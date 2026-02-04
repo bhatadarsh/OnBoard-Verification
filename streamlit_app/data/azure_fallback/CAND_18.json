@@ -1,0 +1,53 @@
+{
+  "candidate_id": "CAND_18",
+  "interview_trace": [
+    {
+      "topic": "build multi-agent workflows",
+      "question": "Can you describe a time when you had to integrate multiple systems or services to automate a complex business process?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770139043.343987
+    },
+    {
+      "topic": "build multi-agent workflows",
+      "question": "Can you describe a specific multi-agent workflow scenario where you would use a particular coordination mechanism, such as synchronization or asynchronous communication?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770139054.057167
+    },
+    {
+      "topic": "build multi-agent workflows",
+      "question": "How do you handle potential deadlocks or race conditions in a multi-agent workflow, and what design patterns or synchronization mechanisms would you use to mitigate them?",
+      "answer_text": "(no response)",
+      "followup_index": 2,
+      "question_type": "followup",
+      "timestamp": 1770139055.792352
+    },
+    {
+      "topic": "build multi-agent workflows",
+      "question": "Can you walk me through your thought process when deciding whether to use a centralized or decentralized architecture for the multi-agent workflow?",
+      "answer_text": "(no response)",
+      "followup_index": 3,
+      "question_type": "followup",
+      "timestamp": 1770139057.3888059
+    },
+    {
+      "topic": "build multi-agent workflows",
+      "question": "How do you handle failures or unexpected events in a multi-agent workflow, and what tradeoffs do you consider when designing fault tolerance mechanisms?",
+      "answer_text": "(no response)",
+      "followup_index": 4,
+      "question_type": "followup",
+      "timestamp": 1770139061.038652
+    },
+    {
+      "topic": "evaluate llm responses for relevance and depth",
+      "question": "Can you describe a time when you had to assess the relevance and depth of responses from a large language model in a real-world application?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770139072.302102
+    }
+  ]
+}
