@@ -14,6 +14,8 @@ def record_and_transcribe(max_seconds: int = 45) -> str:
 
     The function returns an empty string if no input is available.
     """
+    
+    print(f"DEBUG: record_and_transcribe() called with max_seconds={max_seconds}")
 
     # 1) Try native audio_input (some Streamlit builds expose this)
     audio_input_fn = getattr(st, "audio_input", None)
@@ -48,6 +50,8 @@ def record_and_transcribe(max_seconds: int = 45) -> str:
         type=["wav", "mp3", "m4a", "ogg"],
         key=f"u_audio_{max_seconds}"
     )
+    
+    print(f"DEBUG: st.file_uploader returned: {uploaded is not None} (type: {type(uploaded).__name__ if uploaded else 'None'})")
 
     if uploaded is not None:
         try:
@@ -56,10 +60,20 @@ def record_and_transcribe(max_seconds: int = 45) -> str:
                 audio_path = f.name
 
             # convert uploaded audio to WAV if needed
+            # convert uploaded audio to WAV if needed
             wav_path = convert_to_wav(audio_path)
+            
+            import os
+            print(f"DEBUG: Audio file ready for STT. Path: {wav_path}, Size: {os.path.getsize(wav_path)} bytes")
+            
             stt_engine = get_stt_engine()
-            return stt_engine.transcribe(wav_path)
-        except Exception:
+            transcript = stt_engine.transcribe(wav_path)
+            print(f"DEBUG: STT Result: '{transcript}'")
+            return transcript
+        except Exception as e:
+            print(f"DEBUG: STT Exception: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
             return ""
 
     # 3) Text fallback

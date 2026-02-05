@@ -3,6 +3,7 @@ from interview_orchestration.stt.azure_stt import AzureSpeechToText
 
 
 def get_stt_engine():
+    # default to azure as per requirements
     provider = os.getenv("STT_PROVIDER", "azure")
 
     if provider == "azure":

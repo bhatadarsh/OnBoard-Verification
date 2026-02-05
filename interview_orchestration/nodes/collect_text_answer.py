@@ -194,14 +194,20 @@ def collect_text_answer(state: dict) -> dict:
     # -------------------------
     # Resolve answer source
     # -------------------------
+    # -------------------------
+    # Resolve answer source
+    # -------------------------
+    # Prioritize simulated_answer (which holds the text from UI transcription)
     if "simulated_answer" in state:
-        answer_text = state.pop("simulated_answer").strip()
-
-    elif "audio_path" in state and "stt_engine" in state:
-        answer_text = state["stt_engine"].transcribe(state["audio_path"]).strip()
-
+        answer_text = state.pop("simulated_answer")
+        print(f"DEBUG: collect_text_answer popped simulated_answer: '{answer_text}'")
+        if answer_text:
+            answer_text = answer_text.strip()
     else:
-        # No answer provided (timeout or silence)
+        answer_text = None
+
+    if not answer_text:
+        # Fallback if no answer provided
         answer_text = "(no response)"
 
     now = time.time()

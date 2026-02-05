@@ -82,7 +82,7 @@
 
 
 
-from typing import TypedDict, List, Dict, Literal, Optional
+from typing import TypedDict, List, Dict, Literal, Optional, Any
 from datetime import datetime
 
 
@@ -140,3 +140,15 @@ class Stage4State(TypedDict, total=False):
     # -------------------------
     cheating_events: List[Dict]
     cheating_score: float
+
+    # -------------------------
+    # Audio / System State
+    # -------------------------
+    # -------------------------
+    # Audio / System State
+    # -------------------------
+    # These internal fields allow passing audio and engines between nodes
+    audio_path: Optional[str]
+    simulated_audio_blob: Optional[str]
+    stt_engine: Any
+    simulated_answer: Optional[str]  # Holds the transcribed text from UI or testing

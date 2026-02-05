@@ -24,7 +24,9 @@ class AzureSpeechToText(SpeechToTextEngine):
 
         try:
             size = os.path.getsize(audio_path)
-        except Exception:
+            print(f"DEBUG: Azure STT starting. File: {audio_path}, Size: {size} bytes")
+        except Exception as e:
+            print(f"DEBUG: Could not get file size: {e}")
             size = None
 
         # Azure SDK expects a WAV file with compatible PCM encoding
@@ -39,8 +41,20 @@ class AzureSpeechToText(SpeechToTextEngine):
         )
 
         result = recognizer.recognize_once()
+        
+        print(f"DEBUG: Azure STT Result Reason: {result.reason}")
 
         if result.reason == speechsdk.ResultReason.RecognizedSpeech:
+            print(f"DEBUG: Azure STT Success: '{result.text}'")
             return result.text
+        elif result.reason == speechsdk.ResultReason.NoMatch:
+            print(f"DEBUG: Azure STT NoMatch. Details: {result.no_match_details}")
+            return ""
+        elif result.reason == speechsdk.ResultReason.Canceled:
+            cancellation = result.cancellation_details
+            print(f"DEBUG: Azure STT Canceled. Reason: {cancellation.reason}, Error: {cancellation.error_details}")
+            return ""
+        else:
+            print(f"DEBUG: Azure STT Unknown Reason: {result.reason}")
+            return ""
 
-        return ""

@@ -1,3 +1,6 @@
+from interview_orchestration.stt.factory import get_stt_engine
+
+
 def initialize_interview(state: dict) -> dict:
     """
     Initializes the interview session.
@@ -41,6 +44,11 @@ def initialize_interview(state: dict) -> dict:
         # Start as NOT_STARTED so the Streamlit UI invokes the graph
         # to generate the first question (per contract).
         "interview_status": "NOT_STARTED",
+
+        # -------------------------
+        # System Components
+        # -------------------------
+        "stt_engine": get_stt_engine(),
     }
 
     return initialized_state

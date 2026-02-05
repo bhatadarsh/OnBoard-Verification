@@ -32,6 +32,10 @@ def save_interview_trace(candidate_id: str, interview_trace: list):
         "interview_trace": interview_trace,
     }
 
+    print(f"DEBUG: Saving trace to Azure. Turns: {len(interview_trace)}")
+    for i, turn in enumerate(interview_trace):
+        print(f"DEBUG: Trace Turn {i}: {turn.get('answer_text')}")
+
     blob = get_blob_client(blob_name)
     blob.upload_blob(
         json.dumps(payload, indent=2),

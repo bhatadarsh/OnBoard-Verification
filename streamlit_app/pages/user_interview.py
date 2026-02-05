@@ -178,7 +178,7 @@ if state.get("interview_status") == "ASKING_QUESTION":
         st.session_state["interview_state"] = state
         st.rerun()
 
-# WAITING_FOR_ANSWER: show 45s countdown, recorder, uploader, submit
+# WAITING_FOR_ANSWER: show 45s countdown, recorder
 elif state.get("interview_status") == "WAITING_FOR_ANSWER":
     st.subheader("🎙️ Your Answer")
 
@@ -190,22 +190,21 @@ elif state.get("interview_status") == "WAITING_FOR_ANSWER":
     elapsed = int(time.time() - state["answering_started_at"])
     remaining = max(0, answer_limit - elapsed)
 
-    # Countdown UI (JS) — posts rerun when it reaches zero unless recording started
+    # Countdown UI
     st_html(
         f"""
         <div style='padding:10px;border-radius:6px;background:#fff3cd;font-weight:600;'>
             ⏱️ Answer time left: <span id="at">{remaining}</span>s
         </div>
         <script>
-            window.recordingStarted = false;
             let rem = {remaining};
             const el = document.getElementById('at');
             function tick(){{
-                if(rem <= 0 && !window.recordingStarted){{
+                if(rem <= 0){{
                     window.parent.postMessage({{type:'streamlit:rerun'}}, '*');
                     return;
                 }}
-                if(!window.recordingStarted){{ el.innerText = rem; rem--; }}
+                el.innerText = rem; rem--;
                 setTimeout(tick, 1000);
             }}
             tick();
@@ -216,240 +215,135 @@ elif state.get("interview_status") == "WAITING_FOR_ANSWER":
 
     st.warning("🎙️ Recording will temporarily pause the screen. This is expected — please speak clearly.")
 
-    # Recording flow: enter a recording mode so Start Recording does not
-    # immediately attempt to capture inputs (Streamlit widgets are rendered
-    # on rerun). User must click Submit to finalize, or the 45s timer will
-    # auto-submit when it reaches zero.
-    recording_mode = state.get("recording_mode", False)
-
-    if not recording_mode:
+    # -------------------------
+    # RECORDING UI
+    # -------------------------
+    # Trigger recording mode
+    if not state.get("recording_mode"):
         if st.button("🎤 Start Recording"):
             state["recording_mode"] = True
-            state["recording_started_at"] = time.time()
             # Mark that recording has started to prevent auto-submit logic
             state["recording_started"] = True
             st.session_state["interview_state"] = state
             st.rerun()
 
-    # Render recording UI when in recording mode
+    # Initialize pending answer if needed
+    if "pending_answer" not in st.session_state:
+        st.session_state["pending_answer"] = None
+
     if state.get("recording_mode"):
-        st.info("Recording mode — use browser recorder (if available), upload, or type your answer. Click Submit when done.")
+        st.info("🎙️ **Click the microphone button below to record your answer**")
+        
+        from audiorecorder import audiorecorder
+        
+        # Use streamlit-audiorecorder package for reliable browser recording
+        audio_bytes = audiorecorder(
+            start_prompt="🎤 Start Recording",
+            stop_prompt="⏹️ Stop Recording",
+            pause_prompt="",
+            key=f"audiorecorder_{remaining}"
+        )
+        
+        # Check if audio was recorded (audiorecorder returns empty bytes if no recording)
+        if len(audio_bytes) > 0:
+            print(f"DEBUG: Audio recorded via audiorecorder, size: {len(audio_bytes)} bytes")
+            
+            try:
+                import tempfile
+                from interview_orchestration.stt.factory import get_stt_engine
+                from streamlit_app.utils.audio_utils import convert_to_wav
+                
+                # Save audio bytes to temp file
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+                    f.write(audio_bytes)
+                    audio_path = f.name
+                
+                print(f"DEBUG: Audio saved to: {audio_path}")
+                
+                # Convert to WAV
+                wav_path = convert_to_wav(audio_path)
+                print(f"DEBUG: Converted to WAV: {wav_path}")
+                
+                # Transcribe
+                stt_engine = get_stt_engine()
+                transcript = stt_engine.transcribe(wav_path)
+                
+                if transcript and transcript.strip():
+                    st.session_state["pending_answer"] = transcript.strip()
+                    print(f"DEBUG: Transcript saved: '{transcript.strip()}'")
+                    st.success(f"✅ Transcription complete!")
+                    st.rerun()
+                else:
+                    st.warning("⚠️ No speech detected. Please try again with a clearer recording.")
+                    
+            except Exception as e:
+                print(f"DEBUG: STT Error: {e}")
+                import traceback
+                traceback.print_exc()
+                st.error(f"❌ Transcription failed: {e}")
 
-        # Ensure client-side countdown knows recording is started to avoid
-        # posting a rerun while recording is in progress. This sets a global
-        # flag in the browser that the earlier countdown checks.
+
+    # Show transcript preview if available
+    if st.session_state.get("pending_answer"):
+        st.success(f"📝 Transcript Preview: {st.session_state['pending_answer']}")
+    
+    st.markdown("---")
+
+    # -------------------------
+    # EXPLICIT SUBMIT ACTION
+    # -------------------------
+    # Submit button is ALWAYS visible to allow manual finish
+    if st.button("✅ Submit Answer", type="primary"):
+        final_text = st.session_state.get("pending_answer")
+        
+        if not final_text:
+            final_text = "(no response)"
+            
+        state["simulated_answer"] = final_text
+        
+        print(f"DEBUG: Explicit Submit - Setting state['simulated_answer'] = '{final_text}'")
+        
+        # Cleanup
+        st.session_state.pop("pending_answer", None)
+        state.pop("recording_mode", None)
+        state.pop("recording_started", None)
+        state.pop("answering_started_at", None)
+
+        # Invoke Graph
+        state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+        st.session_state["interview_state"] = state
+        
+        # Persist to Azure
         try:
-            st_html("<script>window.recordingStarted = true;</script>")
-        except Exception:
-            pass
-        # Try native audio_input first
-        audio = None
-        audio_input_fn = getattr(st, "audio_input", None)
-        if callable(audio_input_fn):
-            try:
-                # Use a stable key tied to the answering session so the widget
-                # retains its state across reruns. Previously a time-based key
-                # caused the widget to be recreated and lose captured audio.
-                ak = int(state.get("answering_started_at", time.time()))
-                audio = audio_input_fn(f"Click to record (max {remaining}s)", key=f"live_audio_{ak}")
-            except Exception:
-                audio = None
+            from streamlit_app.storage.azure_store import save_interview_trace
+            from streamlit_app.storage.candidate_store import update_candidate
+            cid = state.get("candidate_id")
+            if cid:
+                save_interview_trace(cid, state.get("interview_trace", []))
+                update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+        except Exception as e:
+            print(f"Persistence error: {e}")
 
-        # Auto-save any in-widget recording into session_state so it survives
-        # reruns (this captures the bytes immediately when Streamlit exposes them)
-        try:
-            if audio is not None:
-                saved_key = f"saved_audio_{ak}"
-                if not st.session_state.get(saved_key):
-                    try:
-                        if hasattr(audio, "getbuffer"):
-                            st.session_state[saved_key] = bytes(audio.getbuffer())
-                        else:
-                            # audio may be a file-like object
-                            audio.seek(0)
-                            st.session_state[saved_key] = audio.read()
-                        try:
-                            st.write("DEBUG: auto-saved recording to session", saved_key)
-                        except Exception:
-                            pass
-                    except Exception:
-                        pass
-        except Exception:
-            pass
+        st.rerun()
 
-        uploaded = st.file_uploader("Or upload recorded audio (wav/mp3)", type=["wav", "mp3", "m4a", "ogg"], key="upload_audio")
-        typed = st.text_area("Or type your answer (fallback)")
-
-        # Allow saving the in-widget recording into session_state so it survives reruns
-        try:
-            saved_key = f"saved_audio_{ak}"
-            if audio is not None:
-                if st.button("Save Recording to Session", key=f"save_rec_{ak}"):
-                    try:
-                        if hasattr(audio, "getbuffer"):
-                            saved_bytes = bytes(audio.getbuffer())
-                        else:
-                            saved_bytes = audio.read()
-                        st.session_state[saved_key] = saved_bytes
-                        st.success("Recording saved in session — you can now Submit")
-                    except Exception as e:
-                        st.error("Failed to save recording to session")
-            # If a saved recording exists, offer playback and allow removal
-            if st.session_state.get(saved_key):
-                try:
-                    st.audio(st.session_state.get(saved_key))
-                except Exception:
-                    pass
-                if st.button("Remove saved recording", key=f"rm_rec_{ak}"):
-                    st.session_state.pop(saved_key, None)
-                    st.experimental_rerun()
-        except Exception:
-            pass
-
-        if st.button("Submit Recording"):
-            answer_text = ""
-
-            # If the widget hasn't uploaded the recorded blob yet, trigger
-            # a one-time rerun to allow the browser to send the data.
-            try:
-                capture_key = f"capture_attempted_{ak}"
-                if audio is None and not st.session_state.get(capture_key):
-                    st.session_state[capture_key] = True
-                    st.info("Finalizing recording from browser — please wait a moment and click Submit again if needed.")
-                    st.experimental_rerun()
-                # If we've already attempted capture once, clear the flag on this attempt
-                if st.session_state.get(capture_key):
-                    st.session_state.pop(capture_key, None)
-            except Exception:
-                pass
-
-            # If widget didn't return audio, try any saved recording in session_state
-            try:
-                if audio is None:
-                    saved_key = f"saved_audio_{ak}"
-                    saved_bytes = st.session_state.get(saved_key)
-                    if saved_bytes:
-                        import io
-                        audio = io.BytesIO(saved_bytes)
-            except Exception:
-                pass
-            # Extra debug: capture audio object details and session_state keys
-            try:
-                ak_dbg = int(state.get("answering_started_at", time.time()))
-                dbg_keys = {k: st.session_state.get(k) for k in list(st.session_state.keys()) if k.startswith("live_audio_") or k.startswith("audio_") or k.startswith("u_audio_") or k in ("upload_audio",)}
-                try:
-                    st.write("DEBUG: session_state audio-keys", dbg_keys)
-                except Exception:
-                    pass
-                try:
-                    st.write("DEBUG: computed audio widget key", f"live_audio_{ak_dbg}")
-                except Exception:
-                    pass
-            except Exception:
-                pass
-
-            if audio is not None:
-                try:
-                    try:
-                        st.write("DEBUG: audio var type:", type(audio))
-                        st.write("DEBUG: has getbuffer:", hasattr(audio, "getbuffer"))
-                        if hasattr(audio, "getbuffer"):
-                            try:
-                                st.write("DEBUG: audio.getbuffer() length:", len(audio.getbuffer()))
-                            except Exception:
-                                pass
-                    except Exception:
-                        pass
-                    import tempfile
-                    import os as _os
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as f:
-                        if hasattr(audio, "getbuffer"):
-                            f.write(audio.getbuffer())
-                        else:
-                            f.write(audio.read())
-                        audio_path = f.name
-                    # Convert to WAV acceptable by Azure STT
-                    from streamlit_app.utils.audio_utils import convert_to_wav
-                    wav_path = convert_to_wav(audio_path)
-                    try:
-                        st.info(f"Saved recording to {wav_path} ({_os.path.getsize(wav_path)} bytes)")
-                    except Exception:
-                        pass
-                    from interview_orchestration.stt.factory import get_stt_engine
-                    stt = get_stt_engine()
-                    answer_text = stt.transcribe(wav_path)
-                    saved_raw = False
-                    if not answer_text:
-                        try:
-                            from streamlit_app.storage.azure_store import save_raw_audio
-                            cid = state.get("candidate_id")
-                            if cid:
-                                blob_url = save_raw_audio(cid, wav_path)
-                                saved_raw = True
-                                # attach blob url to state so the graph can include it
-                                state["simulated_audio_blob"] = blob_url
-                        except Exception:
-                            pass
-                    try:
-                        st.write("Transcription result:", repr(answer_text), "saved_raw:", saved_raw)
-                    except Exception:
-                        pass
-                except Exception:
-                    answer_text = ""
-
-            if not answer_text and uploaded is not None:
-                try:
-                    import tempfile
-                    import os as _os
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as f:
-                        f.write(uploaded.getbuffer())
-                        audio_path = f.name
-                    from streamlit_app.utils.audio_utils import convert_to_wav
-                    wav_path = convert_to_wav(audio_path)
-                    try:
-                        st.info(f"Saved uploaded audio to {wav_path} ({_os.path.getsize(wav_path)} bytes)")
-                    except Exception:
-                        pass
-                    from interview_orchestration.stt.factory import get_stt_engine
-                    stt = get_stt_engine()
-                    answer_text = stt.transcribe(wav_path)
-                    saved_raw = False
-                    if not answer_text:
-                        try:
-                            from streamlit_app.storage.azure_store import save_raw_audio
-                            cid = state.get("candidate_id")
-                            if cid:
-                                blob_url = save_raw_audio(cid, wav_path)
-                                saved_raw = True
-                                state["simulated_audio_blob"] = blob_url
-                        except Exception:
-                            pass
-                    try:
-                        st.write("Transcription result (uploaded):", repr(answer_text), "saved_raw:", saved_raw)
-                    except Exception:
-                        pass
-                except Exception:
-                    answer_text = ""
-
-            if not answer_text and typed and typed.strip():
-                answer_text = typed.strip()
-
-            if not answer_text:
-                answer_text = "(No audio captured)"
-
-            # finalize
-            state.pop("recording_mode", None)
-            state.pop("recording_started_at", None)
-            state.pop("recording_started", None)
-            state["simulated_answer"] = answer_text
-            # DEBUG: dump key parts of state to help troubleshoot missing transcriptions
-            try:
-                debug_keys = {k: state.get(k) for k in ("simulated_answer", "simulated_audio_blob", "recording_mode", "recording_started", "answering_started_at", "current_question", "current_topic")}
-                st.write("DEBUG: state before invoke", debug_keys)
-            except Exception:
-                pass
+    # -------------------------
+    # TIMEOUT HANDLING
+    # -------------------------
+    # Only auto-submit if user NEVER started recording and has no pending answer
+    if remaining == 0:
+        if state.get("recording_started") or st.session_state.get("pending_answer"):
+            st.error("⏳ Time is up! Please click 'Submit Answer' to continue.")
+        else:
+            # Passive timeout (user did nothing)
+            state["simulated_answer"] = "(no response)"
+            # Cleanup
+            st.session_state.pop("pending_answer", None)
+            state.pop("answering_started_at", None)
+            
             state = stage4_graph.invoke(state, config={"recursion_limit": 200})
             st.session_state["interview_state"] = state
+            
+            # Persist
             try:
                 from streamlit_app.storage.azure_store import save_interview_trace
                 from streamlit_app.storage.candidate_store import update_candidate
@@ -461,45 +355,6 @@ elif state.get("interview_status") == "WAITING_FOR_ANSWER":
                 pass
             st.rerun()
 
-    else:
-        # Not in recording mode: show uploader + manual submit as alternative
-        st.markdown("---")
-        uploaded = st.file_uploader("Or upload recorded audio (wav/mp3) and click Submit", type=["wav", "mp3", "m4a", "ogg"], key="upload_audio")
-        typed = st.text_area("Or type your answer (fallback)")
-
-        if st.button("Submit Answer"):
-            answer_text = ""
-            if uploaded is not None:
-                try:
-                    import tempfile
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
-                        f.write(uploaded.getbuffer())
-                        audio_path = f.name
-                    from interview_orchestration.stt.factory import get_stt_engine
-                    stt = get_stt_engine()
-                    answer_text = stt.transcribe(audio_path)
-                except Exception:
-                    answer_text = ""
-
-            if not answer_text and typed and typed.strip():
-                answer_text = typed.strip()
-
-            if not answer_text:
-                answer_text = "(No audio captured)"
-
-            state["simulated_answer"] = answer_text
-            state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-            st.session_state["interview_state"] = state
-            try:
-                from streamlit_app.storage.azure_store import save_interview_trace
-                from streamlit_app.storage.candidate_store import update_candidate
-                cid = state.get("candidate_id")
-                if cid:
-                    save_interview_trace(cid, state.get("interview_trace", []))
-                    update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
-            except Exception:
-                pass
-            st.rerun()
 
 # PROCESSING_ANSWER: let graph handle followup/next-topic
 elif state.get("interview_status") == "PROCESSING_ANSWER":
@@ -541,44 +396,81 @@ elif state.get("interview_status") == "COMPLETED":
 # state = st.session_state.get("interview_state")
 # if not state:
 # WAITING_FOR_ANSWER: use blocking server-side recording to avoid Streamlit rerun races
+# WAITING_FOR_ANSWER: minimal, reliable recording flow (capture → save → transcribe on submit)
 elif state.get("interview_status") == "WAITING_FOR_ANSWER":
     st.subheader("🎙️ Your Answer")
 
-    remaining = state.get("answer_time_limit", 45)
+    # Simple pattern: capture once, save bytes in session_state, transcribe on Submit
+    try:
+        audio = None
+        audio_input_fn = getattr(st, "audio_input", None)
+        if callable(audio_input_fn):
+            try:
+                audio = audio_input_fn("Click to record your answer")
+            except Exception:
+                audio = None
 
-    st.warning(
-        "🎙️ Click **Record Answer** and speak clearly.\n"
-        "Recording will pause the screen — this is expected."
-    )
+        if audio is not None:
+            st.success("Audio captured")
+            try:
+                # Store raw bytes so they survive reruns
+                if hasattr(audio, "getbuffer"):
+                    st.session_state["audio_bytes"] = bytes(audio.getbuffer())
+                else:
+                    st.session_state["audio_bytes"] = audio.read()
+            except Exception:
+                pass
 
-    if st.button("🎤 Record Answer"):
-        with st.spinner("Recording... please speak now"):
-            answer_text = record_and_transcribe(remaining)
+        if st.button("Submit Answer"):
+            answer_text = ""
 
-        if not answer_text or not answer_text.strip():
-            answer_text = "(no audio captured)"
+            if "audio_bytes" in st.session_state:
+                import tempfile
 
-        # Inject answer
-        state["simulated_answer"] = answer_text
-        state["early_finish"] = True
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+                    f.write(st.session_state["audio_bytes"])
+                    audio_path = f.name
 
-        # Advance interview
-        state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-        st.session_state["interview_state"] = state
+                from interview_orchestration.stt.factory import get_stt_engine
+                stt = get_stt_engine()
+                try:
+                    answer_text = stt.transcribe(audio_path)
+                except Exception as e:
+                    st.error(f"STT error: {e}")
 
-        # Persist to Azure
-        try:
-            from streamlit_app.storage.azure_store import save_interview_trace
-            from streamlit_app.storage.candidate_store import update_candidate
+            if not answer_text:
+                st.error("No transcription received")
+                # keep user on the same page so they can retry
+            else:
+                # DEBUG: surface final answer before invoking graph
+                try:
+                    st.write("DEBUG simulated_answer BEFORE graph:", repr(answer_text))
+                except Exception:
+                    pass
 
-            cid = state.get("candidate_id")
-            if cid:
-                save_interview_trace(cid, state.get("interview_trace", []))
-                update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
-        except Exception:
-            pass
+                # inject answer into state and advance graph
+                state["simulated_answer"] = answer_text
+                # clear saved audio
+                st.session_state.pop("audio_bytes", None)
 
-        st.rerun()
+                state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+                st.session_state["interview_state"] = state
+
+                # Persist to Azure
+                try:
+                    from streamlit_app.storage.azure_store import save_interview_trace
+                    from streamlit_app.storage.candidate_store import update_candidate
+
+                    cid = state.get("candidate_id")
+                    if cid:
+                        save_interview_trace(cid, state.get("interview_trace", []))
+                        update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+                except Exception:
+                    pass
+
+                st.rerun()
+    except Exception:
+        st.error("Recording UI not available in this Streamlit build")
 #     )
 
 #     st.session_state["interview_state"] = state
