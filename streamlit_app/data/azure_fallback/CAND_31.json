@@ -1,0 +1,29 @@
+{
+  "candidate_id": "CAND_31",
+  "interview_trace": [
+    {
+      "topic": "build multi-agent workflows",
+      "question": "Can you describe a time when you had to integrate multiple systems or services to automate a complex business process?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770186019.286137
+    },
+    {
+      "topic": "build multi-agent workflows",
+      "question": "Can you walk me through a specific scenario where you would use a multi-agent workflow to achieve a particular business outcome?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770186085.9596071
+    },
+    {
+      "topic": "build multi-agent workflows",
+      "question": "How do you handle concurrent execution of tasks within a multi-agent workflow, and what synchronization mechanisms do you use to prevent data inconsistencies?",
+      "answer_text": "(no response)",
+      "followup_index": 2,
+      "question_type": "followup",
+      "timestamp": 1770186152.3841379
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 from langchain_groq import ChatGroq
 from langchain.prompts import PromptTemplate
+import time
 
 
 def followup_question_generator(state: dict) -> dict:
@@ -83,8 +84,16 @@ Return ONLY the question text.
 
     followup_question = response.content.strip()
 
+    # Return to the ASKING_QUESTION phase so the UI shows the
+    # reading window before moving to the answer phase. This
+    # keeps behavior consistent with initial questions.
     return {
         **state,
         "current_question": followup_question,
-        "interview_status": "WAITING_FOR_ANSWER"
+        "interview_status": "ASKING_QUESTION",
+        "reading_started_at": time.time(),
+        "answering_started_at": None,
+        "early_finish": False,
+        "read_time_limit": state.get("read_time_limit", 20),
+        "answer_time_limit": state.get("answer_time_limit", 45),
     }

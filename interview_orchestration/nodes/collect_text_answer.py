@@ -211,6 +211,8 @@ def collect_text_answer(state: dict) -> dict:
         "topic": current_topic,
         "question": current_question,
         "answer_text": answer_text,
+        # optional raw audio blob URL attached by UI when transcription failed
+        "raw_audio_blob": state.pop("simulated_audio_blob", None),
         "followup_index": followup_index,
         "question_type": "initial" if followup_index == 0 else "followup",
         "timestamp": now

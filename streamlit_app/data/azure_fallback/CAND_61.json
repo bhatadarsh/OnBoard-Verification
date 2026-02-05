@@ -1,0 +1,21 @@
+{
+  "candidate_id": "CAND_61",
+  "interview_trace": [
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you describe a time when you implemented a process improvement in a recruitment workflow, and what results you achieved?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770204370.3011231
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you describe a specific end-to-end recruitment process you've managed, and what were some of the key challenges you faced?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770204441.3331
+    }
+  ]
+}

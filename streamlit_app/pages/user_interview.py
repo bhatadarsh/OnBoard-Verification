@@ -1,3 +1,532 @@
+
+import sys
+import os
+import time
+from streamlit.components.v1 import html as st_html
+import streamlit as st
+
+# Fix import path so repository modules can be imported
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
+from interview_orchestration.graph import stage4_graph
+from streamlit_app.components.mic_answer import record_and_transcribe
+
+# Role guard
+if st.session_state.get("role") != "user":
+    st.error("Unauthorized access")
+    st.switch_page("app.py")
+
+# Ensure interview state exists
+if "interview_state" not in st.session_state:
+    st.error("No active interview. Please start from the status page.")
+    st.switch_page("pages/user_status.py")
+
+state = st.session_state["interview_state"]
+
+st.title("🎤 AI Interview")
+
+# Server-side expiry handling: ensure transitions happen on any rerun
+try:
+    # If reading window elapsed, transition to WAITING_FOR_ANSWER
+    if state.get("interview_status") == "ASKING_QUESTION":
+        reading_started = state.get("reading_started_at")
+        read_limit = state.get("read_time_limit", 20)
+        if reading_started and (time.time() - reading_started) >= read_limit:
+            state["interview_status"] = "WAITING_FOR_ANSWER"
+            state["answering_started_at"] = time.time()
+            state["recording_started"] = False
+            st.session_state["interview_state"] = state
+
+    # If answer window elapsed, auto-submit and advance graph
+    if state.get("interview_status") == "WAITING_FOR_ANSWER":
+        answer_started = state.get("answering_started_at")
+        answer_limit = state.get("answer_time_limit", 45)
+        # If recording is in-progress, do not auto-submit here (record_and_transcribe blocks)
+        if answer_started and (time.time() - answer_started) >= answer_limit and not state.get("recording_started"):
+            # Before auto-submitting, check for an in-flight `st.audio_input` upload
+            try:
+                ak_chk = int(answer_started)
+            except Exception:
+                ak_chk = None
+
+            try:
+                # keys that may indicate the browser recorder widget exists but hasn't
+                # uploaded its blob yet: `live_audio_{ak}` (value None until finalized)
+                live_key = f"live_audio_{ak_chk}" if ak_chk else None
+                saved_key = f"saved_audio_{ak_chk}" if ak_chk else None
+                capture_flag = f"capture_attempted_{ak_chk}" if ak_chk else None
+
+                in_flight = False
+                if live_key and live_key in st.session_state and st.session_state.get(live_key) is None:
+                    in_flight = True
+                # if there is a saved recording already, it's fine to auto-submit
+                if saved_key and st.session_state.get(saved_key):
+                    in_flight = False
+
+                if in_flight and capture_flag and not st.session_state.get(capture_flag):
+                    # Switch into recording_mode to allow finalization and user Submit
+                    state["recording_mode"] = True
+                    state["recording_started"] = True
+                    st.session_state["interview_state"] = state
+                    st.session_state[capture_flag] = True
+                    try:
+                        st.info("Finalizing your recording — please click Submit when the recorder finishes uploading.")
+                    except Exception:
+                        pass
+                    st.rerun()
+
+            except Exception:
+                pass
+
+            # If not in-flight, proceed to auto-submit as before
+            state["simulated_answer"] = "(no response)"
+            state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+            st.session_state["interview_state"] = state
+            # persist optionally, but ignore persistence errors
+            try:
+                from streamlit_app.storage.azure_store import save_interview_trace
+                from streamlit_app.storage.candidate_store import update_candidate
+                cid = state.get("candidate_id")
+                if cid:
+                    save_interview_trace(cid, state.get("interview_trace", []))
+                    update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+            except Exception as e:
+                try:
+                    st.error("Failed to persist interview trace to Azure blob storage")
+                    st.exception(e)
+                except Exception:
+                    print("Failed to persist interview trace:", e)
+            st.rerun()
+except Exception:
+    # tolerate transient state shape issues
+    pass
+
+# Optional mic test
+with st.expander("🎧 Test Microphone (one-time)"):
+    st.info("Speak for 5 seconds")
+    if st.button("Start Mic Test"):
+        with st.spinner("Listening..."):
+            test_text = record_and_transcribe(5)
+        if test_text:
+            st.success("Mic working ✅")
+            st.code(test_text)
+        else:
+            st.error("Mic not capturing audio ❌")
+
+st.divider()
+st.markdown(f"**Interview Status:** `{state.get('interview_status')}`")
+
+# Bootstrap first question
+if state.get("interview_status") in (None, "NOT_STARTED"):
+    state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+    st.session_state["interview_state"] = state
+    st.rerun()
+
+# ASKING_QUESTION: show question + 20s reading countdown
+if state.get("interview_status") == "ASKING_QUESTION":
+    st.subheader("Question")
+    st.write(state.get("current_question", "Preparing next question..."))
+
+    if "reading_started_at" not in state or state.get("reading_started_at") is None:
+        state["reading_started_at"] = time.time()
+        st.session_state["interview_state"] = state
+
+    read_limit = state.get("read_time_limit", 20)
+    elapsed = int(time.time() - state["reading_started_at"])
+    remaining = max(0, read_limit - elapsed)
+
+    # Client-side countdown (JS) + server-side fallback tick
+    try:
+        js = """
+        <div id='countdown'>Reading time left: <strong>{REM}s</strong></div>
+        <script>
+        var rem = {REM};
+        var el = document.getElementById('countdown');
+        function tick(){
+            if(rem<=0){
+                try{ window.parent.postMessage({type: 'streamlit:rerun'}, '*'); }
+                catch(e){ window.location.href = window.location.href; }
+                return;
+            }
+            el.innerHTML = 'Reading time left: <strong>' + rem + 's</strong>';
+            rem -= 1;
+            setTimeout(tick, 1000);
+        }
+        tick();
+        </script>
+        """
+        st_html(js.replace('{REM}', str(remaining)), height=40)
+    except Exception:
+        pass
+
+    # server-side tick fallback
+    if remaining > 0:
+        time.sleep(1)
+        try:
+            st.experimental_rerun()
+        except Exception:
+            st.rerun()
+
+    # Auto transition or manual start
+    if remaining == 0 or st.button("▶️ Start Answer"):
+        state["interview_status"] = "WAITING_FOR_ANSWER"
+        state.pop("reading_started_at", None)
+        state["answering_started_at"] = time.time()
+        state["recording_started"] = False
+        st.session_state["interview_state"] = state
+        st.rerun()
+
+# WAITING_FOR_ANSWER: show 45s countdown, recorder, uploader, submit
+elif state.get("interview_status") == "WAITING_FOR_ANSWER":
+    st.subheader("🎙️ Your Answer")
+
+    answer_limit = state.get("answer_time_limit", 45)
+    if "answering_started_at" not in state or state.get("answering_started_at") is None:
+        state["answering_started_at"] = time.time()
+        st.session_state["interview_state"] = state
+
+    elapsed = int(time.time() - state["answering_started_at"])
+    remaining = max(0, answer_limit - elapsed)
+
+    # Countdown UI (JS) — posts rerun when it reaches zero unless recording started
+    st_html(
+        f"""
+        <div style='padding:10px;border-radius:6px;background:#fff3cd;font-weight:600;'>
+            ⏱️ Answer time left: <span id="at">{remaining}</span>s
+        </div>
+        <script>
+            window.recordingStarted = false;
+            let rem = {remaining};
+            const el = document.getElementById('at');
+            function tick(){{
+                if(rem <= 0 && !window.recordingStarted){{
+                    window.parent.postMessage({{type:'streamlit:rerun'}}, '*');
+                    return;
+                }}
+                if(!window.recordingStarted){{ el.innerText = rem; rem--; }}
+                setTimeout(tick, 1000);
+            }}
+            tick();
+        </script>
+        """,
+        height=70,
+    )
+
+    st.warning("🎙️ Recording will temporarily pause the screen. This is expected — please speak clearly.")
+
+    # Recording flow: enter a recording mode so Start Recording does not
+    # immediately attempt to capture inputs (Streamlit widgets are rendered
+    # on rerun). User must click Submit to finalize, or the 45s timer will
+    # auto-submit when it reaches zero.
+    recording_mode = state.get("recording_mode", False)
+
+    if not recording_mode:
+        if st.button("🎤 Start Recording"):
+            state["recording_mode"] = True
+            state["recording_started_at"] = time.time()
+            # Mark that recording has started to prevent auto-submit logic
+            state["recording_started"] = True
+            st.session_state["interview_state"] = state
+            st.rerun()
+
+    # Render recording UI when in recording mode
+    if state.get("recording_mode"):
+        st.info("Recording mode — use browser recorder (if available), upload, or type your answer. Click Submit when done.")
+
+        # Ensure client-side countdown knows recording is started to avoid
+        # posting a rerun while recording is in progress. This sets a global
+        # flag in the browser that the earlier countdown checks.
+        try:
+            st_html("<script>window.recordingStarted = true;</script>")
+        except Exception:
+            pass
+        # Try native audio_input first
+        audio = None
+        audio_input_fn = getattr(st, "audio_input", None)
+        if callable(audio_input_fn):
+            try:
+                # Use a stable key tied to the answering session so the widget
+                # retains its state across reruns. Previously a time-based key
+                # caused the widget to be recreated and lose captured audio.
+                ak = int(state.get("answering_started_at", time.time()))
+                audio = audio_input_fn(f"Click to record (max {remaining}s)", key=f"live_audio_{ak}")
+            except Exception:
+                audio = None
+
+        # Auto-save any in-widget recording into session_state so it survives
+        # reruns (this captures the bytes immediately when Streamlit exposes them)
+        try:
+            if audio is not None:
+                saved_key = f"saved_audio_{ak}"
+                if not st.session_state.get(saved_key):
+                    try:
+                        if hasattr(audio, "getbuffer"):
+                            st.session_state[saved_key] = bytes(audio.getbuffer())
+                        else:
+                            # audio may be a file-like object
+                            audio.seek(0)
+                            st.session_state[saved_key] = audio.read()
+                        try:
+                            st.write("DEBUG: auto-saved recording to session", saved_key)
+                        except Exception:
+                            pass
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+        uploaded = st.file_uploader("Or upload recorded audio (wav/mp3)", type=["wav", "mp3", "m4a", "ogg"], key="upload_audio")
+        typed = st.text_area("Or type your answer (fallback)")
+
+        # Allow saving the in-widget recording into session_state so it survives reruns
+        try:
+            saved_key = f"saved_audio_{ak}"
+            if audio is not None:
+                if st.button("Save Recording to Session", key=f"save_rec_{ak}"):
+                    try:
+                        if hasattr(audio, "getbuffer"):
+                            saved_bytes = bytes(audio.getbuffer())
+                        else:
+                            saved_bytes = audio.read()
+                        st.session_state[saved_key] = saved_bytes
+                        st.success("Recording saved in session — you can now Submit")
+                    except Exception as e:
+                        st.error("Failed to save recording to session")
+            # If a saved recording exists, offer playback and allow removal
+            if st.session_state.get(saved_key):
+                try:
+                    st.audio(st.session_state.get(saved_key))
+                except Exception:
+                    pass
+                if st.button("Remove saved recording", key=f"rm_rec_{ak}"):
+                    st.session_state.pop(saved_key, None)
+                    st.experimental_rerun()
+        except Exception:
+            pass
+
+        if st.button("Submit Recording"):
+            answer_text = ""
+
+            # If the widget hasn't uploaded the recorded blob yet, trigger
+            # a one-time rerun to allow the browser to send the data.
+            try:
+                capture_key = f"capture_attempted_{ak}"
+                if audio is None and not st.session_state.get(capture_key):
+                    st.session_state[capture_key] = True
+                    st.info("Finalizing recording from browser — please wait a moment and click Submit again if needed.")
+                    st.experimental_rerun()
+                # If we've already attempted capture once, clear the flag on this attempt
+                if st.session_state.get(capture_key):
+                    st.session_state.pop(capture_key, None)
+            except Exception:
+                pass
+
+            # If widget didn't return audio, try any saved recording in session_state
+            try:
+                if audio is None:
+                    saved_key = f"saved_audio_{ak}"
+                    saved_bytes = st.session_state.get(saved_key)
+                    if saved_bytes:
+                        import io
+                        audio = io.BytesIO(saved_bytes)
+            except Exception:
+                pass
+            # Extra debug: capture audio object details and session_state keys
+            try:
+                ak_dbg = int(state.get("answering_started_at", time.time()))
+                dbg_keys = {k: st.session_state.get(k) for k in list(st.session_state.keys()) if k.startswith("live_audio_") or k.startswith("audio_") or k.startswith("u_audio_") or k in ("upload_audio",)}
+                try:
+                    st.write("DEBUG: session_state audio-keys", dbg_keys)
+                except Exception:
+                    pass
+                try:
+                    st.write("DEBUG: computed audio widget key", f"live_audio_{ak_dbg}")
+                except Exception:
+                    pass
+            except Exception:
+                pass
+
+            if audio is not None:
+                try:
+                    try:
+                        st.write("DEBUG: audio var type:", type(audio))
+                        st.write("DEBUG: has getbuffer:", hasattr(audio, "getbuffer"))
+                        if hasattr(audio, "getbuffer"):
+                            try:
+                                st.write("DEBUG: audio.getbuffer() length:", len(audio.getbuffer()))
+                            except Exception:
+                                pass
+                    except Exception:
+                        pass
+                    import tempfile
+                    import os as _os
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as f:
+                        if hasattr(audio, "getbuffer"):
+                            f.write(audio.getbuffer())
+                        else:
+                            f.write(audio.read())
+                        audio_path = f.name
+                    # Convert to WAV acceptable by Azure STT
+                    from streamlit_app.utils.audio_utils import convert_to_wav
+                    wav_path = convert_to_wav(audio_path)
+                    try:
+                        st.info(f"Saved recording to {wav_path} ({_os.path.getsize(wav_path)} bytes)")
+                    except Exception:
+                        pass
+                    from interview_orchestration.stt.factory import get_stt_engine
+                    stt = get_stt_engine()
+                    answer_text = stt.transcribe(wav_path)
+                    saved_raw = False
+                    if not answer_text:
+                        try:
+                            from streamlit_app.storage.azure_store import save_raw_audio
+                            cid = state.get("candidate_id")
+                            if cid:
+                                blob_url = save_raw_audio(cid, wav_path)
+                                saved_raw = True
+                                # attach blob url to state so the graph can include it
+                                state["simulated_audio_blob"] = blob_url
+                        except Exception:
+                            pass
+                    try:
+                        st.write("Transcription result:", repr(answer_text), "saved_raw:", saved_raw)
+                    except Exception:
+                        pass
+                except Exception:
+                    answer_text = ""
+
+            if not answer_text and uploaded is not None:
+                try:
+                    import tempfile
+                    import os as _os
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as f:
+                        f.write(uploaded.getbuffer())
+                        audio_path = f.name
+                    from streamlit_app.utils.audio_utils import convert_to_wav
+                    wav_path = convert_to_wav(audio_path)
+                    try:
+                        st.info(f"Saved uploaded audio to {wav_path} ({_os.path.getsize(wav_path)} bytes)")
+                    except Exception:
+                        pass
+                    from interview_orchestration.stt.factory import get_stt_engine
+                    stt = get_stt_engine()
+                    answer_text = stt.transcribe(wav_path)
+                    saved_raw = False
+                    if not answer_text:
+                        try:
+                            from streamlit_app.storage.azure_store import save_raw_audio
+                            cid = state.get("candidate_id")
+                            if cid:
+                                blob_url = save_raw_audio(cid, wav_path)
+                                saved_raw = True
+                                state["simulated_audio_blob"] = blob_url
+                        except Exception:
+                            pass
+                    try:
+                        st.write("Transcription result (uploaded):", repr(answer_text), "saved_raw:", saved_raw)
+                    except Exception:
+                        pass
+                except Exception:
+                    answer_text = ""
+
+            if not answer_text and typed and typed.strip():
+                answer_text = typed.strip()
+
+            if not answer_text:
+                answer_text = "(No audio captured)"
+
+            # finalize
+            state.pop("recording_mode", None)
+            state.pop("recording_started_at", None)
+            state.pop("recording_started", None)
+            state["simulated_answer"] = answer_text
+            # DEBUG: dump key parts of state to help troubleshoot missing transcriptions
+            try:
+                debug_keys = {k: state.get(k) for k in ("simulated_answer", "simulated_audio_blob", "recording_mode", "recording_started", "answering_started_at", "current_question", "current_topic")}
+                st.write("DEBUG: state before invoke", debug_keys)
+            except Exception:
+                pass
+            state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+            st.session_state["interview_state"] = state
+            try:
+                from streamlit_app.storage.azure_store import save_interview_trace
+                from streamlit_app.storage.candidate_store import update_candidate
+                cid = state.get("candidate_id")
+                if cid:
+                    save_interview_trace(cid, state.get("interview_trace", []))
+                    update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+            except Exception:
+                pass
+            st.rerun()
+
+    else:
+        # Not in recording mode: show uploader + manual submit as alternative
+        st.markdown("---")
+        uploaded = st.file_uploader("Or upload recorded audio (wav/mp3) and click Submit", type=["wav", "mp3", "m4a", "ogg"], key="upload_audio")
+        typed = st.text_area("Or type your answer (fallback)")
+
+        if st.button("Submit Answer"):
+            answer_text = ""
+            if uploaded is not None:
+                try:
+                    import tempfile
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+                        f.write(uploaded.getbuffer())
+                        audio_path = f.name
+                    from interview_orchestration.stt.factory import get_stt_engine
+                    stt = get_stt_engine()
+                    answer_text = stt.transcribe(audio_path)
+                except Exception:
+                    answer_text = ""
+
+            if not answer_text and typed and typed.strip():
+                answer_text = typed.strip()
+
+            if not answer_text:
+                answer_text = "(No audio captured)"
+
+            state["simulated_answer"] = answer_text
+            state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+            st.session_state["interview_state"] = state
+            try:
+                from streamlit_app.storage.azure_store import save_interview_trace
+                from streamlit_app.storage.candidate_store import update_candidate
+                cid = state.get("candidate_id")
+                if cid:
+                    save_interview_trace(cid, state.get("interview_trace", []))
+                    update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+            except Exception:
+                pass
+            st.rerun()
+
+# PROCESSING_ANSWER: let graph handle followup/next-topic
+elif state.get("interview_status") == "PROCESSING_ANSWER":
+    st.info("Processing your answer...")
+    state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+    st.session_state["interview_state"] = state
+    try:
+        from streamlit_app.storage.azure_store import save_interview_trace
+        from streamlit_app.storage.candidate_store import update_candidate
+        cid = state.get("candidate_id")
+        if cid:
+            save_interview_trace(cid, state.get("interview_trace", []))
+            update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+    except Exception:
+        pass
+    st.rerun()
+
+# COMPLETED
+elif state.get("interview_status") == "COMPLETED":
+    st.success("✅ Interview Completed")
+    st.subheader("Interview Summary")
+    for turn in state.get("interview_trace", []):
+        st.markdown(f"**Topic:** {turn['topic']}  \n**Q:** {turn['question']}  \n**A:** {turn['answer_text']}\n---")
+
+    st.info("Your interview has been submitted for review.")
+    if st.button("⬅️ Back to Status"):
+        st.switch_page("pages/user_status.py")
 # import streamlit as st
 # from interview_orchestration.graph import stage4_graph
 
@@ -11,222 +540,45 @@
 # # Ensure interview_state exists
 # state = st.session_state.get("interview_state")
 # if not state:
-#     st.error("No active interview. Please start the interview from the Status page.")
-#     st.stop()
+# WAITING_FOR_ANSWER: use blocking server-side recording to avoid Streamlit rerun races
+elif state.get("interview_status") == "WAITING_FOR_ANSWER":
+    st.subheader("🎙️ Your Answer")
 
-# # -------------------------
-# # MIC TEST (optional)
-# # -------------------------
-# if st.checkbox("🎤 Test microphone (one-time check)"):
-#     from streamlit_app.components.mic_answer import record_and_transcribe
+    remaining = state.get("answer_time_limit", 45)
 
-#     st.info("Speak now for 5 seconds")
+    st.warning(
+        "🎙️ Click **Record Answer** and speak clearly.\n"
+        "Recording will pause the screen — this is expected."
+    )
 
-#     with st.spinner("Listening..."):
-#         test_text = record_and_transcribe(5)
+    if st.button("🎤 Record Answer"):
+        with st.spinner("Recording... please speak now"):
+            answer_text = record_and_transcribe(remaining)
 
-#     if test_text:
-#         st.success("Mic working ✅")
-#         st.code(test_text)
-#     else:
-#         st.error("Mic not capturing audio ❌")
+        if not answer_text or not answer_text.strip():
+            answer_text = "(no audio captured)"
 
-# st.divider()
+        # Inject answer
+        state["simulated_answer"] = answer_text
+        state["early_finish"] = True
 
-# # Interview UI
-# st.markdown(f"**Interview Status:** {state.get('interview_status')}")
+        # Advance interview
+        state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+        st.session_state["interview_state"] = state
 
-# if state.get("interview_status") == "ASKING_QUESTION":
-#     st.markdown("### Question")
-#     st.write(state.get("current_question"))
+        # Persist to Azure
+        try:
+            from streamlit_app.storage.azure_store import save_interview_trace
+            from streamlit_app.storage.candidate_store import update_candidate
 
-# elif state.get("interview_status") == "WAITING_FOR_ANSWER":
-#     st.info("Please answer the question")
+            cid = state.get("candidate_id")
+            if cid:
+                save_interview_trace(cid, state.get("interview_trace", []))
+                update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+        except Exception:
+            pass
 
-#     if st.button("🎤 Submit Answer"):
-#         # For now use mic component if available, else ask for text
-#         from streamlit_app.components.mic_answer import record_and_transcribe
-
-#         with st.spinner("Recording..."):
-#             answer_text = record_and_transcribe(state.get("answer_time_limit", 45))
-
-#         if not answer_text:
-#             st.warning("No audio captured — submitting placeholder text.")
-#             answer_text = "(no audio captured)"
-
-#         state["simulated_answer"] = answer_text
-#         state["early_finish"] = True
-
-#         # Advance graph
-#         state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-#         st.session_state["interview_state"] = state
-#         from streamlit_app.utils.st_helpers import safe_rerun
-#         safe_rerun()
-
-# elif state.get("interview_status") == "PROCESSING_ANSWER":
-#     st.info("Processing answer...")
-#     # Allow graph to progress
-#     state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-#     st.session_state["interview_state"] = state
-#     from streamlit_app.utils.st_helpers import safe_rerun
-#     safe_rerun()
-
-# elif state.get("interview_status") == "COMPLETED":
-#     st.success("Interview completed")
-#     st.write("Thanks for your time.")
-#     st.write("Interview trace:")
-#     for turn in state.get("interview_trace", []):
-#         st.write(f"Q: {turn.get('question')} — A: {turn.get('answer_text')}")
-
-
-
-
-# import sys
-# import os
-# import streamlit as st
-
-# # -------------------------
-# # FIX IMPORT PATH (FIRST)
-# # -------------------------
-# ROOT_DIR = os.path.abspath(
-#     os.path.join(os.path.dirname(__file__), "..", "..")
-# )
-# if ROOT_DIR not in sys.path:
-#     sys.path.insert(0, ROOT_DIR)
-
-# from interview_orchestration.graph import stage4_graph
-# from streamlit_app.components.mic_answer import record_and_transcribe
-
-# # -------------------------
-# # ROLE GUARD
-# # -------------------------
-# if st.session_state.get("role") != "user":
-#     st.error("Unauthorized access")
-#     st.switch_page("app.py")
-
-# # -------------------------
-# # INTERVIEW STATE GUARD
-# # -------------------------
-# if "interview_state" not in st.session_state:
-#     st.error("No active interview. Please start from the status page.")
-#     st.switch_page("pages/user_status.py")
-
-# state = st.session_state["interview_state"]
-
-# st.title("🎤 AI Interview")
-
-# # -------------------------
-# # OPTIONAL MIC TEST
-# # -------------------------
-# with st.expander("🎧 Test Microphone (one-time)"):
-#     st.info("Speak for 5 seconds")
-#     if st.button("Start Mic Test"):
-#         with st.spinner("Listening..."):
-#             test_text = record_and_transcribe(5)
-
-#         if test_text:
-#             st.success("Mic working ✅")
-#             st.code(test_text)
-#         else:
-#             st.error("Mic not capturing audio ❌")
-
-# st.divider()
-
-# # -------------------------
-# # STATUS DISPLAY
-# # -------------------------
-# st.markdown(f"**Interview Status:** `{state['interview_status']}`")
-
-# # -------------------------
-# # INVOKE GRAPH FOR FIRST QUESTION (NOT_STARTED)
-# # Per contract: UI invokes the graph exactly once when status is NOT_STARTED
-# # -------------------------
-# if state.get("interview_status") == "NOT_STARTED":
-#     # Run graph to generate the first question (initialize -> ask_initial_question)
-#     state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-#     st.session_state["interview_state"] = state
-#     from streamlit_app.utils.st_helpers import safe_rerun
-#     safe_rerun()
-
-# # ======================================================
-# # ASKING QUESTION
-# # ======================================================
-# if state["interview_status"] == "ASKING_QUESTION":
-#     st.subheader("Question")
-
-#     question = state.get("current_question")
-#     if not question:
-#         st.warning("Preparing next question...")
-#     else:
-#         st.write(question)
-
-#     st.info("Click **Start Answer** when ready")
-
-#     if st.button("▶️ Start Answer"):
-#         # Move explicitly to WAITING_FOR_ANSWER
-#         state["interview_status"] = "WAITING_FOR_ANSWER"
-#         st.session_state["interview_state"] = state
-#         from streamlit_app.utils.st_helpers import safe_rerun
-#         safe_rerun()
-#     else:
-#         # Auto-skip if the reading window has elapsed without user action.
-#         import time as _time
-#         now_ts = _time.time()
-#         reading_started = state.get("reading_started_at")
-#         read_limit = state.get("read_time_limit", 20)
-
-#         if reading_started and (now_ts - reading_started) >= read_limit:
-#             # Mark as no response and advance the graph so the interview
-#             # progresses to processing and subsequent question generation.
-#             state["simulated_answer"] = "(no response - timed out)"
-#             state["early_finish"] = True
-#             state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-#             st.session_state["interview_state"] = state
-#             from streamlit_app.utils.st_helpers import safe_rerun
-#             safe_rerun()
-
-# # ======================================================
-# # WAITING FOR ANSWER
-# # ======================================================
-# elif state["interview_status"] == "WAITING_FOR_ANSWER":
-#     st.subheader("🎙️ Your Answer")
-
-#     st.caption(
-#         f"You have **{state.get('answer_time_limit', 45)} seconds** to answer"
-#     )
-
-#     if st.button("🎤 Record Answer"):
-#         with st.spinner("Recording..."):
-#             answer_text = record_and_transcribe(
-#                 state.get("answer_time_limit", 45)
-#             )
-
-#         if not answer_text:
-#             answer_text = "(No audio captured)"
-
-#         # 🔑 Inject answer
-#         state["simulated_answer"] = answer_text
-#         state["early_finish"] = True
-
-#         # 🔑 Advance graph ONLY ON USER ACTION
-#         state = stage4_graph.invoke(
-#             state,
-#             config={"recursion_limit": 200}
-#         )
-
-#         st.session_state["interview_state"] = state
-#         from streamlit_app.utils.st_helpers import safe_rerun
-#         safe_rerun()
-
-# # ======================================================
-# # PROCESSING ANSWER (SHORT TRANSIENT STATE)
-# # ======================================================
-# elif state["interview_status"] == "PROCESSING_ANSWER":
-#     st.info("Processing your answer...")
-
-#     state = stage4_graph.invoke(
-#         state,
-#         config={"recursion_limit": 200}
+        st.rerun()
 #     )
 
 #     st.session_state["interview_state"] = state
@@ -447,390 +799,682 @@
 
 
 
-import sys
-import os
-import time
-from streamlit.components.v1 import html as st_html
-import streamlit as st
+# import sys
+# import os
+# import time
+# from streamlit.components.v1 import html as st_html
+# import streamlit as st
 
-# -------------------------
-# FIX IMPORT PATH (MUST BE FIRST)
-# -------------------------
-ROOT_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..")
-)
-if ROOT_DIR not in sys.path:
-    sys.path.insert(0, ROOT_DIR)
+# # -------------------------
+# # FIX IMPORT PATH (MUST BE FIRST)
+# # -------------------------
+# ROOT_DIR = os.path.abspath(
+#     os.path.join(os.path.dirname(__file__), "..", "..")
+# )
+# if ROOT_DIR not in sys.path:
+#     sys.path.insert(0, ROOT_DIR)
 
-from interview_orchestration.graph import stage4_graph
-from streamlit_app.components.mic_answer import record_and_transcribe
+# from interview_orchestration.graph import stage4_graph
+# from streamlit_app.components.mic_answer import record_and_transcribe
 
-# -------------------------
-# ROLE GUARD
-# -------------------------
-if st.session_state.get("role") != "user":
-    st.error("Unauthorized access")
-    st.switch_page("app.py")
+# # -------------------------
+# # ROLE GUARD
+# # -------------------------
+# if st.session_state.get("role") != "user":
+#     st.error("Unauthorized access")
+#     st.switch_page("app.py")
 
-# -------------------------
-# INTERVIEW STATE GUARD
-# -------------------------
-if "interview_state" not in st.session_state:
-    st.error("No active interview. Please start from the status page.")
-    st.switch_page("pages/user_status.py")
+# # -------------------------
+# # INTERVIEW STATE GUARD
+# # -------------------------
+# if "interview_state" not in st.session_state:
+#     st.error("No active interview. Please start from the status page.")
+#     st.switch_page("pages/user_status.py")
 
-import time
+# import time
 
-state = st.session_state["interview_state"]
+# state = st.session_state["interview_state"]
 
-st.title("🎤 AI Interview")
-# -------------------------
-# Server-side timer expiry handling
-# Ensures expired reading/answer windows transition correctly on any rerun
-# -------------------------
-try:
-    if state.get("interview_status") == "ASKING_QUESTION":
-        reading_started = state.get("reading_started_at")
-        read_limit = state.get("read_time_limit", 20)
-        if reading_started and (time.time() - reading_started) >= read_limit:
-            # transition to answer phase
-            state["interview_status"] = "WAITING_FOR_ANSWER"
-            state["answering_started_at"] = time.time()
-            st.session_state["interview_state"] = state
-            # fall through to render waiting-for-answer UI on this same run
+# st.title("🎤 AI Interview")
+# # Ensure any leftover recording UI state is cleared when not in answer phase
+# awaiting_key = "awaiting_answer_upload"
+# if st.session_state.get(awaiting_key) and state.get("interview_status") != "WAITING_FOR_ANSWER":
+#     st.session_state.pop(awaiting_key, None)
+#     st.session_state.pop("upload_started_at", None)
+# # -------------------------
+# # Server-side timer expiry handling
+# # Ensures expired reading/answer windows transition correctly on any rerun
+# # -------------------------
+# try:
+#     if state.get("interview_status") == "ASKING_QUESTION":
+#         reading_started = state.get("reading_started_at")
+#         read_limit = state.get("read_time_limit", 20)
+#         if reading_started and (time.time() - reading_started) >= read_limit:
+#             # transition to answer phase
+#             state["interview_status"] = "WAITING_FOR_ANSWER"
+#             state.pop("reading_started_at", None)   # 🔑 CLEAR OLD TIMER
+#             state["answering_started_at"] = time.time()
 
-    if state.get("interview_status") == "WAITING_FOR_ANSWER":
-        answer_started = state.get("answering_started_at")
-        answer_limit = state.get("answer_time_limit", 45)
-        if answer_started and (time.time() - answer_started) >= answer_limit:
-            # auto-submit no-response and advance graph
-            state["simulated_answer"] = "(no response)"
-            state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-            st.session_state["interview_state"] = state
-            try:
-                from streamlit_app.storage.azure_store import save_interview_trace
-                from streamlit_app.storage.candidate_store import update_candidate
-                cid = state.get("candidate_id")
-                if cid:
-                    save_interview_trace(cid, state.get("interview_trace", []))
-                    update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
-            except Exception:
-                pass
-            st.rerun()
-except Exception:
-    # be tolerant of any transient state shape issues
-    pass
+#             st.session_state["interview_state"] = state
+#             st.rerun()
+#             # fall through to render waiting-for-answer UI on this same run
+     
+#     if state.get("interview_status") == "WAITING_FOR_ANSWER":
+#         answer_started = state.get("answering_started_at")
+#         answer_limit = state.get("answer_time_limit", 45)
+#         if answer_started and (time.time() - answer_started) >= answer_limit:
+#             # auto-submit no-response and advance graph
+#             state["simulated_answer"] = "(no response)"
+#             state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#             st.session_state["interview_state"] = state
+#             try:
+#                 from streamlit_app.storage.azure_store import save_interview_trace
+#                 from streamlit_app.storage.candidate_store import update_candidate
+#                 cid = state.get("candidate_id")
+#                 if cid:
+#                     save_interview_trace(cid, state.get("interview_trace", []))
+#                     update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+#             except Exception:
+#                 pass
+#             st.rerun()
+# except Exception:
+#     # be tolerant of any transient state shape issues
+#     pass
 
-# =====================================================
-# OPTIONAL MICROPHONE TEST
-# =====================================================
-with st.expander("🎧 Test Microphone (one-time)"):
-    st.info("Speak for 5 seconds")
-    if st.button("Start Mic Test"):
-        with st.spinner("Listening..."):
-            test_text = record_and_transcribe(5)
+# # =====================================================
+# # OPTIONAL MICROPHONE TEST
+# # =====================================================
+# with st.expander("🎧 Test Microphone (one-time)"):
+#     st.info("Speak for 5 seconds")
+#     if st.button("Start Mic Test"):
+#         with st.spinner("Listening..."):
+#             test_text = record_and_transcribe(5)
 
-        if test_text:
-            st.success("Mic working ✅")
-            st.code(test_text)
-        else:
-            st.error("Mic not capturing audio ❌")
+#         if test_text:
+#             st.success("Mic working ✅")
+#             st.code(test_text)
+#         else:
+#             st.error("Mic not capturing audio ❌")
 
-st.divider()
+# st.divider()
 
-# =====================================================
-# STATUS DISPLAY
-# =====================================================
-st.markdown(f"**Interview Status:** `{state.get('interview_status')}`")
+# # =====================================================
+# # STATUS DISPLAY
+# # =====================================================
+# st.markdown(f"**Interview Status:** `{state.get('interview_status')}`")
 
-# =====================================================
-# FIRST QUESTION BOOTSTRAP
-# =====================================================
-if state.get("interview_status") == "NOT_STARTED":
-    state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-    st.session_state["interview_state"] = state
-    # persist (may be empty) and rerun
-    try:
-        from streamlit_app.storage.azure_store import save_interview_trace
-        from streamlit_app.storage.candidate_store import update_candidate
-        cid = state.get("candidate_id")
-        if cid:
-            save_interview_trace(cid, state.get("interview_trace", []))
-            update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
-    except Exception:
-        pass
-    st.rerun()
+# # =====================================================
+# # FIRST QUESTION BOOTSTRAP
+# # =====================================================
+# if state.get("interview_status") == "NOT_STARTED":
+#     state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#     st.session_state["interview_state"] = state
+#     # persist (may be empty) and rerun
+#     try:
+#         from streamlit_app.storage.azure_store import save_interview_trace
+#         from streamlit_app.storage.candidate_store import update_candidate
+#         cid = state.get("candidate_id")
+#         if cid:
+#             save_interview_trace(cid, state.get("interview_trace", []))
+#             update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+#     except Exception:
+#         pass
+#     st.rerun()
 
-# =====================================================
-# ASKING QUESTION
-# =====================================================
-if state["interview_status"] == "ASKING_QUESTION":
-    st.subheader("Question")
+# # =====================================================
+# # ASKING QUESTION
+# # =====================================================
+# if state["interview_status"] == "ASKING_QUESTION":
+#     st.subheader("Question")
 
-    question = state.get("current_question")
-    if not question:
-        st.warning("Preparing next question...")
-    else:
-        st.write(question)
+#     question = state.get("current_question")
+#     if not question:
+#         st.warning("Preparing next question...")
+#     else:
+#         st.write(question)
 
-    # -------------------------
-    # Reading timer (SAFE)
-    # -------------------------
-    reading_started = state.get("reading_started_at")
-    read_limit = state.get("read_time_limit", 20)
+#     # -------------------------
+#     # Reading timer (SAFE)
+#     # -------------------------
+#     reading_started = state.get("reading_started_at")
+#     read_limit = state.get("read_time_limit", 20)
 
-    if reading_started:
-        elapsed = int(time.time() - reading_started)
-        remaining = max(0, read_limit - elapsed)
-        st.info(f"🕒 Reading time left: **{remaining}s**")
-        # Client-side countdown + auto-reload to keep timers responsive
-        try:
-            js = """
-            <div id='countdown'>Reading time left: <strong>{REM}s</strong></div>
-            <script>
-            var rem = {REM};
-            var el = document.getElementById('countdown');
-            function tick(){
-                if(rem<=0){
-                    // ask Streamlit to rerun (preferred) with reload fallback
-                    try{
-                        window.parent.postMessage({type: 'streamlit:rerun'}, '*');
-                    }catch(e){
-                        window.location.reload();
-                    }
-                    return;
-                }
-                el.innerHTML = 'Reading time left: <strong>' + rem + 's</strong>';
-                rem -= 1;
-                setTimeout(tick, 1000);
-            }
-            tick();
-            </script>
-            """
-            js = js.replace("{REM}", str(remaining))
-            # ensure we reload the same page URL on fallback
-            js = js.replace("window.location.reload()", "window.location.href = window.location.href")
-            st_html(js, height=40)
-        except Exception:
-            pass
+#     if reading_started:
+#         elapsed = int(time.time() - reading_started)
+#         remaining = max(0, read_limit - elapsed)
+#         st.info(f"🕒 Reading time left: **{remaining}s**")
+#         # Client-side countdown + auto-reload to keep timers responsive
+#         try:
+#             js = """
+#             <div id='countdown'>Reading time left: <strong>{REM}s</strong></div>
+#             <script>
+#             var rem = {REM};
+#             var el = document.getElementById('countdown');
+#             function tick(){
+#                 if(rem<=0){
+#                     // ask Streamlit to rerun (preferred) with reload fallback
+#                     try{
+#                         window.parent.postMessage({type: 'streamlit:rerun'}, '*');
+#                     }catch(e){
+#                         window.location.reload();
+#                     }
+#                     return;
+#                 }
+#                 el.innerHTML = 'Reading time left: <strong>' + rem + 's</strong>';
+#                 rem -= 1;
+#                 setTimeout(tick, 1000);
+#             }
+#             tick();
+#             </script>
+#             """
+#             js = js.replace("{REM}", str(remaining))
+#             # ensure we reload the same page URL on fallback
+#             js = js.replace("window.location.reload()", "window.location.href = window.location.href")
+#             st_html(js, height=40)
+#         except Exception:
+#             pass
 
-        # Server-side tick fallback: ensure a rerun each second so remaining updates reliably
-        if remaining > 0:
-            time.sleep(1)
-            try:
-                st.experimental_rerun()
-            except Exception:
-                st.rerun()
+#         # Server-side tick fallback: ensure a rerun each second so remaining updates reliably
+#         # if remaining > 0:
+#         #     time.sleep(1)
+#         #     try:
+#         #         st.experimental_rerun()
+#         #     except Exception:
+#         #         st.rerun()
+#         st.info(f"⏱️ Time left: {remaining}s")
 
-    st.info("Click **Start Answer** when ready")
 
-    if st.button("▶️ Start Answer"):
-        state["interview_status"] = "WAITING_FOR_ANSWER"
-        state["answering_started_at"] = time.time()
-        st.session_state["interview_state"] = state
-        st.rerun()
-    else:
-        # Auto-transition when reading window expires (UI-controlled)
-        if reading_started and (time.time() - reading_started) >= read_limit:
-            state["interview_status"] = "WAITING_FOR_ANSWER"
-            state["answering_started_at"] = time.time()
-            st.session_state["interview_state"] = state
-            st.rerun()
+#     st.info("Click **Start Answer** when ready")
 
-# =====================================================
-# WAITING FOR ANSWER
-# =====================================================
-elif state["interview_status"] == "WAITING_FOR_ANSWER":
-    st.subheader("🎙️ Your Answer")
+#     if st.button("▶️ Start Answer"):
+#         state["interview_status"] = "WAITING_FOR_ANSWER"
+#         state["answering_started_at"] = time.time()
+#         st.session_state["interview_state"] = state
+#         st.rerun()
+#     # else:
+#     #     # Auto-transition when reading window expires (UI-controlled)
+#     #     if reading_started and (time.time() - reading_started) >= read_limit:
+#     #         state["interview_status"] = "WAITING_FOR_ANSWER"
+#     #         state["answering_started_at"] = time.time()
+#     #         st.session_state["interview_state"] = state
+#     #         st.rerun()
 
-    # -------------------------
-    # Answer timer (SAFE)
-    # -------------------------
-    answer_started = state.get("answering_started_at")
-    answer_limit = state.get("answer_time_limit", 45)
+# elif state["interview_status"] == "WAITING_FOR_ANSWER":
+#     st.subheader("🎙️ Your Answer")
 
-    if answer_started:
-        elapsed = int(time.time() - answer_started)
-        remaining = max(0, answer_limit - elapsed)
-        st.info(f"⏳ Answer time left: **{remaining}s**")
-        # Client-side countdown + auto-reload
-        try:
-            js = """
-            <div id='adcount'>Answer time left: <strong>{REM}s</strong></div>
-            <script>
-            var rem = {REM};
-            var el = document.getElementById('adcount');
-            function tick(){
-                if(rem<=0){
-                    try{
-                        window.parent.postMessage({type: 'streamlit:rerun'}, '*');
-                    }catch(e){
-                        window.location.reload();
-                    }
-                    return;
-                }
-                el.innerHTML = 'Answer time left: <strong>' + rem + 's</strong>';
-                rem -= 1;
-                setTimeout(tick, 1000);
-            }
-            tick();
-            </script>
-            """
-            js = js.replace("{REM}", str(remaining))
-            js = js.replace("window.location.reload()", "window.location.href = window.location.href")
-            st_html(js, height=40)
-        except Exception:
-            pass
+#     st.info(
+#         f"You have **{state.get('answer_time_limit', 45)} seconds**.\n"
+#         "Recording will pause the screen — this is expected."
+#     )
 
-        # Server-side tick fallback: ensure a rerun each second so remaining updates reliably
-        if remaining > 0:
-            time.sleep(1)
-            try:
-                st.experimental_rerun()
-            except Exception:
-                st.rerun()
+#     if st.button("🎤 Start Recording"):
+#         with st.spinner("Recording... speak now"):
+#             answer_text = record_and_transcribe(
+#                 state.get("answer_time_limit", 45)
+#             )
+    
+#         if not answer_text:
+#             answer_text = "(no audio captured)"
 
-    # Auto-submit on answer timeout
-    if answer_started and (time.time() - answer_started) >= answer_limit:
-        # mark no response and invoke graph
-        state["simulated_answer"] = "(no response)"
-        # Advance graph due to timeout
-        state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-        st.session_state["interview_state"] = state
-        try:
-            from streamlit_app.storage.azure_store import save_interview_trace
-            from streamlit_app.storage.candidate_store import update_candidate
-            cid = state.get("candidate_id")
-            if cid:
-                save_interview_trace(cid, state.get("interview_trace", []))
-                update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
-        except Exception:
-            pass
-        st.rerun()
+#         state["simulated_answer"] = answer_text
+#         state["early_finish"] = True
 
-    st.warning(
-        "🎙️ Recording will temporarily pause the screen.\n"
-        "This is expected — please speak clearly."
-    )
+#         # ✅ Only now advance graph
+#         state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#         st.session_state["interview_state"] = state
+#         st.rerun()
 
-    # Recording flow: two-step to avoid synchronous widget reruns.
-    awaiting_key = "awaiting_answer_upload"
 
-    if not st.session_state.get(awaiting_key):
-        if st.button("🎤 Record Answer"):
-            st.session_state[awaiting_key] = True
-            st.session_state["upload_started_at"] = time.time()
-            st.rerun()
+#     # Auto-submit on answer timeout
+#     if answer_started and (time.time() - answer_started) >= answer_limit:
+#         # mark no response and invoke graph
+#         state["simulated_answer"] = "(no response)"
+#         # Advance graph due to timeout
+#         state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#         st.session_state["interview_state"] = state
+#         try:
+#             from streamlit_app.storage.azure_store import save_interview_trace
+#             from streamlit_app.storage.candidate_store import update_candidate
+#             cid = state.get("candidate_id")
+#             if cid:
+#                 save_interview_trace(cid, state.get("interview_trace", []))
+#                 update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+#         except Exception:
+#             pass
+#     st.warning(
+#         "🎙️ Recording will temporarily pause the screen.\n"
+#         "This is expected — please speak clearly."
+#     )
 
-    else:
-        st.info("Recording mode — upload a short audio file or type your answer.")
+#     # Single recording UI: define `audio` up-front so it's always available
+#     # in the submit logic below (prevents NameError). Prefer native
+#     # `st.audio_input` when present; otherwise show an HTML5 recorder
+#     # fallback and instruct the user to upload the downloaded file.
+#     audio = None
+#     audio_input_fn = getattr(st, "audio_input", None)
+#     if callable(audio_input_fn):
+#         try:
+#             audio = audio_input_fn("Click to record (browser permitting)", key="live_audio")
+#         except Exception:
+#             audio = None
+#     else:
+#         try:
+#             recorder_html = """
+# <div>
+#     <p><strong>Browser recorder:</strong> click Start, speak, then Stop. Click Download to save and then upload below.</p>
+#     <button id="start">Start</button>
+#     <button id="stop" disabled>Stop</button>
+#     <a id="downloadLink" style="display:none">Download recording</a>
+#     <script>
+#         let mediaRecorder;
+#         let recordedChunks = [];
+#         const startBtn = document.getElementById('start');
+#         const stopBtn = document.getElementById('stop');
+#         const downloadLink = document.getElementById('downloadLink');
 
-        audio = None
-        audio_input_fn = getattr(st, "audio_input", None)
-        if callable(audio_input_fn):
-            try:
-                audio = audio_input_fn("Click to record (browser permitting)", key="live_audio")
-            except Exception:
-                audio = None
+#         startBtn.onclick = async () => {
+#             recordedChunks = [];
+#             try {
+#                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+#                 mediaRecorder = new MediaRecorder(stream);
+#                 mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+#                 mediaRecorder.onstop = () => {
+#                     const blob = new Blob(recordedChunks, { type: 'audio/wav' });
+#                     const url = URL.createObjectURL(blob);
+#                     downloadLink.href = url;
+#                     downloadLink.download = 'recording.wav';
+#                     downloadLink.style.display = 'inline';
+#                     downloadLink.textContent = 'Download recording';
+#                 };
+#                 mediaRecorder.start();
+#                 startBtn.disabled = true;
+#                 stopBtn.disabled = false;
+#             } catch (err) {
+#                 alert('Microphone access denied or not available. Use file upload instead.');
+#             }
+#         };
 
-        uploaded = st.file_uploader("Or upload audio (wav/mp3) or type below", type=["wav", "mp3", "m4a", "ogg"], key="upload_audio")
+#         stopBtn.onclick = () => {
+#             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+#                 mediaRecorder.stop();
+#                 startBtn.disabled = false;
+#                 stopBtn.disabled = true;
+#             }
+#         };
+#     </script>
+# </div>
+# """
+#             st_html(recorder_html, height=120)
+#         except Exception:
+#             pass
 
-        typed = st.text_area("Or type your answer (fallback)")
+#     uploaded = st.file_uploader("Or upload audio (wav/mp3) or type below", type=["wav", "mp3", "m4a", "ogg"], key="upload_audio")
 
-        if st.button("Submit Answer"):
-            answer_text = ""
+#     typed = st.text_area("Or type your answer (fallback)")
 
-            if audio is not None:
-                try:
-                    import tempfile
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
-                        if hasattr(audio, "getbuffer"):
-                            f.write(audio.getbuffer())
-                        else:
-                            f.write(audio.read())
-                        audio_path = f.name
-                    from interview_orchestration.stt.factory import get_stt_engine
-                    stt = get_stt_engine()
-                    answer_text = stt.transcribe(audio_path)
-                except Exception:
-                    answer_text = ""
+#     if st.button("Submit Answer"):
+#         answer_text = ""
 
-            if not answer_text and uploaded is not None:
-                try:
-                    import tempfile
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
-                        f.write(uploaded.getbuffer())
-                        audio_path = f.name
-                    from interview_orchestration.stt.factory import get_stt_engine
-                    stt = get_stt_engine()
-                    answer_text = stt.transcribe(audio_path)
-                except Exception:
-                    answer_text = ""
+#         if audio is not None:
+#             try:
+#                 import tempfile
+#                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+#                     if hasattr(audio, "getbuffer"):
+#                         f.write(audio.getbuffer())
+#                     else:
+#                         f.write(audio.read())
+#                     audio_path = f.name
+#                 from interview_orchestration.stt.factory import get_stt_engine
+#                 stt = get_stt_engine()
+#                 answer_text = stt.transcribe(audio_path)
+#             except Exception:
+#                 answer_text = ""
 
-            if not answer_text and typed and typed.strip():
-                answer_text = typed.strip()
+#         if not answer_text and uploaded is not None:
+#             try:
+#                 import tempfile
+#                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+#                     f.write(uploaded.getbuffer())
+#                     audio_path = f.name
+#                 from interview_orchestration.stt.factory import get_stt_engine
+#                 stt = get_stt_engine()
+#                 answer_text = stt.transcribe(audio_path)
+#             except Exception:
+#                 answer_text = ""
 
-            if not answer_text:
-                answer_text = "(No audio captured)"
+#         if not answer_text and typed and typed.strip():
+#             answer_text = typed.strip()
 
-            # Inject answer and advance
-            state["simulated_answer"] = answer_text
-            state["early_finish"] = True
-            # clear upload state
-            st.session_state.pop(awaiting_key, None)
-            st.session_state.pop("upload_started_at", None)
+#         if not answer_text:
+#             answer_text = "(No audio captured)"
 
-            state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-            st.session_state["interview_state"] = state
-            try:
-                from streamlit_app.storage.azure_store import save_interview_trace
-                from streamlit_app.storage.candidate_store import update_candidate
-                cid = state.get("candidate_id")
-                if cid:
-                    save_interview_trace(cid, state.get("interview_trace", []))
-                    update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
-            except Exception:
-                pass
-            st.rerun()
+#         # Inject answer and advance
+#         state["simulated_answer"] = answer_text
+#         state["early_finish"] = True
+#         # clear upload state
+#         st.session_state.pop(awaiting_key, None)
+#         st.session_state.pop("upload_started_at", None)
 
-# =====================================================
-# PROCESSING ANSWER
-# =====================================================
-elif state["interview_status"] == "PROCESSING_ANSWER":
-    st.info("Processing your answer...")
+#         state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#         st.session_state["interview_state"] = state
+#         try:
+#             from streamlit_app.storage.azure_store import save_interview_trace
+#             from streamlit_app.storage.candidate_store import update_candidate
+#             cid = state.get("candidate_id")
+#             if cid:
+#                 save_interview_trace(cid, state.get("interview_trace", []))
+#                 update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+#         except Exception:
+#             pass
+#         st.rerun()
 
-    state = stage4_graph.invoke(state, config={"recursion_limit": 200})
-    st.session_state["interview_state"] = state
-    try:
-        from streamlit_app.storage.azure_store import save_interview_trace
-        from streamlit_app.storage.candidate_store import update_candidate
-        cid = state.get("candidate_id")
-        if cid:
-            save_interview_trace(cid, state.get("interview_trace", []))
-            update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
-    except Exception:
-        pass
-    st.rerun()
+# # =====================================================
+# # PROCESSING ANSWER
+# # =====================================================
+# elif state["interview_status"] == "PROCESSING_ANSWER":
+#     st.info("Processing your answer...")
 
-# =====================================================
-# COMPLETED
-# =====================================================
-elif state["interview_status"] == "COMPLETED":
-    st.success("✅ Interview Completed")
+#     state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#     st.session_state["interview_state"] = state
+#     try:
+#         from streamlit_app.storage.azure_store import save_interview_trace
+#         from streamlit_app.storage.candidate_store import update_candidate
+#         cid = state.get("candidate_id")
+#         if cid:
+#             save_interview_trace(cid, state.get("interview_trace", []))
+#             update_candidate(cid, {"interview_trace": state.get("interview_trace", [])})
+#     except Exception:
+#         pass
+#     st.rerun()
 
-    st.subheader("Interview Summary")
+# # =====================================================
+# # COMPLETED
+# # =====================================================
+# elif state["interview_status"] == "COMPLETED":
+#     st.success("✅ Interview Completed")
 
-    for turn in state.get("interview_trace", []):
-        st.markdown(
-            f"""
-**Topic:** {turn['topic']}  
-**Q:** {turn['question']}  
-**A:** {turn['answer_text']}
----
-"""
-        )
+#     st.subheader("Interview Summary")
 
-    st.info("Your interview has been submitted for review.")
+#     for turn in state.get("interview_trace", []):
+#         st.markdown(
+#             f"""
+# **Topic:** {turn['topic']}  
+# **Q:** {turn['question']}  
+# **A:** {turn['answer_text']}
+# ---
+# """
+#         )
 
-    if st.button("⬅️ Back to Status"):
-        st.switch_page("pages/user_status.py")
+#     st.info("Your interview has been submitted for review.")
+
+#     if st.button("⬅️ Back to Status"):
+#         st.switch_page("pages/user_status.py")
+
+
+
+# import sys
+# import os
+# import time
+# import streamlit as st
+# from streamlit.components.v1 import html as st_html
+
+# # -------------------------------------------------
+# # FIX IMPORT PATH
+# # -------------------------------------------------
+# ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+# if ROOT_DIR not in sys.path:
+#     sys.path.insert(0, ROOT_DIR)
+
+# from interview_orchestration.graph import stage4_graph
+# from streamlit_app.components.mic_answer import record_and_transcribe
+
+# # -------------------------------------------------
+# # ROLE + STATE GUARDS
+# # -------------------------------------------------
+# if st.session_state.get("role") != "user":
+#     st.error("Unauthorized access")
+#     st.switch_page("app.py")
+
+# if "interview_state" not in st.session_state:
+#     st.error("No active interview.")
+#     st.switch_page("pages/user_status.py")
+
+# state = st.session_state["interview_state"]
+# st.title("🎤 AI Interview")
+
+# # =================================================
+# # FIRST BOOTSTRAP
+# # =================================================
+# if state["interview_status"] == "NOT_STARTED":
+#     state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#     st.session_state["interview_state"] = state
+#     st.rerun()
+
+# # =================================================
+# # ASKING QUESTION (20s READING)
+# # =================================================
+# if state["interview_status"] == "ASKING_QUESTION":
+#     st.subheader("Question")
+#     st.write(state.get("current_question", "Preparing question..."))
+
+#     if "reading_started_at" not in state:
+#         state["reading_started_at"] = time.time()
+#         st.session_state["interview_state"] = state
+
+#     read_limit = state.get("read_time_limit", 20)
+#     elapsed = int(time.time() - state["reading_started_at"])
+#     remaining = max(0, read_limit - elapsed)
+
+#     st_html(
+#         f"""
+#         <div style="padding:10px;border-radius:6px;background:#e8f4ff;font-weight:600;">
+#             🕒 Reading time left: <span id="rt">{remaining}</span>s
+#         </div>
+
+#         <script>
+#             let rem = {remaining};
+#             const el = document.getElementById("rt");
+#             function tick(){{
+#                 if(rem <= 0){{
+#                     window.parent.postMessage({{type:'streamlit:rerun'}}, '*');
+#                     return;
+#                 }}
+#                 rem--;
+#                 el.innerText = rem;
+#                 setTimeout(tick, 1000);
+#             }}
+#             tick();
+#         </script>
+#         """,
+#         height=60
+#     )
+
+#     if remaining == 0:
+#         state["interview_status"] = "WAITING_FOR_ANSWER"
+#         state.pop("reading_started_at", None)
+#         state["answering_started_at"] = time.time()
+#         state["recording_started"] = False
+#         st.session_state["interview_state"] = state
+#         st.rerun()
+
+#     if st.button("▶️ Start Answer"):
+#         state["interview_status"] = "WAITING_FOR_ANSWER"
+#         state.pop("reading_started_at", None)
+#         state["answering_started_at"] = time.time()
+#         state["recording_started"] = False
+#         st.session_state["interview_state"] = state
+#         st.rerun()
+
+# # =================================================
+# # WAITING FOR ANSWER (45s RECORDING)
+# # =================================================
+# elif state["interview_status"] == "WAITING_FOR_ANSWER":
+#     st.subheader("🎙️ Your Answer")
+
+#     answer_limit = state.get("answer_time_limit", 45)
+#     elapsed = int(time.time() - state["answering_started_at"])
+#     remaining = max(0, answer_limit - elapsed)
+
+#     st_html(
+#         f"""
+#         <div style="padding:10px;border-radius:6px;background:#fff3cd;font-weight:600;">
+#             ⏱️ Answer time left: <span id="at">{remaining}</span>s
+#         </div>
+
+#         <script>
+#             window.recordingStarted = false;
+#             let rem = {remaining};
+#             const el = document.getElementById("at");
+
+#             function tick(){{
+#                 if(rem <= 0 && !window.recordingStarted){{
+#                     window.parent.postMessage({{type:'streamlit:rerun'}}, '*');
+#                     return;
+#                 }}
+#                 if(!window.recordingStarted){{
+#                     rem--;
+#                     el.innerText = rem;
+#                 }}
+#                 setTimeout(tick, 1000);
+#             }}
+#             tick();
+#         </script>
+#         """,
+#         height=60
+#     )
+
+#     # ⏰ Timeout (only if not recording)
+#     if remaining == 0 and not state.get("recording_started"):
+#         state["simulated_answer"] = "(no response)"
+#         state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#         st.session_state["interview_state"] = state
+#         st.rerun()
+
+#     # 🎤 Recording
+#     if st.button("🎤 Start Recording"):
+#         state["recording_started"] = True
+#         st.session_state["interview_state"] = state
+
+#         st_html(
+#             "<script>window.recordingStarted = true;</script>",
+#             height=0
+#         )
+
+#         with st.spinner("Recording... speak now"):
+#             answer_text = record_and_transcribe(answer_limit)
+
+#         if not answer_text:
+#             answer_text = "(no audio captured)"
+
+#         state["simulated_answer"] = answer_text
+#         state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#         st.session_state["interview_state"] = state
+#         st.rerun()
+
+# # =================================================
+# # COMPLETED
+# # =================================================
+# elif state["interview_status"] == "COMPLETED":
+#     st.success("✅ Interview Completed")
+
+#     for turn in state.get("interview_trace", []):
+#         st.markdown(
+#             f"""
+# **Topic:** {turn['topic']}  
+# **Q:** {turn['question']}  
+# **A:** {turn['answer_text']}
+# ---
+# """
+#         )
+
+#     if st.button("⬅️ Back to Status"):
+#         st.switch_page("pages/user_status.py")
+
+
+
+
+
+
+
+
+# import streamlit as st
+# from interview_orchestration.graph import stage4_graph
+
+# # Role guard
+# if st.session_state.get("role") != "user":
+#     st.error("Unauthorized access")
+#     st.stop()
+
+# st.title("AI Interview")
+
+# # Ensure interview_state exists
+# state = st.session_state.get("interview_state")
+# if not state:
+#     st.error("No active interview. Please start the interview from the Status page.")
+#     st.stop()
+
+# # -------------------------
+# # MIC TEST (optional)
+# # -------------------------
+# if st.checkbox("🎤 Test microphone (one-time check)"):
+#     from streamlit_app.components.mic_answer import record_and_transcribe
+
+#     st.info("Speak now for 5 seconds")
+
+#     with st.spinner("Listening..."):
+#         test_text = record_and_transcribe(5)
+
+#     if test_text:
+#         st.success("Mic working ✅")
+#         st.code(test_text)
+#     else:
+#         st.error("Mic not capturing audio ❌")
+
+# st.divider()
+
+# # Interview UI
+# st.markdown(f"**Interview Status:** {state.get('interview_status')}")
+
+# if state.get("interview_status") == "ASKING_QUESTION":
+#     st.markdown("### Question")
+#     st.write(state.get("current_question"))
+
+# elif state.get("interview_status") == "WAITING_FOR_ANSWER":
+#     st.info("Please answer the question")
+
+#     if st.button("🎤 Submit Answer"):
+#         # For now use mic component if available, else ask for text
+#         from streamlit_app.components.mic_answer import record_and_transcribe
+
+#         with st.spinner("Recording..."):
+#             answer_text = record_and_transcribe(state.get("answer_time_limit", 45))
+
+#         if not answer_text:
+#             st.warning("No audio captured — submitting placeholder text.")
+#             answer_text = "(no audio captured)"
+
+#         state["simulated_answer"] = answer_text
+#         state["early_finish"] = True
+
+#         # Advance graph
+#         state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#         st.session_state["interview_state"] = state
+#         from streamlit_app.utils.st_helpers import safe_rerun
+#         safe_rerun()
+
+# elif state.get("interview_status") == "PROCESSING_ANSWER":
+#     st.info("Processing answer...")
+#     # Allow graph to progress
+#     state = stage4_graph.invoke(state, config={"recursion_limit": 200})
+#     st.session_state["interview_state"] = state
+#     from streamlit_app.utils.st_helpers import safe_rerun
+#     safe_rerun()
+
+# elif state.get("interview_status") == "COMPLETED":
+#     st.success("Interview completed")
+#     st.write("Thanks for your time.")
+#     st.write("Interview trace:")
+#     for turn in state.get("interview_trace", []):
+#         st.write(f"Q: {turn.get('question')} — A: {turn.get('answer_text')}")
+
+

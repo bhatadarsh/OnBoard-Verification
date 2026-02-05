@@ -18,6 +18,20 @@ class AzureSpeechToText(SpeechToTextEngine):
         self.config.speech_recognition_language = "en-US"
 
     def transcribe(self, audio_path: str) -> str:
+        # Sanity checks: ensure the file exists and is readable
+        if not audio_path or not os.path.exists(audio_path):
+            raise RuntimeError(f"Audio file does not exist: {audio_path}")
+
+        try:
+            size = os.path.getsize(audio_path)
+        except Exception:
+            size = None
+
+        # Azure SDK expects a WAV file with compatible PCM encoding
+        if not audio_path.lower().endswith('.wav'):
+            # allow caller to handle conversion, but surface clearer error
+            raise RuntimeError(f"Azure STT requires a WAV file; got: {audio_path}")
+
         audio_input = speechsdk.AudioConfig(filename=audio_path)
         recognizer = speechsdk.SpeechRecognizer(
             speech_config=self.config,

@@ -1,6 +1,7 @@
 import tempfile
 import streamlit as st
 from interview_orchestration.stt.factory import get_stt_engine
+from streamlit_app.utils.audio_utils import convert_to_wav
 
 
 def record_and_transcribe(max_seconds: int = 45) -> str:
@@ -32,8 +33,10 @@ def record_and_transcribe(max_seconds: int = 45) -> str:
                         f.write(audio.read())
                     audio_path = f.name
 
+                # Ensure audio is a WAV acceptable to Azure STT
+                wav_path = convert_to_wav(audio_path)
                 stt_engine = get_stt_engine()
-                return stt_engine.transcribe(audio_path)
+                return stt_engine.transcribe(wav_path)
         except Exception:
             # Fall through to uploader/text fallback
             pass
@@ -52,8 +55,10 @@ def record_and_transcribe(max_seconds: int = 45) -> str:
                 f.write(uploaded.getbuffer())
                 audio_path = f.name
 
+            # convert uploaded audio to WAV if needed
+            wav_path = convert_to_wav(audio_path)
             stt_engine = get_stt_engine()
-            return stt_engine.transcribe(audio_path)
+            return stt_engine.transcribe(wav_path)
         except Exception:
             return ""
 
