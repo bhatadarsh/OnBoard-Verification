@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userAPI, authAPI } from '../api/client';
+import { userAPI, authAPI, blobAPI } from '../api/client';
 
 export default function UserDashboard() {
     const [data, setData] = useState(null);
@@ -94,7 +94,11 @@ function JDPreview() {
             const { url } = await blobAPI.getUrl('job-descriptions', jd.jd_blob_path);
             window.open(url, '_blank');
         } catch (err) {
-            alert('Failed to get download URL');
+            console.error(err);
+            const msg = err.response
+                ? `Status: ${err.response.status}, Detail: ${err.response.data?.detail}`
+                : err.message;
+            alert('Failed to get download URL: ' + msg);
         }
     };
 
@@ -111,9 +115,10 @@ function JDPreview() {
         </div>
     );
 }
-
 function ResumeUploader() {
+    const navigate = useNavigate();
     const [status, setStatus] = useState(null);
+    const [interviewSession, setInterviewSession] = useState(null);
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [hasJD, setHasJD] = useState(false);
@@ -121,12 +126,14 @@ function ResumeUploader() {
     useEffect(() => {
         const checkStatus = async () => {
             try {
-                const [jdData, resumeData] = await Promise.all([
+                const [jdData, resumeData, interviewData] = await Promise.all([
                     userAPI.getActiveJD(),
-                    userAPI.getResumeStatus()
+                    userAPI.getResumeStatus(),
+                    userAPI.getInterviewStatus()
                 ]);
                 setHasJD(!!jdData);
                 setStatus(resumeData);
+                setInterviewSession(interviewData);
             } catch (err) {
                 console.error('Error checking status:', err);
             }
@@ -160,11 +167,70 @@ function ResumeUploader() {
     }
 
     if (status) {
+        const isShortlisted = status.status === 'SHORTLISTED';
+        const isRejected = status.status === 'REJECTED';
+        const isUnlocked = status.interview_unlocked;
+
         return (
-            <div style={{ padding: '10px', background: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px' }}>
-                <h4 style={{ margin: '0 0 10px 0', color: '#155724' }}>Resume under review</h4>
-                <p style={{ margin: 0, fontSize: '14px' }}>
-                    Uploaded on: {new Date(status.uploaded_at).toLocaleString()}
+            <div style={{
+                padding: '20px',
+                background: isShortlisted ? '#f0fff4' : isRejected ? '#fff5f5' : '#f8f9fa',
+                border: `1px solid ${isShortlisted ? '#c6f6d5' : isRejected ? '#fed7d7' : '#e2e8f0'}`,
+                borderRadius: '8px'
+            }}>
+                <h4 style={{ margin: '0 0 10px 0', color: isShortlisted ? '#2f855a' : isRejected ? '#c53030' : '#4a5568' }}>
+                    Status: {status.status}
+                </h4>
+
+                {isShortlisted && isUnlocked ? (
+                    <div>
+                        <p style={{ marginBottom: '15px' }}>Congratulations! You have been shortlisted for the interview.</p>
+
+                        {interviewSession ? (
+                            <div style={{ padding: '15px', background: 'white', border: '1px solid #c6f6d5', borderRadius: '4px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                    <span style={{ fontWeight: 'bold', color: '#2f855a' }}>Interview scheduled!</span>
+                                    <span style={{ fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px' }}>ID: {interviewSession.interview_id.split('-')[0]}</span>
+                                </div>
+
+                                <p style={{ fontSize: '13px', margin: '5px 0' }}><strong>Status:</strong> {interviewSession.status}</p>
+
+                                <button
+                                    onClick={() => navigate(`/user/interview/${interviewSession.interview_id}`)}
+                                    style={{
+                                        marginTop: '10px',
+                                        padding: '10px 20px',
+                                        background: '#38a169',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        fontWeight: 'bold'
+                                    }}>
+                                    Start Interview 🚀
+                                </button>
+                                {interviewSession.current_question && (
+                                    <p style={{ fontSize: '12px', color: '#4a5568', marginTop: '10px', padding: '10px', background: '#f7fafc', borderLeft: '3px solid #38a169' }}>
+                                        <strong>Ready when you are!</strong> Your first question is prepared.
+                                    </p>
+                                )}
+                            </div>
+                        ) : (
+                            <div style={{ padding: '10px', background: '#ebf8ff', border: '1px solid #bee3f8', borderRadius: '4px' }}>
+                                <p style={{ margin: 0, fontSize: '14px', color: '#2b6cb0' }}>
+                                    Waiting for admin to initialize your interview session...
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                ) : isRejected ? (
+                    <p style={{ color: '#c53030' }}>We regret to inform you that we are not moving forward with your application at this time.</p>
+                ) : (
+                    <p>Your application is currently under review. Please check back later.</p>
+                )}
+
+                <p style={{ marginTop: '15px', fontSize: '12px', color: '#718096' }}>
+                    Last update: {new Date(status.uploaded_at).toLocaleString()}
                 </p>
             </div>
         );

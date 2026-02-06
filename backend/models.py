@@ -34,10 +34,28 @@ class JobDescription(BaseModel):
     jd_blob_path: str
     status: Literal["ACTIVE", "INACTIVE"] = "ACTIVE"
     uploaded_at: datetime
+    intelligence: Optional[dict] = None
+    is_deleted: bool = False
+    deleted_at: Optional[datetime] = None
 
 class Resume(BaseModel):
     candidate_id: int
+    job_id: Optional[str] = None
     resume_id: str
     resume_blob_path: str
-    status: Literal["UNDER_REVIEW", "ACCEPTED", "REJECTED"] = "UNDER_REVIEW"
+    status: Literal["UNDER_REVIEW", "SHORTLISTED", "REJECTED"] = "UNDER_REVIEW"
+    interview_unlocked: bool = False
     uploaded_at: datetime
+    intelligence: Optional[dict] = None
+
+class InterviewSession(BaseModel):
+    interview_id: str
+    candidate_id: int
+    current_question: Optional[str] = None
+    status: Literal["NOT_STARTED", "IN_PROGRESS", "COMPLETED"] = "NOT_STARTED"
+    created_at: datetime
+    focus_areas: Optional[list] = None
+    current_topic: Optional[str] = None
+    current_topic_index: int = 0
+    current_followup_count: int = 0
+    interview_trace: list = []

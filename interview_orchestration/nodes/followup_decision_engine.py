@@ -65,8 +65,12 @@ def decide_followup_or_next(state: dict) -> dict:
 
     current_followups = state.get("current_followup_count", 0)
     current_topic_index = state.get("current_topic_index", 0)
-    focus_areas = state.get("final_focus_areas", [])
-
+    # Support both focus_areas (DB) and final_focus_areas (original graph key)
+    focus_areas = state.get("focus_areas") or state.get("final_focus_areas") or []
+    
+    # TELEMETRY
+    print(f"DEBUG: decide_router. status={state.get('interview_status')}, count={current_followups}, topic_idx={current_topic_index}, total_topics={len(focus_areas)}")
+    
     MAX_FOLLOWUPS_PER_TOPIC = 5
 
     # -------------------------

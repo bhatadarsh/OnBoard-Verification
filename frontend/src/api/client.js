@@ -59,10 +59,26 @@ export const adminAPI = {
         const response = await api.get('/admin/jd');
         return response.data;
     },
-    getResumes: async () => {
-        const response = await api.get('/admin/resumes');
+    deleteJD: async (jobId) => {
+        const response = await api.delete(`/admin/job-descriptions/${jobId}`);
         return response.data;
     },
+    getCandidates: async () => {
+        const response = await api.get('/admin/candidates');
+        return response.data;
+    },
+    shortlistCandidate: async (candidateId, decision) => {
+        const response = await api.post(`/admin/candidates/${candidateId}/shortlist`, { decision });
+        return response.data;
+    },
+    startInterview: async (candidateId) => {
+        const response = await api.post(`/admin/interview/start/${candidateId}`);
+        return response.data;
+    },
+    deleteCandidate: async (candidateId) => {
+        const response = await api.delete(`/admin/candidates/${candidateId}`);
+        return response.data;
+    }
 };
 
 export const blobAPI = {
@@ -91,6 +107,29 @@ userAPI.getActiveJD = async () => {
 userAPI.getResumeStatus = async () => {
     const response = await api.get('/user/resume/status');
     return response.data;
+};
+
+userAPI.getInterviewStatus = async () => {
+    const response = await api.get('/user/interview/status');
+    return response.data;
+};
+
+export const interviewAPI = {
+    getQuestion: async (interviewId) => {
+        const response = await api.get(`/interview/${interviewId}/question`);
+        return response.data;
+    },
+    submitAnswer: async (interviewId, audioBlob, submissionType) => {
+        const formData = new FormData();
+        if (audioBlob) {
+            formData.append('audio_file', audioBlob, 'answer.wav');
+        }
+        formData.append('submission_type', submissionType);
+        const response = await api.post(`/interview/${interviewId}/answer`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
+    }
 };
 
 export default api;

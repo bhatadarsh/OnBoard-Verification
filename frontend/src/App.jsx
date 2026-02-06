@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import AdminDashboard from './components/AdminDashboard';
 import UserDashboard from './components/UserDashboard';
+import InterviewSession from './components/InterviewSession';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
                         <ProtectedRoute requiredRole="user">
                             <Routes>
                                 <Route path="dashboard" element={<UserDashboard />} />
+                                <Route path="interview/:interviewId" element={<InterviewSession />} />
                                 <Route path="*" element={<Navigate to="/user/dashboard" replace />} />
                             </Routes>
                         </ProtectedRoute>

@@ -316,6 +316,7 @@ graph.add_conditional_edges(
 # =====================================================
 # Linear processing chain
 # =====================================================
+graph.add_edge("collect_text_answer", "cheating_detection")
 graph.add_edge("cheating_detection", "decide_followup_or_next")
 
 

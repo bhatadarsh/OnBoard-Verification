@@ -16,6 +16,17 @@ class AzureSpeechToText(SpeechToTextEngine):
             region=self.region
         )
         self.config.speech_recognition_language = "en-US"
+        
+        # Increase initial silence timeout (default is 5s) to 15s
+        self.config.set_property(
+            speechsdk.PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, 
+            "15000"
+        )
+        # Increase end silence timeout to 3s
+        self.config.set_property(
+            speechsdk.PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs,
+            "3000"
+        )
 
     def transcribe(self, audio_path: str) -> str:
         # Sanity checks: ensure the file exists and is readable

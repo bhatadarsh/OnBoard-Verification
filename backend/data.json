@@ -1,0 +1,2217 @@
+{
+  "users": {
+    "supriya.bahubali@sigmoidanalytics.com": {
+      "id": 1,
+      "name": "Supriya",
+      "email": "supriya.bahubali@sigmoidanalytics.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$iASJTnePBbHG7dTtTmwvvOneq4GJFiJSkqb5EecsgS9dqYvom5Gse"
+    },
+    "supriyachougale2626@gmail.com": {
+      "id": 2,
+      "name": "Supriya",
+      "email": "supriyachougale2626@gmail.com",
+      "role": "admin",
+      "status": "active",
+      "hashed_password": "$2b$12$w0CM5JKb7ndAmV.66kwbp.jZ2w/PVvtGD3kBNSOVkE6.PGJYyM//i"
+    },
+    "realadmin@test.com": {
+      "id": 3,
+      "name": "Real Admin",
+      "email": "realadmin@test.com",
+      "role": "admin",
+      "status": "active",
+      "hashed_password": "$2b$12$r6jc2PhpgSzQr7BX1aHjJ.OBJg7jy0gLJWovWZSZmqgIVhCIecPeS"
+    },
+    "supriyachougale26261@gmail.com": {
+      "id": 4,
+      "name": "Supriya",
+      "email": "supriyachougale26261@gmail.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$aUoVOhetaGWFtldmpmwBnuYoarBENojLd1vZShqufhYwQKhhPPO0q"
+    },
+    "supriya.bahubali1@sigmoidanalytics.com": {
+      "id": 6,
+      "name": "Supriya",
+      "email": "supriya.bahubali1@sigmoidanalytics.com",
+      "role": "admin",
+      "status": "active",
+      "hashed_password": "$2b$12$yCU/HZjGe7Mql.E17.nDTedyRlq8K/XLM32GozLAEWZ0lJ3cwj7sS"
+    },
+    "test@a.com": {
+      "id": 7,
+      "name": "testadmin",
+      "email": "test@a.com",
+      "role": "admin",
+      "status": "active",
+      "hashed_password": "$2b$12$9Lhiz.Q8U5ywrHQBNscwv.ScgALn5UVZ0B80VMuR5BoQlwY4Wqv2C"
+    },
+    "test@u.com": {
+      "id": 8,
+      "name": "Supriya",
+      "email": "test@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$3FLWWPa5aJOlrlLPap.6s.o1IRHzRlqIyw8dI2G7XN0TCtSZUH4Nu"
+    },
+    "testuser@test.com": {
+      "id": 10,
+      "name": "Test User",
+      "email": "testuser@test.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$YS/NUHPhkl.5qBuuYhbepuIf/4NMlfJVec7wXA15gYnpe0niOYQpu"
+    },
+    "user4@u.com": {
+      "id": 12,
+      "name": "user4",
+      "email": "user4@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$u5CJ3D4PGeuLDEIK0NG4j.Hd46.3r70kr4F7YlqIXWSwmdy9F9mS2"
+    },
+    "user1@u.com": {
+      "id": 15,
+      "name": "user1",
+      "email": "user1@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$zV/RATSJoTJkWlMgeFYgWOnkUwnR9UF8df6T3w4d3PxALXQ2Jk8q6"
+    },
+    "user6@u.com": {
+      "id": 16,
+      "name": "user6",
+      "email": "user6@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$CvM6wnqzue0rZtprdf7.3e21DKp4EqtmZOK7GXFGyiKunZVoIeYo2"
+    }
+  },
+  "jds": {
+    "JOB_1": {
+      "job_id": "JOB_1",
+      "jd_blob_path": "job_descriptions/JOB_1/20260205_225557_Job_Description_AI_Engineer.docx",
+      "status": "INACTIVE",
+      "uploaded_at": "2026-02-05 22:55:59.663986",
+      "intelligence": {
+        "raw_jd": "Job Description: Human Resources (HR) Executive\nRole Overview\nThe HR Executive is responsible for managing end-to-end human resource functions including recruitment, employee relations, performance management, compliance, and organizational development. This role ensures a positive work environment while aligning HR practices with business goals.\nKey Responsibilities\n\t\u2022\tHandle end-to-end recruitment and onboarding processes\n\t\u2022\tMaintain and update employee records, HR databases, and documentation\n\t\u2022\tSupport performance appraisal and employee development initiatives\n\t\u2022\tManage attendance, leave, and payroll coordination\n\t\u2022\tAddress employee queries, grievances, and promote a healthy work culture\n\t\u2022\tEnsure compliance with company policies and labor laws\n\t\u2022\tAssist in HR audits, reports, and MIS\n\t\u2022\tOrganize employee engagement activities and training programs\nRequired Skills & Qualifications\n\t\u2022\tBachelor\u2019s degree in Human Resources, Business Administration, or related field\n\t\u2022\t1\u20133 years of experience in an HR role (freshers can be considered for junior roles)\n\t\u2022\tStrong communication and interpersonal skills\n\t\u2022\tKnowledge of HR processes, policies, and basic labor laws\n\t\u2022\tProficiency in MS Office / HRMS tools\n\t\u2022\tAbility to maintain confidentiality and professionalism\nPreferred Attributes\n\t\u2022\tProblem-solving mindset\n\t\u2022\tStrong organizational and time management skills\n\t\u2022\tPositive attitude with a people-first approach\nDepartment\nHuman Resources (HR)\nReporting To\nHR Manager / HR Lead",
+        "normalized_jd": "Job Description: Human Resources (HR) Executive\nRole Overview\nThe HR Executive is responsible for managing end-to-end human resource functions including recruitment, employee relations, performance management, compliance, and organizational development. This role ensures a positive work environment while aligning HR practices with business goals.\nKey Responsibilities\n\t-\tHandle end-to-end recruitment and onboarding processes\n\t-\tMaintain and update employee records, HR databases, and documentation\n\t-\tSupport performance appraisal and employee development initiatives\n\t-\tManage attendance, leave, and payroll coordination\n\t-\tAddress employee queries, grievances, and promote a healthy work culture\n\t-\tEnsure compliance with company policies and labor laws\n\t-\tAssist in HR audits, reports, and MIS\n\t-\tOrganize employee engagement activities and training programs\nRequired Skills & Qualifications\n\t-\tBachelor\u2019s degree in Human Resources, Business Administration, or related field\n\t-\t1\u20133 years of experience in an HR role (freshers can be considered for junior roles)\n\t-\tStrong communication and interpersonal skills\n\t-\tKnowledge of HR processes, policies, and basic labor laws\n\t-\tProficiency in MS Office / HRMS tools\n\t-\tAbility to maintain confidentiality and professionalism\nPreferred Attributes\n\t-\tProblem-solving mindset\n\t-\tStrong organizational and time management skills\n\t-\tPositive attitude with a people-first approach\nDepartment\nHuman Resources (HR)\nReporting To\nHR Manager / HR Lead",
+        "role_context": {
+          "primary_role": "HR Database Administrator",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 0.8
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "manage end-to-end recruitment processes",
+            "maintain employee records and databases",
+            "support performance appraisal and development initiatives",
+            "ensure compliance with company policies and labor laws"
+          ],
+          "secondary_skills": [
+            "address employee queries and grievances",
+            "promote a healthy work culture",
+            "coordinate attendance, leave, and payroll"
+          ],
+          "tools": [
+            "ms office",
+            "hrms tools"
+          ],
+          "programming_languages": []
+        },
+        "competency_profile": {
+          "experience_range": "1-3 years",
+          "ownership_expectations": "process ownership",
+          "problem_complexity": "simple to moderate",
+          "decision_making_scope": "individual",
+          "execution_expectations": "coordinate and maintain existing processes"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "end-to-end recruitment processes",
+            "employee records and databases",
+            "performance appraisal and development initiatives",
+            "compliance with company policies and labor laws"
+          ],
+          "secondary_focus_areas": [
+            "employee queries and grievances",
+            "healthy work culture",
+            "attendance, leave, and payroll"
+          ],
+          "evaluation_dimensions": [
+            "problem-solving",
+            "technical depth and reasoning",
+            "process ownership",
+            "end-to-end ownership",
+            "coordination and maintenance"
+          ]
+        }
+      },
+      "is_deleted": true,
+      "deleted_at": "2026-02-06T13:13:22.714062"
+    },
+    "JOB_2": {
+      "job_id": "JOB_2",
+      "jd_blob_path": "job_descriptions/JOB_2/20260205_231859_Matching_Resume_AI_Engineer.docx",
+      "status": "INACTIVE",
+      "uploaded_at": "2026-02-05 23:18:59.478077",
+      "intelligence": {},
+      "is_deleted": true,
+      "deleted_at": "2026-02-06T13:26:34.218751"
+    },
+    "JOB_3": {
+      "job_id": "JOB_3",
+      "jd_blob_path": "job_descriptions/JOB_3/20260206_134417_Job_Description_AI_Engineer.docx",
+      "status": "INACTIVE",
+      "uploaded_at": "2026-02-06 13:44:19.393031",
+      "intelligence": {
+        "raw_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t\u2022\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t\u2022\tWrite complex SQL queries to extract and manipulate data\n\t\u2022\tPerform data analysis using Python (Pandas, NumPy)\n\t\u2022\tCreate interactive dashboards and reports using Power BI / Tableau\n\t\u2022\tIdentify trends, patterns, and anomalies to support business strategies\n\t\u2022\tWork closely with stakeholders to understand business requirements\n\t\u2022\tEnsure data accuracy, consistency, and integrity\n\t\u2022\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t\u2022\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t\u2022\t2\u20134 years of experience as a Data Analyst\n\t\u2022\tStrong proficiency in SQL\n\t\u2022\tHands-on experience with Python for data analysis\n\t\u2022\tExperience with Power BI or Tableau\n\t\u2022\tSolid understanding of data cleaning, data modeling, and data visualization\n\t\u2022\tStrong problem-solving and communication skills\nPreferred Skills\n\t\u2022\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t\u2022\tBasic knowledge of statistics\n\t\u2022\tExperience working with large datasets",
+        "normalized_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t-\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t-\tWrite complex SQL queries to extract and manipulate data\n\t-\tPerform data analysis using Python (Pandas, NumPy)\n\t-\tCreate interactive dashboards and reports using Power BI / Tableau\n\t-\tIdentify trends, patterns, and anomalies to support business strategies\n\t-\tWork closely with stakeholders to understand business requirements\n\t-\tEnsure data accuracy, consistency, and integrity\n\t-\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t-\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t-\t2\u20134 years of experience as a Data Analyst\n\t-\tStrong proficiency in SQL\n\t-\tHands-on experience with Python for data analysis\n\t-\tExperience with Power BI or Tableau\n\t-\tSolid understanding of data cleaning, data modeling, and data visualization\n\t-\tStrong problem-solving and communication skills\nPreferred Skills\n\t-\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t-\tBasic knowledge of statistics\n\t-\tExperience working with large datasets",
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        }
+      },
+      "is_deleted": true,
+      "deleted_at": "2026-02-06T15:03:26.824044"
+    },
+    "JOB_4": {
+      "job_id": "JOB_4",
+      "jd_blob_path": "job_descriptions/JOB_4/20260206_150525_Job_Description_AI_Engineer.docx",
+      "status": "INACTIVE",
+      "uploaded_at": "2026-02-06 15:06:03.876963",
+      "intelligence": {
+        "raw_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t\u2022\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t\u2022\tWrite complex SQL queries to extract and manipulate data\n\t\u2022\tPerform data analysis using Python (Pandas, NumPy)\n\t\u2022\tCreate interactive dashboards and reports using Power BI / Tableau\n\t\u2022\tIdentify trends, patterns, and anomalies to support business strategies\n\t\u2022\tWork closely with stakeholders to understand business requirements\n\t\u2022\tEnsure data accuracy, consistency, and integrity\n\t\u2022\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t\u2022\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t\u2022\t2\u20134 years of experience as a Data Analyst\n\t\u2022\tStrong proficiency in SQL\n\t\u2022\tHands-on experience with Python for data analysis\n\t\u2022\tExperience with Power BI or Tableau\n\t\u2022\tSolid understanding of data cleaning, data modeling, and data visualization\n\t\u2022\tStrong problem-solving and communication skills\nPreferred Skills\n\t\u2022\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t\u2022\tBasic knowledge of statistics\n\t\u2022\tExperience working with large datasets",
+        "normalized_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t-\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t-\tWrite complex SQL queries to extract and manipulate data\n\t-\tPerform data analysis using Python (Pandas, NumPy)\n\t-\tCreate interactive dashboards and reports using Power BI / Tableau\n\t-\tIdentify trends, patterns, and anomalies to support business strategies\n\t-\tWork closely with stakeholders to understand business requirements\n\t-\tEnsure data accuracy, consistency, and integrity\n\t-\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t-\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t-\t2\u20134 years of experience as a Data Analyst\n\t-\tStrong proficiency in SQL\n\t-\tHands-on experience with Python for data analysis\n\t-\tExperience with Power BI or Tableau\n\t-\tSolid understanding of data cleaning, data modeling, and data visualization\n\t-\tStrong problem-solving and communication skills\nPreferred Skills\n\t-\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t-\tBasic knowledge of statistics\n\t-\tExperience working with large datasets",
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        }
+      },
+      "is_deleted": true,
+      "deleted_at": "2026-02-06T15:07:00.347576"
+    },
+    "JOB_5": {
+      "job_id": "JOB_5",
+      "jd_blob_path": "job_descriptions/JOB_5/20260206_150710_Job_Description_AI_Engineer.docx",
+      "status": "INACTIVE",
+      "uploaded_at": "2026-02-06 15:07:11.854784",
+      "intelligence": {
+        "raw_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t\u2022\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t\u2022\tWrite complex SQL queries to extract and manipulate data\n\t\u2022\tPerform data analysis using Python (Pandas, NumPy)\n\t\u2022\tCreate interactive dashboards and reports using Power BI / Tableau\n\t\u2022\tIdentify trends, patterns, and anomalies to support business strategies\n\t\u2022\tWork closely with stakeholders to understand business requirements\n\t\u2022\tEnsure data accuracy, consistency, and integrity\n\t\u2022\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t\u2022\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t\u2022\t2\u20134 years of experience as a Data Analyst\n\t\u2022\tStrong proficiency in SQL\n\t\u2022\tHands-on experience with Python for data analysis\n\t\u2022\tExperience with Power BI or Tableau\n\t\u2022\tSolid understanding of data cleaning, data modeling, and data visualization\n\t\u2022\tStrong problem-solving and communication skills\nPreferred Skills\n\t\u2022\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t\u2022\tBasic knowledge of statistics\n\t\u2022\tExperience working with large datasets",
+        "normalized_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t-\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t-\tWrite complex SQL queries to extract and manipulate data\n\t-\tPerform data analysis using Python (Pandas, NumPy)\n\t-\tCreate interactive dashboards and reports using Power BI / Tableau\n\t-\tIdentify trends, patterns, and anomalies to support business strategies\n\t-\tWork closely with stakeholders to understand business requirements\n\t-\tEnsure data accuracy, consistency, and integrity\n\t-\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t-\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t-\t2\u20134 years of experience as a Data Analyst\n\t-\tStrong proficiency in SQL\n\t-\tHands-on experience with Python for data analysis\n\t-\tExperience with Power BI or Tableau\n\t-\tSolid understanding of data cleaning, data modeling, and data visualization\n\t-\tStrong problem-solving and communication skills\nPreferred Skills\n\t-\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t-\tBasic knowledge of statistics\n\t-\tExperience working with large datasets",
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        }
+      },
+      "is_deleted": true,
+      "deleted_at": "2026-02-06T15:07:31.331085"
+    },
+    "JOB_6": {
+      "job_id": "JOB_6",
+      "jd_blob_path": "job_descriptions/JOB_6/20260206_151130_Job_Description_AI_Engineer.docx",
+      "status": "ACTIVE",
+      "uploaded_at": "2026-02-06 15:11:32.009467",
+      "intelligence": {
+        "raw_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t\u2022\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t\u2022\tWrite complex SQL queries to extract and manipulate data\n\t\u2022\tPerform data analysis using Python (Pandas, NumPy)\n\t\u2022\tCreate interactive dashboards and reports using Power BI / Tableau\n\t\u2022\tIdentify trends, patterns, and anomalies to support business strategies\n\t\u2022\tWork closely with stakeholders to understand business requirements\n\t\u2022\tEnsure data accuracy, consistency, and integrity\n\t\u2022\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t\u2022\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t\u2022\t2\u20134 years of experience as a Data Analyst\n\t\u2022\tStrong proficiency in SQL\n\t\u2022\tHands-on experience with Python for data analysis\n\t\u2022\tExperience with Power BI or Tableau\n\t\u2022\tSolid understanding of data cleaning, data modeling, and data visualization\n\t\u2022\tStrong problem-solving and communication skills\nPreferred Skills\n\t\u2022\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t\u2022\tBasic knowledge of statistics\n\t\u2022\tExperience working with large datasets",
+        "normalized_jd": "Job Title: Data Analyst\nLocation: Hybrid / Onsite\nExperience: 2\u20134 Years\nJob Summary\nWe are looking for a detail-oriented Data Analyst who can collect, analyze, and interpret large datasets to support business decision-making. The ideal candidate will have strong analytical skills, experience with SQL and Python, and the ability to translate data insights into actionable recommendations.\nKey Responsibilities\n\t-\tCollect, clean, and analyze structured and unstructured data from multiple sources\n\t-\tWrite complex SQL queries to extract and manipulate data\n\t-\tPerform data analysis using Python (Pandas, NumPy)\n\t-\tCreate interactive dashboards and reports using Power BI / Tableau\n\t-\tIdentify trends, patterns, and anomalies to support business strategies\n\t-\tWork closely with stakeholders to understand business requirements\n\t-\tEnsure data accuracy, consistency, and integrity\n\t-\tPresent insights and findings to non-technical teams\nRequired Skills & Qualifications\n\t-\tBachelor\u2019s degree in Computer Science, Statistics, Mathematics, or related field\n\t-\t2\u20134 years of experience as a Data Analyst\n\t-\tStrong proficiency in SQL\n\t-\tHands-on experience with Python for data analysis\n\t-\tExperience with Power BI or Tableau\n\t-\tSolid understanding of data cleaning, data modeling, and data visualization\n\t-\tStrong problem-solving and communication skills\nPreferred Skills\n\t-\tExperience with Excel (Pivot Tables, VLOOKUP, formulas)\n\t-\tBasic knowledge of statistics\n\t-\tExperience working with large datasets",
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        }
+      },
+      "is_deleted": false,
+      "deleted_at": null
+    }
+  },
+  "resumes": [
+    {
+      "candidate_id": 1,
+      "job_id": "JOB_1",
+      "resume_id": "5e58407d-e43c-4220-bf36-96850ac65fd5",
+      "resume_blob_path": "resumes/CAND_1/20260205_225634_Matching_Resume_AI_Engineer.docx",
+      "status": "SHORTLISTED",
+      "interview_unlocked": true,
+      "uploaded_at": "2026-02-05 22:56:37.145545",
+      "intelligence": {
+        "candidate_id": "1",
+        "raw_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\n\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\n\nCore HR Skills\n\t\u2022\tEnd-to-End Recruitment & Onboarding\n\t\u2022\tEmployee Relations & Engagement\n\t\u2022\tHR Operations & Documentation\n\t\u2022\tPerformance Management Support\n\t\u2022\tAttendance, Leave & Payroll Coordination\n\t\u2022\tHR Policies & Labor Law Compliance\n\t\u2022\tMIS Reporting & HR Audits\n\t\u2022\tHRMS & MS Office Tools\n\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t\u2022\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t\u2022\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t\u2022\tMaintained accurate employee records, HR databases, and documentation\n\t\u2022\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t\u2022\tAssisted in performance appraisal cycles and employee feedback documentation\n\t\u2022\tActively addressed employee queries and grievances, ensuring timely resolution\n\t\u2022\tEnsured compliance with company policies and applicable labor laws\n\t\u2022\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t\u2022\tOrganized employee engagement activities, training sessions, and internal events\n\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t\u2022\tSupported recruitment activities such as resume screening and interview scheduling\n\t\u2022\tAssisted in maintaining HR files and employee documentation\n\t\u2022\tHelped track attendance and leave records\n\t\u2022\tParticipated in onboarding and orientation programs\n\t\u2022\tAssisted HR team with administrative and reporting tasks\n\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\n\nTechnical Skills\n\t\u2022\tMS Word, Excel, PowerPoint\n\t\u2022\tHRMS Tools\n\t\u2022\tGoogle Workspace\n\t\u2022\tBasic Payroll Systems\n\nPersonal Attributes\n\t\u2022\tStrong communication and interpersonal skills\n\t\u2022\tHigh level of confidentiality and professionalism\n\t\u2022\tOrganized, proactive, and detail-oriented\n\t\u2022\tProblem-solving mindset with a people-first approach\n\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
+        "normalized_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\nCore HR Skills\n\t-\tEnd-to-End Recruitment & Onboarding\n\t-\tEmployee Relations & Engagement\n\t-\tHR Operations & Documentation\n\t-\tPerformance Management Support\n\t-\tAttendance, Leave & Payroll Coordination\n\t-\tHR Policies & Labor Law Compliance\n\t-\tMIS Reporting & HR Audits\n\t-\tHRMS & MS Office Tools\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t-\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t-\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t-\tMaintained accurate employee records, HR databases, and documentation\n\t-\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t-\tAssisted in performance appraisal cycles and employee feedback documentation\n\t-\tActively addressed employee queries and grievances, ensuring timely resolution\n\t-\tEnsured compliance with company policies and applicable labor laws\n\t-\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t-\tOrganized employee engagement activities, training sessions, and internal events\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t-\tSupported recruitment activities such as resume screening and interview scheduling\n\t-\tAssisted in maintaining HR files and employee documentation\n\t-\tHelped track attendance and leave records\n\t-\tParticipated in onboarding and orientation programs\n\t-\tAssisted HR team with administrative and reporting tasks\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\nTechnical Skills\n\t-\tMS Word, Excel, PowerPoint\n\t-\tHRMS Tools\n\t-\tGoogle Workspace\n\t-\tBasic Payroll Systems\nPersonal Attributes\n\t-\tStrong communication and interpersonal skills\n\t-\tHigh level of confidentiality and professionalism\n\t-\tOrganized, proactive, and detail-oriented\n\t-\tProblem-solving mindset with a people-first approach\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
+        "resume_claims": {
+          "skills_claimed": [
+            "end-to-end recruitment",
+            "onboarding",
+            "employee relations",
+            "hr operations",
+            "performance management support",
+            "attendance leave payroll coordination",
+            "hr policies labor law compliance",
+            "mis reporting hr audits",
+            "hrms ms office tools"
+          ],
+          "projects": [
+            {
+              "project_name": "hr executive at abc technologies pvt ltd",
+              "responsibilities": [
+                "managed end-to-end recruitment",
+                "handled joining formalities and onboarding",
+                "maintained accurate employee records",
+                "coordinated with finance team",
+                "assisted in performance appraisal cycles",
+                "addressed employee queries and grievances",
+                "ensured compliance with company policies",
+                "prepared hr mis reports",
+                "organized employee engagement activities"
+              ]
+            },
+            {
+              "project_name": "hr intern at xyz solutions",
+              "responsibilities": [
+                "supported recruitment activities",
+                "assisted in maintaining hr files",
+                "helped track attendance and leave records",
+                "participated in onboarding and orientation programs",
+                "assisted hr team with administrative tasks"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "hr executive",
+            "hr intern"
+          ],
+          "experience_signals": [
+            "proven ability to maintain accurate hr records",
+            "supported performance management processes",
+            "fostered a positive work culture",
+            "coordinated with finance team",
+            "prepared hr mis reports"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.814,
+          "project_alignment": 0.419,
+          "conceptual_alignment": 0.299
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "end-to-end recruitment",
+            "onboarding",
+            "hr policies labor law compliance",
+            "mis reporting hr audits",
+            "hrms ms office tools"
+          ],
+          "weakly_supported": [
+            "attendance leave payroll coordination",
+            "performance management support"
+          ],
+          "unsupported_claims": [
+            "employee relations",
+            "hr operations"
+          ]
+        },
+        "role_context": {
+          "primary_role": "HR Database Administrator",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 0.8
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "manage end-to-end recruitment processes",
+            "maintain employee records and databases",
+            "support performance appraisal and development initiatives",
+            "ensure compliance with company policies and labor laws"
+          ],
+          "secondary_skills": [
+            "address employee queries and grievances",
+            "promote a healthy work culture",
+            "coordinate attendance, leave, and payroll"
+          ],
+          "tools": [
+            "ms office",
+            "hrms tools"
+          ],
+          "programming_languages": []
+        },
+        "competency_profile": {
+          "experience_range": "1-3 years",
+          "ownership_expectations": "process ownership",
+          "problem_complexity": "simple to moderate",
+          "decision_making_scope": "individual",
+          "execution_expectations": "coordinate and maintain existing processes"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "end-to-end recruitment processes",
+            "employee records and databases",
+            "performance appraisal and development initiatives",
+            "compliance with company policies and labor laws"
+          ],
+          "secondary_focus_areas": [
+            "employee queries and grievances",
+            "healthy work culture",
+            "attendance, leave, and payroll"
+          ],
+          "evaluation_dimensions": [
+            "problem-solving",
+            "technical depth and reasoning",
+            "process ownership",
+            "end-to-end ownership",
+            "coordination and maintenance"
+          ]
+        },
+        "exaggeration_penalty": 0.06,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "employee relations",
+            "hr operations"
+          ]
+        },
+        "final_score": 0.748,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "manage end-to-end recruitment processes",
+            "maintain employee records and databases",
+            "support performance appraisal and development initiatives",
+            "ensure compliance with company policies and labor laws"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "hr executive at abc technologies pvt ltd",
+              "responsibilities": [
+                "managed end-to-end recruitment",
+                "handled joining formalities and onboarding",
+                "maintained accurate employee records",
+                "coordinated with finance team",
+                "assisted in performance appraisal cycles",
+                "addressed employee queries and grievances",
+                "ensured compliance with company policies",
+                "prepared hr mis reports",
+                "organized employee engagement activities"
+              ]
+            },
+            {
+              "project_name": "hr intern at xyz solutions",
+              "responsibilities": [
+                "supported recruitment activities",
+                "assisted in maintaining hr files",
+                "helped track attendance and leave records",
+                "participated in onboarding and orientation programs",
+                "assisted hr team with administrative tasks"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "employee relations",
+              "hr operations"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": 8,
+      "job_id": "JOB_1",
+      "resume_id": "254532ff-c4f6-4e4b-8d49-3be9bddb816d",
+      "resume_blob_path": "resumes/CAND_8/20260205_232605_Matching_Resume_AI_Engineer.docx",
+      "status": "SHORTLISTED",
+      "interview_unlocked": true,
+      "uploaded_at": "2026-02-05 23:26:07.514313",
+      "intelligence": {
+        "candidate_id": "8",
+        "raw_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\n\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\n\nCore HR Skills\n\t\u2022\tEnd-to-End Recruitment & Onboarding\n\t\u2022\tEmployee Relations & Engagement\n\t\u2022\tHR Operations & Documentation\n\t\u2022\tPerformance Management Support\n\t\u2022\tAttendance, Leave & Payroll Coordination\n\t\u2022\tHR Policies & Labor Law Compliance\n\t\u2022\tMIS Reporting & HR Audits\n\t\u2022\tHRMS & MS Office Tools\n\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t\u2022\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t\u2022\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t\u2022\tMaintained accurate employee records, HR databases, and documentation\n\t\u2022\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t\u2022\tAssisted in performance appraisal cycles and employee feedback documentation\n\t\u2022\tActively addressed employee queries and grievances, ensuring timely resolution\n\t\u2022\tEnsured compliance with company policies and applicable labor laws\n\t\u2022\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t\u2022\tOrganized employee engagement activities, training sessions, and internal events\n\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t\u2022\tSupported recruitment activities such as resume screening and interview scheduling\n\t\u2022\tAssisted in maintaining HR files and employee documentation\n\t\u2022\tHelped track attendance and leave records\n\t\u2022\tParticipated in onboarding and orientation programs\n\t\u2022\tAssisted HR team with administrative and reporting tasks\n\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\n\nTechnical Skills\n\t\u2022\tMS Word, Excel, PowerPoint\n\t\u2022\tHRMS Tools\n\t\u2022\tGoogle Workspace\n\t\u2022\tBasic Payroll Systems\n\nPersonal Attributes\n\t\u2022\tStrong communication and interpersonal skills\n\t\u2022\tHigh level of confidentiality and professionalism\n\t\u2022\tOrganized, proactive, and detail-oriented\n\t\u2022\tProblem-solving mindset with a people-first approach\n\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
+        "normalized_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\nCore HR Skills\n\t-\tEnd-to-End Recruitment & Onboarding\n\t-\tEmployee Relations & Engagement\n\t-\tHR Operations & Documentation\n\t-\tPerformance Management Support\n\t-\tAttendance, Leave & Payroll Coordination\n\t-\tHR Policies & Labor Law Compliance\n\t-\tMIS Reporting & HR Audits\n\t-\tHRMS & MS Office Tools\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t-\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t-\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t-\tMaintained accurate employee records, HR databases, and documentation\n\t-\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t-\tAssisted in performance appraisal cycles and employee feedback documentation\n\t-\tActively addressed employee queries and grievances, ensuring timely resolution\n\t-\tEnsured compliance with company policies and applicable labor laws\n\t-\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t-\tOrganized employee engagement activities, training sessions, and internal events\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t-\tSupported recruitment activities such as resume screening and interview scheduling\n\t-\tAssisted in maintaining HR files and employee documentation\n\t-\tHelped track attendance and leave records\n\t-\tParticipated in onboarding and orientation programs\n\t-\tAssisted HR team with administrative and reporting tasks\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\nTechnical Skills\n\t-\tMS Word, Excel, PowerPoint\n\t-\tHRMS Tools\n\t-\tGoogle Workspace\n\t-\tBasic Payroll Systems\nPersonal Attributes\n\t-\tStrong communication and interpersonal skills\n\t-\tHigh level of confidentiality and professionalism\n\t-\tOrganized, proactive, and detail-oriented\n\t-\tProblem-solving mindset with a people-first approach\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
+        "resume_claims": {
+          "skills_claimed": [
+            "end-to-end recruitment",
+            "onboarding",
+            "employee relations",
+            "hr operations",
+            "performance management support",
+            "attendance leave payroll coordination",
+            "hr policies labor law compliance",
+            "mis reporting hr audits",
+            "hrms ms office tools"
+          ],
+          "projects": [
+            {
+              "project_name": "hr executive at abc technologies pvt ltd",
+              "responsibilities": [
+                "managed end-to-end recruitment",
+                "handled joining formalities and onboarding",
+                "maintained accurate employee records",
+                "coordinated with finance team",
+                "assisted in performance appraisal cycles",
+                "addressed employee queries and grievances",
+                "ensured compliance with company policies",
+                "prepared hr mis reports",
+                "organized employee engagement activities"
+              ]
+            },
+            {
+              "project_name": "hr intern at xyz solutions",
+              "responsibilities": [
+                "supported recruitment activities",
+                "assisted in maintaining hr files",
+                "helped track attendance and leave records",
+                "participated in onboarding and orientation programs",
+                "assisted hr team with administrative tasks"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "hr executive",
+            "hr intern"
+          ],
+          "experience_signals": [
+            "proven ability to maintain accurate hr records",
+            "supported performance management processes",
+            "fostered a positive work culture",
+            "coordinated with finance team",
+            "prepared hr mis reports"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.814,
+          "project_alignment": 0.419,
+          "conceptual_alignment": 0.299
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "end-to-end recruitment",
+            "onboarding",
+            "hr policies labor law compliance",
+            "mis reporting hr audits",
+            "hrms ms office tools"
+          ],
+          "weakly_supported": [
+            "attendance leave payroll coordination",
+            "performance management support"
+          ],
+          "unsupported_claims": [
+            "employee relations",
+            "hr operations"
+          ]
+        },
+        "role_context": {
+          "primary_role": "HR Database Administrator",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 0.8
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "manage end-to-end recruitment processes",
+            "maintain employee records and databases",
+            "support performance appraisal and development initiatives",
+            "ensure compliance with company policies and labor laws"
+          ],
+          "secondary_skills": [
+            "address employee queries and grievances",
+            "promote a healthy work culture",
+            "coordinate attendance, leave, and payroll"
+          ],
+          "tools": [
+            "ms office",
+            "hrms tools"
+          ],
+          "programming_languages": []
+        },
+        "competency_profile": {
+          "experience_range": "1-3 years",
+          "ownership_expectations": "process ownership",
+          "problem_complexity": "simple to moderate",
+          "decision_making_scope": "individual",
+          "execution_expectations": "coordinate and maintain existing processes"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "end-to-end recruitment processes",
+            "employee records and databases",
+            "performance appraisal and development initiatives",
+            "compliance with company policies and labor laws"
+          ],
+          "secondary_focus_areas": [
+            "employee queries and grievances",
+            "healthy work culture",
+            "attendance, leave, and payroll"
+          ],
+          "evaluation_dimensions": [
+            "problem-solving",
+            "technical depth and reasoning",
+            "process ownership",
+            "end-to-end ownership",
+            "coordination and maintenance"
+          ]
+        },
+        "exaggeration_penalty": 0.06,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "employee relations",
+            "hr operations"
+          ]
+        },
+        "final_score": 0.748,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "manage end-to-end recruitment processes",
+            "maintain employee records and databases",
+            "support performance appraisal and development initiatives",
+            "ensure compliance with company policies and labor laws"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "hr executive at abc technologies pvt ltd",
+              "responsibilities": [
+                "managed end-to-end recruitment",
+                "handled joining formalities and onboarding",
+                "maintained accurate employee records",
+                "coordinated with finance team",
+                "assisted in performance appraisal cycles",
+                "addressed employee queries and grievances",
+                "ensured compliance with company policies",
+                "prepared hr mis reports",
+                "organized employee engagement activities"
+              ]
+            },
+            {
+              "project_name": "hr intern at xyz solutions",
+              "responsibilities": [
+                "supported recruitment activities",
+                "assisted in maintaining hr files",
+                "helped track attendance and leave records",
+                "participated in onboarding and orientation programs",
+                "assisted hr team with administrative tasks"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "employee relations",
+              "hr operations"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": 12,
+      "job_id": "JOB_1",
+      "resume_id": "eb4d2567-0cbb-42c1-b3f2-d8d8e5fc97c0",
+      "resume_blob_path": "resumes/CAND_12/20260206_001737_Matching_Resume_AI_Engineer.docx",
+      "status": "SHORTLISTED",
+      "interview_unlocked": true,
+      "uploaded_at": "2026-02-06 00:17:38.948425",
+      "intelligence": {
+        "candidate_id": "12",
+        "raw_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\n\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\n\nCore HR Skills\n\t\u2022\tEnd-to-End Recruitment & Onboarding\n\t\u2022\tEmployee Relations & Engagement\n\t\u2022\tHR Operations & Documentation\n\t\u2022\tPerformance Management Support\n\t\u2022\tAttendance, Leave & Payroll Coordination\n\t\u2022\tHR Policies & Labor Law Compliance\n\t\u2022\tMIS Reporting & HR Audits\n\t\u2022\tHRMS & MS Office Tools\n\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t\u2022\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t\u2022\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t\u2022\tMaintained accurate employee records, HR databases, and documentation\n\t\u2022\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t\u2022\tAssisted in performance appraisal cycles and employee feedback documentation\n\t\u2022\tActively addressed employee queries and grievances, ensuring timely resolution\n\t\u2022\tEnsured compliance with company policies and applicable labor laws\n\t\u2022\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t\u2022\tOrganized employee engagement activities, training sessions, and internal events\n\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t\u2022\tSupported recruitment activities such as resume screening and interview scheduling\n\t\u2022\tAssisted in maintaining HR files and employee documentation\n\t\u2022\tHelped track attendance and leave records\n\t\u2022\tParticipated in onboarding and orientation programs\n\t\u2022\tAssisted HR team with administrative and reporting tasks\n\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\n\nTechnical Skills\n\t\u2022\tMS Word, Excel, PowerPoint\n\t\u2022\tHRMS Tools\n\t\u2022\tGoogle Workspace\n\t\u2022\tBasic Payroll Systems\n\nPersonal Attributes\n\t\u2022\tStrong communication and interpersonal skills\n\t\u2022\tHigh level of confidentiality and professionalism\n\t\u2022\tOrganized, proactive, and detail-oriented\n\t\u2022\tProblem-solving mindset with a people-first approach\n\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
+        "normalized_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\nCore HR Skills\n\t-\tEnd-to-End Recruitment & Onboarding\n\t-\tEmployee Relations & Engagement\n\t-\tHR Operations & Documentation\n\t-\tPerformance Management Support\n\t-\tAttendance, Leave & Payroll Coordination\n\t-\tHR Policies & Labor Law Compliance\n\t-\tMIS Reporting & HR Audits\n\t-\tHRMS & MS Office Tools\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t-\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t-\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t-\tMaintained accurate employee records, HR databases, and documentation\n\t-\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t-\tAssisted in performance appraisal cycles and employee feedback documentation\n\t-\tActively addressed employee queries and grievances, ensuring timely resolution\n\t-\tEnsured compliance with company policies and applicable labor laws\n\t-\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t-\tOrganized employee engagement activities, training sessions, and internal events\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t-\tSupported recruitment activities such as resume screening and interview scheduling\n\t-\tAssisted in maintaining HR files and employee documentation\n\t-\tHelped track attendance and leave records\n\t-\tParticipated in onboarding and orientation programs\n\t-\tAssisted HR team with administrative and reporting tasks\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\nTechnical Skills\n\t-\tMS Word, Excel, PowerPoint\n\t-\tHRMS Tools\n\t-\tGoogle Workspace\n\t-\tBasic Payroll Systems\nPersonal Attributes\n\t-\tStrong communication and interpersonal skills\n\t-\tHigh level of confidentiality and professionalism\n\t-\tOrganized, proactive, and detail-oriented\n\t-\tProblem-solving mindset with a people-first approach\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
+        "resume_claims": {
+          "skills_claimed": [
+            "end-to-end recruitment",
+            "onboarding",
+            "employee relations",
+            "hr operations",
+            "performance management support",
+            "attendance leave payroll coordination",
+            "hr policies labor law compliance",
+            "mis reporting hr audits",
+            "hrms ms office tools"
+          ],
+          "projects": [
+            {
+              "project_name": "hr executive at abc technologies pvt ltd",
+              "responsibilities": [
+                "managed end-to-end recruitment",
+                "handled joining formalities and onboarding",
+                "maintained accurate employee records",
+                "coordinated with finance team",
+                "assisted in performance appraisal cycles",
+                "addressed employee queries and grievances",
+                "ensured compliance with company policies",
+                "prepared hr mis reports",
+                "organized employee engagement activities"
+              ]
+            },
+            {
+              "project_name": "hr intern at xyz solutions",
+              "responsibilities": [
+                "supported recruitment activities",
+                "assisted in maintaining hr files",
+                "helped track attendance and leave records",
+                "participated in onboarding and orientation programs",
+                "assisted hr team with administrative tasks"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "hr executive",
+            "hr intern"
+          ],
+          "experience_signals": [
+            "proven ability to maintain accurate hr records",
+            "supported performance management processes",
+            "fostered a positive work culture",
+            "coordinated with finance team",
+            "prepared hr mis reports"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.814,
+          "project_alignment": 0.419,
+          "conceptual_alignment": 0.299
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "end-to-end recruitment",
+            "onboarding",
+            "hr policies labor law compliance",
+            "mis reporting hr audits",
+            "hrms ms office tools"
+          ],
+          "weakly_supported": [
+            "attendance leave payroll coordination",
+            "performance management support"
+          ],
+          "unsupported_claims": [
+            "employee relations",
+            "hr operations"
+          ]
+        },
+        "role_context": {
+          "primary_role": "HR Database Administrator",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 0.8
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "manage end-to-end recruitment processes",
+            "maintain employee records and databases",
+            "support performance appraisal and development initiatives",
+            "ensure compliance with company policies and labor laws"
+          ],
+          "secondary_skills": [
+            "address employee queries and grievances",
+            "promote a healthy work culture",
+            "coordinate attendance, leave, and payroll"
+          ],
+          "tools": [
+            "ms office",
+            "hrms tools"
+          ],
+          "programming_languages": []
+        },
+        "competency_profile": {
+          "experience_range": "1-3 years",
+          "ownership_expectations": "process ownership",
+          "problem_complexity": "simple to moderate",
+          "decision_making_scope": "individual",
+          "execution_expectations": "coordinate and maintain existing processes"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "end-to-end recruitment processes",
+            "employee records and databases",
+            "performance appraisal and development initiatives",
+            "compliance with company policies and labor laws"
+          ],
+          "secondary_focus_areas": [
+            "employee queries and grievances",
+            "healthy work culture",
+            "attendance, leave, and payroll"
+          ],
+          "evaluation_dimensions": [
+            "problem-solving",
+            "technical depth and reasoning",
+            "process ownership",
+            "end-to-end ownership",
+            "coordination and maintenance"
+          ]
+        },
+        "exaggeration_penalty": 0.06,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "employee relations",
+            "hr operations"
+          ]
+        },
+        "final_score": 0.748,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "manage end-to-end recruitment processes",
+            "maintain employee records and databases",
+            "support performance appraisal and development initiatives",
+            "ensure compliance with company policies and labor laws"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "hr executive at abc technologies pvt ltd",
+              "responsibilities": [
+                "managed end-to-end recruitment",
+                "handled joining formalities and onboarding",
+                "maintained accurate employee records",
+                "coordinated with finance team",
+                "assisted in performance appraisal cycles",
+                "addressed employee queries and grievances",
+                "ensured compliance with company policies",
+                "prepared hr mis reports",
+                "organized employee engagement activities"
+              ]
+            },
+            {
+              "project_name": "hr intern at xyz solutions",
+              "responsibilities": [
+                "supported recruitment activities",
+                "assisted in maintaining hr files",
+                "helped track attendance and leave records",
+                "participated in onboarding and orientation programs",
+                "assisted hr team with administrative tasks"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "employee relations",
+              "hr operations"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": 15,
+      "job_id": "JOB_3",
+      "resume_id": "ca60b578-b1d4-4fa6-b1bc-4045f90b5500",
+      "resume_blob_path": "resumes/CAND_15/20260206_134606_Matching_Resume_AI_Engineer.docx",
+      "status": "SHORTLISTED",
+      "interview_unlocked": true,
+      "uploaded_at": "2026-02-06 13:46:08.746221",
+      "intelligence": {
+        "candidate_id": "15",
+        "raw_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\n\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\n\nTECHNICAL SKILLS\n\t\u2022\tProgramming: Python (Pandas, NumPy)\n\t\u2022\tDatabases: SQL (MySQL, PostgreSQL)\n\t\u2022\tData Visualization: Power BI, Tableau\n\t\u2022\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t\u2022\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\n\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t\u2022\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t\u2022\tDeveloped complex SQL queries to extract and transform data for reporting\n\t\u2022\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t\u2022\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t\u2022\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t\u2022\tEnsured data accuracy, consistency, and integrity across reports\n\t\u2022\tPresented data findings and recommendations to non-technical teams\n\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\n\nCERTIFICATIONS\n\t\u2022\tData Analysis with Python\n\t\u2022\tSQL for Data Analytics\n\nKEY ACHIEVEMENTS\n\t\u2022\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t\u2022\tSupported strategic business decisions by delivering actionable data insights",
+        "normalized_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\nTECHNICAL SKILLS\n\t-\tProgramming: Python (Pandas, NumPy)\n\t-\tDatabases: SQL (MySQL, PostgreSQL)\n\t-\tData Visualization: Power BI, Tableau\n\t-\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t-\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t-\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t-\tDeveloped complex SQL queries to extract and transform data for reporting\n\t-\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t-\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t-\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t-\tEnsured data accuracy, consistency, and integrity across reports\n\t-\tPresented data findings and recommendations to non-technical teams\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\nCERTIFICATIONS\n\t-\tData Analysis with Python\n\t-\tSQL for Data Analytics\nKEY ACHIEVEMENTS\n\t-\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t-\tSupported strategic business decisions by delivering actionable data insights",
+        "resume_claims": {
+          "skills_claimed": [
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "power bi",
+            "tableau",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
+          ],
+          "projects": [
+            {
+              "project_name": "data analysis",
+              "responsibilities": [
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "data analyst"
+          ],
+          "experience_signals": [
+            "3 years of experience",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.727,
+          "project_alignment": 0.46,
+          "conceptual_alignment": 0.322
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
+          ],
+          "weakly_supported": [
+            "power bi",
+            "tableau"
+          ],
+          "unsupported_claims": [
+            "data analyst",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        },
+        "exaggeration_penalty": 0.15,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "data analyst",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "final_score": 0.623,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "data analysis",
+              "responsibilities": [
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "data analyst",
+              "driving business insights",
+              "presenting actionable insights",
+              "improved reporting efficiency by 30%",
+              "supported strategic business decisions"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": 16,
+      "job_id": "JOB_6",
+      "resume_id": "f3656b0e-1523-41b2-b8e7-4c2be18c9824",
+      "resume_blob_path": "resumes/CAND_16/20260206_151322_Matching_Resume_AI_Engineer.docx",
+      "status": "SHORTLISTED",
+      "interview_unlocked": true,
+      "uploaded_at": "2026-02-06 15:13:23.972693",
+      "intelligence": {
+        "candidate_id": "16",
+        "raw_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\n\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\n\nTECHNICAL SKILLS\n\t\u2022\tProgramming: Python (Pandas, NumPy)\n\t\u2022\tDatabases: SQL (MySQL, PostgreSQL)\n\t\u2022\tData Visualization: Power BI, Tableau\n\t\u2022\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t\u2022\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\n\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t\u2022\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t\u2022\tDeveloped complex SQL queries to extract and transform data for reporting\n\t\u2022\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t\u2022\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t\u2022\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t\u2022\tEnsured data accuracy, consistency, and integrity across reports\n\t\u2022\tPresented data findings and recommendations to non-technical teams\n\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\n\nCERTIFICATIONS\n\t\u2022\tData Analysis with Python\n\t\u2022\tSQL for Data Analytics\n\nKEY ACHIEVEMENTS\n\t\u2022\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t\u2022\tSupported strategic business decisions by delivering actionable data insights",
+        "normalized_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\nTECHNICAL SKILLS\n\t-\tProgramming: Python (Pandas, NumPy)\n\t-\tDatabases: SQL (MySQL, PostgreSQL)\n\t-\tData Visualization: Power BI, Tableau\n\t-\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t-\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t-\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t-\tDeveloped complex SQL queries to extract and transform data for reporting\n\t-\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t-\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t-\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t-\tEnsured data accuracy, consistency, and integrity across reports\n\t-\tPresented data findings and recommendations to non-technical teams\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\nCERTIFICATIONS\n\t-\tData Analysis with Python\n\t-\tSQL for Data Analytics\nKEY ACHIEVEMENTS\n\t-\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t-\tSupported strategic business decisions by delivering actionable data insights",
+        "resume_claims": {
+          "skills_claimed": [
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "power bi",
+            "tableau",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
+          ],
+          "projects": [
+            {
+              "project_name": "data analysis",
+              "responsibilities": [
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "data analyst"
+          ],
+          "experience_signals": [
+            "3 years of experience",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.727,
+          "project_alignment": 0.46,
+          "conceptual_alignment": 0.322
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
+          ],
+          "weakly_supported": [
+            "power bi",
+            "tableau"
+          ],
+          "unsupported_claims": [
+            "data analyst",
+            "3 years of experience",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        },
+        "exaggeration_penalty": 0.18,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "data analyst",
+            "3 years of experience",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "final_score": 0.593,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "data analysis",
+              "responsibilities": [
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "data analyst",
+              "3 years of experience",
+              "driving business insights",
+              "presenting actionable insights",
+              "improved reporting efficiency by 30%",
+              "supported strategic business decisions"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "interviews": [
+    {
+      "interview_id": "909549b5-338f-4d76-b106-291c36af71b6",
+      "candidate_id": 1,
+      "current_question": "Can you describe a time when you implemented a process improvement in a recruitment workflow, and what impact it had on the team or organization?",
+      "status": "IN_PROGRESS",
+      "created_at": "2026-02-06 00:15:28.153859",
+      "focus_areas": [
+        {
+          "order": 1,
+          "topic": "end-to-end recruitment processes",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "hr executive at abc technologies pvt ltd: hands-on ownership of end-to-end recruitment processes"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 2,
+          "topic": "employee records and databases",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "hr executive at abc technologies pvt ltd: hands-on ownership of employee records and databases"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 3,
+          "topic": "compliance with company policies and labor laws",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "hr executive at abc technologies pvt ltd: hands-on ownership of compliance with company policies and labor laws"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        }
+      ],
+      "current_topic": "end-to-end recruitment processes",
+      "current_topic_index": 0,
+      "interview_trace": []
+    },
+    {
+      "interview_id": "57501301-0efd-427a-accb-e4004c223c41",
+      "candidate_id": 12,
+      "current_question": "Can you walk me through a situation where you had to balance compliance with company policies and labor laws, but it resulted in a tradeoff that impacted business goals?",
+      "status": "COMPLETED",
+      "created_at": "2026-02-06 00:19:24.932574",
+      "focus_areas": [
+        {
+          "order": 1,
+          "topic": "end-to-end recruitment processes",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "hr executive at abc technologies pvt ltd: hands-on ownership of end-to-end recruitment processes"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 2,
+          "topic": "employee records and databases",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "hr executive at abc technologies pvt ltd: hands-on ownership of employee records and databases"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 3,
+          "topic": "compliance with company policies and labor laws",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "hr executive at abc technologies pvt ltd: hands-on ownership of compliance with company policies and labor laws"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        }
+      ],
+      "current_topic": "compliance with company policies and labor laws",
+      "current_topic_index": 2,
+      "interview_trace": [
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358673.077832
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358695.561884
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358762.500444
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358762.5127501
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358848.48716
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358848.5009532
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358934.485226
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358934.499379
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770358998.8489861
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770359065.478731
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770359065.492862
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770359151.46978
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770359151.486193
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770359237.476823
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770359237.489635
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770359323.565869
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770359323.837177
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770359345.416854
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770359370.876074
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770359457.275774
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 5,
+          "question_type": "followup",
+          "timestamp": 1770359524.4715881
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 6,
+          "question_type": "followup",
+          "timestamp": 1770359524.601131
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 7,
+          "question_type": "followup",
+          "timestamp": 1770359591.484202
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 8,
+          "question_type": "followup",
+          "timestamp": 1770359591.638437
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: None)",
+          "raw_audio_blob": null,
+          "followup_index": 9,
+          "question_type": "followup",
+          "timestamp": 1770359657.588938
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 10,
+          "question_type": "followup",
+          "timestamp": 1770359657.6945121
+        },
+        {
+          "topic": "end-to-end recruitment processes",
+          "question": "Can you describe a time when you implemented a change to an existing recruitment process, and what impact it had on the outcome?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 11,
+          "question_type": "followup",
+          "timestamp": 1770359993.4987378
+        },
+        {
+          "topic": "employee records and databases",
+          "question": "Can you describe a time when you had to troubleshoot an issue with employee data accuracy in a database?",
+          "answer_text": "[MANUAL] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770360030.462802
+        },
+        {
+          "topic": "employee records and databases",
+          "question": "Can you walk me through a specific scenario where you would use a manual approach to handling employee records?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT completed)",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770360096.618707
+        },
+        {
+          "topic": "employee records and databases",
+          "question": "How would you handle a situation where the database schema needs to be updated to accommodate new employee information, while ensuring data consistency and minimal downtime?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770360097.8137221
+        },
+        {
+          "topic": "employee records and databases",
+          "question": "Can you walk me through your thought process when deciding between a relational database and a NoSQL database for storing employee records?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT completed)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770360164.4511218
+        },
+        {
+          "topic": "employee records and databases",
+          "question": "What are some potential failure modes or edge cases you'd consider when designing a database schema for employee records?",
+          "answer_text": "[TIMEOUT] (No audible response captured: INVALID_WAV_HEADER)",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770360165.2567549
+        },
+        {
+          "topic": "compliance with company policies and labor laws",
+          "question": "Can you describe a situation where you had to balance compliance with company policies and labor laws while making a business decision?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770360646.152643
+        },
+        {
+          "topic": "compliance with company policies and labor laws",
+          "question": "Can you provide a specific example of how you would handle a situation where a team member is unsure about a company policy or labor law?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770360690.921623
+        },
+        {
+          "topic": "compliance with company policies and labor laws",
+          "question": "Can you walk me through how you would integrate compliance checks into our existing workflow management system?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770360758.4301639
+        },
+        {
+          "topic": "compliance with company policies and labor laws",
+          "question": "Can you walk me through your thought process when designing a system to handle a situation where a company policy conflicts with a labor law, and how you would prioritize compliance in such a scenario?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770360762.1627479
+        },
+        {
+          "topic": "compliance with company policies and labor laws",
+          "question": "Can you walk me through a situation where you had to balance compliance with company policies and labor laws, but it resulted in a tradeoff that impacted business goals?",
+          "answer_text": "Hello. Hello.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770360798.956949
+        }
+      ],
+      "current_followup_count": 5
+    },
+    {
+      "interview_id": "f9544d21-b53c-48af-bd70-09b0cdb06a78",
+      "candidate_id": 15,
+      "current_question": "How would you handle a situation where ensuring data accuracy consistency and integrity leads to a significant delay in data processing, potentially impacting business operations?",
+      "status": "COMPLETED",
+      "created_at": "2026-02-06 13:47:06.906047",
+      "focus_areas": [
+        {
+          "order": 1,
+          "topic": "write complex sql queries",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of write complex sql queries"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 2,
+          "topic": "perform data analysis using python",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of perform data analysis using python"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 3,
+          "topic": "ensure data accuracy consistency and integrity",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of ensure data accuracy consistency and integrity"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        }
+      ],
+      "current_topic": "ensure data accuracy consistency and integrity",
+      "current_topic_index": 2,
+      "current_followup_count": 5,
+      "interview_trace": [
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you describe a time when you had to optimize a slow-running SQL query, and what steps you took to improve its performance?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770365935.926242
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you provide a concrete example of a complex SQL query where you had to handle a situation where the data was not in a normalized format?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770365979.662047
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "How did you handle indexing and performance optimization for this query, considering the large dataset involved?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770366046.791477
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you walk me through your thought process when deciding between a subquery and a join in a complex SQL query?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770366050.6467478
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "What are some potential failure modes or edge cases you'd consider when implementing this query, and how would you handle them?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770366096.075728
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you describe a time when you had to analyze a large dataset in Python and identify a key trend or insight that informed a business decision?",
+          "answer_text": "Can you describe a time when you had to analyse a large data set in Python And identify a key trend or insight that informed a business decision? Question.",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770366957.332818
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through the specific steps you took to handle memory constraints when working with the large dataset in that scenario?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770367024.41236
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through how you would handle a large dataset that doesn't fit into memory, given the approach you would take for data analysis?",
+          "answer_text": "Yeah.",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770367030.528194
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through your thought process behind choosing a specific data structure for this analysis, and how you determined it was the most suitable choice?",
+          "answer_text": "Can you walk me through your thought process behind choosing a specific data structure for this analysis and how do you deter mind it was the most suitable choice?",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770367070.78912
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "What were some potential tradeoffs or challenges you considered when choosing that specific data structure, and how did you mitigate or address them?",
+          "answer_text": "What were some potential trade-offs or challenges you considered when choosing that specific data structure and how did you mitigate or address them?",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770367105.622745
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you describe a time when you identified and corrected a data inconsistency in a production system, and what steps you took to prevent it from happening again?",
+          "answer_text": "Can you describe a time when you identified and corrected a data inconsistency in the production system and what steps you took to prevent it from happening again?",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770367142.7103791
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you walk me through the specific steps you took to correct the data inconsistency, and how you verified that the correction was successful?",
+          "answer_text": "About this answer, I don't know anything and I don't know how to answer.",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770367176.119009
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "How would you implement data validation checks in a database schema to prevent incorrect data from being inserted in the first place?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770367242.415481
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you walk me through your thought process behind choosing a particular data validation approach in a scenario where data consistency and integrity are critical?",
+          "answer_text": "I haven't checked, so let's meet up.",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770367247.404358
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "How would you handle a situation where ensuring data accuracy consistency and integrity leads to a significant delay in data processing, potentially impacting business operations?",
+          "answer_text": "Vishka Khan iska ka kya kya Hua hova ho Gaya ho Gaya.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770367303.883229
+        }
+      ]
+    },
+    {
+      "interview_id": "c183c7ce-4aa1-4cd8-bcc8-c9b976bf1120",
+      "candidate_id": 16,
+      "current_question": "How would you handle a situation where your data accuracy consistency and integrity checks fail due to a temporary network outage, and what tradeoffs would you consider to minimize data loss during such an event?",
+      "status": "COMPLETED",
+      "created_at": "2026-02-06 15:15:39.434121",
+      "focus_areas": [
+        {
+          "order": 1,
+          "topic": "write complex sql queries",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of write complex sql queries"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 2,
+          "topic": "perform data analysis using python",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of perform data analysis using python"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 3,
+          "topic": "ensure data accuracy consistency and integrity",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of ensure data accuracy consistency and integrity"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        }
+      ],
+      "current_topic": "ensure data accuracy consistency and integrity",
+      "current_topic_index": 2,
+      "current_followup_count": 5,
+      "interview_trace": [
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you describe a recent situation where you had to optimize a slow-running SQL query, and what steps you took to improve its performance?",
+          "answer_text": "MCU names.",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770371265.730582
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you write a SQL query to retrieve the names of all Avengers who have fought against Thanos in at least two different movies?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770371333.1258
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you walk me through how you would optimize the query for performance, given the potential timeout issue you just encountered?",
+          "answer_text": "Adjust speech to text. I use Curry.",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770371335.36292
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you walk me through your thought process when deciding to use a temporary table versus a Common Table Expression (CTE) in the Adjust speech to text query?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770371403.1290638
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "What are some potential failure modes or edge cases you'd consider when writing a complex SQL query like the one you were attempting to write, and how would you handle them?",
+          "answer_text": "English in English 9.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770371406.658819
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you describe a time when you had to analyze a large dataset in Python and identify a key insight or trend that informed a business decision?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770371472.713515
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through a real-world scenario where you would use data analysis in Python to make a decision, and how you would approach it?",
+          "answer_text": "OK, give me the answer for this given question with 445 seconds under 45 seconds come in. Just my answer for this particular question to Joe. Don't want to answer Deva.",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770371478.386448
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through how you handled the potential edge case where the input data is missing or contains unexpected values?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770371544.1548018
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through your thought process when deciding on the data structures to use for this analysis, and how you would optimize them for performance?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770371547.449219
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "What are some potential pitfalls or edge cases you'd consider when implementing data analysis in a production environment, and how would you address them?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770371614.117124
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you describe a time when you identified and corrected a data inconsistency in a production system, and what steps you took to prevent it from happening again?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770371620.404861
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you provide a specific scenario where data accuracy consistency and integrity were compromised, and how you would have handled it?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770371687.1159968
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "How would you handle a situation where the data validation logic is complex and spans multiple lines of code, potentially leading to a timeout issue like the one we just experienced?",
+          "answer_text": "After precondition by time.",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770371690.613834
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "What led you to choose a time-based approach over other potential methods for ensuring data accuracy consistency and integrity in this scenario?",
+          "answer_text": "[TIMEOUT] (No audible response captured: EMPTY_AUDIO_CONTENT)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770371757.275866
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "How would you handle a situation where your data accuracy consistency and integrity checks fail due to a temporary network outage, and what tradeoffs would you consider to minimize data loss during such an event?",
+          "answer_text": "Open phone kind of MVP that we can use, but we can leverage based on the virtual model.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770371763.243149
+        }
+      ]
+    }
+  ],
+  "user_id_counter": 17
+}
