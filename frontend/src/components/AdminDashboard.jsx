@@ -410,10 +410,10 @@ function ResumeList() {
 
                                 // Logic for Recommendation (only if evaluation exists)
                                 const interviewScore = r.total_interview_score || 0;
+                                const scoreGood = interviewScore >= 6;
                                 const cheatingLow = r.cheating_severity === 'LOW';
                                 const tabChangesOk = r.tab_change_count <= 3;
-                                const scoreGood = interviewScore >= 6;
-                                const interviewRecommended = hasEvaluation && scoreGood && (cheatingLow || tabChangesOk);
+                                const interviewRecommended = hasEvaluation && scoreGood;
 
                                 // Styling based on status
                                 const bg = !hasEvaluation ? '#f7fafc' : (interviewRecommended ? '#f0fff4' : '#fff5f5');

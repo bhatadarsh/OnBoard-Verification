@@ -396,10 +396,6 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             eval_data = interview["evaluation"]
             total_score = eval_data.get("overall_score", 0.0)
             
-            # Soft adjust by cheating score (e.g. 5% reduction per 1.0 cheating score)
-            penalty = min(0.5, (c_score / 5.0)) # Max 50% penalty
-            total_score = round(total_score * (1.0 - penalty), 2)
-            
             # Confidence Level
             results = eval_data.get("per_answer_results", [])
             conf_levels = [r.get("confidence_level", "MEDIUM") for r in results if "confidence_level" in r]

@@ -1031,8 +1031,8 @@
       "job_id": "JOB_6",
       "resume_id": "2ff4e7f1-e82b-47a2-9e00-3ea5d024cffc",
       "resume_blob_path": "resumes/CAND_26/20260207_211334_Matching_Resume_AI_Engineer.docx",
-      "status": "SHORTLISTED",
-      "interview_unlocked": true,
+      "status": "SELECTED",
+      "interview_unlocked": false,
       "uploaded_at": "2026-02-07 21:13:36.864329",
       "intelligence": {
         "candidate_id": "26",
@@ -1322,30 +1322,32 @@
           "timestamp": 1770468825.29517,
           "evaluation": {
             "answer_id": "turn_1",
-            "score": 6.5,
+            "score": 9.0,
             "strengths": [
               "Demonstrated problem-solving skills and technical knowledge of SQL",
-              "Identified relevant optimization steps such as analyzing the execution plan and indexing"
+              "Provided a clear and structured response",
+              "Showcased practical experience evidence with real-world optimization steps"
             ],
             "weaknesses": [
-              "Lacked specific real-world example or hands-on experience",
-              "Did not explicitly mention query design practices or trade-offs"
+              "Lacked explicit mention of query design practices",
+              "Did not provide a specific example from personal experience"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describe a recent situation where a slow-running SQL query was optimized",
-                "Mention specific steps taken to improve performance, including execution plan analysis, indexing, and query design practices"
+                "Recent situation where a slow-running SQL query was optimized",
+                "Steps taken to improve performance, including execution plan analysis, indexing, and query design practices"
               ],
               "covered": [
                 "Problem-solving skills and technical knowledge of SQL",
-                "Optimization steps such as execution plan analysis and indexing"
+                "Execution plan analysis and indexing as optimization steps",
+                "Clear and structured response"
               ],
               "missed": [
-                "Specific real-world example or hands-on experience",
-                "Query design practices and trade-offs"
+                "Query design practices as an optimization step",
+                "Specific example from personal experience"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of SQL optimization techniques, but lacked specific examples and depth in their response. They failed to explicitly mention query design practices and trade-offs, which are crucial aspects of optimization. However, they did show problem-solving skills and technical knowledge of SQL, which are essential for the role.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of SQL optimization techniques and provided a clear response. However, they missed mentioning query design practices and did not provide a specific example from their personal experience. Overall, the response was strong, but could be improved with more specificity and real-world examples.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -1359,36 +1361,35 @@
           "timestamp": 1770468896.972586,
           "evaluation": {
             "answer_id": "turn_2",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrated a general understanding of query optimization principles.",
-              "Mentioned relevant steps such as analyzing the current plan, ensuring proper indexing, and reviewing query logic."
+              "Demonstrated understanding of key steps in optimizing query execution plan",
+              "Mentioned relevant considerations such as indexing, joint order, and statistics"
             ],
             "weaknesses": [
-              "Lacked specific examples or real-world experiences to support their claims.",
-              "Failed to provide detailed explanations for each step, making it hard to assess their depth of understanding.",
-              "Did not explicitly discuss the importance of data distribution and its impact on query optimization."
+              "Lacked specific examples or real-world experiences",
+              "Did not provide detailed explanations for each step"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Analyzing the current query plan using tools like EXPLAIN or DBCC INPUTBUFFER.",
-                "Identifying performance bottlenecks and optimizing the join order and types.",
-                "Discussing the impact of data distribution on query performance and potential solutions like partitioning or denormalization.",
-                "Providing real-world examples or case studies to demonstrate their expertise."
+                "Analyzing current plan and identifying bottlenecks",
+                "Optimizing indexing and statistics",
+                "Reviewing query logic and considering partitioning and denormalization"
               ],
               "covered": [
-                "Analyzing the current plan",
+                "Analyzing current plan",
                 "Ensuring proper indexing",
+                "Optimizing joint order and types",
+                "Updating statistics",
+                "Considering partitioning and denormalization",
                 "Reviewing query logic"
               ],
               "missed": [
-                "Join order and types optimization",
-                "Data distribution considerations",
-                "Partitioning and denormalization",
-                "Real-world examples or case studies"
+                "Providing specific examples or real-world experiences",
+                "Detailed explanations for each step"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a basic understanding of query optimization principles but failed to provide specific examples or real-world experiences to support their claims. Their response lacked depth and failed to address key aspects of query optimization.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the key steps involved in optimizing query execution plan. However, they lacked specific examples or real-world experiences to support their claims. Additionally, they did not provide detailed explanations for each step, which would have added more depth to their answer.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -1402,33 +1403,29 @@
           "timestamp": 1770468946.2477021,
           "evaluation": {
             "answer_id": "turn_3",
-            "score": 2.0,
+            "score": 4.0,
             "strengths": [
-              "Candidate attempted to address the question",
-              "Mentioned method as a requirement"
+              "Candidate provided a relevant sentence"
             ],
             "weaknesses": [
-              "Lack of clarity and specificity",
-              "No concrete steps or strategies provided"
+              "Lack of depth in understanding, technical correctness, and practical experience evidence"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Index types (B-tree, hash, full-text)",
-                "Index fragmentation and its impact",
-                "Index maintenance strategies",
-                "Query optimization techniques"
+                "Indexing strategies for complex queries",
+                "Index fragmentation and maintenance",
+                "Trade-offs between indexing and query performance"
               ],
               "covered": [
-                "Method as a requirement"
+                "Implementing proper indexing for a complex query"
               ],
               "missed": [
-                "Index types and their suitability for complex queries",
+                "Indexing strategies (e.g., clustered, non-clustered, covering indexes)",
                 "Index fragmentation causes and effects",
-                "Index maintenance schedules and techniques",
-                "Query optimization strategies"
+                "Maintenance techniques (e.g., index rebuild, reorganize, drop)"
               ]
             },
-            "reasoning_notes": "The candidate's answer lacks depth and specificity, failing to address key aspects of implementing proper indexing for complex queries. They mention 'method' as a requirement, but do not provide any concrete steps or strategies. This indicates a lack of understanding of the underlying principles and practical experience. The answer does not demonstrate a clear logical flow or trade-off awareness.",
+            "reasoning_notes": "The candidate's answer lacks depth in understanding and technical correctness. They failed to provide specific indexing strategies, discuss index fragmentation and maintenance, and offer practical experience evidence. While they provided a relevant sentence, it does not demonstrate a comprehensive understanding of the topic.",
             "confidence_level": "LOW"
           }
         },
@@ -1442,33 +1439,30 @@
           "timestamp": 1770469003.514292,
           "evaluation": {
             "answer_id": "turn_4",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions balancing query optimization and performance impact",
-              "Candidate acknowledges the importance of data characteristics and overall database workload"
+              "Demonstrates a clear understanding of the trade-offs between composite and individual indexes",
+              "Recognizes the importance of query patterns, data characteristics, and database workload"
             ],
             "weaknesses": [
-              "Lack of specific examples or real-world scenarios",
-              "No clear explanation of when to choose a composite index over individual indexes",
-              "No discussion of index maintenance and fragmentation"
+              "Lacks specific examples or real-world scenarios to support the answer",
+              "Does not provide a clear decision-making framework for choosing between composite and individual indexes"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Balancing query optimization and performance impact",
-                "Considering data characteristics and overall database workload",
-                "Discussing index maintenance and fragmentation",
-                "Providing specific examples or real-world scenarios"
+                "Balancing query optimization, performance impact, and maintenance overload",
+                "Considering query patterns, data characteristics, and database workload",
+                "Providing a clear decision-making framework for choosing between composite and individual indexes"
               ],
               "covered": [
-                "Balancing query optimization and performance impact",
-                "Considering data characteristics and overall database workload"
+                "Balancing query optimization, performance impact, and maintenance overload",
+                "Considering query patterns, data characteristics, and database workload"
               ],
               "missed": [
-                "Index maintenance and fragmentation",
-                "Specific examples or real-world scenarios"
+                "Providing a clear decision-making framework for choosing between composite and individual indexes"
               ]
             },
-            "reasoning_notes": "The candidate demonstrates a basic understanding of the trade-offs between composite indexes and individual indexes. However, their response lacks specificity and real-world examples, which are crucial for making informed decisions in a production environment. A more detailed explanation of index maintenance and fragmentation would have strengthened their answer.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of the trade-offs between composite and individual indexes, but lacks specific examples or real-world scenarios to support the answer. The answer is clear and concise, but could benefit from a more detailed decision-making framework.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -1482,34 +1476,34 @@
           "timestamp": 1770469065.061737,
           "evaluation": {
             "answer_id": "turn_5",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions potential pitfalls of Composite Indexes",
-              "Candidate is aware of the left-to-right rule for Composite Indexes"
+              "Demonstrated understanding of Composite Index limitations",
+              "Mentioned potential pitfalls and edge cases",
+              "Provided a clear explanation of the 'left to right, no skipping rule'"
             ],
             "weaknesses": [
-              "Lack of depth in understanding the underlying principles",
-              "No mention of other edge cases or scenarios",
-              "No real-world examples or practical experience evidence",
-              "Answer is somewhat vague and lacks clarity"
+              "Lacked specific examples or real-world scenarios",
+              "Did not discuss the impact of index maintenance on performance",
+              "Failed to mention the importance of column order in the index"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Potential pitfalls of Composite Indexes",
-                "Edge cases where Composite Indexes might not perform as expected",
-                "Handling scenarios where Composite Indexes underperform or cause overhead"
+                "Potential pitfalls of Composite Indexes (e.g., index maintenance, column order)",
+                "Edge cases where Composite Indexes underperform (e.g., queries with skipping)",
+                "Best practices for designing and using Composite Indexes"
               ],
               "covered": [
-                "Composite Indexes can underperform or cause overhead if designed improperly",
-                "Composite Indexes work effectively only when queries follow the left-to-right rule"
+                "Potential pitfalls of Composite Indexes",
+                "Edge cases where Composite Indexes underperform"
               ],
               "missed": [
-                "Other edge cases, such as index fragmentation, skewness, or data distribution",
-                "Scenarios where Composite Indexes are not suitable, such as frequent updates or deletes",
-                "Best practices for designing and maintaining Composite Indexes"
+                "Index maintenance impact on performance",
+                "Importance of column order in the index",
+                "Best practices for designing and using Composite Indexes"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows some understanding of Composite Indexes, but lacks depth and practical experience evidence. They mention potential pitfalls and the left-to-right rule, but fail to cover other important edge cases and scenarios. The answer is also somewhat vague and lacks clarity.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of Composite Index limitations and potential pitfalls. However, their response lacked specific examples and real-world scenarios, which would have strengthened their answer. Additionally, they failed to discuss the impact of index maintenance on performance and the importance of column order in the index.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -1526,24 +1520,25 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of relevance to the question",
-              "No demonstration of technical correctness or practical experience evidence"
+              "Lack of audible response",
+              "No relevant information provided"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describing a specific time when analyzing a large dataset in Python",
-                "Identifying a key trend or insight that informed a business decision",
-                "Providing a structured response with clear articulation"
+                "Introduction",
+                "Methodology",
+                "Key Trend or Insight",
+                "Business Decision"
               ],
               "covered": [],
               "missed": [
-                "Relevant example of data analysis in Python",
-                "Key trend or insight that informed a business decision",
-                "Structured response with clear articulation"
+                "Introduction",
+                "Methodology",
+                "Key Trend or Insight",
+                "Business Decision"
               ]
             },
-            "reasoning_notes": "The candidate's response was incomplete and did not address the question. The lack of audible response captured and the absence of relevant information make it difficult to evaluate the candidate's technical skills and experience.",
+            "reasoning_notes": "The candidate's answer is not audible, which makes it difficult to evaluate their technical skills and experience.",
             "confidence_level": "LOW"
           }
         },
@@ -1557,34 +1552,30 @@
           "timestamp": 1770469182.6201742,
           "evaluation": {
             "answer_id": "turn_7",
-            "score": 4.0,
+            "score": 8.0,
             "strengths": [
-              "Candidate demonstrates a structured approach to data analysis",
-              "Candidate mentions key steps in the data analysis process"
+              "Relevant structured process",
+              "Awareness of data analysis steps"
             ],
             "weaknesses": [
-              "Lack of specific examples or real-world context",
-              "Answer is too general and doesn't provide concrete details"
+              "Lack of specific example",
+              "No mention of Python implementation"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Specific data analysis task or problem statement",
-                "Clear explanation of data acquisition and cleaning",
-                "Description of exploratory data analysis and modeling techniques",
-                "Real-world examples or case studies"
+                "Concrete example of data analysis task",
+                "Python implementation"
               ],
               "covered": [
-                "Structured approach to data analysis",
-                "Key steps in the data analysis process"
+                "Structured process",
+                "Data analysis steps"
               ],
               "missed": [
-                "Specific data analysis task or problem statement",
-                "Clear explanation of data acquisition and cleaning",
-                "Description of exploratory data analysis and modeling techniques",
-                "Real-world examples or case studies"
+                "Specific example",
+                "Python implementation details"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of the data analysis process, but lacks specific examples and real-world context. The answer is too general and doesn't provide concrete details. The candidate's response is more of a high-level overview rather than a detailed explanation of how they would approach a real-world data analysis task.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of the data analysis process, but lacks a concrete example and specific details about Python implementation. This suggests a good conceptual understanding but limited practical experience.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -1598,37 +1589,37 @@
           "timestamp": 1770469244.6608598,
           "evaluation": {
             "answer_id": "turn_8",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions the importance of a structured approach for exploratory data analysis.",
-              "They identify key libraries (Pandas, Matplotlib, Seaborn) for data manipulation and visualization.",
-              "Candidate mentions handling missing values and outliers, which is a crucial aspect of exploratory data analysis."
+              "Demonstrated understanding of exploratory data analysis",
+              "Mentioned use of relevant libraries (Pandas, Matplotlib, Seaborn)",
+              "Outlined key steps for handling missing values and outliers"
             ],
             "weaknesses": [
-              "Lack of specific details on how to handle missing values (imputation or removal) without context.",
-              "No clear explanation of why sampling or loading in chunks is necessary for large files.",
-              "No mention of data quality checks or data profiling, which are essential steps in exploratory data analysis."
+              "Lack of specific examples or real-world experience",
+              "Used vague terms (e.g., 'structured, memory-efficient approach')",
+              "Did not provide a clear explanation of imputation or removal methods"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Importance of data sampling or chunking for large files",
-                "Data quality checks and profiling",
-                "Handling missing values and outliers using specific techniques (e.g., imputation, removal)",
-                "Visualizing distributions using box plots and other plots",
-                "Using Pandas and Matplotlib/Seaborn for data manipulation and visualization"
+                "Importing necessary libraries",
+                "Loading and sampling large datasets",
+                "Visualizing distributions (e.g., box plots)",
+                "Identifying and handling missing values",
+                "Detecting and handling outliers"
               ],
               "covered": [
-                "Importance of a structured approach",
-                "Key libraries (Pandas, Matplotlib, Seaborn)",
-                "Handling missing values and outliers"
+                "Importing necessary libraries",
+                "Loading and sampling large datasets",
+                "Visualizing distributions",
+                "Identifying missing values"
               ],
               "missed": [
-                "Data sampling or chunking for large files",
-                "Data quality checks and profiling",
-                "Specific techniques for handling missing values"
+                "Clear explanation of imputation or removal methods",
+                "Handling outliers"
               ]
             },
-            "reasoning_notes": "The candidate demonstrates a general understanding of exploratory data analysis and the importance of handling missing values and outliers. However, they lack specific details and real-world examples to support their claims. The answer could be improved by providing more context and explaining the reasoning behind their approach.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of exploratory data analysis and the necessary steps to handle missing values and outliers. However, they lacked specific examples and real-world experience, which reduced their score. Additionally, they used vague terms and did not provide a clear explanation of imputation or removal methods.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -1642,27 +1633,26 @@
           "timestamp": 1770469288.9300742,
           "evaluation": {
             "answer_id": "turn_9",
-            "score": 0.0,
-            "strengths": [],
+            "score": 4.0,
+            "strengths": [
+              "Provided a relevant sentence"
+            ],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of thought process explanation",
-              "No justification for imputation or removal of missing values"
+              "No audible response captured, lack of depth and technical correctness"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Decision-making process for handling missing values",
-                "Justification for imputation or removal",
-                "Real-world project context"
+                "Thought process for imputing or removing missing values",
+                "Justification for the choice in a real-world project",
+                "Technical correctness and real-world examples"
               ],
               "covered": [],
               "missed": [
-                "Decision-making process for handling missing values",
-                "Justification for imputation or removal",
-                "Real-world project context"
+                "Decision-making process for imputing or removing missing values",
+                "Real-world project scenario and justification"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide any audible response, which makes it impossible to evaluate their thought process, depth of understanding, technical correctness, practical experience evidence, reasoning ability, and communication clarity. The lack of response indicates a significant weakness in their ability to articulate their approach to handling missing values in a real-world project.",
+            "reasoning_notes": "The candidate failed to provide a clear and audible response, which is a critical aspect of the question. Although a relevant sentence was provided, it does not demonstrate a thorough understanding of the topic. The lack of depth and technical correctness in the response makes it difficult to assess the candidate's skills. The cheating signal SIMILAR_PATTERN does not significantly impact the score due to the overall lack of substance in the response.",
             "confidence_level": "LOW"
           }
         },
@@ -1676,33 +1666,27 @@
           "timestamp": 1770469345.529608,
           "evaluation": {
             "answer_id": "turn_10",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions data quality and pipeline integrity, which are crucial aspects of production environments.",
-              "They acknowledge the importance of operational and system constraints."
+              "Relevant discussion of data quality, scalability, and maintenance",
+              "Awareness of edge cases and input boundaries"
             ],
             "weaknesses": [
-              "The answer lacks specificity and concrete examples.",
-              "It does not provide a clear logical flow or cause-effect explanation.",
-              "The language used is somewhat vague and lacks technical correctness."
+              "Lack of specific examples or real-world experience",
+              "Somewhat vague and general statements"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data quality and pipeline integrity",
-                "Scalability and maintenance",
-                "Edge cases and input boundaries",
-                "Operational and system constraints"
+                "Data quality, scalability, maintenance, edge cases, and operational constraints"
               ],
               "covered": [
-                "Data quality and pipeline integrity"
+                "Data quality, scalability, maintenance, edge cases"
               ],
               "missed": [
-                "Scalability and maintenance",
-                "Edge cases and input boundaries",
-                "Operational and system constraints"
+                "Operational constraints, specific examples or real-world experience"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows a general understanding of the challenges in implementing data analysis in a production environment. However, it lacks concrete examples and a clear logical flow, which makes it difficult to assess their depth of understanding and practical experience. The answer also contains some vague statements, which may indicate a lack of technical correctness.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of the challenges involved in implementing data analysis in a production environment. However, their response could be more specific and detailed, with real-world examples to support their claims. The discussion of data quality, scalability, and maintenance is relevant, but the mention of operational constraints is somewhat vague. Overall, the candidate's answer is satisfactory, but could be improved with more concrete examples and a clearer articulation of their thoughts.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -1716,27 +1700,27 @@
           "timestamp": 1770469389.8310049,
           "evaluation": {
             "answer_id": "turn_11",
-            "score": 0.0,
+            "score": 3.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of relevance to the question",
-              "No demonstration of depth of understanding, technical correctness, practical experience evidence, reasoning ability, or communication clarity"
+              "Lack of audible response",
+              "Inability to assess relevance, depth of understanding, technical correctness, practical experience evidence, reasoning ability, and communication clarity"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Identifying a data inconsistency in a production system",
-                "Correcting the issue",
-                "Preventing similar issues from occurring in the future"
+                "Relevance",
+                "Depth of understanding",
+                "Technical correctness",
+                "Practical experience evidence",
+                "Reasoning ability",
+                "Communication clarity"
               ],
               "covered": [],
               "missed": [
-                "Description of the data inconsistency",
-                "Steps taken to correct the issue",
-                "Preventative measures to avoid similar issues"
+                "All aspects of the expected answer outline"
               ]
             },
-            "reasoning_notes": "The candidate's response was not captured due to STT_NO_SPEECH_RECOGNIZED, making it impossible to evaluate their answer. The presence of a SIMILAR_PATTERN flag suggests that the candidate may have provided a similar response in the past, but this does not compensate for the lack of content in this specific response.",
+            "reasoning_notes": "The candidate's lack of audible response makes it impossible to assess their answer directly. However, considering the rules provided, we can assign a minimum score of 3.0 for providing a relevant sentence.",
             "confidence_level": "LOW"
           }
         },
@@ -1753,28 +1737,28 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of concrete example",
-              "No demonstration of technical correctness or depth of understanding"
+              "Empty answer",
+              "Lack of relevance",
+              "Lack of depth of understanding",
+              "Lack of technical correctness",
+              "Lack of practical experience evidence",
+              "Lack of reasoning ability",
+              "Lack of communication clarity"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data inconsistency issue",
-                "Real-world scenario",
-                "Concrete example",
-                "Technical correctness",
-                "Depth of understanding"
+                "Identifying the issue",
+                "Root cause analysis",
+                "Solution approach",
+                "Technical tools and methods",
+                "Real-world example"
               ],
               "covered": [],
               "missed": [
-                "Data inconsistency issue",
-                "Real-world scenario",
-                "Concrete example",
-                "Technical correctness",
-                "Depth of understanding"
+                "All aspects of the expected answer outline"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide a concrete example of handling a data inconsistency issue in a real-world scenario, which is a critical aspect of ensuring data accuracy, consistency, and integrity. The lack of audible response and technical correctness makes it difficult to assess their depth of understanding and reasoning ability.",
+            "reasoning_notes": "The candidate's empty answer indicates a lack of preparation and understanding of the question. This is a significant concern, as it suggests that the candidate may not be able to handle real-world data inconsistency issues.",
             "confidence_level": "LOW"
           }
         },
@@ -1791,24 +1775,22 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of technical correctness",
-              "No real-world examples or hands-on exposure"
+              "No audible response captured"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data validation checks in a distributed system",
-                "Consistency across multiple nodes",
-                "Implementation strategies"
+                "Data validation strategy",
+                "Distributed system architecture",
+                "Validation techniques",
+                "Implementation details",
+                "Example or use case"
               ],
               "covered": [],
               "missed": [
-                "Data validation techniques (e.g., checksums, digital signatures)",
-                "Distributed system architecture (e.g., master-slave, peer-to-peer)",
-                "Consistency protocols (e.g., Paxos, Raft)"
+                "All expected points"
               ]
             },
-            "reasoning_notes": "The candidate's response was not captured due to STT_NO_SPEECH_RECOGNIZED. As a result, it's impossible to evaluate their technical correctness, practical experience, or reasoning ability. The lack of a response suggests a potential weakness in their ability to articulate complex technical concepts.",
+            "reasoning_notes": "The candidate's answer is incomplete, and we cannot evaluate their response based on the provided criteria.",
             "confidence_level": "LOW"
           }
         },
@@ -1822,27 +1804,37 @@
           "timestamp": 1770469458.877633,
           "evaluation": {
             "answer_id": "turn_14",
-            "score": 0.0,
+            "score": 3.0,
             "strengths": [],
             "weaknesses": [
-              "Lack of audible response",
-              "No clear thought process or justification",
-              "No evidence of technical correctness or practical experience"
+              "Empty response",
+              "Lack of relevance",
+              "Lack of depth of understanding",
+              "Lack of technical correctness",
+              "Lack of practical experience evidence",
+              "Lack of reasoning ability",
+              "Lack of communication clarity"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data accuracy consistency and integrity",
-                "Manual approach justification",
-                "Trade-offs and considerations"
+                "Relevance",
+                "Depth of Understanding",
+                "Technical Correctness",
+                "Practical Experience Evidence",
+                "Reasoning Ability",
+                "Communication Clarity"
               ],
               "covered": [],
               "missed": [
-                "Data validation techniques",
-                "Automated testing methods",
-                "Data quality metrics"
+                "Relevance",
+                "Depth of Understanding",
+                "Technical Correctness",
+                "Practical Experience Evidence",
+                "Reasoning Ability",
+                "Communication Clarity"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide a clear and audible response, which is a significant concern. Without a thought process or justification, it's impossible to assess their understanding of data accuracy consistency and integrity. The lack of technical correctness and practical experience evidence further reduces confidence in their abilities.",
+            "reasoning_notes": "The candidate's empty response indicates a lack of understanding of the question and the importance of data accuracy consistency and integrity. They have not demonstrated any of the expected skills or conceptual strengths.",
             "confidence_level": "LOW"
           }
         },
@@ -1856,26 +1848,29 @@
           "timestamp": 1770469481.248063,
           "evaluation": {
             "answer_id": "turn_15",
-            "score": 0.0,
-            "strengths": [],
+            "score": 4.0,
+            "strengths": [
+              "Candidate provided a relevant sentence"
+            ],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of clear answer structure",
-              "No trade-off discussion"
+              "No audible response captured, lack of depth and technical correctness"
             ],
             "expected_vs_actual": {
               "expected_focus": [
                 "Automated data validation process failure",
-                "Error handling and rectification",
-                "System downtime vs manual intervention trade-off"
+                "Error handling and trade-off analysis",
+                "System downtime or manual intervention"
               ],
-              "covered": [],
+              "covered": [
+                "Relevant sentence provided"
+              ],
               "missed": [
-                "Error handling and rectification strategies",
-                "System downtime and manual intervention trade-off analysis"
+                "Automated data validation process failure explanation",
+                "Error handling strategies",
+                "Trade-off analysis and system downtime or manual intervention discussion"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide a clear and audible response, which is a critical aspect of the interview. The lack of a structured answer and discussion on trade-offs further indicates a lack of understanding of the topic. Cheating signals do not provide sufficient confidence to adjust the score.",
+            "reasoning_notes": "The candidate's answer lacks depth and technical correctness. Although they provided a relevant sentence, it does not demonstrate a clear understanding of the topic. The cheating signal SIMILAR_PATTERN does not significantly impact the score due to the lack of a meaningful response.",
             "confidence_level": "LOW"
           }
         }
@@ -1983,164 +1978,158 @@
       "last_question_served_at": 1770469459.397172,
       "latest_warning": null,
       "evaluation": {
-        "overall_score": 2.43,
+        "overall_score": 5.17,
         "evaluator_ver": "llama-3.1-8b-instant",
-        "evaluated_at": "2026-02-07T21:52:45.047841",
+        "evaluated_at": "2026-02-07T23:08:39.527073",
         "per_answer_results": [
           {
             "answer_id": "turn_1",
-            "score": 6.5,
+            "score": 9.0,
             "strengths": [
               "Demonstrated problem-solving skills and technical knowledge of SQL",
-              "Identified relevant optimization steps such as analyzing the execution plan and indexing"
+              "Provided a clear and structured response",
+              "Showcased practical experience evidence with real-world optimization steps"
             ],
             "weaknesses": [
-              "Lacked specific real-world example or hands-on experience",
-              "Did not explicitly mention query design practices or trade-offs"
+              "Lacked explicit mention of query design practices",
+              "Did not provide a specific example from personal experience"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describe a recent situation where a slow-running SQL query was optimized",
-                "Mention specific steps taken to improve performance, including execution plan analysis, indexing, and query design practices"
+                "Recent situation where a slow-running SQL query was optimized",
+                "Steps taken to improve performance, including execution plan analysis, indexing, and query design practices"
               ],
               "covered": [
                 "Problem-solving skills and technical knowledge of SQL",
-                "Optimization steps such as execution plan analysis and indexing"
+                "Execution plan analysis and indexing as optimization steps",
+                "Clear and structured response"
               ],
               "missed": [
-                "Specific real-world example or hands-on experience",
-                "Query design practices and trade-offs"
+                "Query design practices as an optimization step",
+                "Specific example from personal experience"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of SQL optimization techniques, but lacked specific examples and depth in their response. They failed to explicitly mention query design practices and trade-offs, which are crucial aspects of optimization. However, they did show problem-solving skills and technical knowledge of SQL, which are essential for the role.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of SQL optimization techniques and provided a clear response. However, they missed mentioning query design practices and did not provide a specific example from their personal experience. Overall, the response was strong, but could be improved with more specificity and real-world examples.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_2",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrated a general understanding of query optimization principles.",
-              "Mentioned relevant steps such as analyzing the current plan, ensuring proper indexing, and reviewing query logic."
+              "Demonstrated understanding of key steps in optimizing query execution plan",
+              "Mentioned relevant considerations such as indexing, joint order, and statistics"
             ],
             "weaknesses": [
-              "Lacked specific examples or real-world experiences to support their claims.",
-              "Failed to provide detailed explanations for each step, making it hard to assess their depth of understanding.",
-              "Did not explicitly discuss the importance of data distribution and its impact on query optimization."
+              "Lacked specific examples or real-world experiences",
+              "Did not provide detailed explanations for each step"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Analyzing the current query plan using tools like EXPLAIN or DBCC INPUTBUFFER.",
-                "Identifying performance bottlenecks and optimizing the join order and types.",
-                "Discussing the impact of data distribution on query performance and potential solutions like partitioning or denormalization.",
-                "Providing real-world examples or case studies to demonstrate their expertise."
+                "Analyzing current plan and identifying bottlenecks",
+                "Optimizing indexing and statistics",
+                "Reviewing query logic and considering partitioning and denormalization"
               ],
               "covered": [
-                "Analyzing the current plan",
+                "Analyzing current plan",
                 "Ensuring proper indexing",
+                "Optimizing joint order and types",
+                "Updating statistics",
+                "Considering partitioning and denormalization",
                 "Reviewing query logic"
               ],
               "missed": [
-                "Join order and types optimization",
-                "Data distribution considerations",
-                "Partitioning and denormalization",
-                "Real-world examples or case studies"
+                "Providing specific examples or real-world experiences",
+                "Detailed explanations for each step"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a basic understanding of query optimization principles but failed to provide specific examples or real-world experiences to support their claims. Their response lacked depth and failed to address key aspects of query optimization.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the key steps involved in optimizing query execution plan. However, they lacked specific examples or real-world experiences to support their claims. Additionally, they did not provide detailed explanations for each step, which would have added more depth to their answer.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_3",
-            "score": 2.0,
+            "score": 4.0,
             "strengths": [
-              "Candidate attempted to address the question",
-              "Mentioned method as a requirement"
+              "Candidate provided a relevant sentence"
             ],
             "weaknesses": [
-              "Lack of clarity and specificity",
-              "No concrete steps or strategies provided"
+              "Lack of depth in understanding, technical correctness, and practical experience evidence"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Index types (B-tree, hash, full-text)",
-                "Index fragmentation and its impact",
-                "Index maintenance strategies",
-                "Query optimization techniques"
+                "Indexing strategies for complex queries",
+                "Index fragmentation and maintenance",
+                "Trade-offs between indexing and query performance"
               ],
               "covered": [
-                "Method as a requirement"
+                "Implementing proper indexing for a complex query"
               ],
               "missed": [
-                "Index types and their suitability for complex queries",
+                "Indexing strategies (e.g., clustered, non-clustered, covering indexes)",
                 "Index fragmentation causes and effects",
-                "Index maintenance schedules and techniques",
-                "Query optimization strategies"
+                "Maintenance techniques (e.g., index rebuild, reorganize, drop)"
               ]
             },
-            "reasoning_notes": "The candidate's answer lacks depth and specificity, failing to address key aspects of implementing proper indexing for complex queries. They mention 'method' as a requirement, but do not provide any concrete steps or strategies. This indicates a lack of understanding of the underlying principles and practical experience. The answer does not demonstrate a clear logical flow or trade-off awareness.",
+            "reasoning_notes": "The candidate's answer lacks depth in understanding and technical correctness. They failed to provide specific indexing strategies, discuss index fragmentation and maintenance, and offer practical experience evidence. While they provided a relevant sentence, it does not demonstrate a comprehensive understanding of the topic.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_4",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions balancing query optimization and performance impact",
-              "Candidate acknowledges the importance of data characteristics and overall database workload"
+              "Demonstrates a clear understanding of the trade-offs between composite and individual indexes",
+              "Recognizes the importance of query patterns, data characteristics, and database workload"
             ],
             "weaknesses": [
-              "Lack of specific examples or real-world scenarios",
-              "No clear explanation of when to choose a composite index over individual indexes",
-              "No discussion of index maintenance and fragmentation"
+              "Lacks specific examples or real-world scenarios to support the answer",
+              "Does not provide a clear decision-making framework for choosing between composite and individual indexes"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Balancing query optimization and performance impact",
-                "Considering data characteristics and overall database workload",
-                "Discussing index maintenance and fragmentation",
-                "Providing specific examples or real-world scenarios"
+                "Balancing query optimization, performance impact, and maintenance overload",
+                "Considering query patterns, data characteristics, and database workload",
+                "Providing a clear decision-making framework for choosing between composite and individual indexes"
               ],
               "covered": [
-                "Balancing query optimization and performance impact",
-                "Considering data characteristics and overall database workload"
+                "Balancing query optimization, performance impact, and maintenance overload",
+                "Considering query patterns, data characteristics, and database workload"
               ],
               "missed": [
-                "Index maintenance and fragmentation",
-                "Specific examples or real-world scenarios"
+                "Providing a clear decision-making framework for choosing between composite and individual indexes"
               ]
             },
-            "reasoning_notes": "The candidate demonstrates a basic understanding of the trade-offs between composite indexes and individual indexes. However, their response lacks specificity and real-world examples, which are crucial for making informed decisions in a production environment. A more detailed explanation of index maintenance and fragmentation would have strengthened their answer.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of the trade-offs between composite and individual indexes, but lacks specific examples or real-world scenarios to support the answer. The answer is clear and concise, but could benefit from a more detailed decision-making framework.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_5",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions potential pitfalls of Composite Indexes",
-              "Candidate is aware of the left-to-right rule for Composite Indexes"
+              "Demonstrated understanding of Composite Index limitations",
+              "Mentioned potential pitfalls and edge cases",
+              "Provided a clear explanation of the 'left to right, no skipping rule'"
             ],
             "weaknesses": [
-              "Lack of depth in understanding the underlying principles",
-              "No mention of other edge cases or scenarios",
-              "No real-world examples or practical experience evidence",
-              "Answer is somewhat vague and lacks clarity"
+              "Lacked specific examples or real-world scenarios",
+              "Did not discuss the impact of index maintenance on performance",
+              "Failed to mention the importance of column order in the index"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Potential pitfalls of Composite Indexes",
-                "Edge cases where Composite Indexes might not perform as expected",
-                "Handling scenarios where Composite Indexes underperform or cause overhead"
+                "Potential pitfalls of Composite Indexes (e.g., index maintenance, column order)",
+                "Edge cases where Composite Indexes underperform (e.g., queries with skipping)",
+                "Best practices for designing and using Composite Indexes"
               ],
               "covered": [
-                "Composite Indexes can underperform or cause overhead if designed improperly",
-                "Composite Indexes work effectively only when queries follow the left-to-right rule"
+                "Potential pitfalls of Composite Indexes",
+                "Edge cases where Composite Indexes underperform"
               ],
               "missed": [
-                "Other edge cases, such as index fragmentation, skewness, or data distribution",
-                "Scenarios where Composite Indexes are not suitable, such as frequent updates or deletes",
-                "Best practices for designing and maintaining Composite Indexes"
+                "Index maintenance impact on performance",
+                "Importance of column order in the index",
+                "Best practices for designing and using Composite Indexes"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows some understanding of Composite Indexes, but lacks depth and practical experience evidence. They mention potential pitfalls and the left-to-right rule, but fail to cover other important edge cases and scenarios. The answer is also somewhat vague and lacks clarity.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of Composite Index limitations and potential pitfalls. However, their response lacked specific examples and real-world scenarios, which would have strengthened their answer. Additionally, they failed to discuss the impact of index maintenance on performance and the importance of column order in the index.",
             "confidence_level": "MEDIUM"
           },
           {
@@ -2148,172 +2137,162 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of relevance to the question",
-              "No demonstration of technical correctness or practical experience evidence"
+              "Lack of audible response",
+              "No relevant information provided"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describing a specific time when analyzing a large dataset in Python",
-                "Identifying a key trend or insight that informed a business decision",
-                "Providing a structured response with clear articulation"
+                "Introduction",
+                "Methodology",
+                "Key Trend or Insight",
+                "Business Decision"
               ],
               "covered": [],
               "missed": [
-                "Relevant example of data analysis in Python",
-                "Key trend or insight that informed a business decision",
-                "Structured response with clear articulation"
+                "Introduction",
+                "Methodology",
+                "Key Trend or Insight",
+                "Business Decision"
               ]
             },
-            "reasoning_notes": "The candidate's response was incomplete and did not address the question. The lack of audible response captured and the absence of relevant information make it difficult to evaluate the candidate's technical skills and experience.",
+            "reasoning_notes": "The candidate's answer is not audible, which makes it difficult to evaluate their technical skills and experience.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_7",
-            "score": 4.0,
+            "score": 8.0,
             "strengths": [
-              "Candidate demonstrates a structured approach to data analysis",
-              "Candidate mentions key steps in the data analysis process"
+              "Relevant structured process",
+              "Awareness of data analysis steps"
             ],
             "weaknesses": [
-              "Lack of specific examples or real-world context",
-              "Answer is too general and doesn't provide concrete details"
+              "Lack of specific example",
+              "No mention of Python implementation"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Specific data analysis task or problem statement",
-                "Clear explanation of data acquisition and cleaning",
-                "Description of exploratory data analysis and modeling techniques",
-                "Real-world examples or case studies"
+                "Concrete example of data analysis task",
+                "Python implementation"
               ],
               "covered": [
-                "Structured approach to data analysis",
-                "Key steps in the data analysis process"
+                "Structured process",
+                "Data analysis steps"
               ],
               "missed": [
-                "Specific data analysis task or problem statement",
-                "Clear explanation of data acquisition and cleaning",
-                "Description of exploratory data analysis and modeling techniques",
-                "Real-world examples or case studies"
+                "Specific example",
+                "Python implementation details"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of the data analysis process, but lacks specific examples and real-world context. The answer is too general and doesn't provide concrete details. The candidate's response is more of a high-level overview rather than a detailed explanation of how they would approach a real-world data analysis task.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of the data analysis process, but lacks a concrete example and specific details about Python implementation. This suggests a good conceptual understanding but limited practical experience.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_8",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions the importance of a structured approach for exploratory data analysis.",
-              "They identify key libraries (Pandas, Matplotlib, Seaborn) for data manipulation and visualization.",
-              "Candidate mentions handling missing values and outliers, which is a crucial aspect of exploratory data analysis."
+              "Demonstrated understanding of exploratory data analysis",
+              "Mentioned use of relevant libraries (Pandas, Matplotlib, Seaborn)",
+              "Outlined key steps for handling missing values and outliers"
             ],
             "weaknesses": [
-              "Lack of specific details on how to handle missing values (imputation or removal) without context.",
-              "No clear explanation of why sampling or loading in chunks is necessary for large files.",
-              "No mention of data quality checks or data profiling, which are essential steps in exploratory data analysis."
+              "Lack of specific examples or real-world experience",
+              "Used vague terms (e.g., 'structured, memory-efficient approach')",
+              "Did not provide a clear explanation of imputation or removal methods"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Importance of data sampling or chunking for large files",
-                "Data quality checks and profiling",
-                "Handling missing values and outliers using specific techniques (e.g., imputation, removal)",
-                "Visualizing distributions using box plots and other plots",
-                "Using Pandas and Matplotlib/Seaborn for data manipulation and visualization"
+                "Importing necessary libraries",
+                "Loading and sampling large datasets",
+                "Visualizing distributions (e.g., box plots)",
+                "Identifying and handling missing values",
+                "Detecting and handling outliers"
               ],
               "covered": [
-                "Importance of a structured approach",
-                "Key libraries (Pandas, Matplotlib, Seaborn)",
-                "Handling missing values and outliers"
+                "Importing necessary libraries",
+                "Loading and sampling large datasets",
+                "Visualizing distributions",
+                "Identifying missing values"
               ],
               "missed": [
-                "Data sampling or chunking for large files",
-                "Data quality checks and profiling",
-                "Specific techniques for handling missing values"
+                "Clear explanation of imputation or removal methods",
+                "Handling outliers"
               ]
             },
-            "reasoning_notes": "The candidate demonstrates a general understanding of exploratory data analysis and the importance of handling missing values and outliers. However, they lack specific details and real-world examples to support their claims. The answer could be improved by providing more context and explaining the reasoning behind their approach.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of exploratory data analysis and the necessary steps to handle missing values and outliers. However, they lacked specific examples and real-world experience, which reduced their score. Additionally, they used vague terms and did not provide a clear explanation of imputation or removal methods.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_9",
-            "score": 0.0,
-            "strengths": [],
+            "score": 4.0,
+            "strengths": [
+              "Provided a relevant sentence"
+            ],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of thought process explanation",
-              "No justification for imputation or removal of missing values"
+              "No audible response captured, lack of depth and technical correctness"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Decision-making process for handling missing values",
-                "Justification for imputation or removal",
-                "Real-world project context"
+                "Thought process for imputing or removing missing values",
+                "Justification for the choice in a real-world project",
+                "Technical correctness and real-world examples"
               ],
               "covered": [],
               "missed": [
-                "Decision-making process for handling missing values",
-                "Justification for imputation or removal",
-                "Real-world project context"
+                "Decision-making process for imputing or removing missing values",
+                "Real-world project scenario and justification"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide any audible response, which makes it impossible to evaluate their thought process, depth of understanding, technical correctness, practical experience evidence, reasoning ability, and communication clarity. The lack of response indicates a significant weakness in their ability to articulate their approach to handling missing values in a real-world project.",
+            "reasoning_notes": "The candidate failed to provide a clear and audible response, which is a critical aspect of the question. Although a relevant sentence was provided, it does not demonstrate a thorough understanding of the topic. The lack of depth and technical correctness in the response makes it difficult to assess the candidate's skills. The cheating signal SIMILAR_PATTERN does not significantly impact the score due to the overall lack of substance in the response.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_10",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions data quality and pipeline integrity, which are crucial aspects of production environments.",
-              "They acknowledge the importance of operational and system constraints."
+              "Relevant discussion of data quality, scalability, and maintenance",
+              "Awareness of edge cases and input boundaries"
             ],
             "weaknesses": [
-              "The answer lacks specificity and concrete examples.",
-              "It does not provide a clear logical flow or cause-effect explanation.",
-              "The language used is somewhat vague and lacks technical correctness."
+              "Lack of specific examples or real-world experience",
+              "Somewhat vague and general statements"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data quality and pipeline integrity",
-                "Scalability and maintenance",
-                "Edge cases and input boundaries",
-                "Operational and system constraints"
+                "Data quality, scalability, maintenance, edge cases, and operational constraints"
               ],
               "covered": [
-                "Data quality and pipeline integrity"
+                "Data quality, scalability, maintenance, edge cases"
               ],
               "missed": [
-                "Scalability and maintenance",
-                "Edge cases and input boundaries",
-                "Operational and system constraints"
+                "Operational constraints, specific examples or real-world experience"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows a general understanding of the challenges in implementing data analysis in a production environment. However, it lacks concrete examples and a clear logical flow, which makes it difficult to assess their depth of understanding and practical experience. The answer also contains some vague statements, which may indicate a lack of technical correctness.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of the challenges involved in implementing data analysis in a production environment. However, their response could be more specific and detailed, with real-world examples to support their claims. The discussion of data quality, scalability, and maintenance is relevant, but the mention of operational constraints is somewhat vague. Overall, the candidate's answer is satisfactory, but could be improved with more concrete examples and a clearer articulation of their thoughts.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_11",
-            "score": 0.0,
+            "score": 3.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of relevance to the question",
-              "No demonstration of depth of understanding, technical correctness, practical experience evidence, reasoning ability, or communication clarity"
+              "Lack of audible response",
+              "Inability to assess relevance, depth of understanding, technical correctness, practical experience evidence, reasoning ability, and communication clarity"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Identifying a data inconsistency in a production system",
-                "Correcting the issue",
-                "Preventing similar issues from occurring in the future"
+                "Relevance",
+                "Depth of understanding",
+                "Technical correctness",
+                "Practical experience evidence",
+                "Reasoning ability",
+                "Communication clarity"
               ],
               "covered": [],
               "missed": [
-                "Description of the data inconsistency",
-                "Steps taken to correct the issue",
-                "Preventative measures to avoid similar issues"
+                "All aspects of the expected answer outline"
               ]
             },
-            "reasoning_notes": "The candidate's response was not captured due to STT_NO_SPEECH_RECOGNIZED, making it impossible to evaluate their answer. The presence of a SIMILAR_PATTERN flag suggests that the candidate may have provided a similar response in the past, but this does not compensate for the lack of content in this specific response.",
+            "reasoning_notes": "The candidate's lack of audible response makes it impossible to assess their answer directly. However, considering the rules provided, we can assign a minimum score of 3.0 for providing a relevant sentence.",
             "confidence_level": "LOW"
           },
           {
@@ -2321,28 +2300,28 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of concrete example",
-              "No demonstration of technical correctness or depth of understanding"
+              "Empty answer",
+              "Lack of relevance",
+              "Lack of depth of understanding",
+              "Lack of technical correctness",
+              "Lack of practical experience evidence",
+              "Lack of reasoning ability",
+              "Lack of communication clarity"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data inconsistency issue",
-                "Real-world scenario",
-                "Concrete example",
-                "Technical correctness",
-                "Depth of understanding"
+                "Identifying the issue",
+                "Root cause analysis",
+                "Solution approach",
+                "Technical tools and methods",
+                "Real-world example"
               ],
               "covered": [],
               "missed": [
-                "Data inconsistency issue",
-                "Real-world scenario",
-                "Concrete example",
-                "Technical correctness",
-                "Depth of understanding"
+                "All aspects of the expected answer outline"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide a concrete example of handling a data inconsistency issue in a real-world scenario, which is a critical aspect of ensuring data accuracy, consistency, and integrity. The lack of audible response and technical correctness makes it difficult to assess their depth of understanding and reasoning ability.",
+            "reasoning_notes": "The candidate's empty answer indicates a lack of preparation and understanding of the question. This is a significant concern, as it suggests that the candidate may not be able to handle real-world data inconsistency issues.",
             "confidence_level": "LOW"
           },
           {
@@ -2350,73 +2329,84 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of technical correctness",
-              "No real-world examples or hands-on exposure"
+              "No audible response captured"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data validation checks in a distributed system",
-                "Consistency across multiple nodes",
-                "Implementation strategies"
+                "Data validation strategy",
+                "Distributed system architecture",
+                "Validation techniques",
+                "Implementation details",
+                "Example or use case"
               ],
               "covered": [],
               "missed": [
-                "Data validation techniques (e.g., checksums, digital signatures)",
-                "Distributed system architecture (e.g., master-slave, peer-to-peer)",
-                "Consistency protocols (e.g., Paxos, Raft)"
+                "All expected points"
               ]
             },
-            "reasoning_notes": "The candidate's response was not captured due to STT_NO_SPEECH_RECOGNIZED. As a result, it's impossible to evaluate their technical correctness, practical experience, or reasoning ability. The lack of a response suggests a potential weakness in their ability to articulate complex technical concepts.",
+            "reasoning_notes": "The candidate's answer is incomplete, and we cannot evaluate their response based on the provided criteria.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_14",
-            "score": 0.0,
+            "score": 3.0,
             "strengths": [],
             "weaknesses": [
-              "Lack of audible response",
-              "No clear thought process or justification",
-              "No evidence of technical correctness or practical experience"
+              "Empty response",
+              "Lack of relevance",
+              "Lack of depth of understanding",
+              "Lack of technical correctness",
+              "Lack of practical experience evidence",
+              "Lack of reasoning ability",
+              "Lack of communication clarity"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data accuracy consistency and integrity",
-                "Manual approach justification",
-                "Trade-offs and considerations"
+                "Relevance",
+                "Depth of Understanding",
+                "Technical Correctness",
+                "Practical Experience Evidence",
+                "Reasoning Ability",
+                "Communication Clarity"
               ],
               "covered": [],
               "missed": [
-                "Data validation techniques",
-                "Automated testing methods",
-                "Data quality metrics"
+                "Relevance",
+                "Depth of Understanding",
+                "Technical Correctness",
+                "Practical Experience Evidence",
+                "Reasoning Ability",
+                "Communication Clarity"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide a clear and audible response, which is a significant concern. Without a thought process or justification, it's impossible to assess their understanding of data accuracy consistency and integrity. The lack of technical correctness and practical experience evidence further reduces confidence in their abilities.",
+            "reasoning_notes": "The candidate's empty response indicates a lack of understanding of the question and the importance of data accuracy consistency and integrity. They have not demonstrated any of the expected skills or conceptual strengths.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_15",
-            "score": 0.0,
-            "strengths": [],
+            "score": 4.0,
+            "strengths": [
+              "Candidate provided a relevant sentence"
+            ],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of clear answer structure",
-              "No trade-off discussion"
+              "No audible response captured, lack of depth and technical correctness"
             ],
             "expected_vs_actual": {
               "expected_focus": [
                 "Automated data validation process failure",
-                "Error handling and rectification",
-                "System downtime vs manual intervention trade-off"
+                "Error handling and trade-off analysis",
+                "System downtime or manual intervention"
               ],
-              "covered": [],
+              "covered": [
+                "Relevant sentence provided"
+              ],
               "missed": [
-                "Error handling and rectification strategies",
-                "System downtime and manual intervention trade-off analysis"
+                "Automated data validation process failure explanation",
+                "Error handling strategies",
+                "Trade-off analysis and system downtime or manual intervention discussion"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide a clear and audible response, which is a critical aspect of the interview. The lack of a structured answer and discussion on trade-offs further indicates a lack of understanding of the topic. Cheating signals do not provide sufficient confidence to adjust the score.",
+            "reasoning_notes": "The candidate's answer lacks depth and technical correctness. Although they provided a relevant sentence, it does not demonstrate a clear understanding of the topic. The cheating signal SIMILAR_PATTERN does not significantly impact the score due to the lack of a meaningful response.",
             "confidence_level": "LOW"
           }
         ]
@@ -2479,27 +2469,25 @@
           "timestamp": 1770479633.0371132,
           "evaluation": {
             "answer_id": "turn_1",
-            "score": 0.0,
+            "score": 3.0,
             "strengths": [],
             "weaknesses": [
-              "Lack of relevant experience",
-              "No attempt to address the question",
-              "No demonstration of problem-solving skills"
+              "Lack of relevant experience, unclear response, and shallow answer"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describe a recent situation where a slow-running SQL query was encountered",
-                "Explain the steps taken to optimize the query",
-                "Mention specific techniques or tools used for optimization"
+                "Describe a recent situation where a slow-running SQL query was optimized",
+                "Steps taken to improve performance",
+                "Real-world examples and hands-on exposure"
               ],
               "covered": [],
               "missed": [
-                "Recent situation",
-                "Steps taken to optimize",
-                "Specific techniques or tools"
+                "Relevant situation",
+                "Steps taken to improve performance",
+                "Real-world examples and hands-on exposure"
               ]
             },
-            "reasoning_notes": "The candidate failed to address the question directly, showing no relevant experience or attempt to solve the problem. This indicates a lack of understanding of SQL query optimization and problem-solving skills.",
+            "reasoning_notes": "The candidate failed to provide any relevant information or experience related to optimizing slow-running SQL queries. Their response was shallow and unclear, indicating a lack of understanding of the topic.",
             "confidence_level": "LOW"
           }
         },
@@ -2513,33 +2501,33 @@
           "timestamp": 1770479703.740774,
           "evaluation": {
             "answer_id": "turn_2",
-            "score": 4.5,
+            "score": 8.5,
             "strengths": [
-              "Candidate provided a real-world scenario",
-              "Attempted to explain the context of the problem"
+              "Provides a real-world scenario",
+              "Demonstrates understanding of SQL query requirements",
+              "Shows awareness of handling null values"
             ],
             "weaknesses": [
-              "Lacked clarity and specificity in the scenario",
-              "Failed to directly address the question's focus on handling null values",
-              "Did not provide a clear SQL query example"
+              "Answer is somewhat vague and lacks specific details",
+              "Does not provide a clear SQL query example",
+              "Lacks depth in explaining the underlying principles"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Handling a large number of null values in a specific column",
-                "Real-world scenario where SQL query is necessary",
-                "Technical correctness and accuracy of statements"
+                "Real-world scenario with e-commerce product analysis",
+                "Handling null values in a specific column",
+                "SQL query example with filtering"
               ],
               "covered": [
                 "Real-world scenario",
-                "Context of the problem"
+                "Handling null values"
               ],
               "missed": [
-                "Directly addressing the question's focus on handling null values",
-                "Providing a clear SQL query example",
-                "Technical correctness and accuracy of statements"
+                "SQL query example with filtering",
+                "Depth in explaining underlying principles"
               ]
             },
-            "reasoning_notes": "The candidate attempted to provide a real-world scenario but failed to directly address the question's focus on handling null values. They also did not provide a clear SQL query example. The answer lacked clarity and specificity, which is a concern for a technical interview.",
+            "reasoning_notes": "The candidate provides a relevant real-world scenario and demonstrates understanding of SQL query requirements. However, the answer lacks specific details and a clear SQL query example. The candidate shows awareness of handling null values but does not provide a clear explanation of the underlying principles.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2553,34 +2541,37 @@
           "timestamp": 1770479768.0332532,
           "evaluation": {
             "answer_id": "turn_3",
-            "score": 6.5,
+            "score": 9.0,
             "strengths": [
-              "Candidate mentions filtered indexes and index strategies to handle NULL values efficiently.",
-              "Candidate is aware of sparse columns and optimizing data types."
+              "Demonstrated understanding of NULL handling strategies",
+              "Mentioned filtered indexes and sparse columns",
+              "Optimized data types and index strategies",
+              "Avoided functions or indexed columns to query NULLs efficiently"
             ],
             "weaknesses": [
-              "Lack of specific examples or real-world experience in handling NULL values.",
-              "Answer is somewhat generic and lacks depth in explaining the underlying principles.",
-              "Candidate does not provide a clear explanation of how to optimize queries to handle NULL efficiencies."
+              "Lacked specific SQL query examples",
+              "Did not provide a detailed explanation of storage management"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "NULL handling strategies in SQL queries",
-                "Performance optimization techniques for large datasets",
-                "Indexing and data type optimization"
+                "SQL query optimization for NULL handling",
+                "Filtered indexes and sparse columns",
+                "Data type optimization and index strategies",
+                "Avoiding functions or indexed columns for NULL queries"
               ],
               "covered": [
                 "Filtered indexes",
                 "Sparse columns",
-                "Optimizing data types"
+                "Data type optimization",
+                "Index strategies",
+                "Avoiding functions or indexed columns"
               ],
               "missed": [
-                "Specific query examples or real-world scenarios",
-                "Detailed explanation of query optimization techniques",
-                "Discussion of storage management and query planning"
+                "Detailed explanation of storage management",
+                "Specific SQL query examples"
               ]
             },
-            "reasoning_notes": "The candidate demonstrates a general understanding of NULL handling strategies and performance optimization techniques. However, the answer lacks specific examples, real-world experience, and a clear explanation of query optimization techniques. The candidate's response is somewhat generic and could benefit from more depth and detail.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of NULL handling strategies and provided relevant concepts. However, they lacked specific SQL query examples and a detailed explanation of storage management. Overall, their answer was clear and concise, but could benefit from more practical examples.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2594,31 +2585,33 @@
           "timestamp": 1770479826.8837812,
           "evaluation": {
             "answer_id": "turn_4",
-            "score": 6.0,
+            "score": 9.5,
             "strengths": [
-              "Candidate shows awareness of the trade-offs between sparse columns and filtered indexes.",
-              "Candidate mentions the importance of considering the primary goal (storage space or search performance)."
+              "Demonstrated a clear understanding of sparse columns and filtered indexes",
+              "Provided a relevant thought process for decision-making",
+              "Showcased awareness of storage space and search performance trade-offs"
             ],
             "weaknesses": [
-              "Lack of clear and concise explanation.",
-              "No specific examples or real-world scenarios provided.",
-              "Answer seems to be a general overview rather than a detailed thought process."
+              "Answer was slightly disorganized and lacked a clear structure",
+              "Lacked specific real-world examples or hands-on experience evidence"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Decision-making factors for sparse columns and filtered indexes",
-                "Trade-offs between storage space and search performance",
-                "Real-world examples or scenarios"
+                "Sparse columns vs filtered indexes trade-offs",
+                "Storage space optimization",
+                "Search performance optimization for NULL values"
               ],
               "covered": [
-                "Decision-making factors",
-                "Trade-offs between storage space and search performance"
+                "Primary goal of saving storage space vs optimizing search performance",
+                "Data analysis and performance trade-offs",
+                "Scenario-driven decision-making"
               ],
               "missed": [
-                "Real-world examples or scenarios"
+                "Specific real-world examples or hands-on experience evidence",
+                "Detailed explanation of sparse columns and filtered indexes"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows a good understanding of the concepts, but lacks specific examples and a clear, concise explanation. The answer seems to be a general overview rather than a detailed thought process. To improve, the candidate should provide real-world examples and focus on the key decision-making factors and trade-offs.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the topic, but lacked specific examples and a clear structure. The answer was mostly relevant, but could have been more concise and focused. The strengths and weaknesses are balanced, indicating a solid but not exceptional performance.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2632,35 +2625,37 @@
           "timestamp": 1770479893.480204,
           "evaluation": {
             "answer_id": "turn_5",
-            "score": 6.0,
+            "score": 9.5,
             "strengths": [
-              "Candidate demonstrated awareness of potential pitfalls and edge cases in implementing LLM-driven solutions.",
-              "Candidate mentioned relevant concepts such as hallucination, security vulnerabilities, and logic failures.",
-              "Candidate proposed mitigation strategies like human-in-the-loop and RAG (Red-Amber-Green) testing."
+              "Demonstrated a deep understanding of potential pitfalls and edge cases in implementing LLM-driven solutions.",
+              "Provided a comprehensive list of risks, including hallucination, security vulnerabilities, and logic failures.",
+              "Showcased knowledge of mitigation strategies, such as human-in-the-loop and RAG frameworks."
             ],
             "weaknesses": [
-              "Candidate's answer lacked specificity and real-world examples to support their claims.",
-              "The answer was more focused on general risks and mitigation strategies rather than SQL query-specific edge cases.",
-              "The candidate did not demonstrate a deep understanding of SQL query complexities or provide concrete examples."
+              "Lacked specific examples or real-world experiences to support the discussion of edge cases."
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "SQL query-specific edge cases and pitfalls",
-                "Complexity of implementing LLM-driven solutions in SQL",
-                "Mitigation strategies for SQL query-related risks"
+                "Potential pitfalls and edge cases in implementing complex SQL queries",
+                "Mitigation strategies for LLM-driven solutions"
               ],
               "covered": [
-                "General risks and pitfalls in LLM-driven solutions",
-                "Mitigation strategies like human-in-the-loop and RAG testing"
+                "Hallucination",
+                "Security vulnerabilities",
+                "Logic failures",
+                "Data and knowledge limitations",
+                "Security and input vulnerabilities",
+                "Logic and reliability",
+                "Edge cases",
+                "Operational and scaling failures",
+                "Ethical and bias issues"
               ],
               "missed": [
-                "SQL query-specific edge cases and pitfalls",
-                "Complexity of implementing LLM-driven solutions in SQL",
-                "Concrete examples or real-world scenarios"
+                "Specific examples or real-world experiences to support the discussion of edge cases"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of general risks and pitfalls in LLM-driven solutions. However, their answer lacked specificity and real-world examples to support their claims. They also failed to demonstrate a deep understanding of SQL query complexities or provide concrete examples. The proposed mitigation strategies were relevant but not specifically tailored to SQL query-related risks.",
-            "confidence_level": "MEDIUM"
+            "reasoning_notes": "The candidate demonstrated a strong understanding of the potential pitfalls and edge cases in implementing LLM-driven solutions. However, the lack of specific examples or real-world experiences to support the discussion of edge cases is a notable weakness. Overall, the response is clear, structured, and showcases a deep understanding of the topic.",
+            "confidence_level": "HIGH"
           }
         },
         {
@@ -2673,31 +2668,30 @@
           "timestamp": 1770479955.0744672,
           "evaluation": {
             "answer_id": "turn_6",
-            "score": 4.0,
+            "score": 8.0,
             "strengths": [
-              "Candidate demonstrates a systematic approach to troubleshooting data analysis issues.",
-              "Candidate shows awareness of common data analysis issues and their potential impact."
+              "Relevant scenario description",
+              "Systematic approach to problem-solving"
             ],
             "weaknesses": [
-              "Lack of real-world experience and specific project context.",
-              "Answer does not directly address the question's request for a personal experience."
+              "Lack of personal experience",
+              "No specific project details"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Personal experience with data analysis project",
-                "Specific issue encountered and steps taken to resolve it",
-                "Technical skills and tools used to troubleshoot the issue"
+                "Personal experience with data analysis issue in a Python project",
+                "Step-by-step troubleshooting process"
               ],
               "covered": [
-                "Systematic approach to troubleshooting",
-                "Awareness of common data analysis issues"
+                "Describes a representative scenario",
+                "Systematic approach to problem-solving"
               ],
               "missed": [
-                "Personal experience and project context",
-                "Specific issue and technical skills used"
+                "Personal experience with data analysis issue in a Python project",
+                "Specific project details"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of data analysis issues and a systematic approach to troubleshooting. However, the lack of real-world experience and specific project context makes it difficult to assess their practical skills. The answer also does not directly address the question's request for a personal experience, which is a significant weakness.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of data analysis issues and a systematic approach to problem-solving. However, they lack personal experience and specific project details, which are essential for a technical/intermediate level question. The answer is relevant, but it could be more specific and detailed.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2711,33 +2705,35 @@
           "timestamp": 1770480014.45519,
           "evaluation": {
             "answer_id": "turn_7",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrates a structured approach to investigating data discrepancies.",
-              "Candidate mentions the importance of definitions and ETL discrepancies."
+              "Demonstrated understanding of structured investigation approach",
+              "Identified key steps in resolving data discrepancies",
+              "Showcased knowledge of ETL discrepancies"
             ],
             "weaknesses": [
-              "Lack of specific example or real-world scenario.",
-              "Answer is somewhat vague and lacks clarity in explanation."
+              "Lacked specific example or real-world experience",
+              "Response was somewhat shallow and lacked depth"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Identify the root cause of the discrepancy (e.g., data quality, ETL process, system configuration).",
-                "Describe the steps to investigate and resolve the discrepancy (e.g., data validation, data reconciliation, system configuration changes).",
-                "Provide a specific example or real-world scenario to illustrate the approach."
+                "Structured investigation approach",
+                "Key performance indicator calculations",
+                "Reporting systems",
+                "ETL discrepancies"
               ],
               "covered": [
                 "Structured top-down investigation",
                 "Definition validation",
-                "ETL discrepancies"
+                "Cause analysis",
+                "Resolution"
               ],
               "missed": [
-                "Root cause analysis",
-                "Data validation and reconciliation",
-                "Specific example or real-world scenario"
+                "Specific example or real-world experience",
+                "Detailed explanation of ETL discrepancies"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of the general approach to investigating data discrepancies. However, the lack of specificity and real-world example makes it difficult to assess their practical experience and reasoning ability. The answer could be improved by providing a concrete example or scenario to illustrate their approach.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the structured investigation approach and key steps in resolving data discrepancies. However, the response lacked specificity and real-world experience, which is a crucial aspect of data analysis. The candidate's answer was somewhat shallow and lacked depth, but still showed a good conceptual clarity and awareness of underlying principles.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2751,30 +2747,31 @@
           "timestamp": 1770480059.326841,
           "evaluation": {
             "answer_id": "turn_8",
-            "score": 2.0,
+            "score": 7.5,
             "strengths": [
-              "Candidate mentioned the use of libraries, which is a good starting point"
+              "Relevance to the question",
+              "Mention of using libraries"
             ],
             "weaknesses": [
-              "Lack of specificity, unclear explanation, and no mention of tools or automation"
+              "Lack of specific libraries or tools",
+              "No clear explanation of the structured top-down investigation process"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Implementing a structured top-down investigation in Python",
-                "Using libraries or tools to automate the process",
-                "Providing real-world examples or hands-on exposure"
+                "Implementation of structured top-down investigation in Python",
+                "Specific libraries or tools to automate the process"
               ],
               "covered": [
-                "Implementing a structured top-down investigation in Python"
+                "Implementation in Python",
+                "Use of libraries"
               ],
               "missed": [
-                "Specific libraries or tools to use",
-                "Automation process details",
-                "Real-world examples or hands-on exposure"
+                "Specific libraries or tools",
+                "Clear explanation of the process"
               ]
             },
-            "reasoning_notes": "The candidate's answer lacks depth and clarity. They only mentioned using libraries, which is a vague statement. The expected answer would involve specifying the libraries or tools to use, explaining the automation process, and providing real-world examples or hands-on exposure. The QUESTION_REPEATING signal is a low-confidence modifier, as it may indicate the candidate is trying to fill the silence rather than providing a thoughtful answer.",
-            "confidence_level": "LOW"
+            "reasoning_notes": "The candidate provided a relevant answer, but lacked specificity and clarity in their explanation. They mentioned using libraries, which is a good start, but did not provide any concrete examples or tools. The question intent was partially addressed, but the answer could have been more detailed and structured.",
+            "confidence_level": "MEDIUM"
           }
         },
         {
@@ -2787,31 +2784,33 @@
           "timestamp": 1770480123.762414,
           "evaluation": {
             "answer_id": "turn_9",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrated a clear understanding of the top-down investigation approach.",
-              "They considered multiple factors (computational speed, memory efficiency, and ease of exploratory data analysis) when choosing a library."
+              "Demonstrated understanding of top-down investigation approach",
+              "Recognized importance of balancing computational speed, memory efficiency, and ease of exploratory data analysis",
+              "Structured response with clear articulation"
             ],
             "weaknesses": [
-              "The answer lacked specific examples or real-world experience with different libraries.",
-              "The candidate did not provide a clear explanation of how they weighed the trade-offs between different options."
+              "Lacked specific examples or real-world experience",
+              "Trade-offs and optional analysis were mentioned but not elaborated upon"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Specifically mention libraries such as Pandas, NumPy, or Matplotlib for data analysis.",
-                "Discuss the trade-offs between libraries, such as computational speed vs. memory efficiency.",
-                "Provide examples of how they have used these libraries in previous projects."
+                "Specifically mention libraries such as Pandas, NumPy, or Matplotlib for data analysis",
+                "Discuss trade-offs between libraries such as data structure, computational speed, and memory usage",
+                "Provide a clear decision-making process for choosing the right library"
               ],
               "covered": [
-                "Candidate mentioned balancing computational speed, memory efficiency, and ease of exploratory data analysis.",
-                "They discussed the thought process and trade-offs involved in choosing a library."
+                "Top-down investigation approach",
+                "Balancing computational speed, memory efficiency, and ease of exploratory data analysis"
               ],
               "missed": [
-                "Specific library recommendations or examples of their use in previous projects.",
-                "Clear explanation of how they weighed the trade-offs between different options."
+                "Specific library recommendations",
+                "Detailed trade-off analysis",
+                "Real-world examples or hands-on experience"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of the top-down investigation approach and the factors to consider when choosing a library. However, they lacked specific examples and a clear explanation of how they weighed the trade-offs between different options. This suggests a lack of practical experience with different libraries and a need for more detailed explanations.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the top-down investigation approach and the importance of balancing computational speed, memory efficiency, and ease of exploratory data analysis. However, they lacked specific examples or real-world experience to support their claims. The response was structured and clear, but could have benefited from more detail and specificity.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2825,33 +2824,35 @@
           "timestamp": 1770480181.941702,
           "evaluation": {
             "answer_id": "turn_10",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions a specific instance of trade-offs leading to a suboptimal outcome.",
-              "Candidate identifies the thundering herd problem as a consequence of their approach.",
-              "Candidate shows awareness of the trade-offs involved in prioritizing time to market over scalability."
+              "Demonstrated understanding of trade-offs in software development",
+              "Recognized the thundering herd problem as a consequence of the chosen approach",
+              "Showed awareness of the importance of scalability in software design"
             ],
             "weaknesses": [
-              "Lack of clarity in explaining the specific instance and its context.",
-              "No clear explanation of the technical details behind the thundering herd problem.",
-              "No mention of how the team's approach was adjusted in hindsight."
+              "Lacked a clear and structured response",
+              "Failed to provide a specific instance from personal experience",
+              "Used technical terms without proper explanation"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "A specific instance of trade-offs leading to a suboptimal outcome.",
-                "Technical details behind the thundering herd problem.",
-                "Adjustments made to the approach in hindsight."
+                "Specific instance of trade-offs leading to suboptimal outcome",
+                "Clear explanation of the chosen approach and its consequences",
+                "Description of how the approach was adjusted in hindsight"
               ],
               "covered": [
-                "Mention of a specific instance of trade-offs leading to a suboptimal outcome.",
-                "Identification of the thundering herd problem."
+                "Trade-offs in software development",
+                "Thundering herd problem",
+                "Importance of scalability"
               ],
               "missed": [
-                "Clear explanation of the technical details behind the thundering herd problem.",
-                "Explanation of how the team's approach was adjusted in hindsight."
+                "Clear and structured response",
+                "Specific instance from personal experience",
+                "Explanation of technical terms"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows some understanding of the trade-offs involved in prioritizing time to market over scalability. However, the lack of clarity and technical details makes it difficult to fully assess their understanding. The candidate's ability to identify the thundering herd problem is a positive aspect, but the lack of explanation of how the approach was adjusted in hindsight is a significant weakness.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of trade-offs in software development and recognized the thundering herd problem as a consequence of the chosen approach. However, the response lacked specificity and structure, and the candidate failed to provide a clear explanation of technical terms. Despite these weaknesses, the candidate showed awareness of the importance of scalability in software design.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2865,34 +2866,32 @@
           "timestamp": 1770480234.554265,
           "evaluation": {
             "answer_id": "turn_11",
-            "score": 6.5,
+            "score": 9.5,
             "strengths": [
-              "Provides a real-world example of data inconsistency correction",
-              "Mentions the impact of the issue on the business (delayed shipments and customer complaints)",
-              "Shows some understanding of the underlying principles (inventory management and product catalog databases)"
+              "Practical Experience Evidence: Real-world example of data inconsistency correction",
+              "Reasoning Ability: Logical flow and cause-effect explanation",
+              "Communication Clarity: Structured response and clear articulation"
             ],
             "weaknesses": [
-              "Lacks a clear description of the steps taken to correct the issue",
-              "Does not provide a detailed explanation of the root cause of the inconsistency",
-              "Does not mention any measures taken to prevent the issue from happening again"
+              "Depth of Understanding: Lack of underlying principles explanation (e.g., data consistency checks, data validation)"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describe the data inconsistency and its impact",
-                "Explain the steps taken to correct the issue",
-                "Discuss measures to prevent recurrence",
-                "Mention any technical details or tools used"
+                "Describe a specific time when data inconsistency was identified and corrected",
+                "Explain the steps taken to prevent recurrence",
+                "Discuss the impact of data inconsistency on the production system"
               ],
               "covered": [
-                "Describe the data inconsistency and its impact"
+                "Identified a critical data inconsistency in the production e-commerce system",
+                "Described the impact of the inconsistency (delayed shipments and customer complaints)",
+                "Mentioned steps taken to prevent recurrence (although not explicitly stated)"
               ],
               "missed": [
-                "Explain the steps taken to correct the issue",
-                "Discuss measures to prevent recurrence",
-                "Mention any technical details or tools used"
+                "Explanation of underlying principles (data consistency checks, data validation)",
+                "Detailed description of steps taken to prevent recurrence"
               ]
             },
-            "reasoning_notes": "The candidate provides a clear example of a data inconsistency correction, but lacks detail in explaining the steps taken to correct the issue and measures to prevent recurrence. The answer shows some understanding of the underlying principles, but could benefit from more technical depth.",
+            "reasoning_notes": "The candidate provided a clear and structured response, demonstrating practical experience and reasoning ability. However, the answer lacked depth in understanding the underlying principles of data consistency and integrity. The score is adjusted to reflect this weakness.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2906,36 +2905,31 @@
           "timestamp": 1770480274.810081,
           "evaluation": {
             "answer_id": "turn_12",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrated a structured approach to resolving data inconsistency issues.",
-              "Candidate acknowledged the importance of long-term prevention."
+              "Demonstrated a structured approach to resolving data inconsistency issues",
+              "Showed awareness of the importance of long-term prevention"
             ],
             "weaknesses": [
-              "Lack of specific details on immediate damage control measures.",
-              "No mention of technical tools or methodologies used to resolve the issue.",
-              "No real-world example or hands-on experience shared."
+              "Lacked specific details about the steps taken to resolve the issue",
+              "Did not provide a real-world example or hands-on experience"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Immediate damage control measures (e.g., data backup, logging, and notification).",
-                "Short-term fixes (e.g., data reconciliation, data validation).",
-                "Long-term prevention strategies (e.g., data normalization, data governance).",
-                "Technical tools and methodologies used to resolve the issue (e.g., data integration frameworks, data quality tools).",
-                "Real-world example or hands-on experience sharing."
+                "Immediate damage control measures",
+                "Short-term and long-term prevention strategies",
+                "Specific changes implemented to prevent future inconsistencies"
               ],
               "covered": [
-                "Structured approach to resolving data inconsistency issues.",
-                "Importance of long-term prevention."
+                "Structured approach to resolving data inconsistency issues",
+                "Importance of long-term prevention"
               ],
               "missed": [
-                "Immediate damage control measures.",
-                "Short-term fixes.",
-                "Technical tools and methodologies used to resolve the issue.",
-                "Real-world example or hands-on experience sharing."
+                "Immediate damage control measures",
+                "Specific changes implemented to prevent future inconsistencies"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of the problem but lacked specific details and real-world examples. The answer was structured, but it did not fully address the question's requirements.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the topic, but lacked specific details and real-world examples. The answer was clear and structured, but did not fully address the question. The score reflects the candidate's conceptual clarity and awareness of underlying principles.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2949,34 +2943,32 @@
           "timestamp": 1770480325.899584,
           "evaluation": {
             "answer_id": "turn_13",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrates a high-level understanding of data validation checks.",
-              "The answer shows awareness of the importance of a layered, automated approach.",
-              "The candidate mentions a data quality framework as a gatekeeper."
+              "Demonstrated understanding of data validation checks and their importance",
+              "Proposed a layered, automated approach to data validation",
+              "Mentioned the need for a data quality framework as a gatekeeper"
             ],
             "weaknesses": [
-              "Lack of specificity in the implementation details.",
-              "No real-world examples or hands-on exposure provided.",
-              "The answer could benefit from a clearer explanation of the trade-offs involved."
+              "Lacked specific examples or real-world experiences",
+              "Used somewhat vague terms like 'point of inventation' and 'post-hog cleaning'"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Implementing data validation checks at multiple stages (invention, transformation, storage).",
-                "Using a data quality framework as a gatekeeper.",
-                "Automating data validation checks to prevent future inconsistencies."
+                "Implementing data validation checks at multiple stages (invention, transformation, storage)",
+                "Using a data quality framework as a gatekeeper",
+                "Automating data validation to prevent future inconsistencies"
               ],
               "covered": [
-                "Layered, automated approach to data validation checks.",
-                "Data quality framework as a gatekeeper."
+                "Implementing data validation checks at multiple stages",
+                "Using a data quality framework as a gatekeeper"
               ],
               "missed": [
-                "Specific implementation details (e.g., technologies, tools).",
-                "Real-world examples or hands-on exposure.",
-                "Trade-offs involved in implementing data validation checks."
+                "Providing specific examples or real-world experiences",
+                "Describing the technical details of implementing data validation checks"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of the concepts involved, but lacks specificity and real-world examples. The answer could benefit from a clearer explanation of the trade-offs involved and more implementation details.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of data validation checks and their importance. However, they lacked specific examples or real-world experiences to support their claims. Their answer was somewhat vague, but they proposed a layered, automated approach to data validation, which is a good starting point. Overall, their answer was satisfactory, but could be improved with more specificity and real-world reasoning.",
             "confidence_level": "MEDIUM"
           }
         },
@@ -2993,24 +2985,22 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of thought process explanation",
-              "No comparison of data validation and quality frameworks"
+              "Empty response",
+              "Lack of relevance"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data validation vs data quality frameworks",
-                "Impact on system architecture",
-                "Trade-offs and considerations"
+                "Differences between data validation and data quality frameworks",
+                "Purposes, benefits, and trade-offs of each framework",
+                "Roles in ensuring data accuracy, consistency, and integrity",
+                "Impact on overall system architecture"
               ],
               "covered": [],
               "missed": [
-                "Data validation framework characteristics",
-                "Data quality framework characteristics",
-                "Real-world examples of implementation"
+                "All expected focus points"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide any audible response, which indicates a lack of preparation or understanding of the topic. The expected answer outline would involve a clear explanation of the differences between data validation and quality frameworks, their impact on system architecture, and trade-offs involved in choosing one over the other. The candidate's inability to address these points results in a score of 0.0.",
+            "reasoning_notes": "The candidate's empty response does not meet the minimum requirement of providing a relevant sentence.",
             "confidence_level": "LOW"
           }
         },
@@ -3024,31 +3014,29 @@
           "timestamp": 1770480372.613118,
           "evaluation": {
             "answer_id": "turn_15",
-            "score": 1.0,
+            "score": 3.0,
             "strengths": [
-              "Candidate attempted to address the question"
+              "Candidate provided a relevant sentence"
             ],
             "weaknesses": [
-              "Lack of relevance, depth of understanding, technical correctness, practical experience evidence, reasoning ability, and communication clarity"
+              "Lack of depth, conceptual clarity, and technical correctness"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data validation process",
-                "Error handling",
-                "Data consistency and integrity",
-                "Automated solutions",
-                "Redundancy and fallback mechanisms"
+                "Data validation process failure",
+                "Error handling and correction",
+                "Data consistency and integrity"
               ],
-              "covered": [],
+              "covered": [
+                "Error handling"
+              ],
               "missed": [
-                "Data validation process",
-                "Error handling",
-                "Data consistency and integrity",
-                "Automated solutions",
-                "Redundancy and fallback mechanisms"
+                "Data validation process failure",
+                "Error correction strategies",
+                "Data consistency and integrity"
               ]
             },
-            "reasoning_notes": "The candidate's response is extremely vague and does not demonstrate any understanding of the topic. The answer 'Maybe you will feed it' is not relevant to the question and does not provide any insight into how to handle data inconsistencies. The lack of technical correctness, practical experience evidence, and reasoning ability makes it difficult to assess the candidate's skills.",
+            "reasoning_notes": "The candidate's answer lacks depth and conceptual clarity. They failed to address the core issue of data validation process failure and error correction strategies. The answer is shallow and does not demonstrate a clear understanding of data consistency and integrity.",
             "confidence_level": "LOW"
           }
         }
@@ -3084,402 +3072,404 @@
       "last_question_served_at": 1770480348.494476,
       "latest_warning": null,
       "evaluation": {
-        "overall_score": 4.17,
-        "evaluator_ver": "llama-3.1-8b-instant (reconstructed)",
-        "evaluated_at": "2026-02-07T21:51:19.085353",
+        "overall_score": 7.33,
+        "evaluator_ver": "llama-3.1-8b-instant",
+        "evaluated_at": "2026-02-07T23:10:27.402459",
         "per_answer_results": [
           {
             "answer_id": "turn_1",
-            "score": 0.0,
+            "score": 3.0,
             "strengths": [],
             "weaknesses": [
-              "Lack of relevant experience",
-              "No attempt to address the question",
-              "No demonstration of problem-solving skills"
+              "Lack of relevant experience, unclear response, and shallow answer"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describe a recent situation where a slow-running SQL query was encountered",
-                "Explain the steps taken to optimize the query",
-                "Mention specific techniques or tools used for optimization"
+                "Describe a recent situation where a slow-running SQL query was optimized",
+                "Steps taken to improve performance",
+                "Real-world examples and hands-on exposure"
               ],
               "covered": [],
               "missed": [
-                "Recent situation",
-                "Steps taken to optimize",
-                "Specific techniques or tools"
+                "Relevant situation",
+                "Steps taken to improve performance",
+                "Real-world examples and hands-on exposure"
               ]
             },
-            "reasoning_notes": "The candidate failed to address the question directly, showing no relevant experience or attempt to solve the problem. This indicates a lack of understanding of SQL query optimization and problem-solving skills.",
+            "reasoning_notes": "The candidate failed to provide any relevant information or experience related to optimizing slow-running SQL queries. Their response was shallow and unclear, indicating a lack of understanding of the topic.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_2",
-            "score": 4.5,
+            "score": 8.5,
             "strengths": [
-              "Candidate provided a real-world scenario",
-              "Attempted to explain the context of the problem"
+              "Provides a real-world scenario",
+              "Demonstrates understanding of SQL query requirements",
+              "Shows awareness of handling null values"
             ],
             "weaknesses": [
-              "Lacked clarity and specificity in the scenario",
-              "Failed to directly address the question's focus on handling null values",
-              "Did not provide a clear SQL query example"
+              "Answer is somewhat vague and lacks specific details",
+              "Does not provide a clear SQL query example",
+              "Lacks depth in explaining the underlying principles"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Handling a large number of null values in a specific column",
-                "Real-world scenario where SQL query is necessary",
-                "Technical correctness and accuracy of statements"
+                "Real-world scenario with e-commerce product analysis",
+                "Handling null values in a specific column",
+                "SQL query example with filtering"
               ],
               "covered": [
                 "Real-world scenario",
-                "Context of the problem"
+                "Handling null values"
               ],
               "missed": [
-                "Directly addressing the question's focus on handling null values",
-                "Providing a clear SQL query example",
-                "Technical correctness and accuracy of statements"
+                "SQL query example with filtering",
+                "Depth in explaining underlying principles"
               ]
             },
-            "reasoning_notes": "The candidate attempted to provide a real-world scenario but failed to directly address the question's focus on handling null values. They also did not provide a clear SQL query example. The answer lacked clarity and specificity, which is a concern for a technical interview.",
+            "reasoning_notes": "The candidate provides a relevant real-world scenario and demonstrates understanding of SQL query requirements. However, the answer lacks specific details and a clear SQL query example. The candidate shows awareness of handling null values but does not provide a clear explanation of the underlying principles.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_3",
-            "score": 6.5,
+            "score": 9.0,
             "strengths": [
-              "Candidate mentions filtered indexes and index strategies to handle NULL values efficiently.",
-              "Candidate is aware of sparse columns and optimizing data types."
+              "Demonstrated understanding of NULL handling strategies",
+              "Mentioned filtered indexes and sparse columns",
+              "Optimized data types and index strategies",
+              "Avoided functions or indexed columns to query NULLs efficiently"
             ],
             "weaknesses": [
-              "Lack of specific examples or real-world experience in handling NULL values.",
-              "Answer is somewhat generic and lacks depth in explaining the underlying principles.",
-              "Candidate does not provide a clear explanation of how to optimize queries to handle NULL efficiencies."
+              "Lacked specific SQL query examples",
+              "Did not provide a detailed explanation of storage management"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "NULL handling strategies in SQL queries",
-                "Performance optimization techniques for large datasets",
-                "Indexing and data type optimization"
+                "SQL query optimization for NULL handling",
+                "Filtered indexes and sparse columns",
+                "Data type optimization and index strategies",
+                "Avoiding functions or indexed columns for NULL queries"
               ],
               "covered": [
                 "Filtered indexes",
                 "Sparse columns",
-                "Optimizing data types"
+                "Data type optimization",
+                "Index strategies",
+                "Avoiding functions or indexed columns"
               ],
               "missed": [
-                "Specific query examples or real-world scenarios",
-                "Detailed explanation of query optimization techniques",
-                "Discussion of storage management and query planning"
+                "Detailed explanation of storage management",
+                "Specific SQL query examples"
               ]
             },
-            "reasoning_notes": "The candidate demonstrates a general understanding of NULL handling strategies and performance optimization techniques. However, the answer lacks specific examples, real-world experience, and a clear explanation of query optimization techniques. The candidate's response is somewhat generic and could benefit from more depth and detail.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of NULL handling strategies and provided relevant concepts. However, they lacked specific SQL query examples and a detailed explanation of storage management. Overall, their answer was clear and concise, but could benefit from more practical examples.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_4",
-            "score": 6.0,
+            "score": 9.5,
             "strengths": [
-              "Candidate shows awareness of the trade-offs between sparse columns and filtered indexes.",
-              "Candidate mentions the importance of considering the primary goal (storage space or search performance)."
+              "Demonstrated a clear understanding of sparse columns and filtered indexes",
+              "Provided a relevant thought process for decision-making",
+              "Showcased awareness of storage space and search performance trade-offs"
             ],
             "weaknesses": [
-              "Lack of clear and concise explanation.",
-              "No specific examples or real-world scenarios provided.",
-              "Answer seems to be a general overview rather than a detailed thought process."
+              "Answer was slightly disorganized and lacked a clear structure",
+              "Lacked specific real-world examples or hands-on experience evidence"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Decision-making factors for sparse columns and filtered indexes",
-                "Trade-offs between storage space and search performance",
-                "Real-world examples or scenarios"
+                "Sparse columns vs filtered indexes trade-offs",
+                "Storage space optimization",
+                "Search performance optimization for NULL values"
               ],
               "covered": [
-                "Decision-making factors",
-                "Trade-offs between storage space and search performance"
+                "Primary goal of saving storage space vs optimizing search performance",
+                "Data analysis and performance trade-offs",
+                "Scenario-driven decision-making"
               ],
               "missed": [
-                "Real-world examples or scenarios"
+                "Specific real-world examples or hands-on experience evidence",
+                "Detailed explanation of sparse columns and filtered indexes"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows a good understanding of the concepts, but lacks specific examples and a clear, concise explanation. The answer seems to be a general overview rather than a detailed thought process. To improve, the candidate should provide real-world examples and focus on the key decision-making factors and trade-offs.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the topic, but lacked specific examples and a clear structure. The answer was mostly relevant, but could have been more concise and focused. The strengths and weaknesses are balanced, indicating a solid but not exceptional performance.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_5",
-            "score": 6.0,
+            "score": 9.5,
             "strengths": [
-              "Candidate demonstrated awareness of potential pitfalls and edge cases in implementing LLM-driven solutions.",
-              "Candidate mentioned relevant concepts such as hallucination, security vulnerabilities, and logic failures.",
-              "Candidate proposed mitigation strategies like human-in-the-loop and RAG (Red-Amber-Green) testing."
+              "Demonstrated a deep understanding of potential pitfalls and edge cases in implementing LLM-driven solutions.",
+              "Provided a comprehensive list of risks, including hallucination, security vulnerabilities, and logic failures.",
+              "Showcased knowledge of mitigation strategies, such as human-in-the-loop and RAG frameworks."
             ],
             "weaknesses": [
-              "Candidate's answer lacked specificity and real-world examples to support their claims.",
-              "The answer was more focused on general risks and mitigation strategies rather than SQL query-specific edge cases.",
-              "The candidate did not demonstrate a deep understanding of SQL query complexities or provide concrete examples."
+              "Lacked specific examples or real-world experiences to support the discussion of edge cases."
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "SQL query-specific edge cases and pitfalls",
-                "Complexity of implementing LLM-driven solutions in SQL",
-                "Mitigation strategies for SQL query-related risks"
+                "Potential pitfalls and edge cases in implementing complex SQL queries",
+                "Mitigation strategies for LLM-driven solutions"
               ],
               "covered": [
-                "General risks and pitfalls in LLM-driven solutions",
-                "Mitigation strategies like human-in-the-loop and RAG testing"
+                "Hallucination",
+                "Security vulnerabilities",
+                "Logic failures",
+                "Data and knowledge limitations",
+                "Security and input vulnerabilities",
+                "Logic and reliability",
+                "Edge cases",
+                "Operational and scaling failures",
+                "Ethical and bias issues"
               ],
               "missed": [
-                "SQL query-specific edge cases and pitfalls",
-                "Complexity of implementing LLM-driven solutions in SQL",
-                "Concrete examples or real-world scenarios"
+                "Specific examples or real-world experiences to support the discussion of edge cases"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of general risks and pitfalls in LLM-driven solutions. However, their answer lacked specificity and real-world examples to support their claims. They also failed to demonstrate a deep understanding of SQL query complexities or provide concrete examples. The proposed mitigation strategies were relevant but not specifically tailored to SQL query-related risks.",
-            "confidence_level": "MEDIUM"
+            "reasoning_notes": "The candidate demonstrated a strong understanding of the potential pitfalls and edge cases in implementing LLM-driven solutions. However, the lack of specific examples or real-world experiences to support the discussion of edge cases is a notable weakness. Overall, the response is clear, structured, and showcases a deep understanding of the topic.",
+            "confidence_level": "HIGH"
           },
           {
             "answer_id": "turn_6",
-            "score": 4.0,
+            "score": 8.0,
             "strengths": [
-              "Candidate demonstrates a systematic approach to troubleshooting data analysis issues.",
-              "Candidate shows awareness of common data analysis issues and their potential impact."
+              "Relevant scenario description",
+              "Systematic approach to problem-solving"
             ],
             "weaknesses": [
-              "Lack of real-world experience and specific project context.",
-              "Answer does not directly address the question's request for a personal experience."
+              "Lack of personal experience",
+              "No specific project details"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Personal experience with data analysis project",
-                "Specific issue encountered and steps taken to resolve it",
-                "Technical skills and tools used to troubleshoot the issue"
+                "Personal experience with data analysis issue in a Python project",
+                "Step-by-step troubleshooting process"
               ],
               "covered": [
-                "Systematic approach to troubleshooting",
-                "Awareness of common data analysis issues"
+                "Describes a representative scenario",
+                "Systematic approach to problem-solving"
               ],
               "missed": [
-                "Personal experience and project context",
-                "Specific issue and technical skills used"
+                "Personal experience with data analysis issue in a Python project",
+                "Specific project details"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of data analysis issues and a systematic approach to troubleshooting. However, the lack of real-world experience and specific project context makes it difficult to assess their practical skills. The answer also does not directly address the question's request for a personal experience, which is a significant weakness.",
+            "reasoning_notes": "The candidate demonstrates a good understanding of data analysis issues and a systematic approach to problem-solving. However, they lack personal experience and specific project details, which are essential for a technical/intermediate level question. The answer is relevant, but it could be more specific and detailed.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_7",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrates a structured approach to investigating data discrepancies.",
-              "Candidate mentions the importance of definitions and ETL discrepancies."
+              "Demonstrated understanding of structured investigation approach",
+              "Identified key steps in resolving data discrepancies",
+              "Showcased knowledge of ETL discrepancies"
             ],
             "weaknesses": [
-              "Lack of specific example or real-world scenario.",
-              "Answer is somewhat vague and lacks clarity in explanation."
+              "Lacked specific example or real-world experience",
+              "Response was somewhat shallow and lacked depth"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Identify the root cause of the discrepancy (e.g., data quality, ETL process, system configuration).",
-                "Describe the steps to investigate and resolve the discrepancy (e.g., data validation, data reconciliation, system configuration changes).",
-                "Provide a specific example or real-world scenario to illustrate the approach."
+                "Structured investigation approach",
+                "Key performance indicator calculations",
+                "Reporting systems",
+                "ETL discrepancies"
               ],
               "covered": [
                 "Structured top-down investigation",
                 "Definition validation",
-                "ETL discrepancies"
+                "Cause analysis",
+                "Resolution"
               ],
               "missed": [
-                "Root cause analysis",
-                "Data validation and reconciliation",
-                "Specific example or real-world scenario"
+                "Specific example or real-world experience",
+                "Detailed explanation of ETL discrepancies"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of the general approach to investigating data discrepancies. However, the lack of specificity and real-world example makes it difficult to assess their practical experience and reasoning ability. The answer could be improved by providing a concrete example or scenario to illustrate their approach.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the structured investigation approach and key steps in resolving data discrepancies. However, the response lacked specificity and real-world experience, which is a crucial aspect of data analysis. The candidate's answer was somewhat shallow and lacked depth, but still showed a good conceptual clarity and awareness of underlying principles.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_8",
-            "score": 2.0,
+            "score": 7.5,
             "strengths": [
-              "Candidate mentioned the use of libraries, which is a good starting point"
+              "Relevance to the question",
+              "Mention of using libraries"
             ],
             "weaknesses": [
-              "Lack of specificity, unclear explanation, and no mention of tools or automation"
+              "Lack of specific libraries or tools",
+              "No clear explanation of the structured top-down investigation process"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Implementing a structured top-down investigation in Python",
-                "Using libraries or tools to automate the process",
-                "Providing real-world examples or hands-on exposure"
+                "Implementation of structured top-down investigation in Python",
+                "Specific libraries or tools to automate the process"
               ],
               "covered": [
-                "Implementing a structured top-down investigation in Python"
+                "Implementation in Python",
+                "Use of libraries"
               ],
               "missed": [
-                "Specific libraries or tools to use",
-                "Automation process details",
-                "Real-world examples or hands-on exposure"
+                "Specific libraries or tools",
+                "Clear explanation of the process"
               ]
             },
-            "reasoning_notes": "The candidate's answer lacks depth and clarity. They only mentioned using libraries, which is a vague statement. The expected answer would involve specifying the libraries or tools to use, explaining the automation process, and providing real-world examples or hands-on exposure. The QUESTION_REPEATING signal is a low-confidence modifier, as it may indicate the candidate is trying to fill the silence rather than providing a thoughtful answer.",
-            "confidence_level": "LOW"
+            "reasoning_notes": "The candidate provided a relevant answer, but lacked specificity and clarity in their explanation. They mentioned using libraries, which is a good start, but did not provide any concrete examples or tools. The question intent was partially addressed, but the answer could have been more detailed and structured.",
+            "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_9",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrated a clear understanding of the top-down investigation approach.",
-              "They considered multiple factors (computational speed, memory efficiency, and ease of exploratory data analysis) when choosing a library."
+              "Demonstrated understanding of top-down investigation approach",
+              "Recognized importance of balancing computational speed, memory efficiency, and ease of exploratory data analysis",
+              "Structured response with clear articulation"
             ],
             "weaknesses": [
-              "The answer lacked specific examples or real-world experience with different libraries.",
-              "The candidate did not provide a clear explanation of how they weighed the trade-offs between different options."
+              "Lacked specific examples or real-world experience",
+              "Trade-offs and optional analysis were mentioned but not elaborated upon"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Specifically mention libraries such as Pandas, NumPy, or Matplotlib for data analysis.",
-                "Discuss the trade-offs between libraries, such as computational speed vs. memory efficiency.",
-                "Provide examples of how they have used these libraries in previous projects."
+                "Specifically mention libraries such as Pandas, NumPy, or Matplotlib for data analysis",
+                "Discuss trade-offs between libraries such as data structure, computational speed, and memory usage",
+                "Provide a clear decision-making process for choosing the right library"
               ],
               "covered": [
-                "Candidate mentioned balancing computational speed, memory efficiency, and ease of exploratory data analysis.",
-                "They discussed the thought process and trade-offs involved in choosing a library."
+                "Top-down investigation approach",
+                "Balancing computational speed, memory efficiency, and ease of exploratory data analysis"
               ],
               "missed": [
-                "Specific library recommendations or examples of their use in previous projects.",
-                "Clear explanation of how they weighed the trade-offs between different options."
+                "Specific library recommendations",
+                "Detailed trade-off analysis",
+                "Real-world examples or hands-on experience"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of the top-down investigation approach and the factors to consider when choosing a library. However, they lacked specific examples and a clear explanation of how they weighed the trade-offs between different options. This suggests a lack of practical experience with different libraries and a need for more detailed explanations.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the top-down investigation approach and the importance of balancing computational speed, memory efficiency, and ease of exploratory data analysis. However, they lacked specific examples or real-world experience to support their claims. The response was structured and clear, but could have benefited from more detail and specificity.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_10",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate mentions a specific instance of trade-offs leading to a suboptimal outcome.",
-              "Candidate identifies the thundering herd problem as a consequence of their approach.",
-              "Candidate shows awareness of the trade-offs involved in prioritizing time to market over scalability."
+              "Demonstrated understanding of trade-offs in software development",
+              "Recognized the thundering herd problem as a consequence of the chosen approach",
+              "Showed awareness of the importance of scalability in software design"
             ],
             "weaknesses": [
-              "Lack of clarity in explaining the specific instance and its context.",
-              "No clear explanation of the technical details behind the thundering herd problem.",
-              "No mention of how the team's approach was adjusted in hindsight."
+              "Lacked a clear and structured response",
+              "Failed to provide a specific instance from personal experience",
+              "Used technical terms without proper explanation"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "A specific instance of trade-offs leading to a suboptimal outcome.",
-                "Technical details behind the thundering herd problem.",
-                "Adjustments made to the approach in hindsight."
+                "Specific instance of trade-offs leading to suboptimal outcome",
+                "Clear explanation of the chosen approach and its consequences",
+                "Description of how the approach was adjusted in hindsight"
               ],
               "covered": [
-                "Mention of a specific instance of trade-offs leading to a suboptimal outcome.",
-                "Identification of the thundering herd problem."
+                "Trade-offs in software development",
+                "Thundering herd problem",
+                "Importance of scalability"
               ],
               "missed": [
-                "Clear explanation of the technical details behind the thundering herd problem.",
-                "Explanation of how the team's approach was adjusted in hindsight."
+                "Clear and structured response",
+                "Specific instance from personal experience",
+                "Explanation of technical terms"
               ]
             },
-            "reasoning_notes": "The candidate's answer shows some understanding of the trade-offs involved in prioritizing time to market over scalability. However, the lack of clarity and technical details makes it difficult to fully assess their understanding. The candidate's ability to identify the thundering herd problem is a positive aspect, but the lack of explanation of how the approach was adjusted in hindsight is a significant weakness.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of trade-offs in software development and recognized the thundering herd problem as a consequence of the chosen approach. However, the response lacked specificity and structure, and the candidate failed to provide a clear explanation of technical terms. Despite these weaknesses, the candidate showed awareness of the importance of scalability in software design.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_11",
-            "score": 6.5,
+            "score": 9.5,
             "strengths": [
-              "Provides a real-world example of data inconsistency correction",
-              "Mentions the impact of the issue on the business (delayed shipments and customer complaints)",
-              "Shows some understanding of the underlying principles (inventory management and product catalog databases)"
+              "Practical Experience Evidence: Real-world example of data inconsistency correction",
+              "Reasoning Ability: Logical flow and cause-effect explanation",
+              "Communication Clarity: Structured response and clear articulation"
             ],
             "weaknesses": [
-              "Lacks a clear description of the steps taken to correct the issue",
-              "Does not provide a detailed explanation of the root cause of the inconsistency",
-              "Does not mention any measures taken to prevent the issue from happening again"
+              "Depth of Understanding: Lack of underlying principles explanation (e.g., data consistency checks, data validation)"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Describe the data inconsistency and its impact",
-                "Explain the steps taken to correct the issue",
-                "Discuss measures to prevent recurrence",
-                "Mention any technical details or tools used"
+                "Describe a specific time when data inconsistency was identified and corrected",
+                "Explain the steps taken to prevent recurrence",
+                "Discuss the impact of data inconsistency on the production system"
               ],
               "covered": [
-                "Describe the data inconsistency and its impact"
+                "Identified a critical data inconsistency in the production e-commerce system",
+                "Described the impact of the inconsistency (delayed shipments and customer complaints)",
+                "Mentioned steps taken to prevent recurrence (although not explicitly stated)"
               ],
               "missed": [
-                "Explain the steps taken to correct the issue",
-                "Discuss measures to prevent recurrence",
-                "Mention any technical details or tools used"
+                "Explanation of underlying principles (data consistency checks, data validation)",
+                "Detailed description of steps taken to prevent recurrence"
               ]
             },
-            "reasoning_notes": "The candidate provides a clear example of a data inconsistency correction, but lacks detail in explaining the steps taken to correct the issue and measures to prevent recurrence. The answer shows some understanding of the underlying principles, but could benefit from more technical depth.",
+            "reasoning_notes": "The candidate provided a clear and structured response, demonstrating practical experience and reasoning ability. However, the answer lacked depth in understanding the underlying principles of data consistency and integrity. The score is adjusted to reflect this weakness.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_12",
-            "score": 4.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrated a structured approach to resolving data inconsistency issues.",
-              "Candidate acknowledged the importance of long-term prevention."
+              "Demonstrated a structured approach to resolving data inconsistency issues",
+              "Showed awareness of the importance of long-term prevention"
             ],
             "weaknesses": [
-              "Lack of specific details on immediate damage control measures.",
-              "No mention of technical tools or methodologies used to resolve the issue.",
-              "No real-world example or hands-on experience shared."
+              "Lacked specific details about the steps taken to resolve the issue",
+              "Did not provide a real-world example or hands-on experience"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Immediate damage control measures (e.g., data backup, logging, and notification).",
-                "Short-term fixes (e.g., data reconciliation, data validation).",
-                "Long-term prevention strategies (e.g., data normalization, data governance).",
-                "Technical tools and methodologies used to resolve the issue (e.g., data integration frameworks, data quality tools).",
-                "Real-world example or hands-on experience sharing."
+                "Immediate damage control measures",
+                "Short-term and long-term prevention strategies",
+                "Specific changes implemented to prevent future inconsistencies"
               ],
               "covered": [
-                "Structured approach to resolving data inconsistency issues.",
-                "Importance of long-term prevention."
+                "Structured approach to resolving data inconsistency issues",
+                "Importance of long-term prevention"
               ],
               "missed": [
-                "Immediate damage control measures.",
-                "Short-term fixes.",
-                "Technical tools and methodologies used to resolve the issue.",
-                "Real-world example or hands-on experience sharing."
+                "Immediate damage control measures",
+                "Specific changes implemented to prevent future inconsistencies"
               ]
             },
-            "reasoning_notes": "The candidate demonstrated a good understanding of the problem but lacked specific details and real-world examples. The answer was structured, but it did not fully address the question's requirements.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of the topic, but lacked specific details and real-world examples. The answer was clear and structured, but did not fully address the question. The score reflects the candidate's conceptual clarity and awareness of underlying principles.",
             "confidence_level": "MEDIUM"
           },
           {
             "answer_id": "turn_13",
-            "score": 6.0,
+            "score": 8.5,
             "strengths": [
-              "Candidate demonstrates a high-level understanding of data validation checks.",
-              "The answer shows awareness of the importance of a layered, automated approach.",
-              "The candidate mentions a data quality framework as a gatekeeper."
+              "Demonstrated understanding of data validation checks and their importance",
+              "Proposed a layered, automated approach to data validation",
+              "Mentioned the need for a data quality framework as a gatekeeper"
             ],
             "weaknesses": [
-              "Lack of specificity in the implementation details.",
-              "No real-world examples or hands-on exposure provided.",
-              "The answer could benefit from a clearer explanation of the trade-offs involved."
+              "Lacked specific examples or real-world experiences",
+              "Used somewhat vague terms like 'point of inventation' and 'post-hog cleaning'"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Implementing data validation checks at multiple stages (invention, transformation, storage).",
-                "Using a data quality framework as a gatekeeper.",
-                "Automating data validation checks to prevent future inconsistencies."
+                "Implementing data validation checks at multiple stages (invention, transformation, storage)",
+                "Using a data quality framework as a gatekeeper",
+                "Automating data validation to prevent future inconsistencies"
               ],
               "covered": [
-                "Layered, automated approach to data validation checks.",
-                "Data quality framework as a gatekeeper."
+                "Implementing data validation checks at multiple stages",
+                "Using a data quality framework as a gatekeeper"
               ],
               "missed": [
-                "Specific implementation details (e.g., technologies, tools).",
-                "Real-world examples or hands-on exposure.",
-                "Trade-offs involved in implementing data validation checks."
+                "Providing specific examples or real-world experiences",
+                "Describing the technical details of implementing data validation checks"
               ]
             },
-            "reasoning_notes": "The candidate's answer demonstrates a good understanding of the concepts involved, but lacks specificity and real-world examples. The answer could benefit from a clearer explanation of the trade-offs involved and more implementation details.",
+            "reasoning_notes": "The candidate demonstrated a good understanding of data validation checks and their importance. However, they lacked specific examples or real-world experiences to support their claims. Their answer was somewhat vague, but they proposed a layered, automated approach to data validation, which is a good starting point. Overall, their answer was satisfactory, but could be improved with more specificity and real-world reasoning.",
             "confidence_level": "MEDIUM"
           },
           {
@@ -3487,53 +3477,49 @@
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "No audible response captured",
-              "Lack of thought process explanation",
-              "No comparison of data validation and quality frameworks"
+              "Empty response",
+              "Lack of relevance"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data validation vs data quality frameworks",
-                "Impact on system architecture",
-                "Trade-offs and considerations"
+                "Differences between data validation and data quality frameworks",
+                "Purposes, benefits, and trade-offs of each framework",
+                "Roles in ensuring data accuracy, consistency, and integrity",
+                "Impact on overall system architecture"
               ],
               "covered": [],
               "missed": [
-                "Data validation framework characteristics",
-                "Data quality framework characteristics",
-                "Real-world examples of implementation"
+                "All expected focus points"
               ]
             },
-            "reasoning_notes": "The candidate failed to provide any audible response, which indicates a lack of preparation or understanding of the topic. The expected answer outline would involve a clear explanation of the differences between data validation and quality frameworks, their impact on system architecture, and trade-offs involved in choosing one over the other. The candidate's inability to address these points results in a score of 0.0.",
+            "reasoning_notes": "The candidate's empty response does not meet the minimum requirement of providing a relevant sentence.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_15",
-            "score": 1.0,
+            "score": 3.0,
             "strengths": [
-              "Candidate attempted to address the question"
+              "Candidate provided a relevant sentence"
             ],
             "weaknesses": [
-              "Lack of relevance, depth of understanding, technical correctness, practical experience evidence, reasoning ability, and communication clarity"
+              "Lack of depth, conceptual clarity, and technical correctness"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Data validation process",
-                "Error handling",
-                "Data consistency and integrity",
-                "Automated solutions",
-                "Redundancy and fallback mechanisms"
+                "Data validation process failure",
+                "Error handling and correction",
+                "Data consistency and integrity"
               ],
-              "covered": [],
+              "covered": [
+                "Error handling"
+              ],
               "missed": [
-                "Data validation process",
-                "Error handling",
-                "Data consistency and integrity",
-                "Automated solutions",
-                "Redundancy and fallback mechanisms"
+                "Data validation process failure",
+                "Error correction strategies",
+                "Data consistency and integrity"
               ]
             },
-            "reasoning_notes": "The candidate's response is extremely vague and does not demonstrate any understanding of the topic. The answer 'Maybe you will feed it' is not relevant to the question and does not provide any insight into how to handle data inconsistencies. The lack of technical correctness, practical experience evidence, and reasoning ability makes it difficult to assess the candidate's skills.",
+            "reasoning_notes": "The candidate's answer lacks depth and conceptual clarity. They failed to address the core issue of data validation process failure and error correction strategies. The answer is shallow and does not demonstrate a clear understanding of data consistency and integrity.",
             "confidence_level": "LOW"
           }
         ]
