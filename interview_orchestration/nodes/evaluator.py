@@ -83,16 +83,20 @@ def evaluate_interview(state: dict) -> dict:
             
             eval_data = extract_json(response.content)
             if eval_data:
+                # Attach evaluation directly to the turn for persistence
+                turn["evaluation"] = eval_data
                 evaluation_reports.append(eval_data)
                 total_eval_score += float(eval_data.get("score", 0.0))
         except Exception as e:
             print(f"Error evaluating {turn_id}: {e}")
-            evaluation_reports.append({
+            error_eval = {
                 "answer_id": turn_id,
                 "score": 0.0,
                 "error": str(e),
                 "reasoning_notes": "Evaluation failed due to system error."
-            })
+            }
+            turn["evaluation"] = error_eval
+            evaluation_reports.append(error_eval)
 
     # 5. Aggregate Results
     if trace:

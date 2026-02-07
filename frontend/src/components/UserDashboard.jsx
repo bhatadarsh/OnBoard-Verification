@@ -167,6 +167,7 @@ function ResumeUploader() {
     }
 
     if (status) {
+        const isSelected = status.status === 'SELECTED';
         const isShortlisted = status.status === 'SHORTLISTED';
         const isRejected = status.status === 'REJECTED';
         const isUnlocked = status.interview_unlocked;
@@ -174,13 +175,44 @@ function ResumeUploader() {
         return (
             <div style={{
                 padding: '20px',
-                background: isShortlisted ? '#f0fff4' : isRejected ? '#fff5f5' : '#f8f9fa',
-                border: `1px solid ${isShortlisted ? '#c6f6d5' : isRejected ? '#fed7d7' : '#e2e8f0'}`,
+                background: isSelected ? '#f0fff4' : isShortlisted ? '#f0fff4' : isRejected ? '#fff5f5' : '#f8f9fa',
+                border: `1px solid ${isSelected ? '#38a169' : isShortlisted ? '#c6f6d5' : isRejected ? '#fed7d7' : '#e2e8f0'}`,
                 borderRadius: '8px'
             }}>
-                <h4 style={{ margin: '0 0 10px 0', color: isShortlisted ? '#2f855a' : isRejected ? '#c53030' : '#4a5568' }}>
-                    Status: {status.status}
+                <h4 style={{ margin: '0 0 10px 0', color: isSelected ? '#2f855a' : isShortlisted ? '#2f855a' : isRejected ? '#c53030' : '#4a5568' }}>
+                    Status: {status.status.replace('_', ' ')}
                 </h4>
+
+                {/* SELECTED STATUS - Congratulations Message */}
+                {isSelected && (
+                    <div style={{
+                        padding: '20px',
+                        background: 'linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%)',
+                        border: '2px solid #38a169',
+                        borderRadius: '8px',
+                        textAlign: 'center'
+                    }}>
+                        <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
+                        <h2 style={{ color: '#2f855a', margin: '0 0 10px 0' }}>Congratulations!</h2>
+                        <p style={{ fontSize: '16px', color: '#276749', margin: 0 }}>
+                            You have been selected for the position!
+                        </p>
+                    </div>
+                )}
+
+                {/* REJECTED STATUS - Rejection Message */}
+                {isRejected && (
+                    <div style={{
+                        padding: '15px',
+                        background: '#fff5f5',
+                        border: '1px solid #fc8181',
+                        borderRadius: '6px'
+                    }}>
+                        <p style={{ color: '#c53030', margin: 0 }}>
+                            Thank you for your interest. Unfortunately, we have decided to move forward with other candidates at this time.
+                        </p>
+                    </div>
+                )}
 
                 {isShortlisted && isUnlocked ? (
                     <div>
@@ -225,9 +257,9 @@ function ResumeUploader() {
                     </div>
                 ) : isRejected ? (
                     <p style={{ color: '#c53030' }}>We regret to inform you that we are not moving forward with your application at this time.</p>
-                ) : (
+                ) : !isSelected ? (
                     <p>Your application is currently under review. Please check back later.</p>
-                )}
+                ) : null}
 
                 <p style={{ marginTop: '15px', fontSize: '12px', color: '#718096' }}>
                     Last update: {new Date(status.uploaded_at).toLocaleString()}

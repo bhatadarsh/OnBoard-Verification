@@ -142,8 +142,13 @@ class Stage4State(TypedDict, total=False):
     cheating_score: float
 
     # -------------------------
-    # Audio / System State
+    # Evaluation & Warnings
     # -------------------------
+    evaluation: Optional[Dict]
+    warnings: List[str]
+    latest_warning: Optional[str]
+    next_action: Optional[str]
+
     # -------------------------
     # Audio / System State
     # -------------------------

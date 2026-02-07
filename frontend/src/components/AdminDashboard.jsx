@@ -41,10 +41,26 @@ export default function AdminDashboard() {
     return (
         <div style={{ padding: '50px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                <h1>Admin Dashboard</h1>
-                <button onClick={handleLogout} style={{ padding: '10px 20px', background: '#dc3545', color: 'white', border: 'none', cursor: 'pointer' }}>
-                    Logout
-                </button>
+                <h1 style={{ margin: 0 }}>Admin Dashboard</h1>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                        onClick={() => window.location.reload()}
+                        style={{
+                            padding: '10px 20px',
+                            background: '#f8f9fa',
+                            color: '#4299e1',
+                            border: '1px solid #4299e1',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        🔄 Refresh View
+                    </button>
+                    <button onClick={handleLogout} style={{ padding: '10px 20px', background: '#dc3545', color: 'white', border: 'none', cursor: 'pointer', borderRadius: '4px' }}>
+                        Logout
+                    </button>
+                </div>
             </div>
 
             {user && (
@@ -168,27 +184,41 @@ function JDManager() {
 
 function ResumeList() {
     const [resumes, setResumes] = useState([]);
+    const [sortBy, setSortBy] = useState('newest'); // 'newest', 'score'
+    const [lastRefresh, setLastRefresh] = useState(new Date());
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const fetchResumes = async () => {
+    const fetchResumes = async (showRefreshIndicator = false) => {
+        if (showRefreshIndicator) setIsRefreshing(true);
         try {
             const data = await adminAPI.getCandidates();
             setResumes(data);
+            setLastRefresh(new Date());
         } catch (err) {
             console.error('Error fetching candidates:', err);
+        } finally {
+            if (showRefreshIndicator) setIsRefreshing(false);
         }
     };
 
     useEffect(() => {
         fetchResumes();
+
+        // Auto-refresh every 10 seconds to ensure latest data
+        const intervalId = setInterval(() => {
+            fetchResumes(false); // Silent refresh
+        }, 10000);
+
+        return () => clearInterval(intervalId);
     }, []);
 
     const handleAction = async (candidateId, decision) => {
         try {
             await adminAPI.shortlistCandidate(candidateId, decision);
             alert(`Candidate ${decision.toLowerCase()} successfully!`);
-            fetchResumes();
+            fetchResumes(true); // Immediate refresh with indicator
         } catch (err) {
-            alert('Action failed: ' + err.message);
+            alert('Action failed: ' + (err.response?.data?.detail || err.message));
         }
     };
 
@@ -204,72 +234,294 @@ function ResumeList() {
         }
     };
 
+    const handleDownloadReport = (candidateId) => {
+        const token = localStorage.getItem('token');
+        window.open(`http://localhost:8000/admin/candidates/${candidateId}/report?token=${token}`, '_blank');
+    };
+
+    const sortedResumes = [...resumes].sort((a, b) => {
+        if (sortBy === 'score') return b.total_interview_score - a.total_interview_score;
+        return 0; // default order from backend
+    });
+
     return (
         <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ margin: 0 }}>Candidate Management</h3>
+                <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    <div style={{ fontSize: '11px', color: '#718096' }}>
+                        Last updated: {lastRefresh.toLocaleTimeString()}
+                    </div>
+                    <button
+                        onClick={() => fetchResumes(true)}
+                        disabled={isRefreshing}
+                        style={{
+                            padding: '5px 12px',
+                            background: isRefreshing ? '#cbd5e0' : '#4299e1',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: isRefreshing ? 'not-allowed' : 'pointer',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        {isRefreshing ? '🔄 Refreshing...' : '🔄 Refresh'}
+                    </button>
+                    <div style={{ fontSize: '12px' }}>
+                        Sort by:
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{ marginLeft: '5px', padding: '2px' }}>
+                            <option value="newest">Newest</option>
+                            <option value="score">Total Score</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             {resumes.length === 0 ? <p>No resumes uploaded yet.</p> : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    {resumes.map(r => (
+                    {sortedResumes.map(r => (
                         <div key={r.resume_id} style={{
                             padding: '15px',
                             border: '1px solid #ddd',
                             borderRadius: '8px',
-                            background: r.admin_status === 'SHORTLISTED' ? '#f0fff4' : r.admin_status === 'REJECTED' ? '#fff5f5' : 'white'
+                            background: r.admin_status === 'SELECTED' ? '#f0fff4' : r.admin_status === 'REJECTED' ? '#fff5f5' : 'white',
+                            position: 'relative'
                         }}>
+                            {r.total_interview_score > 0 && (
+                                <div style={{
+                                    position: 'absolute', top: '-10px', right: '15px',
+                                    background: '#4299e1', color: 'white', padding: '4px 12px', borderRadius: '20px',
+                                    fontWeight: 'bold', fontSize: '14px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}>
+                                    Score: {r.total_interview_score}/10
+                                </div>
+                            )}
+
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                                 <strong>Candidate #{r.candidate_id}</strong>
                                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                    {r.tab_change_count > 0 && (
-                                        <span style={{
-                                            padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold',
-                                            backgroundColor: '#ed64a6',
-                                            color: 'white'
-                                        }}>
-                                            🔄 Tab Changes: {r.tab_change_count}
-                                        </span>
-                                    )}
-                                    {r.cheating_score > 0 && (
-                                        <span style={{
-                                            padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold',
-                                            backgroundColor: r.cheating_score > 1.0 ? '#c53030' : '#ecc94b',
-                                            color: 'white'
-                                        }}>
-                                            ⚠️ Misconduct: {r.cheating_score.toFixed(1)}
-                                        </span>
-                                    )}
-                                    {r.interview_status !== 'N/A' && (
-                                        <span style={{
-                                            padding: '2px 8px', borderRadius: '4px', fontSize: '11px',
-                                            backgroundColor: r.interview_status === 'COMPLETED' ? '#2c7a7b' : '#3182ce',
-                                            color: 'white'
-                                        }}>
-                                            Interview: {r.interview_status.replace('_', ' ')}
-                                        </span>
-                                    )}
-                                    {r.misconduct_events?.some(ev => ev.cheating_flags.some(f => f.includes('HUMAN') || f.includes('MOBILE') || f.includes('OBJECT'))) && (
-                                        <span style={{
-                                            padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold',
-                                            backgroundColor: '#e53e3e',
-                                            color: 'white',
-                                            animation: 'pulse 2s infinite'
-                                        }}>
-                                            📸 Visual Alert
-                                        </span>
-                                    )}
                                     <span style={{
                                         padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold',
-                                        backgroundColor: r.admin_status === 'SHORTLISTED' ? '#48bb78' : r.admin_status === 'REJECTED' ? '#f56565' : '#ecc94b',
+                                        backgroundColor: r.admin_status === 'SELECTED' ? '#2f855a' : r.admin_status === 'REJECTED' ? '#c53030' : '#ecc94b',
                                         color: 'white'
                                     }}>
-                                        {r.admin_status}
+                                        {r.admin_status.replace('_', ' ')}
                                     </span>
                                 </div>
                             </div>
 
-                            <div style={{ fontSize: '14px', marginBottom: '10px', color: '#555' }}>
-                                <p style={{ margin: '5px 0' }}><strong>System Score:</strong> {(r.system_score * 100).toFixed(1)}%</p>
-                                <p style={{ margin: '5px 0' }}><strong>System Decision:</strong> {r.system_shortlisted ? 'Recommended ✅' : 'Not Recommended ❌'}</p>
-                                <p style={{ margin: '5px 0', fontStyle: 'italic' }}>"{r.system_reason?.summary}"</p>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13px', marginBottom: '10px' }}>
+                                <div>
+                                    <p style={{ margin: '2px 0' }}><strong>Interview Status:</strong> {r.interview_status}</p>
+                                    <p style={{ margin: '2px 0' }}><strong>Tab Changes:</strong>
+                                        <span style={{
+                                            color: r.tab_change_count === 0 ? '#38a169' : r.tab_change_count <= 2 ? '#d69e2e' : '#e53e3e',
+                                            marginLeft: '5px',
+                                            fontWeight: r.tab_change_count > 2 ? 'bold' : 'normal'
+                                        }}>
+                                            {r.tab_change_count}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div>
+                                    <p style={{ margin: '2px 0' }}><strong>Cheating Severity:</strong>
+                                        <span style={{ color: r.cheating_severity === 'LOW' ? '#38a169' : '#e53e3e', marginLeft: '5px' }}>
+                                            {r.cheating_severity}
+                                        </span>
+                                    </p>
+                                    <p style={{ margin: '2px 0' }}><strong>System Rec:</strong> {r.system_shortlisted ? 'Yes' : 'No'}</p>
+                                </div>
                             </div>
+
+                            {/* JD/RESUME MATCHING SECTION - Always Visible */}
+                            <div style={{
+                                marginTop: '15px',
+                                background: r.system_shortlisted ? '#f0fff4' : '#fff5f5',
+                                padding: '12px',
+                                borderRadius: '8px',
+                                border: `2px solid ${r.system_shortlisted ? '#48bb78' : '#fc8181'}`,
+                                fontSize: '13px'
+                            }}>
+                                <div style={{
+                                    fontWeight: 'bold',
+                                    color: r.system_shortlisted ? '#2f855a' : '#c53030',
+                                    marginBottom: '8px',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        {r.system_shortlisted ? '✅' : '❌'} JD/Resume Matching
+                                        <span style={{
+                                            fontSize: '11px',
+                                            background: r.system_shortlisted ? '#2f855a' : '#c53030',
+                                            color: 'white',
+                                            padding: '2px 8px',
+                                            borderRadius: '12px',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            {r.system_shortlisted ? 'RECOMMENDED' : 'NOT RECOMMENDED'}
+                                        </span>
+                                    </div>
+                                    <div style={{
+                                        fontSize: '18px',
+                                        color: r.system_shortlisted ? '#276749' : '#9b2c2c',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '5px'
+                                    }}>
+                                        <span style={{ fontSize: '14px', fontWeight: 'normal' }}>Match Score:</span>
+                                        <strong>{r.system_score.toFixed(1)}/10</strong>
+                                    </div>
+                                </div>
+
+                                {r.system_reason?.summary && (
+                                    <div style={{
+                                        padding: '10px',
+                                        background: 'rgba(255,255,255,0.7)',
+                                        borderRadius: '6px',
+                                        marginTop: '8px',
+                                        fontSize: '12px',
+                                        color: '#2d3748',
+                                        borderLeft: `3px solid ${r.system_shortlisted ? '#48bb78' : '#fc8181'}`
+                                    }}>
+                                        <strong>AI Assessment:</strong>
+                                        <div style={{
+                                            marginTop: '5px',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: '2',
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden',
+                                            lineHeight: '1.4'
+                                        }}>
+                                            {r.system_reason.summary}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* INTERVIEW RESULT SECTION - Always Visible */}
+                            {(() => {
+                                const hasEvaluation = !!r.evaluation_results;
+                                const isCompleted = r.interview_status === 'COMPLETED';
+                                const isInProgress = r.interview_status === 'IN_PROGRESS';
+                                const notStarted = r.interview_status === 'NOT_STARTED' || r.interview_status === 'N/A';
+
+                                // Logic for Recommendation (only if evaluation exists)
+                                const interviewScore = r.total_interview_score || 0;
+                                const cheatingLow = r.cheating_severity === 'LOW';
+                                const tabChangesOk = r.tab_change_count <= 3;
+                                const scoreGood = interviewScore >= 6;
+                                const interviewRecommended = hasEvaluation && scoreGood && (cheatingLow || tabChangesOk);
+
+                                // Styling based on status
+                                const bg = !hasEvaluation ? '#f7fafc' : (interviewRecommended ? '#f0fff4' : '#fff5f5');
+                                const borderCol = !hasEvaluation ? '#e2e8f0' : (interviewRecommended ? '#48bb78' : '#fc8181');
+                                const textCol = !hasEvaluation ? '#718096' : (interviewRecommended ? '#2f855a' : '#c53030');
+                                const scoreCol = !hasEvaluation ? '#a0aec0' : (interviewRecommended ? '#276749' : '#9b2c2c');
+
+                                return (
+                                    <div style={{
+                                        marginTop: '15px',
+                                        background: bg,
+                                        padding: '12px',
+                                        borderRadius: '8px',
+                                        border: `2px solid ${borderCol}`,
+                                        fontSize: '13px'
+                                    }}>
+                                        <div style={{
+                                            fontWeight: 'bold',
+                                            color: textCol,
+                                            marginBottom: '8px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                {hasEvaluation ? (interviewRecommended ? '✅' : '❌') : '⏳'} Interview Result
+                                                {hasEvaluation && (
+                                                    <span style={{
+                                                        fontSize: '11px',
+                                                        background: interviewRecommended ? '#2f855a' : '#c53030',
+                                                        color: 'white',
+                                                        padding: '2px 8px',
+                                                        borderRadius: '12px',
+                                                        fontWeight: 'bold'
+                                                    }}>
+                                                        {interviewRecommended ? 'RECOMMENDED' : 'NOT RECOMMENDED'}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div style={{
+                                                fontSize: '18px',
+                                                color: scoreCol,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '5px'
+                                            }}>
+                                                <span style={{ fontSize: '14px', fontWeight: 'normal' }}>Interview Score:</span>
+                                                <strong>{hasEvaluation ? `${interviewScore.toFixed(1)}/10` : 'PND'}</strong>
+                                            </div>
+                                        </div>
+
+                                        <div style={{
+                                            padding: '10px',
+                                            background: 'rgba(255,255,255,0.7)',
+                                            borderRadius: '6px',
+                                            marginTop: '8px',
+                                            fontSize: '12px',
+                                            color: '#2d3748',
+                                            borderLeft: `3px solid ${borderCol}`
+                                        }}>
+                                            <strong>Performance Assessment:</strong>
+                                            <div style={{
+                                                marginTop: '5px',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: '2',
+                                                WebkitBoxOrient: 'vertical',
+                                                overflow: 'hidden',
+                                                lineHeight: '1.4'
+                                            }}>
+                                                {
+                                                    hasEvaluation ? (
+                                                        interviewRecommended ?
+                                                            `Strong interview performance (${interviewScore.toFixed(1)}/10). No significant integrity concerns.` :
+                                                            `Interview score: ${interviewScore.toFixed(1)}/10. Concerns identified in performance or behavior.`
+                                                    ) : (
+                                                        notStarted ? "Interview not yet started." :
+                                                            isInProgress ? "Interview in progress... Evaluation will appear after completion." :
+                                                                "Evaluation in progress... Please refresh in a moment."
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+
+                                        {hasEvaluation && (
+                                            <div style={{
+                                                display: 'grid',
+                                                gridTemplateColumns: '1fr 1fr 1fr',
+                                                gap: '8px',
+                                                marginTop: '10px',
+                                                fontSize: '11px'
+                                            }}>
+                                                <div style={{ padding: '6px', background: 'rgba(255,255,255,0.5)', borderRadius: '4px', textAlign: 'center' }}>
+                                                    <div style={{ color: '#718096', marginBottom: '2px' }}>Score</div>
+                                                    <div style={{ fontWeight: 'bold', color: scoreGood ? '#2f855a' : '#c53030' }}>{interviewScore.toFixed(1)}/10</div>
+                                                </div>
+                                                <div style={{ padding: '6px', background: 'rgba(255,255,255,0.5)', borderRadius: '4px', textAlign: 'center' }}>
+                                                    <div style={{ color: '#718096', marginBottom: '2px' }}>Cheating</div>
+                                                    <div style={{ fontWeight: 'bold', color: cheatingLow ? '#2f855a' : '#c53030' }}>{r.cheating_severity}</div>
+                                                </div>
+                                                <div style={{ padding: '6px', background: 'rgba(255,255,255,0.5)', borderRadius: '4px', textAlign: 'center' }}>
+                                                    <div style={{ color: '#718096', marginBottom: '2px' }}>Tab Changes</div>
+                                                    <div style={{ fontWeight: 'bold', color: tabChangesOk ? '#2f855a' : '#c53030' }}>{r.tab_change_count}</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })()}
 
                             {r.misconduct_events && r.misconduct_events.length > 0 && (
                                 <div style={{ marginTop: '15px', background: '#fff5f5', padding: '12px', borderRadius: '8px', fontSize: '13px', border: '1px solid #feb2b2' }}>
@@ -306,6 +558,7 @@ function ResumeList() {
                                 </div>
                             )}
 
+
                             {r.interview_trace && r.interview_trace.length > 0 && (
                                 <div style={{ marginTop: '15px', background: '#f0f4f8', padding: '10px', borderRadius: '6px', fontSize: '13px', border: '1px solid #d1d5db' }}>
                                     <details>
@@ -314,7 +567,14 @@ function ResumeList() {
                                             {r.interview_trace.map((t, i) => (
                                                 <div key={i} style={{ marginBottom: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
                                                     <div style={{ fontWeight: 'bold', color: '#4a5568', fontSize: '11px' }}>Q: {t.question}</div>
-                                                    <div style={{ color: '#2d3748', marginTop: '4px' }}>A: {t.answer_text}</div>
+                                                    <div style={{
+                                                        color: '#2d3748',
+                                                        marginTop: '4px',
+                                                        display: '-webkit-box',
+                                                        WebkitLineClamp: '2',
+                                                        WebkitBoxOrient: 'vertical',
+                                                        overflow: 'hidden'
+                                                    }}>A: {t.answer_text}</div>
                                                 </div>
                                             ))}
                                         </div>
@@ -322,20 +582,30 @@ function ResumeList() {
                                 </div>
                             )}
 
-                            {r.evaluation_results && (
-                                <div style={{ marginTop: '15px', background: '#e6fffa', padding: '12px', borderRadius: '8px', border: '1px solid #81e6d9' }}>
-                                    <div style={{ fontWeight: 'bold', color: '#2c7a7b', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                            🎓 Intelligence Evaluation
+
+                            {/* EVALUATION RESULTS - Always Visible */}
+                            <div style={{ marginTop: '15px', background: r.evaluation_results ? '#e6fffa' : '#f7fafc', padding: '12px', borderRadius: '8px', border: `1px solid ${r.evaluation_results ? '#81e6d9' : '#e2e8f0'}` }}>
+                                <div style={{ fontWeight: 'bold', color: r.evaluation_results ? '#2c7a7b' : '#718096', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        🎓 Intelligence Evaluation
+                                        {r.evaluation_results && (
                                             <span style={{ fontSize: '10px', background: '#2c7a7b', color: 'white', padding: '1px 5px', borderRadius: '4px' }}>
                                                 {r.evaluation_results.evaluator_ver}
                                             </span>
-                                        </div>
+                                        )}
+                                    </div>
+                                    {r.evaluation_results ? (
                                         <div style={{ fontSize: '16px', color: '#234e52' }}>
                                             Overall Score: <strong>{r.evaluation_results.overall_score}/10</strong>
                                         </div>
-                                    </div>
+                                    ) : (
+                                        <div style={{ fontSize: '13px', color: '#a0aec0', fontStyle: 'italic' }}>
+                                            {r.interview_status === 'COMPLETED' ? 'Processing...' : 'Not yet evaluated'}
+                                        </div>
+                                    )}
+                                </div>
 
+                                {r.evaluation_results ? (
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                         {r.evaluation_results.per_answer_results?.map((evData, i) => (
                                             <div key={i} style={{ padding: '10px', background: 'white', borderRadius: '6px', border: '1px solid #b2f5ea' }}>
@@ -348,7 +618,15 @@ function ResumeList() {
                                                     }}>Score: {evData.score}/10</span>
                                                 </div>
 
-                                                <div style={{ fontSize: '12px', marginBottom: '8px', lineHeight: '1.4' }}>
+                                                <div style={{
+                                                    fontSize: '12px',
+                                                    marginBottom: '8px',
+                                                    lineHeight: '1.4',
+                                                    display: '-webkit-box',
+                                                    WebkitLineClamp: '2',
+                                                    WebkitBoxOrient: 'vertical',
+                                                    overflow: 'hidden'
+                                                }}>
                                                     <strong>Reasoning:</strong> {evData.reasoning_notes}
                                                 </div>
 
@@ -383,8 +661,16 @@ function ResumeList() {
                                             </div>
                                         ))}
                                     </div>
-                                </div>
-                            )}
+                                ) : (
+                                    <div style={{ padding: '20px', textAlign: 'center', color: '#a0aec0', fontSize: '13px' }}>
+                                        {r.interview_status === 'COMPLETED'
+                                            ? '⏳ Evaluation in progress... Please refresh in a moment.'
+                                            : r.interview_status === 'IN_PROGRESS'
+                                                ? '⏳ Interview in progress... Evaluation will appear after completion.'
+                                                : '📋 Interview not yet started.'}
+                                    </div>
+                                )}
+                            </div>
 
                             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '15px' }}>
                                 <a href={r.resume_blob_url} target="_blank" rel="noopener noreferrer"
@@ -416,6 +702,26 @@ function ResumeList() {
                                     <button onClick={() => handleDeleteCandidate(r.candidate_id)}
                                         style={{ padding: '5px 10px', background: '#fed7d7', color: '#c53030', border: '1px solid #feb2b2', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>
                                         Delete Candidate
+                                    </button>
+                                )}
+
+                                {r.interview_status === 'COMPLETED' && r.admin_status !== 'SELECTED' && r.admin_status !== 'REJECTED' && (
+                                    <>
+                                        <button onClick={() => handleAction(r.candidate_id, "SELECTED")}
+                                            style={{ padding: '5px 10px', background: '#38a169', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>
+                                            Select Candidate
+                                        </button>
+                                        <button onClick={() => handleAction(r.candidate_id, "REJECTED")}
+                                            style={{ padding: '5px 10px', background: '#e53e3e', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>
+                                            Reject Candidate
+                                        </button>
+                                    </>
+                                )}
+
+                                {r.interview_status === 'COMPLETED' && (
+                                    <button onClick={() => handleDownloadReport(r.candidate_id)}
+                                        style={{ padding: '5px 10px', background: '#3182ce', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>
+                                        Download Report
                                     </button>
                                 )}
                             </div>

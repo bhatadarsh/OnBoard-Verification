@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 load_dotenv()
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fastapi import FastAPI, HTTPException, status, Depends, File, UploadFile, Form
+from fastapi import FastAPI, HTTPException, status, Depends, File, UploadFile, Form, Query
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import timedelta, datetime
 from typing import List, Optional, Literal
@@ -32,6 +34,10 @@ from jd_intelligence.graph import jd_graph
 from resume_intelligence.graph import resume_graph
 from focus_area_selection.graph import stage3_graph
 from interview_orchestration.graph import stage4_graph
+from fastapi.security import HTTPBearer
+
+# Security instance for flexible auth (allows missing tokens)
+security_optional = HTTPBearer(auto_error=False)
 from interview_orchestration.nodes.initialize_interview import initialize_interview
 from interview_orchestration.stt.factory import get_stt_engine
 
@@ -317,7 +323,7 @@ async def get_resume_status(current_user: TokenData = Depends(require_user)):
 from pydantic import BaseModel
 
 class ShortlistRequest(BaseModel):
-    decision: Literal["SHORTLISTED", "REJECTED"]
+    decision: Literal["SHORTLISTED", "REJECTED", "SELECTED"]
 
 class CandidateResponse(BaseModel):
     candidate_id: int
@@ -335,10 +341,14 @@ class CandidateResponse(BaseModel):
     interview_trace: list = []
     tab_change_count: int = 0
     evaluation_results: Optional[dict] = None
+    total_interview_score: float = 0.0
+    total_confidence_level: str = "N/A"
+    cheating_severity: str = "LOW"
 
 @app.get("/admin/candidates", response_model=List[CandidateResponse])
 async def get_candidates(current_user: TokenData = Depends(require_admin)):
     """Get all candidates with intelligence results."""
+    db.load()  # Force reload from disk to catch external evaluation updates
     candidates = []
     for r_dict in db.resumes:
         intel = r_dict.get("intelligence", {}) or {}
@@ -361,7 +371,42 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             summary = str(reason_data)
 
         # Get interview session for cheating data
-        interview = next((i for i in db.interviews if i["candidate_id"] == r_dict["candidate_id"]), None)
+        interview = next((i for i in db.interviews if str(i["candidate_id"]) == str(r_dict["candidate_id"])), None)
+
+        # Calculate Total Interview Score & Metrics
+        total_score = 0.0
+        confidence = "N/A"
+        severity = "LOW"  # Default
+        
+        # Get cheating score (available even without evaluation)
+        c_score = interview.get("cheating_score", 0.0) if interview else 0.0
+        
+        # MANDATORY CHEATING SEVERITY RULE (Backend enforced)
+        # cheating_score <= 2 → LOW
+        # cheating_score > 2  → MEDIUM
+        # cheating_score > 3  → HIGH
+        if c_score > 3.0:
+            severity = "HIGH"
+        elif c_score > 2.0:
+            severity = "MEDIUM"
+        else:
+            severity = "LOW"
+        
+        if interview and interview.get("evaluation"):
+            eval_data = interview["evaluation"]
+            total_score = eval_data.get("overall_score", 0.0)
+            
+            # Soft adjust by cheating score (e.g. 5% reduction per 1.0 cheating score)
+            penalty = min(0.5, (c_score / 5.0)) # Max 50% penalty
+            total_score = round(total_score * (1.0 - penalty), 2)
+            
+            # Confidence Level
+            results = eval_data.get("per_answer_results", [])
+            conf_levels = [r.get("confidence_level", "MEDIUM") for r in results if "confidence_level" in r]
+            if conf_levels:
+                confidence = max(set(conf_levels), key=conf_levels.count)
+            else:
+                confidence = "MEDIUM"
 
         c = CandidateResponse(
             candidate_id=r_dict["candidate_id"],
@@ -378,24 +423,211 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             misconduct_events=interview.get("cheating_events", []) if interview else [],
             interview_trace=interview.get("interview_trace", []) if interview else [],
             tab_change_count=interview.get("tab_change_count", 0) if interview else 0,
-            evaluation_results=interview.get("evaluation") if interview else None
+            evaluation_results=interview.get("evaluation") if interview else None,
+            total_interview_score=total_score,
+            total_confidence_level=confidence,
+            cheating_severity=severity
         )
         candidates.append(c)
     return candidates
 
-@app.post("/admin/candidates/{candidate_id}/shortlist")
-async def shortlist_candidate(candidate_id: int, request: ShortlistRequest, current_user: TokenData = Depends(require_admin)):
-    """Shortlist or reject a candidate."""
-    # Find resume
+# Helper auth function for report downloads (supports both header and query param tokens)
+async def admin_report_auth(token: Optional[str] = Query(None), credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)):
+    auth_token = token or (credentials.credentials if credentials else None)
+    if not auth_token:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    from auth import decode_token
+    user = decode_token(auth_token)
+    if user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
+
+@app.get("/admin/candidates/{candidate_id}/report", response_class=HTMLResponse)
+async def generate_interview_report(candidate_id: int, current_user: TokenData = Depends(admin_report_auth)):
+    """Generate a rich HTML interview report."""
     resume = next((r for r in db.resumes if r["candidate_id"] == candidate_id), None)
-    
     if not resume:
         raise HTTPException(status_code=404, detail="Candidate not found")
         
+    interview = next((i for i in db.interviews if i["candidate_id"] == candidate_id), None)
+    if not interview or interview["status"] != "COMPLETED":
+        return f"<html><body><h1>Report not ready</h1><p>Interview for candidate {candidate_id} is not yet completed.</p></body></html>"
+
+    eval_data = interview.get("evaluation", {})
+    trace = interview.get("interview_trace", [])
+    
+    # Safety check: If no evaluation data exists, return error page
+    if not eval_data:
+        return f"""<html><body style="padding: 50px; font-family: system-ui;">
+        <h1>Report Generation Error</h1>
+        <p>No evaluation data found for candidate {candidate_id}.</p>
+        <p>The interview may not have been evaluated yet.</p>
+        </body></html>"""
+    
+    # Calculate scores on the fly for the report header (with safe defaults)
+    total_score = eval_data.get("overall_score", 0.0)
+    c_score = interview.get("cheating_score", 0.0)
+    penalty = min(0.5, (c_score / 5.0))
+    final_score = round(total_score * (1.0 - penalty), 2)
+    
+    # Extract confidence (mode) with safe handling
+    results = eval_data.get("per_answer_results", [])
+    conf_levels = [r.get("confidence_level", "MEDIUM") for r in results if r and "confidence_level" in r]
+    avg_conf = max(set(conf_levels), key=conf_levels.count) if conf_levels else "MEDIUM"
+    
+    # Calculate cheating severity using mandatory rule
+    if c_score > 3.0:
+        severity = "HIGH"
+    elif c_score > 2.0:
+        severity = "MEDIUM"
+    else:
+        severity = "LOW"
+
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Interview Report - Candidate {candidate_id}</title>
+        <style>
+            body {{ font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; color: #1a202c; max-width: 900px; margin: 0 auto; padding: 40px; background: #fff; }}
+            .header {{ border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }}
+            .header h1 {{ margin: 0; color: #2d3748; font-size: 28px; }}
+            .badge {{ padding: 4px 12px; borderRadius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; }}
+            .metric-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }}
+            .metric-box {{ background: #f7fafc; padding: 20px; borderRadius: 8px; border: 1px solid #edf2f7; text-align: center; }}
+            .metric-box .label {{ font-size: 12px; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }}
+            .metric-box .value {{ font-size: 24px; font-weight: bold; color: #2d3748; }}
+            .section {{ margin-bottom: 40px; }}
+            .section-title {{ font-size: 18px; font-weight: bold; color: #4a5568; margin-bottom: 15px; border-left: 4px solid #4299e1; padding-left: 12px; }}
+            .turn {{ background: #fff; border: 1px solid #e2e8f0; borderRadius: 8px; padding: 20px; margin-bottom: 20px; page-break-inside: avoid; }}
+            .turn-header {{ display: flex; justify-content: space-between; margin-bottom: 15px; background: #f8fafc; padding: 8px 12px; borderRadius: 6px; }}
+            .question {{ font-weight: bold; color: #2d3748; margin-bottom: 10px; font-size: 15px; }}
+            .answer {{ color: #4a5568; margin-bottom: 20px; font-style: italic; white-space: pre-wrap; }}
+            .eval-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px; }}
+            .eval-points ul {{ padding-left: 18px; margin: 0; }}
+            .status-selected {{ color: #38a169; }}
+            .status-rejected {{ color: #e53e3e; }}
+            .score-tag {{ background: #4299e1; color: white; padding: 2px 8px; borderRadius: 4px; }}
+            @media print {{
+                body {{ padding: 0; }}
+                .no-print {{ display: none; }}
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="no-print" style="margin-bottom: 20px; text-align: right;">
+            <button onclick="window.print()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; borderRadius: 6px; cursor: pointer;">Print to PDF</button>
+        </div>
+        
+        <div class="header">
+            <div>
+                <h1>Interview Performance Report</h1>
+                <div style="color: #718096; margin-top: 5px;">Candidate ID: {candidate_id} | Status: <span class="status-{resume['status'].lower()}">{resume['status']}</span></div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 12px; color: #a0aec0;">Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</div>
+                <div style="font-size: 12px; color: #a0aec0;">System Ver: 1.0-Admin-Core</div>
+            </div>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-box">
+                <div class="label">Total Adjusted Score</div>
+                <div class="value">{final_score}/10</div>
+            </div>
+            <div class="metric-box">
+                <div class="label">Decision Confidence</div>
+                <div class="value" style="color: {'#38a169' if avg_conf == 'HIGH' else '#ecc94b'}">{avg_conf}</div>
+            </div>
+            <div class="metric-box">
+                <div class="label">Cheating Severity</div>
+                <div class="value" style="color: {'#e53e3e' if severity == 'HIGH' else '#ecc94b' if severity == 'MEDIUM' else '#38a169'}">{severity}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Evaluation Summary</div>
+            <p style="font-size: 14px;">This candidate was evaluated across {len(trace)} interactive turns. The system analyzed technical depth, communication clarity, and situational reasoning. {f'A cheating penalty was applied due to suspicious events (Score: {c_score}).' if c_score > 0 else 'No major misconduct was detected.'}</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Question by Question Breakdown</div>
+    """
+
+    for i, t in enumerate(trace):
+        t_eval = t.get("evaluation", {})
+        ev_v_ac = t_eval.get("expected_vs_actual", {})
+        
+        html_content += f"""
+        <div class="turn">
+            <div class="turn-header">
+                <span style="font-weight: bold; color: #4a5568;">Turn {i+1}: {t.get('topic', 'General')}</span>
+                <span class="score-tag">Score: {t_eval.get('score', 0.0)}/10</span>
+            </div>
+            <div class="question">Q: {t.get('question')}</div>
+            <div class="answer">A: {t.get('answer_text')}</div>
+            
+            <div class="eval-grid">
+                <div class="eval-points">
+                    <div style="font-weight: bold; color: #38a169; margin-bottom: 5px;">Strengths</div>
+                    <ul>
+                        {"".join([f"<li>{s}</li>" for s in t_eval.get('strengths', [])])}
+                    </ul>
+                </div>
+                <div class="eval-points">
+                    <div style="font-weight: bold; color: #e53e3e; margin-bottom: 5px;">Weaknesses</div>
+                    <ul>
+                        {"".join([f"<li>{w}</li>" for w in t_eval.get('weaknesses', [])])}
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; font-size: 13px; border-top: 1px dashed #e2e8f0; padding-top: 10px;">
+                <strong>Reasoning Notes:</strong> {t_eval.get('reasoning_notes', 'N/A')}
+            </div>
+            
+            <div style="margin-top: 10px; font-size: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <strong>Expected Points:</strong>
+                {" ".join([f'<span style="background: {"#c6f6d5" if c in ev_v_ac.get("covered", []) else "#fed7d7"}; padding: 2px 6px; borderRadius: 4px;">{c}</span>' for c in (ev_v_ac.get("expected_focus", []) + ev_v_ac.get("missed", []))])}
+            </div>
+        </div>
+        """
+
+    html_content += """
+        </div>
+        <div style="margin-top: 50px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; font-size: 12px; color: #a0aec0;">
+            Confidential - AI Interview Intelligence Report - &copy; 2026 Sigmoid Analytics
+        </div>
+    </body>
+    </html>
+    """
+    
+    return html_content
+
+@app.post("/admin/candidates/{candidate_id}/shortlist")
+async def shortlist_candidate(candidate_id: int, request: ShortlistRequest, current_user: TokenData = Depends(require_admin)):
+    """Shortlist, Select or Reject a candidate."""
+    # Find resume
+    resume = next((r for r in db.resumes if r["candidate_id"] == candidate_id), None)
+    if not resume:
+        raise HTTPException(status_code=404, detail="Candidate not found")
+        
+    # Check interview status if this is a final decision (SELECTED)
+    interview = next((i for i in db.interviews if i["candidate_id"] == candidate_id), None)
+    
+    if request.decision == "SELECTED":
+        if not interview or interview["status"] != "COMPLETED":
+             raise HTTPException(status_code=400, detail="Cannot SELECT a candidate before they have COMPLETED the interview.")
+
+    # Update Status
     resume["status"] = request.decision
+    
     if request.decision == "SHORTLISTED":
         resume["interview_unlocked"] = True
+    elif request.decision == "SELECTED":
+        resume["interview_unlocked"] = False # Logic: No more interview needed
     else:
+        # For REJECTED
         resume["interview_unlocked"] = False
         
     db.save()
@@ -418,17 +650,14 @@ async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(
             detail=f"Cannot delete candidate with status: {resume['status']}. Only REJECTED candidates can be deleted."
         )
 
-    # 3. Check for associated interview
-    interview = next((i for i in db.interviews if i["candidate_id"] == candidate_id), None)
-    if interview:
-         raise HTTPException(
-            status_code=400, 
-            detail=f"Cannot delete candidate with an associated interview (Status: {interview['status']})."
-        )
-
-    # 4. Perform Deletion
+    # 3. Perform Deletion
     # Delete Resume record
     db.resumes.pop(resume_idx)
+    
+    # Delete associated interview session if exists
+    interview_idx = next((i for i, inter in enumerate(db.interviews) if inter["candidate_id"] == candidate_id), None)
+    if interview_idx is not None:
+        db.interviews.pop(interview_idx)
     
     # Delete User account (dictionary filter based on user id)
     db.users = {email: u for email, u in db.users.items() if u.get("id") != candidate_id}
@@ -787,16 +1016,38 @@ async def submit_answer(
                 
                 print(f"DEBUG: Turn trace and text answer persisted to Azure container: {container}")
                 
-                # 5b. If completed, upload the final evaluation report
-                if session_data["status"] == "COMPLETED" and session_data.get("evaluation"):
-                    eval_blob_name = f"{interview_id}/evaluation.json"
+                # 5b. If completed, upload the final evaluation report and full trace
+                if session_data["status"] == "COMPLETED":
+                    # Upload individual evaluation.json (legacy/compact)
+                    if session_data.get("evaluation"):
+                        eval_blob_name = f"{interview_id}/evaluation.json"
+                        azure_blob_helper.upload_file(
+                            container_name=container,
+                            blob_name=eval_blob_name,
+                            file_content=json.dumps(session_data["evaluation"]).encode('utf-8'),
+                            content_type="application/json"
+                        )
+                    
+                    # Upload FULL COMPREHENSIVE REPORT
+                    report_blob_name = f"{interview_id}/full_interview_report.json"
+                    full_report = {
+                        "candidate_id": str(session_data["candidate_id"]),
+                        "interview_id": str(session_data["interview_id"]),
+                        "overall_metrics": {
+                            "total_score": session_data.get("evaluation", {}).get("overall_score", 0.0),
+                            "cheating_score": session_data.get("cheating_score", 0.0),
+                            "completed_at": datetime.now().isoformat()
+                        },
+                        "interview_trace": session_data["interview_trace"],
+                        "evaluation_summary": session_data.get("evaluation")
+                    }
                     azure_blob_helper.upload_file(
                         container_name=container,
-                        blob_name=eval_blob_name,
-                        file_content=json.dumps(session_data["evaluation"]).encode('utf-8'),
+                        blob_name=report_blob_name,
+                        file_content=json.dumps(full_report).encode('utf-8'),
                         content_type="application/json"
                     )
-                    print(f"DEBUG: Final evaluation report persisted to Azure: {eval_blob_name}")
+                    print(f"DEBUG: Full comprehensive report persisted to Azure: {report_blob_name}")
         except Exception as storage_err:
             print(f"Trace Storage Warning (Non-blocking): {storage_err}")
         

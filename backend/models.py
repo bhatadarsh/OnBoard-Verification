@@ -43,7 +43,7 @@ class Resume(BaseModel):
     job_id: Optional[str] = None
     resume_id: str
     resume_blob_path: str
-    status: Literal["UNDER_REVIEW", "SHORTLISTED", "REJECTED"] = "UNDER_REVIEW"
+    status: Literal["UNDER_REVIEW", "SHORTLISTED", "REJECTED", "SELECTED"] = "UNDER_REVIEW"
     interview_unlocked: bool = False
     uploaded_at: datetime
     intelligence: Optional[dict] = None
