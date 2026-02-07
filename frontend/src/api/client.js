@@ -119,15 +119,23 @@ export const interviewAPI = {
         const response = await api.get(`/interview/${interviewId}/question`);
         return response.data;
     },
-    submitAnswer: async (interviewId, audioBlob, submissionType) => {
+    submitAnswer: async (interviewId, audioFile, submissionType) => {
         const formData = new FormData();
-        if (audioBlob) {
-            formData.append('audio_file', audioBlob, 'answer.wav');
+        if (audioFile) {
+            formData.append('audio_file', audioFile);
         }
         formData.append('submission_type', submissionType);
         const response = await api.post(`/interview/${interviewId}/answer`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
+        return response.data;
+    },
+    sendVideoFrame: async (interviewId, frameB64) => {
+        const response = await api.post(`/interview/${interviewId}/video-frame`, { frame: frameB64 });
+        return response.data;
+    },
+    reportEvent: async (interviewId, eventType) => {
+        const response = await api.post(`/interview/${interviewId}/event`, { event_type: eventType });
         return response.data;
     }
 };

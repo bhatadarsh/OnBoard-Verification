@@ -12,6 +12,12 @@ class Settings(BaseSettings):
     # Azure Settings
     AZURE_STORAGE_CONNECTION_STRING: str = ""
     
+    # Azure OpenAI Settings
+    AZURE_OPENAI_API_KEY: str = ""
+    AZURE_OPENAI_ENDPOINT: str = ""
+    AZURE_OPENAI_API_VERSION: str = "2023-05-15"
+    AZURE_OPENAI_DEPLOYMENT_NAME: str = ""
+    
     class Config:
         env_file = ".env"
         extra = "ignore"

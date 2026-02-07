@@ -330,6 +330,11 @@ class CandidateResponse(BaseModel):
     admin_status: str
     interview_unlocked: bool
     interview_status: Literal["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "N/A"] = "N/A"
+    cheating_score: float = 0.0
+    misconduct_events: list = []
+    interview_trace: list = []
+    tab_change_count: int = 0
+    evaluation_results: Optional[dict] = None
 
 @app.get("/admin/candidates", response_model=List[CandidateResponse])
 async def get_candidates(current_user: TokenData = Depends(require_admin)):
@@ -355,6 +360,9 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
         else:
             summary = str(reason_data)
 
+        # Get interview session for cheating data
+        interview = next((i for i in db.interviews if i["candidate_id"] == r_dict["candidate_id"]), None)
+
         c = CandidateResponse(
             candidate_id=r_dict["candidate_id"],
             resume_id=r_dict["resume_id"],
@@ -365,7 +373,12 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             system_reason={"summary": summary},
             admin_status=r_dict["status"],
             interview_unlocked=r_dict.get("interview_unlocked", False),
-            interview_status=next((i["status"] for i in db.interviews if i["candidate_id"] == r_dict["candidate_id"]), "N/A")
+            interview_status=interview["status"] if interview else "N/A",
+            cheating_score=interview.get("cheating_score", 0.0) if interview else 0.0,
+            misconduct_events=interview.get("cheating_events", []) if interview else [],
+            interview_trace=interview.get("interview_trace", []) if interview else [],
+            tab_change_count=interview.get("tab_change_count", 0) if interview else 0,
+            evaluation_results=interview.get("evaluation") if interview else None
         )
         candidates.append(c)
     return candidates
@@ -525,6 +538,10 @@ async def get_current_question(interview_id: str, current_user: TokenData = Depe
     
     total_expected = len(session_data.get("focus_areas", [])) * 3 
     
+    # Track when question was served for cheating detection (TOO_FAST)
+    session_data["last_question_served_at"] = datetime.now().timestamp()
+    db.save()
+    
     return {
         "question_id": f"q_{len(session_data['interview_trace'])}",
         "question_text": session_data["current_question"],
@@ -532,6 +549,46 @@ async def get_current_question(interview_id: str, current_user: TokenData = Depe
         "total_questions": total_expected,
         "status": session_data["status"]
     }
+
+@app.post("/interview/{interview_id}/video-frame")
+async def store_video_frame(interview_id: str, frame_data: dict, current_user: TokenData = Depends(require_user)):
+    """Async endpoint to buffer video frames for misconduct analysis."""
+    session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
+    if not session_data:
+        return {"status": "error", "message": "Session not found"}
+        
+    # Buffer up to 5 frames per question to avoid memory bloat
+    frames = session_data.setdefault("buffered_video_frames", [])
+    if len(frames) < 5:
+        frames.append(frame_data.get("frame")) # Expecting base64 string
+        # db.save() is expensive for every frame, we rely on in-memory until next save
+        # or we could just skip saving frames to disk at all if we process them instantly
+    return {"status": "success"}
+
+@app.post("/interview/{interview_id}/event")
+async def log_interview_event(interview_id: str, event_data: dict, current_user: TokenData = Depends(require_user)):
+    """Log real-time events like tab changes."""
+    session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
+    if not session_data:
+        raise HTTPException(status_code=404, detail="Session not found")
+        
+    event_type = event_data.get("event_type")
+    
+    if event_type == "TAB_CHANGE":
+        session_data["tab_change_count"] = session_data.get("tab_change_count", 0) + 1
+        
+        # Add to cheating events if desired, or just keep as a separate counter
+        session_data.setdefault("cheating_events", []).append({
+            "answer_id": "REALTIME",
+            "cheating_flags": ["TAB_CHANGE"],
+            "cheating_score": 0.1, # Small penalty for tab switching
+            "timestamp": datetime.now().timestamp()
+        })
+        session_data["cheating_score"] = round(session_data.get("cheating_score", 0.0) + 0.1, 2)
+        db.save()
+        return {"status": "success", "tab_change_count": session_data["tab_change_count"]}
+    
+    return {"status": "ignored"}
 
 @app.post("/interview/{interview_id}/answer")
 async def submit_answer(
@@ -563,39 +620,45 @@ async def submit_answer(
     if audio_file:
         temp_dir = os.path.join(os.getcwd(), "temp_audio")
         os.makedirs(temp_dir, exist_ok=True)
-        file_path = os.path.join(temp_dir, f"{interview_id}_{uuid.uuid4()}.wav")
+        
+        # Determine actual extension
+        ext = audio_file.filename.split('.')[-1] if '.' in audio_file.filename else 'webm'
+        original_path = os.path.join(temp_dir, f"{interview_id}_{uuid.uuid4()}.{ext}")
+        wav_path = original_path + ".wav" # Target for STT
+        file_path = wav_path # For backward compatibility in logs
         
         try:
             audio_content = await audio_file.read()
-            print(f"DEBUG: Received audio file '{audio_file.filename}' size: {len(audio_content)} bytes")
+            print(f"DEBUG: Received audio file '{audio_file.filename}' Content-Type: {audio_file.content_type} size: {len(audio_content)} bytes")
             
             if audio_content:
+                # 1. Save original for reference/debugging
+                with open(original_path, "wb") as buffer:
+                    buffer.write(audio_content)
+
                 # 2. Convert to standard WAV (16kHz, Mono, PCM) using Pydub
-                # This fixes the INVALID_WAV_HEADER issue by normalizing the format
                 try:
-                    # Load audio from bytes
-                    audio = AudioSegment.from_file(io.BytesIO(audio_content))
+                    # Determine format from extension
+                    fmt = ext if ext != 'wav' else None
                     
-                    # Normalize to 16000Hz, Mono, 16-bit (Preferred by Azure Speech SDK)
+                    # Load audio from original file
+                    audio = AudioSegment.from_file(original_path, format=fmt)
+                    
+                    # Normalize to 16000Hz, Mono, 16-bit
                     audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
                     
-                    # Save locally for STT
-                    audio.export(file_path, format="wav")
+                    # Save to WAV for STT
+                    audio.export(wav_path, format="wav")
                     
                     # Log audio stats
                     duration = len(audio) / 1000.0
                     volume = audio.dBFS
                     print(f"DEBUG: Audio converted. Duration: {duration}s, Volume: {volume} dBFS")
                     
-                    if volume < -60: # Threshold for very quiet/silent
-                        print("WARNING: Audio is extremely quiet. STT might fail.")
-                        
-                    print(f"DEBUG: Saved to: {file_path}")
-
                     # 3. Transcribe
                     try:
                         stt = get_stt_engine()
-                        transcript = stt.transcribe(file_path)
+                        transcript = stt.transcribe(wav_path)
                         if not transcript:
                             error_info = "STT_NO_SPEECH_RECOGNIZED"
                     except Exception as stt_err:
@@ -604,9 +667,11 @@ async def submit_answer(
                 except Exception as conv_err:
                     print(f"Audio Conversion Error: {conv_err}")
                     error_info = f"CONVERSION_FAILED: {str(conv_err)}"
-                    # Fallback: save original and try STT anyway
-                    with open(file_path, "wb") as buffer:
-                        buffer.write(audio_content)
+                    # If conversion failed, try STT on original as last resort
+                    try:
+                        stt = get_stt_engine()
+                        transcript = stt.transcribe(original_path)
+                    except: pass
             else:
                 error_info = "EMPTY_AUDIO_CONTENT"
         except Exception as audio_err:
@@ -621,13 +686,20 @@ async def submit_answer(
         error_msg = error_info if error_info else "STT completed"
         final_answer_text = transcript if transcript else f"[{submission_type}] (No audible response captured: {error_msg})"
         
+        # Calculate time taken
+        now = datetime.now().timestamp()
+        served_at = session_data.get("last_question_served_at", now - 30)
+        time_taken = max(1, now - served_at)
+
         graph_state = {
             **session_data,
             "final_focus_areas": session_data.get("focus_areas", []), # Add alias for nodes
             "interview_status": "WAITING_FOR_ANSWER",
             "simulated_answer": final_answer_text,
             "stt_engine": None,
-            "current_followup_count": session_data.get("current_followup_count", 0)
+            "current_followup_count": session_data.get("current_followup_count", 0),
+            "time_taken": time_taken,
+            "buffered_video_frames": session_data.get("buffered_video_frames", [])
         }
         
         # Logging Telemetry
@@ -651,23 +723,41 @@ async def submit_answer(
         session_data["current_followup_count"] = new_state.get("current_followup_count", 0)
         session_data["interview_trace"] = new_state.get("interview_trace", [])
         
+        # CHEATING DETECTION persistence
+        session_data["cheating_score"] = new_state.get("cheating_score", 0.0)
+        session_data["cheating_events"] = new_state.get("cheating_events", [])
+        session_data["warnings"] = new_state.get("warnings", [])
+        session_data["latest_warning"] = new_state.get("latest_warning")
+        session_data["evaluation"] = new_state.get("evaluation")
+        
+        # Buffer cleanup
+        session_data["buffered_video_frames"] = []
+
         if new_state.get("interview_status") == "COMPLETED" or not session_data["current_question"]:
             session_data["status"] = "COMPLETED"
         else:
             session_data["status"] = "IN_PROGRESS"
+            # Update served time for the NEXT question to ensure accurate time_taken
+            session_data["last_question_served_at"] = datetime.now().timestamp()
             
         db.save()
 
         # 5. Azure Blob Persistence (GUARANTEED)
         try:
-            if session_data["interview_trace"]:
-                last_turn = session_data["interview_trace"][-1]
+            # Find the turn we just processed. It's the one that matches current question index.
+            # Usually it's the last one in the trace.
+            trace = session_data.get("interview_trace", [])
+            if trace:
+                last_turn = trace[-1]
+                
+                # Double check this is actually the turn for the question we just answered
+                # (to prevent stale uploads if there were race conditions)
                 blob_payload = {
                     "candidate_id": str(session_data["candidate_id"]),
                     "interview_id": str(session_data["interview_id"]),
                     "topic": last_turn.get("topic"),
                     "question": last_turn.get("question"),
-                    "answer_text": last_turn.get("answer_text"),
+                    "answer_text": last_turn.get("answer_text") or final_answer_text, # Fallback
                     "question_type": last_turn.get("question_type"),
                     "followup_index": last_turn.get("followup_index"),
                     "stt_error": error_info,
@@ -685,25 +775,44 @@ async def submit_answer(
                     file_content=json.dumps(blob_payload).encode('utf-8'),
                     content_type="application/json"
                 )
-                print(f"DEBUG: Turn trace persisted to Azure container: {container}")
+                
+                # Also upload a simple .txt version for raw answer visibility
+                txt_blob_name = f"{interview_id}/turn_{len(session_data['interview_trace'])}_answer.txt"
+                azure_blob_helper.upload_file(
+                    container_name=container,
+                    blob_name=txt_blob_name,
+                    file_content=(last_turn.get("answer_text") or final_answer_text or "").encode('utf-8'),
+                    content_type="text/plain"
+                )
+                
+                print(f"DEBUG: Turn trace and text answer persisted to Azure container: {container}")
+                
+                # 5b. If completed, upload the final evaluation report
+                if session_data["status"] == "COMPLETED" and session_data.get("evaluation"):
+                    eval_blob_name = f"{interview_id}/evaluation.json"
+                    azure_blob_helper.upload_file(
+                        container_name=container,
+                        blob_name=eval_blob_name,
+                        file_content=json.dumps(session_data["evaluation"]).encode('utf-8'),
+                        content_type="application/json"
+                    )
+                    print(f"DEBUG: Final evaluation report persisted to Azure: {eval_blob_name}")
         except Exception as storage_err:
             print(f"Trace Storage Warning (Non-blocking): {storage_err}")
         
         # 6. Return Structured Response for Smooth UX
-        next_question = None
-        if session_data["status"] == "IN_PROGRESS":
-            next_question = {
+        return {
+            "status": session_data["status"],
+            "next_question": {
                 "question_id": f"q_{len(session_data['interview_trace'])}",
                 "question_text": session_data["current_question"],
                 "question_index": len(session_data["interview_trace"]) + 1,
                 "total_questions": len(session_data.get("focus_areas", [])) * 3 
-            }
-
-        return {
-            "status": session_data["status"],
+            } if session_data["current_question"] else None,
             "transcript": transcript,
             "error": error_info,
-            "next_question": next_question
+            "warning": session_data.get("latest_warning"), # Pass warning to UI
+            "cheating_score": session_data.get("cheating_score", 0)
         }
         
     except Exception as e:

@@ -11,10 +11,17 @@ const InterviewSession = () => {
     const [timeLeft, setTimeLeft] = useState(0);
     const [transcript, setTranscript] = useState('');
     const [error, setError] = useState(null);
+    const [latestWarning, setLatestWarning] = useState(null);
+    const [cheatingScore, setCheatingScore] = useState(0);
+
+    const isSubmittingRef = useRef(false);
 
     const timerRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+    const frameIntervalRef = useRef(null);
 
     // Constants
     const READING_TIME = 20;
@@ -22,11 +29,35 @@ const InterviewSession = () => {
 
     useEffect(() => {
         loadQuestion();
+
+        // 1. Detect Tab Changes / Visibility
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                console.warn('Tab change detected!');
+                setLatestWarning("Warning: Switching tabs is recorded as a misconduct event.");
+                // Report to backend
+                interviewAPI.reportEvent(interviewId, 'TAB_CHANGE').catch(e => { });
+
+                // Clear warning after 5s
+                setTimeout(() => setLatestWarning(prev => prev?.includes("Switching tabs") ? null : prev), 5000);
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
         return () => {
-            if (timerRef.current) clearInterval(timerRef.current);
+            clearAnyTimer();
             stopRecording();
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
     }, []);
+
+    const clearAnyTimer = () => {
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+    };
 
     const loadQuestion = async () => {
         try {
@@ -47,15 +78,14 @@ const InterviewSession = () => {
     };
 
     const startReadingPhase = () => {
+        clearAnyTimer();
         setStatus('reading');
         setTimeLeft(READING_TIME);
-
-        if (timerRef.current) clearInterval(timerRef.current);
 
         timerRef.current = setInterval(() => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
-                    clearInterval(timerRef.current);
+                    clearAnyTimer();
                     startAnsweringPhase();
                     return 0;
                 }
@@ -64,71 +94,46 @@ const InterviewSession = () => {
         }, 1000);
     };
 
-    const startAnsweringPhase = async () => {
-        setStatus('answering');
-        setTimeLeft(ANSWER_TIME);
+    const activeAudioStream = useRef(null);
+    const activeVideoStream = useRef(null);
 
-        // Start Recording
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-            // Try to find a supported mimeType
-            const types = ['audio/webm', 'audio/ogg', 'audio/mp4'];
-            const mimeType = types.find(type => MediaRecorder.isTypeSupported(type)) || '';
-
-            mediaRecorderRef.current = new MediaRecorder(stream, { mimeType });
-            audioChunksRef.current = [];
-
-            mediaRecorderRef.current.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    audioChunksRef.current.push(event.data);
-                }
-            };
-
-            mediaRecorderRef.current.start();
-        } catch (err) {
-            console.error('Recording start failed:', err);
-            // Don't block the interview, but allow text progression if possible
-            // For now, we show error as requested, but we could fallback to "no audio" mode
-            setError('Microphone access denied or recording failed. Please enable it to continue.');
-            return;
-        }
-
-        if (timerRef.current) clearInterval(timerRef.current);
-
-        timerRef.current = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timerRef.current);
-                    handleSubmit('TIMEOUT');
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-    };
-
-    const stopRecording = () => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            try {
-                mediaRecorderRef.current.stop();
-                mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-            } catch (e) {
-                console.error('Error stopping recorder:', e);
-            }
-        }
-    };
 
     const handleSubmit = async (submissionType) => {
-        if (status === 'submitting') return;
+        if (isSubmittingRef.current) return;
+        isSubmittingRef.current = true;
 
         setStatus('submitting');
-        if (timerRef.current) clearInterval(timerRef.current);
+        clearAnyTimer();
 
-        const processSubmission = async (blob) => {
+        const recorder = mediaRecorderRef.current;
+        // Capture the chunks ref content at this exact moment
+        const capturedChunks = [...audioChunksRef.current];
+
+        const finishSubmission = async (blob) => {
             try {
-                const res = await interviewAPI.submitAnswer(interviewId, blob || new Blob(), submissionType);
+                if (!blob || blob.size === 0) {
+                    console.warn('Empty audio blob captured for submission:', submissionType);
+                } else {
+                    console.log(`Audio blob ready for submission: ${blob.size} bytes (${blob.type})`);
+                }
+
+                // Determine extension based on mimeType
+                const mimeType = recorder?.mimeType || blob?.type || 'audio/webm';
+                const extension = mimeType.includes('wav') ? 'wav' :
+                    mimeType.includes('ogg') ? 'ogg' :
+                        mimeType.includes('mp4') ? 'mp4' : 'webm';
+
+                console.log(`Submitting as answer.${extension} with type ${mimeType}`);
+                const file = new File([blob || new Blob()], `answer.${extension}`, { type: mimeType });
+
+                const res = await interviewAPI.submitAnswer(interviewId, file, submissionType);
                 setTranscript(res.transcript);
+                if (res.warning) {
+                    setLatestWarning(res.warning);
+                    setTimeout(() => setLatestWarning(null), 5000);
+                }
+                setCheatingScore(res.cheating_score || 0);
 
                 if (res.status === 'COMPLETED') {
                     setStatus('completed');
@@ -136,26 +141,156 @@ const InterviewSession = () => {
                     setQuestion(res.next_question);
                     startReadingPhase();
                 } else {
-                    loadQuestion(); // Final fallback
+                    loadQuestion();
                 }
             } catch (err) {
+                console.error('Submission error:', err);
                 setError('Submission failed: ' + (err.response?.data?.detail || err.message));
                 setStatus('error');
+            } finally {
+                isSubmittingRef.current = false;
             }
         };
 
-        // stop recording and get blob
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            mediaRecorderRef.current.onstop = () => {
-                const audioBlob = new Blob(audioChunksRef.current, { type: mediaRecorderRef.current.mimeType });
-                mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-                processSubmission(audioBlob);
+        if (recorder && recorder.state === 'recording') {
+            recorder.onstop = () => {
+                // Use the chunks captured at the moment submission was triggered
+                const audioBlob = new Blob(capturedChunks, { type: recorder.mimeType });
+
+                // Stop tracks fully
+                stopRecording(true);
+
+                finishSubmission(audioBlob);
             };
-            mediaRecorderRef.current.stop();
+            recorder.stop();
         } else {
-            // No active recording (maybe it errored during start)
-            processSubmission(null);
+            stopRecording();
+            finishSubmission(null);
         }
+    };
+
+    const stopRecording = (keepRecorderActive = false) => {
+        if (frameIntervalRef.current) {
+            clearInterval(frameIntervalRef.current);
+            frameIntervalRef.current = null;
+        }
+
+        // 1. Handle Recorder
+        if (mediaRecorderRef.current) {
+            const recorder = mediaRecorderRef.current;
+
+            // If we're fully stopping, remove handlers so no ghost calls back
+            if (!keepRecorderActive) {
+                recorder.ondataavailable = null;
+                recorder.onstop = null;
+                if (recorder.state !== 'inactive') {
+                    try { recorder.stop(); } catch (e) { }
+                }
+            }
+        }
+
+        // 2. Stop ALL Audio tracks
+        if (activeAudioStream.current) {
+            activeAudioStream.current.getTracks().forEach(track => {
+                try { track.stop(); } catch (e) { }
+            });
+            activeAudioStream.current = null;
+        }
+
+        // 3. Stop ALL Video tracks
+        if (activeVideoStream.current) {
+            activeVideoStream.current.getTracks().forEach(track => {
+                try { track.stop(); } catch (e) { }
+            });
+            activeVideoStream.current = null;
+        }
+
+        if (videoRef.current) {
+            videoRef.current.srcObject = null;
+        }
+    };
+
+    const startAnsweringPhase = async () => {
+        // Ensure ALL previous resources are cleared
+        clearAnyTimer();
+        stopRecording();
+
+        setStatus('answering');
+        setTimeLeft(ANSWER_TIME);
+
+        // Reset state for new recording
+        audioChunksRef.current = [];
+        isSubmittingRef.current = false;
+
+        // Start Recording
+        try {
+            console.log('Requesting media devices...');
+
+            // 1. Get Video
+            try {
+                const videoStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
+                activeVideoStream.current = videoStream;
+                if (videoRef.current) {
+                    videoRef.current.srcObject = videoStream;
+                }
+            } catch (vErr) {
+                console.warn('Camera failed:', vErr);
+            }
+
+            // 2. Get Audio
+            try {
+                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+                activeAudioStream.current = audioStream;
+
+                const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg', 'audio/mp4', 'audio/wav'];
+                const mimeType = types.find(type => MediaRecorder.isTypeSupported(type)) || '';
+
+                const recorder = new MediaRecorder(audioStream, { mimeType });
+                mediaRecorderRef.current = recorder;
+
+                // Closure-safe chunk handling: This array belongs ONLY to this recorder
+                const turnChunks = [];
+                // Store in ref so handleSubmit can access it
+                audioChunksRef.current = turnChunks;
+
+                recorder.ondataavailable = (event) => {
+                    if (event.data && event.data.size > 0) {
+                        turnChunks.push(event.data);
+                    }
+                };
+
+                recorder.onstop = () => {
+                    console.log(`Recorder onstop. Accumulated chunks: ${turnChunks.length}`);
+                };
+
+                recorder.start(1000);
+                console.log('MediaRecorder started with mimeType:', mimeType);
+            } catch (aErr) {
+                console.error('Audio access denied:', aErr);
+                setError('Microphone access denied. Please enable it to record.');
+            }
+
+            if (activeVideoStream.current) {
+                if (frameIntervalRef.current) clearInterval(frameIntervalRef.current);
+                frameIntervalRef.current = setInterval(captureAndSendFrame, 8000);
+            }
+
+        } catch (err) {
+            console.error('Media init failed:', err);
+        }
+
+        // START ANSWER TIMER
+        clearAnyTimer();
+        timerRef.current = setInterval(() => {
+            setTimeLeft((prev) => {
+                if (prev <= 1) {
+                    clearAnyTimer();
+                    handleSubmit('TIMEOUT');
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
     };
 
     if (status === 'completed') {
@@ -256,7 +391,55 @@ const InterviewSession = () => {
                         </div>
                     )}
                 </div>
+
+                {/* Video Monitor */}
+                <div style={{ marginTop: '20px', borderRadius: '12px', overflow: 'hidden', background: '#000', height: '180px', width: '320px', margin: '20px auto', position: 'relative' }}>
+                    <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <canvas ref={canvasRef} style={{ display: 'none' }} />
+                    <div style={{ position: 'absolute', top: '10px', right: '10px', color: 'red', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <div style={{ width: '8px', height: '8px', background: 'red', borderRadius: '50%', animation: 'pulse 1s infinite' }} />
+                        LIVE MONITORING
+                    </div>
+                </div>
+
+                {/* Misconduct Warnings */}
+                {latestWarning && (
+                    <div style={{
+                        marginTop: '20px',
+                        padding: '12px',
+                        background: '#fff5f5',
+                        border: '1px solid #feb2b2',
+                        color: '#c53030',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                        fontWeight: 'bold',
+                        animation: 'shake 0.5s'
+                    }}>
+                        ⚠️ {latestWarning}
+                    </div>
+                )}
             </div>
+
+            {/* Transcribed Answer Display */}
+            {transcript && (
+                <div style={{
+                    marginTop: '20px',
+                    width: '100%',
+                    maxWidth: '600px',
+                    padding: '20px',
+                    background: '#ebf8ff',
+                    border: '1px solid #bee3f8',
+                    borderRadius: '12px',
+                    color: '#2b6cb0',
+                    fontSize: '14px',
+                    animation: 'fadeIn 0.5s'
+                }}>
+                    <strong>Your Last Answer (Transcribed):</strong>
+                    <p style={{ margin: '10px 0 0 0', fontStyle: 'italic', lineHeight: '1.6' }}>
+                        "{transcript}"
+                    </p>
+                </div>
+            )}
 
             {/* Hint / Instructions */}
             <div style={{ marginTop: '30px', color: '#a0aec0', fontSize: '12px', textAlign: 'center' }}>
@@ -278,6 +461,16 @@ const InterviewSession = () => {
                 }
                 @keyframes spin {
                     to { transform: rotate(360deg); }
+                }
+                @keyframes pulse {
+                    0% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                    100% { opacity: 1; }
+                }
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-5px); }
+                    75% { transform: translateX(5px); }
                 }
             `}</style>
         </div>

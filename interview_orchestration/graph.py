@@ -250,6 +250,7 @@ from interview_orchestration.nodes.collect_text_answer import collect_text_answe
 from interview_orchestration.nodes.cheating_detector import detect_text_cheating
 from interview_orchestration.nodes.followup_decision_engine import decide_followup_or_next
 from interview_orchestration.nodes.followup_question_generator import followup_question_generator
+from interview_orchestration.nodes.evaluator import evaluate_interview
 
 
 # =====================================================
@@ -272,6 +273,7 @@ graph.add_node("collect_text_answer", collect_text_answer)
 graph.add_node("cheating_detection", detect_text_cheating)
 graph.add_node("decide_followup_or_next", decide_followup_or_next)
 graph.add_node("followup_question_generator", followup_question_generator)
+graph.add_node("evaluation", evaluate_interview)
 
 graph.set_entry_point("step")
 
@@ -337,7 +339,7 @@ def _decide_router(state: dict):
     if action == "NEXT_TOPIC":
         return "NEXT_TOPIC"
 
-    return None   # ✅ clean END
+    return "EVALUATE"   # Trigger evaluation before ending
 
 
 graph.add_conditional_edges(
@@ -346,16 +348,17 @@ graph.add_conditional_edges(
     {
         "FOLLOWUP": "followup_question_generator",
         "NEXT_TOPIC": "ask_initial_question",
-        None: END,   # ✅ THIS prevents KeyError
+        "EVALUATE": "evaluation",   # Map to evaluation node
     }
 )
 
 
 # =====================================================
-# After question generation → return control to UI
+# After question generation or evaluation → return control to UI/End
 # =====================================================
 graph.add_edge("followup_question_generator", END)
 graph.add_edge("ask_initial_question", END)
+graph.add_edge("evaluation", END)
 
 
 # =====================================================

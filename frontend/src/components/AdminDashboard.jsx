@@ -217,7 +217,25 @@ function ResumeList() {
                         }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                                 <strong>Candidate #{r.candidate_id}</strong>
-                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                    {r.tab_change_count > 0 && (
+                                        <span style={{
+                                            padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold',
+                                            backgroundColor: '#ed64a6',
+                                            color: 'white'
+                                        }}>
+                                            🔄 Tab Changes: {r.tab_change_count}
+                                        </span>
+                                    )}
+                                    {r.cheating_score > 0 && (
+                                        <span style={{
+                                            padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold',
+                                            backgroundColor: r.cheating_score > 1.0 ? '#c53030' : '#ecc94b',
+                                            color: 'white'
+                                        }}>
+                                            ⚠️ Misconduct: {r.cheating_score.toFixed(1)}
+                                        </span>
+                                    )}
                                     {r.interview_status !== 'N/A' && (
                                         <span style={{
                                             padding: '2px 8px', borderRadius: '4px', fontSize: '11px',
@@ -225,6 +243,16 @@ function ResumeList() {
                                             color: 'white'
                                         }}>
                                             Interview: {r.interview_status.replace('_', ' ')}
+                                        </span>
+                                    )}
+                                    {r.misconduct_events?.some(ev => ev.cheating_flags.some(f => f.includes('HUMAN') || f.includes('MOBILE') || f.includes('OBJECT'))) && (
+                                        <span style={{
+                                            padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold',
+                                            backgroundColor: '#e53e3e',
+                                            color: 'white',
+                                            animation: 'pulse 2s infinite'
+                                        }}>
+                                            📸 Visual Alert
                                         </span>
                                     )}
                                     <span style={{
@@ -243,7 +271,122 @@ function ResumeList() {
                                 <p style={{ margin: '5px 0', fontStyle: 'italic' }}>"{r.system_reason?.summary}"</p>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                            {r.misconduct_events && r.misconduct_events.length > 0 && (
+                                <div style={{ marginTop: '15px', background: '#fff5f5', padding: '12px', borderRadius: '8px', fontSize: '13px', border: '1px solid #feb2b2' }}>
+                                    <div style={{ fontWeight: 'bold', color: '#c53030', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        🚨 Intelligence Alerts ({r.misconduct_events.length})
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {r.misconduct_events.map((ev, i) => (
+                                            <div key={i} style={{ padding: '8px', background: 'rgba(255,255,255,0.5)', borderRadius: '6px', borderLeft: '4px solid #f56565' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#718096', marginBottom: '4px' }}>
+                                                    <strong>{ev.answer_id.toUpperCase().replace('_', ' ')}</strong>
+                                                    <span>{new Date(ev.timestamp * 1000).toLocaleTimeString()}</span>
+                                                </div>
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                                                    {ev.cheating_flags.map((flag, fi) => (
+                                                        <span key={fi} style={{
+                                                            padding: '2px 6px',
+                                                            borderRadius: '4px',
+                                                            fontSize: '10px',
+                                                            fontWeight: 'bold',
+                                                            background: flag.includes('HUMAN') || flag.includes('MOBILE') || flag.includes('OBJECT') ? '#7b341e' : '#e53e3e',
+                                                            color: 'white'
+                                                        }}>
+                                                            {flag.replace(/_/g, ' ')}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                                <div style={{ marginTop: '5px', fontSize: '12px', color: '#2d3748' }}>
+                                                    Severity Impact: <strong>+{ev.cheating_score.toFixed(2)}</strong>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {r.interview_trace && r.interview_trace.length > 0 && (
+                                <div style={{ marginTop: '15px', background: '#f0f4f8', padding: '10px', borderRadius: '6px', fontSize: '13px', border: '1px solid #d1d5db' }}>
+                                    <details>
+                                        <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>View Interview Log ({r.interview_trace.length} turns)</summary>
+                                        <div style={{ marginTop: '10px', maxHeight: '200px', overflowY: 'auto' }}>
+                                            {r.interview_trace.map((t, i) => (
+                                                <div key={i} style={{ marginBottom: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
+                                                    <div style={{ fontWeight: 'bold', color: '#4a5568', fontSize: '11px' }}>Q: {t.question}</div>
+                                                    <div style={{ color: '#2d3748', marginTop: '4px' }}>A: {t.answer_text}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </details>
+                                </div>
+                            )}
+
+                            {r.evaluation_results && (
+                                <div style={{ marginTop: '15px', background: '#e6fffa', padding: '12px', borderRadius: '8px', border: '1px solid #81e6d9' }}>
+                                    <div style={{ fontWeight: 'bold', color: '#2c7a7b', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            🎓 Intelligence Evaluation
+                                            <span style={{ fontSize: '10px', background: '#2c7a7b', color: 'white', padding: '1px 5px', borderRadius: '4px' }}>
+                                                {r.evaluation_results.evaluator_ver}
+                                            </span>
+                                        </div>
+                                        <div style={{ fontSize: '16px', color: '#234e52' }}>
+                                            Overall Score: <strong>{r.evaluation_results.overall_score}/10</strong>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                        {r.evaluation_results.per_answer_results?.map((evData, i) => (
+                                            <div key={i} style={{ padding: '10px', background: 'white', borderRadius: '6px', border: '1px solid #b2f5ea' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                                    <span style={{ fontWeight: 'bold', fontSize: '11px', color: '#4a5568' }}>{evData.answer_id.toUpperCase().replace('_', ' ')}</span>
+                                                    <span style={{
+                                                        padding: '2px 8px', borderRadius: '12px', fontSize: '10px', fontWeight: 'bold',
+                                                        backgroundColor: evData.score >= 7 ? '#48bb78' : evData.score >= 4 ? '#ecc94b' : '#f56565',
+                                                        color: 'white'
+                                                    }}>Score: {evData.score}/10</span>
+                                                </div>
+
+                                                <div style={{ fontSize: '12px', marginBottom: '8px', lineHeight: '1.4' }}>
+                                                    <strong>Reasoning:</strong> {evData.reasoning_notes}
+                                                </div>
+
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', fontSize: '11px', marginBottom: '10px' }}>
+                                                    <div>
+                                                        <div style={{ color: '#2f855a', fontWeight: 'bold', marginBottom: '4px' }}>Strengths:</div>
+                                                        <ul style={{ paddingLeft: '18px', margin: '0' }}>
+                                                            {evData.strengths?.map((s, si) => <li key={si} style={{ marginBottom: '2px' }}>{s}</li>)}
+                                                        </ul>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#c53030', fontWeight: 'bold', marginBottom: '4px' }}>Weaknesses:</div>
+                                                        <ul style={{ paddingLeft: '18px', margin: '0' }}>
+                                                            {evData.weaknesses?.map((w, wi) => <li key={wi} style={{ marginBottom: '2px' }}>{w}</li>)}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                {evData.expected_vs_actual && (
+                                                    <div style={{ marginTop: '8px', fontSize: '11px', borderTop: '1px dashed #e2e8f0', paddingTop: '8px' }}>
+                                                        <div style={{ fontWeight: 'bold', color: '#2b6cb0', marginBottom: '6px' }}>Expected vs Actual:</div>
+                                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                            {evData.expected_vs_actual.covered?.map((c, ci) => (
+                                                                <span key={ci} style={{ background: '#f0fff4', color: '#276749', padding: '2px 8px', borderRadius: '12px', border: '1px solid #c6f6d5', fontSize: '9px' }}>✓ {c}</span>
+                                                            ))}
+                                                            {evData.expected_vs_actual.missed?.map((m, mi) => (
+                                                                <span key={mi} style={{ background: '#fff5f5', color: '#9b2c2c', padding: '2px 8px', borderRadius: '12px', border: '1px solid #fed7d7', fontSize: '9px' }}>✗ {m}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '15px' }}>
                                 <a href={r.resume_blob_url} target="_blank" rel="noopener noreferrer"
                                     style={{ padding: '5px 10px', background: '#4a5568', color: 'white', textDecoration: 'none', borderRadius: '4px', fontSize: '13px' }}>
                                     View Resume

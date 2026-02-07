@@ -59,3 +59,6 @@ class InterviewSession(BaseModel):
     current_topic_index: int = 0
     current_followup_count: int = 0
     interview_trace: list = []
+    cheating_score: float = 0.0
+    cheating_events: list = []
+    warnings: list = []
