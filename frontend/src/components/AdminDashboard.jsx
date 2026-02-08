@@ -698,7 +698,7 @@ function ResumeList() {
                                     </button>
                                 )}
 
-                                {r.admin_status === 'REJECTED' && (
+                                {(r.admin_status === 'REJECTED' || r.admin_status === 'SELECTED') && (
                                     <button onClick={() => handleDeleteCandidate(r.candidate_id)}
                                         style={{ padding: '5px 10px', background: '#fed7d7', color: '#c53030', border: '1px solid #feb2b2', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}>
                                         Delete Candidate

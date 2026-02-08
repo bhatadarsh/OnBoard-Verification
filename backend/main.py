@@ -1,4 +1,6 @@
 import sys
+# Backend - Peak Intelligence Scoring
+# Updated: 2026-02-08T12:59:00
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -396,6 +398,9 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             eval_data = interview["evaluation"]
             total_score = eval_data.get("overall_score", 0.0)
             
+            # Apply cheating penalty: Directly subtract cheating score from technical total
+            total_score = max(0.0, round(total_score - c_score, 2))
+            
             # Confidence Level
             results = eval_data.get("per_answer_results", [])
             conf_levels = [r.get("confidence_level", "MEDIUM") for r in results if "confidence_level" in r]
@@ -631,7 +636,7 @@ async def shortlist_candidate(candidate_id: int, request: ShortlistRequest, curr
 
 @app.delete("/admin/candidates/{candidate_id}")
 async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(require_admin)):
-    """Admin permanently deletes a REJECTED candidate."""
+    """Admin permanently deletes a REJECTED or SELECTED candidate."""
     # 1. Find the resume/candidate status
     resume_idx = next((i for i, r in enumerate(db.resumes) if r["candidate_id"] == candidate_id), None)
     if resume_idx is None:
@@ -639,11 +644,11 @@ async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(
         
     resume = db.resumes[resume_idx]
     
-    # 2. Validation: Only REJECTED candidates can be deleted
-    if resume["status"] != "REJECTED":
+    # 2. Validation: Only REJECTED or SELECTED candidates can be deleted
+    if resume["status"] not in ["REJECTED", "SELECTED"]:
         raise HTTPException(
             status_code=400, 
-            detail=f"Cannot delete candidate with status: {resume['status']}. Only REJECTED candidates can be deleted."
+            detail=f"Cannot delete candidate with status: {resume['status']}. Only REJECTED or SELECTED candidates can be deleted."
         )
 
     # 3. Perform Deletion
