@@ -5,8 +5,10 @@ def select_final_focus_areas(state: dict) -> dict:
     """
 
     depth_worthy = state.get("depth_worthy_focus_areas", [])
+    print(f"[DEBUG] Final Selector received {len(depth_worthy)} items.")
 
     if not depth_worthy:
+        print("[DEBUG] No depth-worthy focus areas found. Returning empty list.")
         return {
             **state,
             "final_focus_areas": []
@@ -14,7 +16,7 @@ def select_final_focus_areas(state: dict) -> dict:
 
     # Priority ordering maps
     priority_rank = {"Primary": 0, "Secondary": 1}
-    depth_rank = {"High": 0, "Medium": 1, "Low": 2}
+    depth_rank = {"High": 0, "Medium": 1, "Foundation": 2, "Low": 3}
     confidence_rank = {"High": 0, "Medium": 1, "Low": 2}
 
     # Sort topics by interview value

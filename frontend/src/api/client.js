@@ -71,8 +71,11 @@ export const adminAPI = {
         const response = await api.post(`/admin/candidates/${candidateId}/shortlist`, { decision });
         return response.data;
     },
-    startInterview: async (candidateId) => {
-        const response = await api.post(`/admin/interview/start/${candidateId}`);
+    startInterview: async (candidateId, resumeId) => {
+        const url = resumeId
+            ? `/admin/interview/start/${candidateId}?resume_id=${resumeId}`
+            : `/admin/interview/start/${candidateId}`;
+        const response = await api.post(url);
         return response.data;
     },
     deleteCandidate: async (candidateId) => {
@@ -90,12 +93,20 @@ export const blobAPI = {
     }
 };
 
-userAPI.uploadResume = async (file) => {
+userAPI.uploadResume = async (file, jobId) => {
     const formData = new FormData();
     formData.append('file', file);
+    if (jobId) {
+        formData.append('job_id', jobId);
+    }
     const response = await api.post('/user/resume/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
     });
+    return response.data;
+};
+
+userAPI.getJDs = async () => {
+    const response = await api.get('/user/jds');
     return response.data;
 };
 
@@ -136,6 +147,16 @@ export const interviewAPI = {
     },
     reportEvent: async (interviewId, eventType) => {
         const response = await api.post(`/interview/${interviewId}/event`, { event_type: eventType });
+        return response.data;
+    },
+    endInterview: async (interviewId, audioFile) => {
+        const formData = new FormData();
+        if (audioFile) {
+            formData.append('audio_file', audioFile);
+        }
+        const response = await api.post(`/interview/${interviewId}/end`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
         return response.data;
     }
 };

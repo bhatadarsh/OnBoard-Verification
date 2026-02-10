@@ -11,7 +11,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import timedelta, datetime
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Dict
 import uuid
 import json
 import logging
@@ -41,6 +41,7 @@ from fastapi.security import HTTPBearer
 # Security instance for flexible auth (allows missing tokens)
 security_optional = HTTPBearer(auto_error=False)
 from interview_orchestration.nodes.initialize_interview import initialize_interview
+from interview_orchestration.nodes.evaluator import evaluate_interview
 from interview_orchestration.stt.factory import get_stt_engine
 
 app = FastAPI(title="Interview System API - Stage 5: Interview In-Progress")
@@ -226,27 +227,35 @@ async def delete_jd(job_id: str, current_user: TokenData = Depends(require_admin
 
 @app.get("/user/jd", response_model=Optional[JobDescription])
 async def get_active_jd(current_user: TokenData = Depends(require_user)):
-    """Candidate previews the active JD."""
+    """Candidate previews the first active JD."""
     # Return the first active and non-deleted JD found
     for jd_data in db.jds.values():
         if jd_data.get("status") == "ACTIVE" and not jd_data.get("is_deleted", False):
             return JobDescription(**jd_data)
     return None
 
+@app.get("/user/jds", response_model=List[JobDescription])
+async def get_all_active_jds(current_user: TokenData = Depends(require_user)):
+    """Candidate lists all active JDs."""
+    return [JobDescription(**jd) for jd in db.jds.values() if jd.get("status") == "ACTIVE" and not jd.get("is_deleted", False)]
+
 @app.post("/user/resume/upload", response_model=Resume, status_code=status.HTTP_201_CREATED)
 async def upload_resume(
     file: UploadFile = File(...),
+    job_id: Optional[str] = Form(None),
     current_user: TokenData = Depends(require_user)
 ):
     """User uploads resume. Gated by existence of active JD."""
-    # Check if an active non-deleted JD exists
-    active_jd = None
-    for jd_data in db.jds.values():
-        if jd_data.get("status") == "ACTIVE" and not jd_data.get("is_deleted", False):
-            active_jd = True
-            break
+    # If job_id specified, verify it exists
+    if job_id and job_id in db.jds:
+        target_jd = db.jds[job_id]
+        if target_jd.get("status") != "ACTIVE" or target_jd.get("is_deleted", False):
+             raise HTTPException(status_code=400, detail="The selected job is no longer active")
+    else:
+        # Fallback to first active JD
+        target_jd = next((j for j in db.jds.values() if j.get("status") == "ACTIVE" and not j.get("is_deleted", False)), None)
     
-    if not active_jd:
+    if not target_jd:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Job description not uploaded yet"
@@ -267,40 +276,34 @@ async def upload_resume(
     
     # Run Resume Intelligence & Matching
     intelligence = {}
-    job_id = None
+    job_id_used = target_jd.get("job_id")
+    jd_intel = target_jd.get("intelligence", {})
     
-    # Find active non-deleted JD
-    active_jd = next((j for j in db.jds.values() if j.get("status") == "ACTIVE" and not j.get("is_deleted", False)), None)
-    
-    if active_jd:
-        job_id = active_jd.get("job_id")
-        jd_intel = active_jd.get("intelligence", {})
-        
-        try:
-            text = extract_text(file_content, file.filename)
-            if text:
-                print(f"Running Resume Intelligence linked to {job_id}...")
-                state_input = {
-                    "candidate_id": str(current_user.user_id),
-                    "raw_resume": text,
-                    # Inject JD context required by resume graph nodes
-                    "role_context": jd_intel.get("role_context", {}),
-                    "skill_intelligence": jd_intel.get("skill_intelligence", {}),
-                    "competency_profile": jd_intel.get("competency_profile", {}),
-                    "interview_requirements": jd_intel.get("interview_requirements", {})
-                }
-                res = resume_graph.invoke(state_input)
-                intelligence = res
-        except Exception as e:
-            print(f"Resume Graph Error: {e}")
+    try:
+        text = extract_text(file_content, file.filename)
+        if text:
+            print(f"Running Resume Intelligence linked to {job_id_used}...")
+            state_input = {
+                "candidate_id": str(current_user.user_id),
+                "raw_resume": text,
+                # Inject JD context required by resume graph nodes
+                "role_context": jd_intel.get("role_context", {}),
+                "skill_intelligence": jd_intel.get("skill_intelligence", {}),
+                "competency_profile": jd_intel.get("competency_profile", {}),
+                "interview_requirements": jd_intel.get("interview_requirements", {})
+            }
+            res = resume_graph.invoke(state_input)
+            intelligence = res
+    except Exception as e:
+        print(f"Resume Graph Error: {e}")
     
     resume = Resume(
         candidate_id=current_user.user_id,
+        job_id=job_id_used,
         resume_id=resume_id,
         resume_blob_path=blob_name,
         status="UNDER_REVIEW",
         uploaded_at=datetime.now(),
-        job_id=job_id,
         intelligence=intelligence
     )
     
@@ -332,12 +335,13 @@ class CandidateResponse(BaseModel):
     resume_id: str
     resume_blob_url: str
     jd_id: Optional[str] = None
+    jd_name: Optional[str] = None
     system_score: float = 0.0
     system_shortlisted: bool = False
     system_reason: Optional[dict] = None
     admin_status: str
     interview_unlocked: bool
-    interview_status: Literal["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "N/A"] = "N/A"
+    interview_status: Literal["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "COMPLETED_EARLY", "N/A"] = "N/A"
     cheating_score: float = 0.0
     misconduct_events: list = []
     interview_trace: list = []
@@ -346,6 +350,8 @@ class CandidateResponse(BaseModel):
     total_interview_score: float = 0.0
     total_confidence_level: str = "N/A"
     cheating_severity: str = "LOW"
+    interview_recommendation: str = "PENDING"
+    admin_insights: Optional[Dict[str, str]] = None
 
 @app.get("/admin/candidates", response_model=List[CandidateResponse])
 async def get_candidates(current_user: TokenData = Depends(require_admin)):
@@ -366,6 +372,10 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
         if isinstance(reason_data, dict):
             matched = len(reason_data.get("matched_core_skills", []))
             summary = f"Matched {matched} core skills."
+            
+            exp_meta = reason_data.get("experience_metadata", {})
+            if exp_meta.get("flexibility_applied"):
+                summary += " Shortlisted via skill-alignment flexibility."
             penalties = reason_data.get("penalties_applied", {}).get("buzzword_only_claims", [])
             if penalties:
                 summary += f" ({len(penalties)} penalties applied for buzzwords)."
@@ -409,12 +419,32 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             else:
                 confidence = "MEDIUM"
 
+        # Calculate Interview Recommendation
+        interview_rec = "PENDING"
+        if interview and interview.get("status") in ["COMPLETED", "COMPLETED_EARLY"]:
+            if severity == "HIGH":
+                interview_rec = "NO HIRE (Integrity)"
+            elif total_score >= 7.5:
+                interview_rec = "STRONG HIRE"
+            elif total_score >= 5.0:
+                interview_rec = "HIRE"
+            else:
+                interview_rec = "NO HIRE"
+
+        # Get JD name
+        target_jd_id = r_dict.get("job_id")
+        jd_info = db.jds.get(target_jd_id)
+        jd_name = "Unassigned"
+        if jd_info and jd_info.get("jd_blob_path"):
+            jd_name = jd_info["jd_blob_path"].split("/")[-1].split("_", 2)[-1] # Extract original filename
+
         c = CandidateResponse(
             candidate_id=r_dict["candidate_id"],
             resume_id=r_dict["resume_id"],
             resume_blob_url=blob_url,
-            jd_id=r_dict.get("job_id"),
-            system_score=intel.get("final_score", 0.0),
+            jd_id=target_jd_id,
+            jd_name=jd_name,
+            system_score=intel.get("final_score", 0.0) * 10,
             system_shortlisted=intel.get("shortlist_decision", False),
             system_reason={"summary": summary},
             admin_status=r_dict["status"],
@@ -427,7 +457,9 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             evaluation_results=interview.get("evaluation") if interview else None,
             total_interview_score=total_score,
             total_confidence_level=confidence,
-            cheating_severity=severity
+            cheating_severity=severity,
+            interview_recommendation=interview_rec,
+            admin_insights=intel.get("admin_insights")
         )
         candidates.append(c)
     return candidates
@@ -617,8 +649,8 @@ async def shortlist_candidate(candidate_id: int, request: ShortlistRequest, curr
     interview = next((i for i in db.interviews if i["candidate_id"] == candidate_id), None)
     
     if request.decision == "SELECTED":
-        if not interview or interview["status"] != "COMPLETED":
-             raise HTTPException(status_code=400, detail="Cannot SELECT a candidate before they have COMPLETED the interview.")
+        if not interview or interview["status"] not in ["COMPLETED", "COMPLETED_EARLY"]:
+             raise HTTPException(status_code=400, detail="Cannot SELECT a candidate before they have COMPLETED the interview (Full or Early).")
 
     # Update Status
     resume["status"] = request.decision
@@ -671,10 +703,18 @@ async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(
 # Stage 4: Interview Session Initialization
 
 @app.post("/admin/interview/start/{candidate_id}", response_model=InterviewSession)
-async def start_interview(candidate_id: int, current_user: TokenData = Depends(require_admin)):
+async def start_interview(candidate_id: int, resume_id: Optional[str] = Query(None), current_user: TokenData = Depends(require_admin)):
     """Admin starts the interview session for a shortlisted candidate."""
-    # Find the candidate's resume
-    resume = next((r for r in db.resumes if r["candidate_id"] == candidate_id), None)
+    db.load() # Reload to ensure we have the latest uploads
+    
+    # 1. Find the specific resume for this application instance
+    if resume_id:
+        resume = next((r for r in db.resumes if r["resume_id"] == resume_id), None)
+    else:
+        # Fallback: get the most recent resume for this candidate
+        cand_resumes = [r for r in db.resumes if r["candidate_id"] == candidate_id]
+        resume = cand_resumes[-1] if cand_resumes else None
+
     if not resume:
         raise HTTPException(status_code=404, detail="Candidate resume not found")
         
@@ -765,6 +805,9 @@ async def get_current_question(interview_id: str, current_user: TokenData = Depe
     
     if session_data["candidate_id"] != current_user.user_id:
         raise HTTPException(status_code=403, detail="Not authorized for this interview")
+    
+    if session_data["status"] in ["COMPLETED", "COMPLETED_EARLY"]:
+        return {"status": session_data["status"], "question_text": "Interview already completed."}
     
     total_expected = len(session_data.get("focus_areas", [])) * 3 
     
@@ -1074,6 +1117,109 @@ async def submit_answer(
     finally:
         if file_path and os.path.exists(file_path):
             os.remove(file_path)
+
+@app.post("/interview/{interview_id}/end")
+async def end_interview_early(
+    interview_id: str,
+    audio_file: UploadFile = File(None),
+    current_user: TokenData = Depends(require_user)
+):
+    """Voluntarily end the interview early."""
+    session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
+    if not session_data:
+        raise HTTPException(status_code=404, detail="Interview session not found")
+    
+    if session_data["candidate_id"] != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    if session_data["status"] in ["COMPLETED", "COMPLETED_EARLY"]:
+        return {"status": session_data["status"]}
+
+    # 1. Process Final Answer (if provided)
+    transcript = ""
+    error_info = None
+    file_path = None
+    
+    if audio_file:
+        temp_dir = os.path.join(os.getcwd(), "temp_audio")
+        os.makedirs(temp_dir, exist_ok=True)
+        ext = audio_file.filename.split('.')[-1] if '.' in audio_file.filename else 'webm'
+        original_path = os.path.join(temp_dir, f"end_{interview_id}_{uuid.uuid4()}.{ext}")
+        wav_path = original_path + ".wav"
+        
+        try:
+            audio_content = await audio_file.read()
+            if audio_content:
+                with open(original_path, "wb") as buffer:
+                    buffer.write(audio_content)
+                audio = AudioSegment.from_file(original_path)
+                audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
+                audio.export(wav_path, format="wav")
+                stt = get_stt_engine()
+                transcript = stt.transcribe(wav_path)
+                file_path = wav_path
+            else:
+                error_info = "EMPTY_AUDIO"
+        except Exception as e:
+            error_info = str(e)
+            print(f"DEBUG: End Interview STT Error: {e}")
+
+    # 2. Add current question to trace (either with transcript or as SKIPPED)
+    if session_data.get("current_question"):
+        answer_text = transcript if transcript else "[SKIPPED] (Candidate ended interview early)"
+        
+        turn = {
+            "topic": session_data.get("current_topic", "General"),
+            "question": session_data["current_question"],
+            "answer_text": answer_text,
+            "timestamp": datetime.now().timestamp(),
+            "followup_index": session_data.get("current_followup_count", 0),
+            "question_type": "initial" if session_data.get("current_followup_count", 0) == 0 else "followup"
+        }
+        session_data.setdefault("interview_trace", []).append(turn)
+
+    # 3. Mark Completion Metadata
+    session_data["status"] = "COMPLETED_EARLY"
+    session_data["ended_at"] = datetime.now().isoformat()
+    session_data["termination_metadata"] = {
+        "ended_by": "CANDIDATE",
+        "end_reason": "MANUAL_SUBMISSION",
+        "questions_at_termination": len(session_data["interview_trace"])
+    }
+    
+    # 4. Trigger Final Evaluation
+    try:
+        # Prepare state for evaluator
+        eval_state = {
+            **session_data,
+            "final_focus_areas": session_data.get("focus_areas", [])
+        }
+        evaluated_state = evaluate_interview(eval_state)
+        session_data["evaluation"] = evaluated_state.get("evaluation")
+    except Exception as eval_err:
+        print(f"DEBUG: Early termination evaluation failed: {eval_err}")
+
+    db.save()
+
+    # 5. Persist final report to Azure (Simplified)
+    try:
+        container = "interview-traces"
+        report_blob_name = f"{interview_id}/early_termination_report.json"
+        azure_blob_helper.upload_file(
+            container_name=container,
+            blob_name=report_blob_name,
+            file_content=json.dumps(session_data).encode('utf-8'),
+            content_type="application/json"
+        )
+    except: pass
+
+    if file_path and os.path.exists(file_path):
+        os.remove(file_path)
+
+    return {
+        "status": "COMPLETED_EARLY",
+        "message": "Interview ended successfully by candidate."
+    }
 
 @app.get("/blob/url")
 async def get_blob_url(container: str, blob_path: str, current_user: TokenData = Depends(get_current_user)):

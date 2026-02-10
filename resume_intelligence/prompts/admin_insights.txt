@@ -1,0 +1,36 @@
+You are an expert recruitment analyst. Your task is to generate two concise paragraphs for an Admin Dashboard to help recruiters understand the JD-Resume match for a candidate.
+
+JD CONTEXT (Extracted Intelligence):
+- Core Skills Required: {core_skills}
+- Role Context: {role_context}
+
+CANDIDATE DATA:
+- Resume Content (claims and projects): {resume_claims}
+- Matched Core Skills: {matched_skills}
+- Experience Metadata: {experience_metadata}
+
+STRICT REQUIREMENTS:
+1. Matched Core Skills Summary:
+   - A brief paragraph explaining the matched core skills from the JD found in the resume.
+   - Explain how these skills align with the role requirements.
+   - Focus on overlap, not gaps.
+   - Use professional and neutral tone.
+   - DO NOT use bullet points — paragraphs only.
+   - DO NOT repeat numeric match scores.
+   - Intent: Explain *which* core skills from the JD were found and how they align.
+
+2. Strengths Based on JD–Resume Match:
+   - A separate brief paragraph summarizing candidate strengths specifically aligned to the JD.
+   - Emphasize practical experience, tools, or domains inferred from the resume that are relevant to this JD.
+   - Avoid generic praise.
+   - DO NOT use bullet points — paragraphs only.
+   - DO NOT repeat numeric match scores.
+   - Intent: Describe candidate's key strengths inferred from the resume that are JD-relevant.
+
+OUTPUT FORMAT (JSON):
+{{
+  "matched_skills_summary": "Concise paragraph here...",
+  "candidate_strengths": "Concise paragraph here..."
+}}
+
+Refuse to hallucinate skills not present in resume or JD. Do not include weaknesses or gaps. Tone must be neutral, professional, and factual. Content must be explainable and auditable.

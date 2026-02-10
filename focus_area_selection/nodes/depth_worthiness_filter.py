@@ -57,22 +57,29 @@ def filter_depth_worthy_areas(state: dict) -> dict:
         elif len(depth_signals) == 1:
             depth_score = "Medium"
         else:
-            depth_score = "Low"
+            # Fallback: If topic was intersected, it means we found skills for it.
+            # Even without explicit "depth keywords" in project descriptions, 
+            # we should allow it as a valid interview topic to avoid blocking the interview.
+            depth_score = "Foundation"
 
-        if depth_score != "Low":
+        if depth_score in ["High", "Medium", "Foundation"]:
             depth_worthy.append({
                 "topic": topic,
                 "priority": priority,
                 "confidence": confidence,
-                "depth_signals": depth_signals[:3],
+                "depth_signals": depth_signals[:3] if depth_signals else ["Inferred from skill match"],
                 "depth_score": depth_score,
                 "reason": (
                     "Clear ownership and multiple decision points"
                     if depth_score == "High"
-                    else "Some ownership and implementation depth"
+                    else "Standard implementation experience"
                 )
             })
+            print(f"[DEBUG] Appended topic '{topic}' with depth_score='{depth_score}'")
+        else:
+            print(f"[DEBUG] Topic '{topic}' rejected with depth_score='{depth_score}'")
 
+    print(f"[DEBUG] Final depth_worthy list size: {len(depth_worthy)}")
     return {
         **state,
         "depth_worthy_focus_areas": depth_worthy

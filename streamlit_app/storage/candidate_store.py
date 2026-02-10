@@ -33,7 +33,7 @@ def save_candidate(candidate):
         # resume_output-style input
         wrapped = {
             "candidate_id": candidate.get("candidate_id"),
-            "system_score": float(candidate.get("final_score", 0.0)),
+            "system_score": float(candidate.get("final_score", 0.0)) * 10,
             "system_shortlisted": bool(candidate.get("shortlist_decision", False)),
             "system_reason": candidate.get("shortlist_reason", {}),
             "admin_status": "PENDING",

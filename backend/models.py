@@ -52,7 +52,7 @@ class InterviewSession(BaseModel):
     interview_id: str
     candidate_id: int
     current_question: Optional[str] = None
-    status: Literal["NOT_STARTED", "IN_PROGRESS", "COMPLETED"] = "NOT_STARTED"
+    status: Literal["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "COMPLETED_EARLY"] = "NOT_STARTED"
     created_at: datetime
     focus_areas: Optional[list] = None
     current_topic: Optional[str] = None

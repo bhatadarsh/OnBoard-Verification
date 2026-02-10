@@ -27,3 +27,5 @@ class ResumeState(TypedDict, total=False):
     final_score: float
     shortlist_decision: bool
     shortlist_reason: str
+    # --- Admin Dashboard Insights ---
+    admin_insights: Dict[str, str]

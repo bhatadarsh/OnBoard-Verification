@@ -48,14 +48,6 @@
       "status": "active",
       "hashed_password": "$2b$12$9Lhiz.Q8U5ywrHQBNscwv.ScgALn5UVZ0B80VMuR5BoQlwY4Wqv2C"
     },
-    "test@u.com": {
-      "id": 8,
-      "name": "Supriya",
-      "email": "test@u.com",
-      "role": "user",
-      "status": "active",
-      "hashed_password": "$2b$12$3FLWWPa5aJOlrlLPap.6s.o1IRHzRlqIyw8dI2G7XN0TCtSZUH4Nu"
-    },
     "testuser@test.com": {
       "id": 10,
       "name": "Test User",
@@ -71,6 +63,38 @@
       "role": "admin",
       "status": "active",
       "hashed_password": "$2b$12$8PEtnpkjOZ1Trokmlt/RXOguHmYg/gPOpSwkou1GLLL6sc92t7u6u"
+    },
+    "user5@u.com": {
+      "id": 33,
+      "name": "user5",
+      "email": "user5@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$EY2QzqoSNxRnjTyRXD73JuBVEKPGoZR1Mfue8/Y/PR2XLjYSXiv52"
+    },
+    "user6@u.com": {
+      "id": 34,
+      "name": "User6",
+      "email": "user6@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$8ZIxp0oCYxAVLOh4rKZT4.SP2M.SEf04hwnpf61/UVqKJnujaq3zO"
+    },
+    "user9@u.com": {
+      "id": 36,
+      "name": "user9",
+      "email": "user9@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$qc/m1rbR63FXSFjK6S0ov.AbVMj4WwtzsljqIqsrtEBqCSTXHZ/HG"
+    },
+    "user8@u.com": {
+      "id": 43,
+      "name": "user8",
+      "email": "user8@u.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$px0TApjpfEJtWXevp6D./eBp41lCJRUKVmsNhu2jMY8JIfihWM.om"
     }
   },
   "jds": {
@@ -441,6 +465,78 @@
       },
       "is_deleted": false,
       "deleted_at": null
+    },
+    "JOB_7": {
+      "job_id": "JOB_7",
+      "jd_blob_path": "job_descriptions/JOB_7/20260208_151220_Software_Engineer_Backend_JD.docx",
+      "status": "ACTIVE",
+      "uploaded_at": "2026-02-08 15:12:22.758425",
+      "intelligence": {
+        "raw_jd": "Job Description \u2013 Software Engineer (Backend)\n\nJob Title: Software Engineer (Backend)\nLocation: Remote / Hybrid / On-site\nExperience: 2\u20135 Years\nEmployment Type: Full-time\n\nJob Summary:\nWe are seeking a skilled Backend Software Engineer to design, develop, and maintain scalable server-side applications. The candidate should have strong problem-solving skills and experience building reliable backend systems.\n\nKey Responsibilities:\n\u2022 Design and develop backend services and RESTful APIs\n\u2022 Build scalable and secure server-side applications\n\u2022 Work with SQL and NoSQL databases\n\u2022 Integrate third-party APIs and services\n\u2022 Optimize performance and ensure system reliability\n\u2022 Collaborate with frontend, DevOps, and product teams\n\u2022 Debug and resolve production issues\n\u2022 Write clean, maintainable, and well-documented code\n\nRequired Skills & Qualifications:\n\u2022 Proficiency in Python / Java / Node.js\n\u2022 Experience with backend frameworks (FastAPI, Spring Boot, Express, etc.)\n\u2022 Strong understanding of REST APIs and microservices\n\u2022 Hands-on experience with databases (PostgreSQL, MySQL, MongoDB)\n\u2022 Familiarity with Git and version control\n\u2022 Knowledge of authentication and security best practices\n\nPreferred Qualifications:\n\u2022 Experience with cloud platforms (AWS / Azure / GCP)\n\u2022 Knowledge of Docker and containerization\n\u2022 Exposure to CI/CD pipelines\n\u2022 Experience working in Agile environments\n\nWhat We Offer:\n\u2022 Competitive salary\n\u2022 Flexible work environment\n\u2022 Career growth opportunities\n\u2022 Collaborative team culture",
+        "normalized_jd": "Job Description \u2013 Software Engineer (Backend)\nJob Title: Software Engineer (Backend)\nLocation: Remote / Hybrid / On-site\nExperience: 2\u20135 Years\nEmployment Type: Full-time\nJob Summary:\nWe are seeking a skilled Backend Software Engineer to design, develop, and maintain scalable server-side applications. The candidate should have strong problem-solving skills and experience building reliable backend systems.\nKey Responsibilities:\n- Design and develop backend services and RESTful APIs\n- Build scalable and secure server-side applications\n- Work with SQL and NoSQL databases\n- Integrate third-party APIs and services\n- Optimize performance and ensure system reliability\n- Collaborate with frontend, DevOps, and product teams\n- Debug and resolve production issues\n- Write clean, maintainable, and well-documented code\nRequired Skills & Qualifications:\n- Proficiency in Python / Java / Node.js\n- Experience with backend frameworks (FastAPI, Spring Boot, Express, etc.)\n- Strong understanding of REST APIs and microservices\n- Hands-on experience with databases (PostgreSQL, MySQL, MongoDB)\n- Familiarity with Git and version control\n- Knowledge of authentication and security best practices\nPreferred Qualifications:\n- Experience with cloud platforms (AWS / Azure / GCP)\n- Knowledge of Docker and containerization\n- Exposure to CI/CD pipelines\n- Experience working in Agile environments\nWhat We Offer:\n- Competitive salary\n- Flexible work environment\n- Career growth opportunities\n- Collaborative team culture",
+        "role_context": {
+          "primary_role": "Backend Software Engineer",
+          "seniority": "Mid",
+          "primary_domain": "Backend Systems",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "integrate third-party apis and services",
+            "optimize performance and ensure system reliability",
+            "write clean, maintainable, and well-documented code"
+          ],
+          "secondary_skills": [
+            "collaborate with frontend, devops, and product teams",
+            "debug and resolve production issues"
+          ],
+          "tools": [
+            "fastapi",
+            "spring boot",
+            "express",
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "git"
+          ],
+          "programming_languages": [
+            "python",
+            "java",
+            "node.js"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "3-5 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "distributed systems",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "optimize performance and ensure system reliability"
+          ],
+          "secondary_focus_areas": [
+            "integrate third-party apis and services",
+            "collaborate with frontend, devops, and product teams",
+            "debug and resolve production issues"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "problem-solving under uncertainty",
+            "end-to-end ownership",
+            "team-level decision making"
+          ]
+        }
+      },
+      "is_deleted": false,
+      "deleted_at": null
     }
   },
   "resumes": [
@@ -635,181 +731,182 @@
       }
     },
     {
-      "candidate_id": 8,
-      "job_id": "JOB_1",
-      "resume_id": "254532ff-c4f6-4e4b-8d49-3be9bddb816d",
-      "resume_blob_path": "resumes/CAND_8/20260205_232605_Matching_Resume_AI_Engineer.docx",
+      "candidate_id": 33,
+      "job_id": "JOB_6",
+      "resume_id": "f4f91858-baa6-48e4-87da-dcd0f4fc6826",
+      "resume_blob_path": "resumes/CAND_33/20260209_115756_Matching_Resume_AI_Engineer.docx",
       "status": "SHORTLISTED",
       "interview_unlocked": true,
-      "uploaded_at": "2026-02-05 23:26:07.514313",
+      "uploaded_at": "2026-02-09 11:57:58.864342",
       "intelligence": {
-        "candidate_id": "8",
-        "raw_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\n\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\n\nCore HR Skills\n\t\u2022\tEnd-to-End Recruitment & Onboarding\n\t\u2022\tEmployee Relations & Engagement\n\t\u2022\tHR Operations & Documentation\n\t\u2022\tPerformance Management Support\n\t\u2022\tAttendance, Leave & Payroll Coordination\n\t\u2022\tHR Policies & Labor Law Compliance\n\t\u2022\tMIS Reporting & HR Audits\n\t\u2022\tHRMS & MS Office Tools\n\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t\u2022\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t\u2022\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t\u2022\tMaintained accurate employee records, HR databases, and documentation\n\t\u2022\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t\u2022\tAssisted in performance appraisal cycles and employee feedback documentation\n\t\u2022\tActively addressed employee queries and grievances, ensuring timely resolution\n\t\u2022\tEnsured compliance with company policies and applicable labor laws\n\t\u2022\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t\u2022\tOrganized employee engagement activities, training sessions, and internal events\n\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t\u2022\tSupported recruitment activities such as resume screening and interview scheduling\n\t\u2022\tAssisted in maintaining HR files and employee documentation\n\t\u2022\tHelped track attendance and leave records\n\t\u2022\tParticipated in onboarding and orientation programs\n\t\u2022\tAssisted HR team with administrative and reporting tasks\n\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\n\nTechnical Skills\n\t\u2022\tMS Word, Excel, PowerPoint\n\t\u2022\tHRMS Tools\n\t\u2022\tGoogle Workspace\n\t\u2022\tBasic Payroll Systems\n\nPersonal Attributes\n\t\u2022\tStrong communication and interpersonal skills\n\t\u2022\tHigh level of confidentiality and professionalism\n\t\u2022\tOrganized, proactive, and detail-oriented\n\t\u2022\tProblem-solving mindset with a people-first approach\n\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
-        "normalized_resume": "Supriya Bahubali Chougale\n\ud83d\udccd India\n\ud83d\udce7 supriya.chougale@email.com\n\ud83d\udcde +91-XXXXXXXXXX\n\ud83d\udd17 LinkedIn: linkedin.com/in/supriyachougale\nProfessional Summary\nDetail-oriented and people-focused HR Executive with hands-on experience in end-to-end recruitment, onboarding, employee relations, HR operations, and compliance. Proven ability to maintain accurate HR records, support performance management processes, and foster a positive work culture aligned with organizational goals.\nCore HR Skills\n\t-\tEnd-to-End Recruitment & Onboarding\n\t-\tEmployee Relations & Engagement\n\t-\tHR Operations & Documentation\n\t-\tPerformance Management Support\n\t-\tAttendance, Leave & Payroll Coordination\n\t-\tHR Policies & Labor Law Compliance\n\t-\tMIS Reporting & HR Audits\n\t-\tHRMS & MS Office Tools\nProfessional Experience\nHR Executive\nABC Technologies Pvt. Ltd. | June 2023 \u2013 Present\n\t-\tManaged end-to-end recruitment including sourcing, screening, interview coordination, and offer rollouts\n\t-\tHandled joining formalities and onboarding to ensure smooth employee integration\n\t-\tMaintained accurate employee records, HR databases, and documentation\n\t-\tCoordinated with finance team for payroll processing, attendance, and leave management\n\t-\tAssisted in performance appraisal cycles and employee feedback documentation\n\t-\tActively addressed employee queries and grievances, ensuring timely resolution\n\t-\tEnsured compliance with company policies and applicable labor laws\n\t-\tPrepared HR MIS reports, audit data, and monthly dashboards\n\t-\tOrganized employee engagement activities, training sessions, and internal events\nHR Intern\nXYZ Solutions | Jan 2023 \u2013 May 2023\n\t-\tSupported recruitment activities such as resume screening and interview scheduling\n\t-\tAssisted in maintaining HR files and employee documentation\n\t-\tHelped track attendance and leave records\n\t-\tParticipated in onboarding and orientation programs\n\t-\tAssisted HR team with administrative and reporting tasks\nEducation\nBachelor of Business Administration (BBA) \u2013 Human Resources\nUniversity Name | 2020 \u2013 2023\nTechnical Skills\n\t-\tMS Word, Excel, PowerPoint\n\t-\tHRMS Tools\n\t-\tGoogle Workspace\n\t-\tBasic Payroll Systems\nPersonal Attributes\n\t-\tStrong communication and interpersonal skills\n\t-\tHigh level of confidentiality and professionalism\n\t-\tOrganized, proactive, and detail-oriented\n\t-\tProblem-solving mindset with a people-first approach\nDeclaration\nI hereby declare that the information provided above is true and correct to the best of my knowledge.\nPlace:\nDate:\nSignature: Supriya Bahubali Chougale",
+        "candidate_id": "33",
+        "raw_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\n\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\n\nTECHNICAL SKILLS\n\t\u2022\tProgramming: Python (Pandas, NumPy)\n\t\u2022\tDatabases: SQL (MySQL, PostgreSQL)\n\t\u2022\tData Visualization: Power BI, Tableau\n\t\u2022\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t\u2022\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\n\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t\u2022\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t\u2022\tDeveloped complex SQL queries to extract and transform data for reporting\n\t\u2022\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t\u2022\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t\u2022\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t\u2022\tEnsured data accuracy, consistency, and integrity across reports\n\t\u2022\tPresented data findings and recommendations to non-technical teams\n\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\n\nCERTIFICATIONS\n\t\u2022\tData Analysis with Python\n\t\u2022\tSQL for Data Analytics\n\nKEY ACHIEVEMENTS\n\t\u2022\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t\u2022\tSupported strategic business decisions by delivering actionable data insights",
+        "normalized_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\nTECHNICAL SKILLS\n\t-\tProgramming: Python (Pandas, NumPy)\n\t-\tDatabases: SQL (MySQL, PostgreSQL)\n\t-\tData Visualization: Power BI, Tableau\n\t-\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t-\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t-\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t-\tDeveloped complex SQL queries to extract and transform data for reporting\n\t-\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t-\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t-\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t-\tEnsured data accuracy, consistency, and integrity across reports\n\t-\tPresented data findings and recommendations to non-technical teams\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\nCERTIFICATIONS\n\t-\tData Analysis with Python\n\t-\tSQL for Data Analytics\nKEY ACHIEVEMENTS\n\t-\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t-\tSupported strategic business decisions by delivering actionable data insights",
         "resume_claims": {
           "skills_claimed": [
-            "end-to-end recruitment",
-            "onboarding",
-            "employee relations",
-            "hr operations",
-            "performance management support",
-            "attendance leave payroll coordination",
-            "hr policies labor law compliance",
-            "mis reporting hr audits",
-            "hrms ms office tools"
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "power bi",
+            "tableau",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
           ],
           "projects": [
             {
-              "project_name": "hr executive at abc technologies pvt ltd",
+              "project_name": "data analysis",
               "responsibilities": [
-                "managed end-to-end recruitment",
-                "handled joining formalities and onboarding",
-                "maintained accurate employee records",
-                "coordinated with finance team",
-                "assisted in performance appraisal cycles",
-                "addressed employee queries and grievances",
-                "ensured compliance with company policies",
-                "prepared hr mis reports",
-                "organized employee engagement activities"
-              ]
-            },
-            {
-              "project_name": "hr intern at xyz solutions",
-              "responsibilities": [
-                "supported recruitment activities",
-                "assisted in maintaining hr files",
-                "helped track attendance and leave records",
-                "participated in onboarding and orientation programs",
-                "assisted hr team with administrative tasks"
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
               ]
             }
           ],
           "roles_and_ownership": [
-            "hr executive",
-            "hr intern"
+            "data analyst"
           ],
           "experience_signals": [
-            "proven ability to maintain accurate hr records",
-            "supported performance management processes",
-            "fostered a positive work culture",
-            "coordinated with finance team",
-            "prepared hr mis reports"
+            "3 years of experience",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
           ]
         },
         "match_scores": {
-          "core_skill_match": 0.814,
-          "project_alignment": 0.419,
-          "conceptual_alignment": 0.299
+          "core_skill_match": 0.727,
+          "project_alignment": 0.46,
+          "conceptual_alignment": 0.322
         },
         "evidence_map": {
           "strongly_supported": [
-            "end-to-end recruitment",
-            "onboarding",
-            "hr policies labor law compliance",
-            "mis reporting hr audits",
-            "hrms ms office tools"
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
           ],
           "weakly_supported": [
-            "attendance leave payroll coordination",
-            "performance management support"
+            "power bi",
+            "tableau"
           ],
           "unsupported_claims": [
-            "employee relations",
-            "hr operations"
+            "data analyst",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
           ]
         },
         "role_context": {
-          "primary_role": "HR Database Administrator",
+          "primary_role": "Data Analyst",
           "seniority": "Mid",
           "primary_domain": "Data",
-          "confidence": 0.8
+          "confidence": 1.0
         },
         "skill_intelligence": {
           "core_skills": [
-            "manage end-to-end recruitment processes",
-            "maintain employee records and databases",
-            "support performance appraisal and development initiatives",
-            "ensure compliance with company policies and labor laws"
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
           ],
           "secondary_skills": [
-            "address employee queries and grievances",
-            "promote a healthy work culture",
-            "coordinate attendance, leave, and payroll"
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
           ],
           "tools": [
-            "ms office",
-            "hrms tools"
+            "power bi",
+            "tableau"
           ],
-          "programming_languages": []
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
         },
         "competency_profile": {
-          "experience_range": "1-3 years",
-          "ownership_expectations": "process ownership",
-          "problem_complexity": "simple to moderate",
-          "decision_making_scope": "individual",
-          "execution_expectations": "coordinate and maintain existing processes"
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
         },
         "interview_requirements": {
           "primary_focus_areas": [
-            "end-to-end recruitment processes",
-            "employee records and databases",
-            "performance appraisal and development initiatives",
-            "compliance with company policies and labor laws"
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
           ],
           "secondary_focus_areas": [
-            "employee queries and grievances",
-            "healthy work culture",
-            "attendance, leave, and payroll"
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
           ],
           "evaluation_dimensions": [
-            "problem-solving",
             "technical depth and reasoning",
-            "process ownership",
             "end-to-end ownership",
-            "coordination and maintenance"
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
           ]
         },
-        "exaggeration_penalty": 0.06,
+        "exaggeration_penalty": 0.15,
         "penalty_breakdown": {
           "unsupported_core_skills": [],
           "weak_focus_areas": [],
           "buzzword_only_claims": [
-            "employee relations",
-            "hr operations"
+            "data analyst",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
           ]
         },
-        "final_score": 0.748,
+        "final_score": 0.623,
         "shortlist_decision": true,
         "shortlist_reason": {
           "matched_core_skills": [
-            "manage end-to-end recruitment processes",
-            "maintain employee records and databases",
-            "support performance appraisal and development initiatives",
-            "ensure compliance with company policies and labor laws"
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
           ],
           "aligned_projects": [
             {
-              "project_name": "hr executive at abc technologies pvt ltd",
+              "project_name": "data analysis",
               "responsibilities": [
-                "managed end-to-end recruitment",
-                "handled joining formalities and onboarding",
-                "maintained accurate employee records",
-                "coordinated with finance team",
-                "assisted in performance appraisal cycles",
-                "addressed employee queries and grievances",
-                "ensured compliance with company policies",
-                "prepared hr mis reports",
-                "organized employee engagement activities"
-              ]
-            },
-            {
-              "project_name": "hr intern at xyz solutions",
-              "responsibilities": [
-                "supported recruitment activities",
-                "assisted in maintaining hr files",
-                "helped track attendance and leave records",
-                "participated in onboarding and orientation programs",
-                "assisted hr team with administrative tasks"
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
               ]
             }
           ],
@@ -817,10 +914,601 @@
             "unsupported_core_skills": [],
             "weak_focus_areas": [],
             "buzzword_only_claims": [
-              "employee relations",
-              "hr operations"
+              "data analyst",
+              "driving business insights",
+              "presenting actionable insights",
+              "improved reporting efficiency by 30%",
+              "supported strategic business decisions"
             ]
           }
+        }
+      }
+    },
+    {
+      "candidate_id": 34,
+      "job_id": "JOB_7",
+      "resume_id": "93a3f53e-5d08-4e07-a2d2-45ca57011f3a",
+      "resume_blob_path": "resumes/CAND_34/20260209_121046_Software_Engineer_Backend_JD.docx",
+      "status": "SHORTLISTED",
+      "interview_unlocked": true,
+      "uploaded_at": "2026-02-09 12:10:48.989072",
+      "intelligence": {
+        "candidate_id": "34",
+        "raw_resume": "Job Description \u2013 Software Engineer (Backend)\n\nJob Title: Software Engineer (Backend)\nLocation: Remote / Hybrid / On-site\nExperience: 2\u20135 Years\nEmployment Type: Full-time\n\nJob Summary:\nWe are seeking a skilled Backend Software Engineer to design, develop, and maintain scalable server-side applications. The candidate should have strong problem-solving skills and experience building reliable backend systems.\n\nKey Responsibilities:\n\u2022 Design and develop backend services and RESTful APIs\n\u2022 Build scalable and secure server-side applications\n\u2022 Work with SQL and NoSQL databases\n\u2022 Integrate third-party APIs and services\n\u2022 Optimize performance and ensure system reliability\n\u2022 Collaborate with frontend, DevOps, and product teams\n\u2022 Debug and resolve production issues\n\u2022 Write clean, maintainable, and well-documented code\n\nRequired Skills & Qualifications:\n\u2022 Proficiency in Python / Java / Node.js\n\u2022 Experience with backend frameworks (FastAPI, Spring Boot, Express, etc.)\n\u2022 Strong understanding of REST APIs and microservices\n\u2022 Hands-on experience with databases (PostgreSQL, MySQL, MongoDB)\n\u2022 Familiarity with Git and version control\n\u2022 Knowledge of authentication and security best practices\n\nPreferred Qualifications:\n\u2022 Experience with cloud platforms (AWS / Azure / GCP)\n\u2022 Knowledge of Docker and containerization\n\u2022 Exposure to CI/CD pipelines\n\u2022 Experience working in Agile environments\n\nWhat We Offer:\n\u2022 Competitive salary\n\u2022 Flexible work environment\n\u2022 Career growth opportunities\n\u2022 Collaborative team culture",
+        "normalized_resume": "Job Description \u2013 Software Engineer (Backend)\nJob Title: Software Engineer (Backend)\nLocation: Remote / Hybrid / On-site\nExperience: 2\u20135 Years\nEmployment Type: Full-time\nJob Summary:\nWe are seeking a skilled Backend Software Engineer to design, develop, and maintain scalable server-side applications. The candidate should have strong problem-solving skills and experience building reliable backend systems.\nKey Responsibilities:\n- Design and develop backend services and RESTful APIs\n- Build scalable and secure server-side applications\n- Work with SQL and NoSQL databases\n- Integrate third-party APIs and services\n- Optimize performance and ensure system reliability\n- Collaborate with frontend, DevOps, and product teams\n- Debug and resolve production issues\n- Write clean, maintainable, and well-documented code\nRequired Skills & Qualifications:\n- Proficiency in Python / Java / Node.js\n- Experience with backend frameworks (FastAPI, Spring Boot, Express, etc.)\n- Strong understanding of REST APIs and microservices\n- Hands-on experience with databases (PostgreSQL, MySQL, MongoDB)\n- Familiarity with Git and version control\n- Knowledge of authentication and security best practices\nPreferred Qualifications:\n- Experience with cloud platforms (AWS / Azure / GCP)\n- Knowledge of Docker and containerization\n- Exposure to CI/CD pipelines\n- Experience working in Agile environments\nWhat We Offer:\n- Competitive salary\n- Flexible work environment\n- Career growth opportunities\n- Collaborative team culture",
+        "resume_claims": {
+          "skills_claimed": [
+            "python",
+            "java",
+            "node.js",
+            "fastapi",
+            "spring boot",
+            "express",
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "git",
+            "authentication",
+            "security best practices"
+          ],
+          "projects": [
+            {
+              "project_name": "backend services and restful apis",
+              "responsibilities": [
+                "design and develop backend services",
+                "build scalable and secure server-side applications",
+                "work with sql and nosql databases",
+                "integrate third-party apis and services",
+                "optimize performance and ensure system reliability",
+                "collaborate with frontend devops and product teams",
+                "debug and resolve production issues",
+                "write clean maintainable and well-documented code"
+              ]
+            }
+          ],
+          "roles_and_ownership": [],
+          "experience_signals": [
+            "2\u20135 years of experience",
+            "full-time employment"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.899,
+          "project_alignment": 0.542,
+          "conceptual_alignment": 0.173
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "python",
+            "java",
+            "node.js",
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "git"
+          ],
+          "weakly_supported": [
+            "fastapi",
+            "spring boot",
+            "express",
+            "authentication",
+            "security best practices"
+          ],
+          "unsupported_claims": [
+            "mongodb"
+          ]
+        },
+        "role_context": {
+          "primary_role": "Backend Software Engineer",
+          "seniority": "Mid",
+          "primary_domain": "Backend Systems",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "integrate third-party apis and services",
+            "optimize performance and ensure system reliability",
+            "write clean, maintainable, and well-documented code"
+          ],
+          "secondary_skills": [
+            "collaborate with frontend, devops, and product teams",
+            "debug and resolve production issues"
+          ],
+          "tools": [
+            "fastapi",
+            "spring boot",
+            "express",
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "git"
+          ],
+          "programming_languages": [
+            "python",
+            "java",
+            "node.js"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "3-5 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "distributed systems",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "optimize performance and ensure system reliability"
+          ],
+          "secondary_focus_areas": [
+            "integrate third-party apis and services",
+            "collaborate with frontend, devops, and product teams",
+            "debug and resolve production issues"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "problem-solving under uncertainty",
+            "end-to-end ownership",
+            "team-level decision making"
+          ]
+        },
+        "exaggeration_penalty": 0.03,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "mongodb"
+          ]
+        },
+        "final_score": 0.868,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "integrate third-party apis and services",
+            "optimize performance and ensure system reliability",
+            "write clean, maintainable, and well-documented code"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "backend services and restful apis",
+              "responsibilities": [
+                "design and develop backend services",
+                "build scalable and secure server-side applications",
+                "work with sql and nosql databases",
+                "integrate third-party apis and services",
+                "optimize performance and ensure system reliability",
+                "collaborate with frontend devops and product teams",
+                "debug and resolve production issues",
+                "write clean maintainable and well-documented code"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "mongodb"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": 36,
+      "job_id": "JOB_7",
+      "resume_id": "0bbda7b0-b8c1-4f18-8099-e8f634cfbeed",
+      "resume_blob_path": "resumes/CAND_36/20260209_125453_Exact_Matching_Backend_Resume.docx",
+      "status": "SELECTED",
+      "interview_unlocked": false,
+      "uploaded_at": "2026-02-09 12:54:54.758491",
+      "intelligence": {
+        "candidate_id": "36",
+        "raw_resume": "Resume \u2013 Backend Software Engineer\n\nName: Rahul Sharma\nEmail: rahul.sharma@email.com\nPhone: +91-9XXXXXXXXX\nLocation: India\n\nProfessional Summary:\nBackend Software Engineer with 4+ years of experience in designing, developing, and maintaining scalable backend systems. Strong expertise in building RESTful APIs, database management, and cloud-based applications. Proven ability to deliver secure, high-performance server-side solutions.\n\nTechnical Skills:\n\u2022 Programming Languages: Python, JavaScript (Node.js)\n\u2022 Frameworks: FastAPI, Express.js\n\u2022 Databases: PostgreSQL, MySQL, MongoDB\n\u2022 API Development: RESTful APIs, Microservices\n\u2022 Cloud Platforms: AWS, Azure\n\u2022 DevOps Tools: Docker, CI/CD Pipelines\n\u2022 Version Control: Git, GitHub\n\u2022 Security: Authentication, Authorization, OAuth, JWT\n\nProfessional Experience:\n\nBackend Software Engineer  \nABC Technologies Pvt Ltd | 2021 \u2013 Present\n\n\u2022 Designed and developed scalable backend services using Python and FastAPI  \n\u2022 Built secure RESTful APIs consumed by frontend and mobile applications  \n\u2022 Integrated third-party APIs and external services  \n\u2022 Worked extensively with PostgreSQL and MongoDB for data storage and retrieval  \n\u2022 Optimized application performance and improved system reliability  \n\u2022 Collaborated with frontend developers, DevOps, and product teams  \n\u2022 Implemented authentication and authorization mechanisms  \n\u2022 Debugged and resolved production-level issues  \n\nSoftware Engineer  \nXYZ Solutions | 2019 \u2013 2021\n\n\u2022 Developed backend modules using Node.js and Express  \n\u2022 Designed database schemas and optimized queries  \n\u2022 Maintained version control using Git  \n\u2022 Assisted in deploying applications using Docker  \n\u2022 Participated in Agile sprint planning and code reviews  \n\nEducation:\nBachelor of Engineering in Computer Science  \nUniversity Name | 2019\n\nCertifications:\n\u2022 AWS Certified Cloud Practitioner\n\u2022 Python Backend Development Certification\n\nProjects:\n\u2022 Scalable REST API Platform using FastAPI and PostgreSQL  \n\u2022 Microservices-based backend system with Docker  \n\nDeclaration:\nI hereby declare that the above information is true to the best of my knowledge.",
+        "normalized_resume": "Resume \u2013 Backend Software Engineer\nName: Rahul Sharma\nEmail: rahul.sharma@email.com\nPhone: +91-9XXXXXXXXX\nLocation: India\nProfessional Summary:\nBackend Software Engineer with 4+ years of experience in designing, developing, and maintaining scalable backend systems. Strong expertise in building RESTful APIs, database management, and cloud-based applications. Proven ability to deliver secure, high-performance server-side solutions.\nTechnical Skills:\n- Programming Languages: Python, JavaScript (Node.js)\n- Frameworks: FastAPI, Express.js\n- Databases: PostgreSQL, MySQL, MongoDB\n- API Development: RESTful APIs, Microservices\n- Cloud Platforms: AWS, Azure\n- DevOps Tools: Docker, CI/CD Pipelines\n- Version Control: Git, GitHub\n- Security: Authentication, Authorization, OAuth, JWT\nProfessional Experience:\nBackend Software Engineer  \nABC Technologies Pvt Ltd | 2021 \u2013 Present\n- Designed and developed scalable backend services using Python and FastAPI  \n- Built secure RESTful APIs consumed by frontend and mobile applications  \n- Integrated third-party APIs and external services  \n- Worked extensively with PostgreSQL and MongoDB for data storage and retrieval  \n- Optimized application performance and improved system reliability  \n- Collaborated with frontend developers, DevOps, and product teams  \n- Implemented authentication and authorization mechanisms  \n- Debugged and resolved production-level issues  \nSoftware Engineer  \nXYZ Solutions | 2019 \u2013 2021\n- Developed backend modules using Node.js and Express  \n- Designed database schemas and optimized queries  \n- Maintained version control using Git  \n- Assisted in deploying applications using Docker  \n- Participated in Agile sprint planning and code reviews  \nEducation:\nBachelor of Engineering in Computer Science  \nUniversity Name | 2019\nCertifications:\n- AWS Certified Cloud Practitioner\n- Python Backend Development Certification\nProjects:\n- Scalable REST API Platform using FastAPI and PostgreSQL  \n- Microservices-based backend system with Docker  \nDeclaration:\nI hereby declare that the above information is true to the best of my knowledge.",
+        "resume_claims": {
+          "skills_claimed": [
+            "python",
+            "javascript node.js",
+            "fastapi",
+            "express.js",
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "restful apis",
+            "microservices",
+            "aws",
+            "azure",
+            "docker",
+            "ci/cd pipelines",
+            "git",
+            "github",
+            "authentication",
+            "authorization",
+            "oauth",
+            "jwt"
+          ],
+          "projects": [
+            {
+              "project_name": "scalable rest api platform using fastapi and postgresql",
+              "responsibilities": [
+                "designed and developed scalable backend services",
+                "built secure restful apis",
+                "integrated third-party apis and external services",
+                "worked extensively with postgresql and mongodb"
+              ]
+            },
+            {
+              "project_name": "microservices-based backend system with docker",
+              "responsibilities": [
+                "developed scalable backend services",
+                "optimized application performance",
+                "improved system reliability"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "backend software engineer",
+            "software engineer"
+          ],
+          "experience_signals": [
+            "4+ years of experience",
+            "delivered secure high-performance server-side solutions",
+            "production-level issues",
+            "agile sprint planning",
+            "code reviews"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.668,
+          "project_alignment": 0.491,
+          "conceptual_alignment": 0.252
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "python",
+            "fastapi",
+            "postgresql",
+            "mongodb",
+            "restful apis",
+            "microservices",
+            "docker",
+            "ci/cd pipelines",
+            "git",
+            "github",
+            "authentication",
+            "authorization",
+            "oauth",
+            "jwt"
+          ],
+          "weakly_supported": [
+            "javascript",
+            "node.js",
+            "express.js",
+            "mysql",
+            "aws",
+            "azure"
+          ],
+          "unsupported_claims": [
+            "jwt"
+          ]
+        },
+        "role_context": {
+          "primary_role": "Backend Software Engineer",
+          "seniority": "Mid",
+          "primary_domain": "Backend Systems",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "integrate third-party apis and services",
+            "optimize performance and ensure system reliability",
+            "write clean, maintainable, and well-documented code"
+          ],
+          "secondary_skills": [
+            "collaborate with frontend, devops, and product teams",
+            "debug and resolve production issues"
+          ],
+          "tools": [
+            "fastapi",
+            "spring boot",
+            "express",
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "git"
+          ],
+          "programming_languages": [
+            "python",
+            "java",
+            "node.js"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "3-5 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "distributed systems",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "optimize performance and ensure system reliability"
+          ],
+          "secondary_focus_areas": [
+            "integrate third-party apis and services",
+            "collaborate with frontend, devops, and product teams",
+            "debug and resolve production issues"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "problem-solving under uncertainty",
+            "end-to-end ownership",
+            "team-level decision making"
+          ]
+        },
+        "exaggeration_penalty": 0.03,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "jwt"
+          ]
+        },
+        "final_score": 0.704,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "design and develop backend services",
+            "build scalable and secure server-side applications",
+            "work with sql and nosql databases",
+            "integrate third-party apis and services",
+            "optimize performance and ensure system reliability"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "scalable rest api platform using fastapi and postgresql",
+              "responsibilities": [
+                "designed and developed scalable backend services",
+                "built secure restful apis",
+                "integrated third-party apis and external services",
+                "worked extensively with postgresql and mongodb"
+              ]
+            },
+            {
+              "project_name": "microservices-based backend system with docker",
+              "responsibilities": [
+                "developed scalable backend services",
+                "optimized application performance",
+                "improved system reliability"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "jwt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "candidate_id": 43,
+      "job_id": "JOB_6",
+      "resume_id": "f6c589a3-1e18-4435-a77d-cb27622b9794",
+      "resume_blob_path": "resumes/CAND_43/20260209_192531_Matching_Resume_AI_Engineer.docx",
+      "status": "REJECTED",
+      "interview_unlocked": false,
+      "uploaded_at": "2026-02-09 19:25:38.204027",
+      "intelligence": {
+        "candidate_id": "43",
+        "raw_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\n\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\n\nTECHNICAL SKILLS\n\t\u2022\tProgramming: Python (Pandas, NumPy)\n\t\u2022\tDatabases: SQL (MySQL, PostgreSQL)\n\t\u2022\tData Visualization: Power BI, Tableau\n\t\u2022\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t\u2022\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\n\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t\u2022\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t\u2022\tDeveloped complex SQL queries to extract and transform data for reporting\n\t\u2022\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t\u2022\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t\u2022\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t\u2022\tEnsured data accuracy, consistency, and integrity across reports\n\t\u2022\tPresented data findings and recommendations to non-technical teams\n\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\n\nCERTIFICATIONS\n\t\u2022\tData Analysis with Python\n\t\u2022\tSQL for Data Analytics\n\nKEY ACHIEVEMENTS\n\t\u2022\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t\u2022\tSupported strategic business decisions by delivering actionable data insights",
+        "normalized_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\nTECHNICAL SKILLS\n\t-\tProgramming: Python (Pandas, NumPy)\n\t-\tDatabases: SQL (MySQL, PostgreSQL)\n\t-\tData Visualization: Power BI, Tableau\n\t-\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t-\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t-\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t-\tDeveloped complex SQL queries to extract and transform data for reporting\n\t-\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t-\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t-\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t-\tEnsured data accuracy, consistency, and integrity across reports\n\t-\tPresented data findings and recommendations to non-technical teams\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\nCERTIFICATIONS\n\t-\tData Analysis with Python\n\t-\tSQL for Data Analytics\nKEY ACHIEVEMENTS\n\t-\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t-\tSupported strategic business decisions by delivering actionable data insights",
+        "resume_claims": {
+          "skills_claimed": [
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "power bi",
+            "tableau",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
+          ],
+          "projects": [
+            {
+              "project_name": "data analysis",
+              "responsibilities": [
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "data analyst"
+          ],
+          "experience_signals": [
+            "3 years of experience",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.727,
+          "project_alignment": 0.46,
+          "conceptual_alignment": 0.322
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "sql",
+            "python",
+            "pandas",
+            "numpy",
+            "data cleaning",
+            "data modeling",
+            "exploratory data analysis",
+            "excel",
+            "pivot tables",
+            "vlookup",
+            "formulas"
+          ],
+          "weakly_supported": [
+            "power bi",
+            "tableau"
+          ],
+          "unsupported_claims": [
+            "data analyst",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        },
+        "exaggeration_penalty": 0.15,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": [
+            "data analyst",
+            "driving business insights",
+            "presenting actionable insights",
+            "improved reporting efficiency by 30%",
+            "supported strategic business decisions"
+          ]
+        },
+        "final_score": 0.603,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "matched_core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "data analysis",
+              "responsibilities": [
+                "collected and cleaned large datasets",
+                "developed complex sql queries",
+                "performed data analysis using python",
+                "designed and maintained interactive dashboards",
+                "ensured data accuracy and consistency",
+                "presented data findings"
+              ]
+            }
+          ],
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": [
+              "data analyst",
+              "driving business insights",
+              "presenting actionable insights",
+              "improved reporting efficiency by 30%",
+              "supported strategic business decisions"
+            ]
+          },
+          "experience_metadata": {
+            "jd_required_years": 4.0,
+            "candidate_years": 3.0,
+            "flexibility_applied": true,
+            "note": "Shortlisted via skill-alignment flexibility"
+          }
+        },
+        "admin_insights": {
+          "matched_skills_summary": "The candidate's resume demonstrates a strong alignment with the core skills required for the Data Analyst role. Specifically, the candidate has experience in collecting and analyzing large datasets, writing complex SQL queries, performing data analysis using Python, creating interactive dashboards and reports, and ensuring data accuracy, consistency, and integrity. These skills are directly relevant to the role requirements, showcasing the candidate's ability to deliver data-driven insights and support business decisions.",
+          "candidate_strengths": "The candidate's practical experience in data analysis, data modeling, and data visualization, as evident from their projects and roles, makes them a strong fit for this role. Their ability to drive business insights, present actionable findings, and improve reporting efficiency by 30% demonstrates their potential to deliver value in this position. Additionally, their experience in working with tools like SQL, Python, and Power BI further supports their suitability for this Data Analyst role."
         }
       }
     }
@@ -870,7 +1558,997 @@
       "current_topic": "end-to-end recruitment processes",
       "current_topic_index": 0,
       "interview_trace": []
+    },
+    {
+      "interview_id": "cbf8a3ce-08ea-46d8-b466-3bc0b82190e2",
+      "candidate_id": 33,
+      "current_question": "What are some potential edge cases or failure scenarios that could occur with this query, and how would you handle or mitigate them?",
+      "status": "IN_PROGRESS",
+      "created_at": "2026-02-09 11:58:28.233777",
+      "focus_areas": [
+        {
+          "order": 1,
+          "topic": "write complex sql queries",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of write complex sql queries"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 2,
+          "topic": "perform data analysis using python",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of perform data analysis using python"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 3,
+          "topic": "ensure data accuracy consistency and integrity",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of ensure data accuracy consistency and integrity"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        }
+      ],
+      "current_topic": "write complex sql queries",
+      "current_topic_index": 0,
+      "current_followup_count": 4,
+      "interview_trace": [
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you describe a recent situation where you had to optimize a slow-running SQL query, and what steps you took to improve its performance?",
+          "answer_text": "Can you describe?",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770618670.4967391
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you show me a concrete example of how you would write a SQL query to retrieve the top 3 customers with the highest average order value from a given sales database?",
+          "answer_text": "MMM.",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770618718.017012
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "How would you optimize the query for performance when dealing with large datasets and multiple joins?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770618791.337006
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you walk me through your thought process when deciding on the query structure in a situation where you're unsure of the optimal indexing strategy for a complex query?",
+          "answer_text": "[TIMEOUT] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770618863.903797
+        }
+      ],
+      "cheating_score": 0.4,
+      "cheating_events": [
+        {
+          "answer_id": "REALTIME",
+          "cheating_flags": [
+            "TAB_CHANGE"
+          ],
+          "cheating_score": 0.1,
+          "timestamp": 1770618725.228954
+        },
+        {
+          "answer_id": "turn_4",
+          "cheating_flags": [
+            "SIMILAR_PATTERN"
+          ],
+          "cheating_score": 0.3,
+          "timestamp": 1770618864.239158
+        }
+      ],
+      "warnings": [],
+      "last_question_served_at": 1770618864.537074,
+      "latest_warning": null,
+      "evaluation": null,
+      "buffered_video_frames": [],
+      "tab_change_count": 1
+    },
+    {
+      "interview_id": "b3b12406-93f7-42cf-9cbc-3c1161a2b39b",
+      "candidate_id": 36,
+      "current_question": "What are some potential failure modes or edge cases you've encountered when implementing log-based change data capture in high-volume production environments?",
+      "status": "COMPLETED",
+      "created_at": "2026-02-09 12:55:19.424613",
+      "focus_areas": [
+        {
+          "order": 1,
+          "topic": "design and develop backend services",
+          "priority": "Primary",
+          "depth_score": "High",
+          "confidence": "High",
+          "evidence": [
+            "scalable rest api platform using fastapi and postgresql: hands-on ownership of design and develop backend services",
+            "microservices-based backend system with docker: hands-on ownership of design and develop backend services"
+          ],
+          "interview_goal": "Assess system design, decision-making, and tradeoff reasoning"
+        },
+        {
+          "order": 2,
+          "topic": "work with sql and nosql databases",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "scalable rest api platform using fastapi and postgresql: hands-on ownership of work with sql and nosql databases"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        }
+      ],
+      "current_topic": "work with sql and nosql databases",
+      "current_topic_index": 1,
+      "current_followup_count": 5,
+      "interview_trace": [
+        {
+          "topic": "design and develop backend services",
+          "question": "Can you describe a time when you had to optimize the performance of a slow backend service?",
+          "answer_text": "In my previous role, I was responsible for optimizing a user dashboard API endpoint that was loading in over 6 seconds during peak times, leading to high abundant rates on the front end. This service was critical for displaying user matrix, recent transactions and user.",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770622779.317705,
+          "evaluation": {
+            "answer_id": "turn_1",
+            "score": 3.0,
+            "strengths": [
+              "Mentions a real-world example",
+              "Provides some context about the service"
+            ],
+            "weaknesses": [
+              "Lacks depth and technical correctness",
+              "Doesn't demonstrate a clear understanding of underlying principles",
+              "Doesn't provide technical details"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Problem Statement",
+                "Root Cause Analysis",
+                "Optimization Approach",
+                "Technical Details",
+                "Results and Metrics"
+              ],
+              "covered": [
+                "Problem Statement (partially)",
+                "Real-world example"
+              ],
+              "missed": [
+                "Root Cause Analysis",
+                "Optimization Approach",
+                "Technical Details",
+                "Results and Metrics"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some awareness of the importance of optimizing backend services, but lacks technical correctness and depth. The candidate's response is somewhat unclear and lacks structure, making it difficult to follow.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "design and develop backend services",
+          "question": "Can you walk me through the specific changes you made to the API endpoint to improve its performance, and what metrics you used to measure the success of those optimizations?",
+          "answer_text": "To include the performance of care.",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770622826.969546,
+          "evaluation": {
+            "answer_id": "turn_2",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Lack of relevance to the question",
+              "No demonstration of technical understanding or knowledge",
+              "No practical experience evidence",
+              "No reasoning ability or logical flow",
+              "Poor communication clarity"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Relevant context",
+                "Problem identification",
+                "Optimization approach",
+                "Metrics used",
+                "Results and conclusion"
+              ],
+              "covered": [],
+              "missed": [
+                "Relevant context",
+                "Problem identification",
+                "Optimization approach",
+                "Metrics used",
+                "Results and conclusion"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer does not demonstrate any understanding of the question or the topic. The response is vague and lacks any technical substance.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "design and develop backend services",
+          "question": "How would you optimize the performance of the care service for a large-scale deployment, considering potential bottlenecks and resource constraints?",
+          "answer_text": "Yeah.",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770622883.204077,
+          "evaluation": {
+            "answer_id": "turn_3",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Repeats the question without providing any technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identify potential bottlenecks in the care service",
+                "Consider resource constraints for large-scale deployment",
+                "Optimize performance with specific strategies"
+              ],
+              "covered": [],
+              "missed": [
+                "Potential bottlenecks (e.g., database queries, network latency)",
+                "Resource constraints (e.g., CPU, memory, network bandwidth)",
+                "Optimization strategies (e.g., caching, load balancing, scaling)"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer lacks any technical substance, failing to address the question directly. This response does not demonstrate any understanding of the underlying principles or concepts related to optimizing the performance of the care service.",
+            "confidence_level": "HIGH"
+          }
+        },
+        {
+          "topic": "design and develop backend services",
+          "question": "What led you to choose a synchronous versus asynchronous approach for handling incoming requests in your backend service design?",
+          "answer_text": "The decision to use a synchronous or a synchronous approach for backend request handling is driven by the specific open completing needs for immediate user feedback VS system scalability.",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770622920.8885498,
+          "evaluation": {
+            "answer_id": "turn_4",
+            "score": 1.0,
+            "strengths": [],
+            "weaknesses": [
+              "Lack of conceptual clarity",
+              "Vague terminology",
+              "No real-world example or scenario",
+              "Poor articulation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Understanding of Synchronous and Asynchronous Approaches",
+                "Factors Influencing the Choice"
+              ],
+              "covered": [],
+              "missed": [
+                "Real-World Example or Scenario",
+                "Explanation of Trade-Offs"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer lacks specificity and real-world reasoning. They fail to provide a clear explanation of the trade-offs between synchronous and asynchronous approaches and do not offer a real-world example or scenario to support their answer. The answer is also plagued by vague terminology and poor articulation.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "design and develop backend services",
+          "question": "How do you handle situations where a synchronous request fails, and the user is waiting for a response?",
+          "answer_text": "Handling failed synchronous request requires immediate user feedback to prevent perceived application hanging. Best practices include implementing timeouts to catch slow responses, providing clear error messages, and where possible, adopting an asynchronous polling or callback approach to allow the user to continue working while the system retries in the background.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770622978.03393,
+          "evaluation": {
+            "answer_id": "turn_5",
+            "score": 0.0,
+            "error": "No JSON object found in LLM output",
+            "reasoning_notes": "Evaluation failed due to system error."
+          }
+        },
+        {
+          "topic": "work with sql and nosql databases",
+          "question": "Can you describe a situation where you had to choose between using a relational SQL database and a NoSQL database for a project, and how you made that decision?",
+          "answer_text": "For a project involving a social media platforms user-generated content, the decision was made to use a no SQL for handling posts and user profiles while retaining relational SQL database for core transactional data like user account management. The decision was driven by the need for a flexibility and massive scalability for dynamic content contrasted with the need for strong data integrity for financial or login information.",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770623036.4273531,
+          "evaluation": {
+            "answer_id": "turn_6",
+            "score": 4.5,
+            "strengths": [
+              "Demonstrates some understanding of trade-offs between relational SQL and NoSQL databases",
+              "Provides a real-world example to support decision-making process"
+            ],
+            "weaknesses": [
+              "Lacks depth and specificity in response",
+              "Does not provide a clear problem statement or contextual background",
+              "Logical flow is partially clear, but lacks explicit trade-off analysis"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Contextual Background",
+                "Problem Statement",
+                "NoSQL Database Selection",
+                "SQL Database Retention",
+                "Trade-off Analysis",
+                "Real-world Experience"
+              ],
+              "covered": [
+                "Mentions a real-world project",
+                "Explains the decision to use a NoSQL database",
+                "Mentions the need for flexibility and scalability",
+                "Explains the decision to retain a relational SQL database"
+              ],
+              "missed": [
+                "Clear problem statement or contextual background",
+                "Explicit trade-off analysis",
+                "Depth and specificity in real-world example"
+              ]
+            },
+            "reasoning_notes": "Candidate demonstrates some understanding of trade-offs between relational SQL and NoSQL databases, but lacks depth and specificity in their response. While they provide a real-world example, it lacks depth and does not explicitly discuss the trade-offs made between flexibility/scalability and data integrity.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "work with sql and nosql databases",
+          "question": "Can you walk me through how you would handle a situation where a user's post in the NoSQL database is updated concurrently by multiple users, and how you would ensure data consistency across both the NoSQL and SQL databases?",
+          "answer_text": "Hunting concurrent updates in a polyglot database environment requires A robust strategies, primarily using optimistic concurrency control for the no SQL database and renewable synchronization pattern with the SQL database as the source of prope handling concurrent updates in the Nosql database. Use versioning or timestamps. Read the store version conditional right if the versions match. If the versions don't match, conflict resolution. Ensuring data consistency across no SQL and SQL data.",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770623108.47894,
+          "evaluation": {
+            "answer_id": "turn_7",
+            "score": 6.0,
+            "strengths": [
+              "Demonstrated understanding of concurrency control in NoSQL databases",
+              "Mentioned versioning or timestamps as a strategy"
+            ],
+            "weaknesses": [
+              "Lacked a clear explanation of the renewable synchronization pattern",
+              "Did not provide a detailed example of conflict resolution"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Optimistic concurrency control",
+                "Renewable synchronization pattern",
+                "Versioning or timestamps",
+                "Conflict resolution"
+              ],
+              "covered": [
+                "Optimistic concurrency control",
+                "Versioning or timestamps"
+              ],
+              "missed": [
+                "Renewable synchronization pattern",
+                "Conflict resolution"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of concurrency control in NoSQL databases and mentioned some relevant strategies. However, their explanation was not clear and concise, and they missed some key points. The answer lacked a structured response and clear articulation.",
+            "confidence_level": "MEDIUM"
+          }
+        },
+        {
+          "topic": "work with sql and nosql databases",
+          "question": "Can you walk me through how you would implement the renewable synchronization pattern with SQL as the source of truth, considering the potential overhead of frequent reads from the SQL database?",
+          "answer_text": "Implementing renewable synchronization pattern with SQLST Source of Truth requires minimizing the direct query load through change data capture, caching and incremental polling. Key steps include implementing log based CDC to stream changes, using readies for caching hot data to prevent redundant SQL heads, and using high watermark timestamps for periodic efficient syncing.",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770623170.439851,
+          "evaluation": {
+            "answer_id": "turn_8",
+            "score": 8.5,
+            "strengths": [
+              "Demonstrated understanding of the renewable synchronization pattern",
+              "Identified key steps for minimizing direct query load",
+              "Mentioned specific techniques like log-based CDC, caching, and incremental polling"
+            ],
+            "weaknesses": [
+              "Lacked explicit mention of the SQL database as the source of truth",
+              "Did not provide a clear explanation of the trade-offs involved in the approach"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Renewable synchronization pattern",
+                "SQL database as the source of truth",
+                "Minimizing direct query load",
+                "Change data capture",
+                "Caching",
+                "Incremental polling",
+                "Trade-offs involved"
+              ],
+              "covered": [
+                "Renewable synchronization pattern",
+                "Minimizing direct query load",
+                "Change data capture",
+                "Caching",
+                "Incremental polling"
+              ],
+              "missed": [
+                "SQL database as the source of truth",
+                "Trade-offs involved"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of the renewable synchronization pattern and identified key steps for minimizing direct query load. However, they lacked explicit mention of the SQL database as the source of truth and did not provide a clear explanation of the trade-offs involved. Overall, the answer was clear and concise, but could benefit from more specificity and real-world reasoning.",
+            "confidence_level": "MEDIUM"
+          }
+        },
+        {
+          "topic": "work with sql and nosql databases",
+          "question": "Can you walk me through your thought process when deciding to use log-based CDC versus other CDC methods, such as transactional CDC?",
+          "answer_text": "Deciding between law based change data capture and other methods like query based Trigger-based CDC depends on a trade off between performance, data latency, and implementation complexity. Log base at CDC is generally prescribed as the gold standard for model high volume production environments, while others are reserved for simpler, low load or legacy.",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770623223.3179488,
+          "evaluation": {
+            "answer_id": "turn_9",
+            "score": 6.0,
+            "strengths": [
+              "Demonstrated understanding of log-based CDC and its advantages",
+              "Mentioned trade-offs between performance, data latency, and implementation complexity"
+            ],
+            "weaknesses": [
+              "Lacked specific examples or real-world experiences",
+              "Used generic terms like 'gold standard' without explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Log-based CDC vs. transactional CDC",
+                "Trade-offs between performance, data latency, and implementation complexity",
+                "Real-world examples or experiences"
+              ],
+              "covered": [
+                "Log-based CDC",
+                "Trade-offs between performance, data latency, and implementation complexity"
+              ],
+              "missed": [
+                "Transactional CDC",
+                "Real-world examples or experiences"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of log-based CDC and its advantages, but lacked specific examples or real-world experiences to support their claims. They also used generic terms without explanation, which reduced the clarity of their response. Overall, their answer was relevant and showed a good depth of understanding, but could be improved with more practical experience evidence and technical correctness.",
+            "confidence_level": "MEDIUM"
+          }
+        },
+        {
+          "topic": "work with sql and nosql databases",
+          "question": "What are some potential failure modes or edge cases you've encountered when implementing log-based change data capture in high-volume production environments?",
+          "answer_text": "Log based change data capture using tools like Debacian with Kafka or database native CDC is highly effective for high volume production, but it introduces specific high stakes failure models when operating at scale source data based infrastructure failures, connector and Kafka failures. Data integrity and application education's high volume education strategies are proactive alerting configurable retention schema registered.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770623288.780006,
+          "evaluation": {
+            "answer_id": "turn_10",
+            "score": 5.5,
+            "strengths": [
+              "Demonstrates some understanding of log-based change data capture",
+              "Mentions some potential failure modes"
+            ],
+            "weaknesses": [
+              "Lacks focus and depth in explaining underlying principles and concepts",
+              "Contains technical inaccuracies",
+              "Lacks real-world examples and hands-on exposure",
+              "Lacks logical flow and cause-effect explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Failure modes and edge cases in log-based change data capture"
+              ],
+              "covered": [
+                "Source data infrastructure failures",
+                "Connector failures",
+                "Kafka failures"
+              ],
+              "missed": [
+                "Data integrity and consistency",
+                "Proactive alerting and monitoring",
+                "Structured reasoning"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some understanding of log-based change data capture, but lacks depth and focus in explaining the underlying principles and concepts. The candidate's answer contains technical inaccuracies and lacks real-world examples and hands-on exposure. The candidate's answer could benefit from more structured reasoning and logical flow.",
+            "confidence_level": "LOW"
+          }
+        }
+      ],
+      "cheating_score": 0.0,
+      "cheating_events": [],
+      "warnings": [],
+      "last_question_served_at": 1770623342.679408,
+      "latest_warning": null,
+      "evaluation": {
+        "overall_score": 8.5,
+        "evaluator_ver": "llama-3.1-8b-instant",
+        "evaluated_at": "2026-02-09T13:18:57.581037",
+        "per_answer_results": [
+          {
+            "answer_id": "turn_1",
+            "score": 3.0,
+            "strengths": [
+              "Mentions a real-world example",
+              "Provides some context about the service"
+            ],
+            "weaknesses": [
+              "Lacks depth and technical correctness",
+              "Doesn't demonstrate a clear understanding of underlying principles",
+              "Doesn't provide technical details"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Problem Statement",
+                "Root Cause Analysis",
+                "Optimization Approach",
+                "Technical Details",
+                "Results and Metrics"
+              ],
+              "covered": [
+                "Problem Statement (partially)",
+                "Real-world example"
+              ],
+              "missed": [
+                "Root Cause Analysis",
+                "Optimization Approach",
+                "Technical Details",
+                "Results and Metrics"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some awareness of the importance of optimizing backend services, but lacks technical correctness and depth. The candidate's response is somewhat unclear and lacks structure, making it difficult to follow.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_2",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Lack of relevance to the question",
+              "No demonstration of technical understanding or knowledge",
+              "No practical experience evidence",
+              "No reasoning ability or logical flow",
+              "Poor communication clarity"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Relevant context",
+                "Problem identification",
+                "Optimization approach",
+                "Metrics used",
+                "Results and conclusion"
+              ],
+              "covered": [],
+              "missed": [
+                "Relevant context",
+                "Problem identification",
+                "Optimization approach",
+                "Metrics used",
+                "Results and conclusion"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer does not demonstrate any understanding of the question or the topic. The response is vague and lacks any technical substance.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_3",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Repeats the question without providing any technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identify potential bottlenecks in the care service",
+                "Consider resource constraints for large-scale deployment",
+                "Optimize performance with specific strategies"
+              ],
+              "covered": [],
+              "missed": [
+                "Potential bottlenecks (e.g., database queries, network latency)",
+                "Resource constraints (e.g., CPU, memory, network bandwidth)",
+                "Optimization strategies (e.g., caching, load balancing, scaling)"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer lacks any technical substance, failing to address the question directly. This response does not demonstrate any understanding of the underlying principles or concepts related to optimizing the performance of the care service.",
+            "confidence_level": "HIGH"
+          },
+          {
+            "answer_id": "turn_4",
+            "score": 1.0,
+            "strengths": [],
+            "weaknesses": [
+              "Lack of conceptual clarity",
+              "Vague terminology",
+              "No real-world example or scenario",
+              "Poor articulation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Understanding of Synchronous and Asynchronous Approaches",
+                "Factors Influencing the Choice"
+              ],
+              "covered": [],
+              "missed": [
+                "Real-World Example or Scenario",
+                "Explanation of Trade-Offs"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer lacks specificity and real-world reasoning. They fail to provide a clear explanation of the trade-offs between synchronous and asynchronous approaches and do not offer a real-world example or scenario to support their answer. The answer is also plagued by vague terminology and poor articulation.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_5",
+            "score": 0.0,
+            "error": "No JSON object found in LLM output",
+            "reasoning_notes": "Evaluation failed due to system error."
+          },
+          {
+            "answer_id": "turn_6",
+            "score": 4.5,
+            "strengths": [
+              "Demonstrates some understanding of trade-offs between relational SQL and NoSQL databases",
+              "Provides a real-world example to support decision-making process"
+            ],
+            "weaknesses": [
+              "Lacks depth and specificity in response",
+              "Does not provide a clear problem statement or contextual background",
+              "Logical flow is partially clear, but lacks explicit trade-off analysis"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Contextual Background",
+                "Problem Statement",
+                "NoSQL Database Selection",
+                "SQL Database Retention",
+                "Trade-off Analysis",
+                "Real-world Experience"
+              ],
+              "covered": [
+                "Mentions a real-world project",
+                "Explains the decision to use a NoSQL database",
+                "Mentions the need for flexibility and scalability",
+                "Explains the decision to retain a relational SQL database"
+              ],
+              "missed": [
+                "Clear problem statement or contextual background",
+                "Explicit trade-off analysis",
+                "Depth and specificity in real-world example"
+              ]
+            },
+            "reasoning_notes": "Candidate demonstrates some understanding of trade-offs between relational SQL and NoSQL databases, but lacks depth and specificity in their response. While they provide a real-world example, it lacks depth and does not explicitly discuss the trade-offs made between flexibility/scalability and data integrity.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_7",
+            "score": 6.0,
+            "strengths": [
+              "Demonstrated understanding of concurrency control in NoSQL databases",
+              "Mentioned versioning or timestamps as a strategy"
+            ],
+            "weaknesses": [
+              "Lacked a clear explanation of the renewable synchronization pattern",
+              "Did not provide a detailed example of conflict resolution"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Optimistic concurrency control",
+                "Renewable synchronization pattern",
+                "Versioning or timestamps",
+                "Conflict resolution"
+              ],
+              "covered": [
+                "Optimistic concurrency control",
+                "Versioning or timestamps"
+              ],
+              "missed": [
+                "Renewable synchronization pattern",
+                "Conflict resolution"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of concurrency control in NoSQL databases and mentioned some relevant strategies. However, their explanation was not clear and concise, and they missed some key points. The answer lacked a structured response and clear articulation.",
+            "confidence_level": "MEDIUM"
+          },
+          {
+            "answer_id": "turn_8",
+            "score": 8.5,
+            "strengths": [
+              "Demonstrated understanding of the renewable synchronization pattern",
+              "Identified key steps for minimizing direct query load",
+              "Mentioned specific techniques like log-based CDC, caching, and incremental polling"
+            ],
+            "weaknesses": [
+              "Lacked explicit mention of the SQL database as the source of truth",
+              "Did not provide a clear explanation of the trade-offs involved in the approach"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Renewable synchronization pattern",
+                "SQL database as the source of truth",
+                "Minimizing direct query load",
+                "Change data capture",
+                "Caching",
+                "Incremental polling",
+                "Trade-offs involved"
+              ],
+              "covered": [
+                "Renewable synchronization pattern",
+                "Minimizing direct query load",
+                "Change data capture",
+                "Caching",
+                "Incremental polling"
+              ],
+              "missed": [
+                "SQL database as the source of truth",
+                "Trade-offs involved"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of the renewable synchronization pattern and identified key steps for minimizing direct query load. However, they lacked explicit mention of the SQL database as the source of truth and did not provide a clear explanation of the trade-offs involved. Overall, the answer was clear and concise, but could benefit from more specificity and real-world reasoning.",
+            "confidence_level": "MEDIUM"
+          },
+          {
+            "answer_id": "turn_9",
+            "score": 6.0,
+            "strengths": [
+              "Demonstrated understanding of log-based CDC and its advantages",
+              "Mentioned trade-offs between performance, data latency, and implementation complexity"
+            ],
+            "weaknesses": [
+              "Lacked specific examples or real-world experiences",
+              "Used generic terms like 'gold standard' without explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Log-based CDC vs. transactional CDC",
+                "Trade-offs between performance, data latency, and implementation complexity",
+                "Real-world examples or experiences"
+              ],
+              "covered": [
+                "Log-based CDC",
+                "Trade-offs between performance, data latency, and implementation complexity"
+              ],
+              "missed": [
+                "Transactional CDC",
+                "Real-world examples or experiences"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of log-based CDC and its advantages, but lacked specific examples or real-world experiences to support their claims. They also used generic terms without explanation, which reduced the clarity of their response. Overall, their answer was relevant and showed a good depth of understanding, but could be improved with more practical experience evidence and technical correctness.",
+            "confidence_level": "MEDIUM"
+          },
+          {
+            "answer_id": "turn_10",
+            "score": 5.5,
+            "strengths": [
+              "Demonstrates some understanding of log-based change data capture",
+              "Mentions some potential failure modes"
+            ],
+            "weaknesses": [
+              "Lacks focus and depth in explaining underlying principles and concepts",
+              "Contains technical inaccuracies",
+              "Lacks real-world examples and hands-on exposure",
+              "Lacks logical flow and cause-effect explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Failure modes and edge cases in log-based change data capture"
+              ],
+              "covered": [
+                "Source data infrastructure failures",
+                "Connector failures",
+                "Kafka failures"
+              ],
+              "missed": [
+                "Data integrity and consistency",
+                "Proactive alerting and monitoring",
+                "Structured reasoning"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some understanding of log-based change data capture, but lacks depth and focus in explaining the underlying principles and concepts. The candidate's answer contains technical inaccuracies and lacks real-world examples and hands-on exposure. The candidate's answer could benefit from more structured reasoning and logical flow.",
+            "confidence_level": "LOW"
+          }
+        ]
+      },
+      "buffered_video_frames": []
+    },
+    {
+      "interview_id": "d6fc269b-3132-4e16-84c4-ace1435d81ce",
+      "candidate_id": 43,
+      "current_question": "Can you walk me through a specific step in the optimization process you mentioned, and how you measured its impact on query performance?",
+      "status": "COMPLETED_EARLY",
+      "created_at": "2026-02-09 19:26:25.148998",
+      "focus_areas": [
+        {
+          "order": 1,
+          "topic": "write complex sql queries",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of write complex sql queries"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 2,
+          "topic": "perform data analysis using python",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of perform data analysis using python"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        },
+        {
+          "order": 3,
+          "topic": "ensure data accuracy consistency and integrity",
+          "priority": "Primary",
+          "depth_score": "Medium",
+          "confidence": "High",
+          "evidence": [
+            "data analysis: hands-on ownership of ensure data accuracy consistency and integrity"
+          ],
+          "interview_goal": "Assess implementation understanding and practical experience"
+        }
+      ],
+      "current_topic": "write complex sql queries",
+      "current_topic_index": 0,
+      "current_followup_count": 1,
+      "interview_trace": [
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you describe a challenging SQL query you've written in the past and how you optimized its performance?",
+          "answer_text": "Can you describe a challenging SQL query you have written in the part and have you optimized its performance?",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770645438.428513,
+          "evaluation": {
+            "answer_id": "turn_1",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Question repetition",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Describe a challenging SQL query",
+                "Optimization techniques"
+              ],
+              "covered": [],
+              "missed": [
+                "Challenging SQL query",
+                "Optimization techniques"
+              ]
+            },
+            "reasoning_notes": "The candidate primarily repeated the question, showing no technical substance or understanding of the topic. Cheating signals indicate a possible attempt to avoid answering, but the lack of relevant information overrides any potential confidence boost.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you walk me through a specific step in the optimization process you mentioned, and how you measured its impact on query performance?",
+          "answer_text": "[SKIPPED] (Candidate ended interview early)",
+          "timestamp": 1770645444.201207,
+          "followup_index": 1,
+          "question_type": "followup",
+          "evaluation": {
+            "answer_id": "turn_2",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Incomplete answer",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Explain a specific step in the optimization process",
+                "Describe how the candidate measured the impact of the optimization step on query performance",
+                "Provide a real-world example or hands-on experience"
+              ],
+              "covered": [],
+              "missed": [
+                "All expected points"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer is incomplete and does not demonstrate any technical substance. The candidate ended the interview early, which suggests a lack of interest or preparedness.",
+            "confidence_level": "LOW"
+          }
+        }
+      ],
+      "cheating_score": 0.4,
+      "cheating_events": [
+        {
+          "answer_id": "turn_1",
+          "cheating_flags": [
+            "QUESTION_REPEATING"
+          ],
+          "cheating_score": 0.4,
+          "timestamp": 1770645438.7075882
+        }
+      ],
+      "warnings": [],
+      "last_question_served_at": 1770645438.946346,
+      "latest_warning": null,
+      "evaluation": {
+        "overall_score": 0.0,
+        "evaluator_ver": "llama-3.1-8b-instant",
+        "evaluated_at": "2026-02-09T19:27:26.364998",
+        "per_answer_results": [
+          {
+            "answer_id": "turn_1",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Question repetition",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Describe a challenging SQL query",
+                "Optimization techniques"
+              ],
+              "covered": [],
+              "missed": [
+                "Challenging SQL query",
+                "Optimization techniques"
+              ]
+            },
+            "reasoning_notes": "The candidate primarily repeated the question, showing no technical substance or understanding of the topic. Cheating signals indicate a possible attempt to avoid answering, but the lack of relevant information overrides any potential confidence boost.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_2",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Incomplete answer",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Explain a specific step in the optimization process",
+                "Describe how the candidate measured the impact of the optimization step on query performance",
+                "Provide a real-world example or hands-on experience"
+              ],
+              "covered": [],
+              "missed": [
+                "All expected points"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer is incomplete and does not demonstrate any technical substance. The candidate ended the interview early, which suggests a lack of interest or preparedness.",
+            "confidence_level": "LOW"
+          }
+        ]
+      },
+      "buffered_video_frames": [],
+      "ended_at": "2026-02-09T19:27:24.201248",
+      "termination_metadata": {
+        "ended_by": "CANDIDATE",
+        "end_reason": "MANUAL_SUBMISSION",
+        "questions_at_termination": 2
+      }
     }
   ],
-  "user_id_counter": 31
+  "user_id_counter": 44
 }

@@ -6,19 +6,24 @@ export default function UserDashboard() {
     const [data, setData] = useState(null);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [allJds, setAllJds] = useState([]);
+    const [selectedJobId, setSelectedJobId] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [dashboardData, userData] = await Promise.all([
-                    userAPI.getDashboard(),
-                    authAPI.getMe()
+                const [userData, jdsData] = await Promise.all([
+                    authAPI.getMe(),
+                    userAPI.getJDs()
                 ]);
-                setData(dashboardData);
                 setUser(userData);
+                setAllJds(jdsData);
+                if (jdsData.length > 0) {
+                    setSelectedJobId(jdsData[0].job_id);
+                }
             } catch (err) {
-                console.error('Error fetching data:', err);
+                console.error('Error fetching dashboard base data:', err);
                 if (err.response?.status === 401 || err.response?.status === 403) {
                     localStorage.clear();
                     navigate('/login');
@@ -35,6 +40,8 @@ export default function UserDashboard() {
         localStorage.clear();
         navigate('/login');
     };
+
+    const selectedJD = allJds.find(j => j.job_id === selectedJobId);
 
     const styles = {
         container: {
@@ -91,6 +98,9 @@ export default function UserDashboard() {
         },
         header: {
             marginBottom: '50px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
         },
         title: {
             fontSize: 'clamp(32px, 5vw, 42px)',
@@ -123,6 +133,18 @@ export default function UserDashboard() {
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
+        },
+        jdSelector: {
+            padding: '12px 20px',
+            borderRadius: '12px',
+            border: '1px solid #e2e8f0',
+            background: '#fff',
+            fontSize: '15px',
+            fontWeight: '600',
+            color: '#1e293b',
+            outline: 'none',
+            minWidth: '250px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
         }
     };
 
@@ -145,21 +167,38 @@ export default function UserDashboard() {
 
             <main style={styles.content}>
                 <div style={styles.header}>
-                    <h1 style={styles.title}>
-                        Hello, <span style={styles.highlight}>{user?.name?.split(' ')[0] || 'there'}!</span>
-                    </h1>
-                    <p style={{ color: '#64748b', fontSize: '18px', marginTop: '12px' }}>Welcome to your personal career command center.</p>
+                    <div>
+                        <h1 style={styles.title}>
+                            Hello, <span style={styles.highlight}>{user?.name?.split(' ')[0] || 'there'}!</span>
+                        </h1>
+                        <p style={{ color: '#64748b', fontSize: '18px', marginTop: '12px' }}>Welcome to your personal career command center.</p>
+                    </div>
+
+                    {allJds.length > 0 && (
+                        <div>
+                            <p style={{ fontSize: '13px', fontWeight: '700', color: '#64748b', marginBottom: '8px', textAlign: 'right' }}>Target Opening</p>
+                            <select
+                                value={selectedJobId}
+                                onChange={(e) => setSelectedJobId(e.target.value)}
+                                style={styles.jdSelector}
+                            >
+                                {allJds.map(j => (
+                                    <option key={j.job_id} value={j.job_id}>{j.job_id}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </div>
 
                 <div style={styles.grid}>
                     <div style={styles.card}>
-                        <h3 style={styles.cardTitle}><span>📁</span> Active Job Brief</h3>
-                        <JDPreview />
+                        <h3 style={styles.cardTitle}><span>📁</span> Job Brief Details</h3>
+                        <JDPreview jd={selectedJD} />
                     </div>
 
                     <div style={styles.card}>
                         <h3 style={styles.cardTitle}><span>🚀</span> Your Application</h3>
-                        <ResumeUploader />
+                        <ResumeUploader selectedJobId={selectedJobId} />
                     </div>
                 </div>
             </main>
@@ -167,24 +206,7 @@ export default function UserDashboard() {
     );
 }
 
-function JDPreview() {
-    const [jd, setJd] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchJD = async () => {
-            try {
-                const data = await userAPI.getActiveJD();
-                setJd(data);
-            } catch (err) {
-                console.error('Error fetching JD:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchJD();
-    }, []);
-
+function JDPreview({ jd }) {
     const handleDownload = async () => {
         try {
             const { url } = await blobAPI.getUrl('job-descriptions', jd.jd_blob_path);
@@ -195,57 +217,103 @@ function JDPreview() {
         }
     };
 
-    if (loading) return <p style={{ color: '#64748b' }}>Locating briefly...</p>;
     if (!jd) return (
         <div style={{ padding: '24px', background: '#fef2f2', borderRadius: '16px', border: '1px solid #fecaca' }}>
             <p style={{ margin: 0, color: '#dc2626', fontSize: '14px', fontWeight: '600' }}>No active job descriptions published yet.</p>
         </div>
     );
 
+    const intel = jd.intelligence || {};
+    const roleContext = intel.role_context || {};
+    const skills = intel.skill_intelligence || {};
+    const competency = intel.competency_profile || {};
+
     return (
         <div>
             <div style={{ marginBottom: '24px' }}>
-                <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' }}>Brief ID</div>
-                <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>{jd.job_id}</div>
+                <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' }}>Target Role</div>
+                <div style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a' }}>{roleContext.job_title || jd.job_id}</div>
+                {(roleContext.department || roleContext.team_name) && (
+                    <div style={{ fontSize: '14px', color: '#475569', marginTop: '2px' }}>
+                        {roleContext.department} {roleContext.team_name ? `• ${roleContext.team_name}` : ''}
+                    </div>
+                )}
             </div>
 
-            <div style={{ marginBottom: '32px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' }}>
                 <span style={{ padding: '4px 12px', background: '#ecfdf5', color: '#059669', borderRadius: '100px', fontSize: '12px', fontWeight: '800' }}>ACTIVE MISSION</span>
+                {competency.experience_level && (
+                    <span style={{ padding: '4px 12px', background: '#f1f5f9', color: '#475569', borderRadius: '100px', fontSize: '12px', fontWeight: '600' }}>{competency.experience_level}</span>
+                )}
             </div>
+
+            <div style={{ padding: '20px', background: '#f8fafc', borderRadius: '16px', marginBottom: '24px', border: '1px solid #e2e8f0' }}>
+                <h4 style={{ fontSize: '12px', fontWeight: '800', color: '#64748b', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Job Snapshot</h4>
+                <p style={{ fontSize: '14px', color: '#334155', lineHeight: '1.6', margin: 0 }}>
+                    {intel.normalized_jd
+                        ? (intel.normalized_jd.slice(0, 400).split('. ').slice(0, -1).join('. ') + '.')
+                        : `We are seeking a ${roleContext.seniority || ''} ${roleContext.primary_role || 'Candidate'} to drive innovation in ${roleContext.primary_domain || 'technical engineering'}. This role involves hands-on execution and strategic contribution to our core missions.`
+                    }
+                </p>
+            </div>
+
+            {roleContext.key_responsibilities && roleContext.key_responsibilities.length > 0 && (
+                <div style={{ marginBottom: '20px' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: '700', color: '#334155', marginBottom: '10px' }}>Key Responsibilities</h4>
+                    <ul style={{ paddingLeft: '20px', margin: 0, fontSize: '14px', color: '#475569', lineHeight: '1.6' }}>
+                        {roleContext.key_responsibilities.slice(0, 3).map((res, i) => (
+                            <li key={i}>{res}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            {skills.required_technical_skills && skills.required_technical_skills.length > 0 && (
+                <div style={{ marginBottom: '24px' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: '700', color: '#334155', marginBottom: '10px' }}>Required Skills</h4>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        {skills.required_technical_skills.slice(0, 5).map((skill, i) => (
+                            <span key={i} style={{ padding: '4px 10px', background: '#e0e7ff', color: '#4338ca', borderRadius: '6px', fontSize: '12px', fontWeight: '600' }}>{skill}</span>
+                        ))}
+                        {skills.required_technical_skills.length > 5 && (
+                            <span style={{ padding: '4px 10px', background: '#f1f5f9', color: '#64748b', borderRadius: '6px', fontSize: '12px' }}>+{skills.required_technical_skills.length - 5} more</span>
+                        )}
+                    </div>
+                </div>
+            )}
 
             <button onClick={handleDownload} style={{
                 width: '100%',
-                padding: '16px',
+                padding: '12px',
                 borderRadius: '12px',
                 border: '1px solid #e2e8f0',
                 background: '#f8fafc',
                 color: '#1e293b',
                 fontWeight: '700',
                 cursor: 'pointer',
+                fontSize: '14px',
+                transition: 'all 0.2s',
             }}>
-                View / Download JD
+                View Full Brief PDF
             </button>
         </div>
     );
 }
 
-function ResumeUploader() {
+function ResumeUploader({ selectedJobId }) {
     const navigate = useNavigate();
     const [status, setStatus] = useState(null);
     const [interviewSession, setInterviewSession] = useState(null);
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
-    const [hasJD, setHasJD] = useState(false);
 
     useEffect(() => {
         const checkStatus = async () => {
             try {
-                const [jdData, resumeData, interviewData] = await Promise.all([
-                    userAPI.getActiveJD(),
+                const [resumeData, interviewData] = await Promise.all([
                     userAPI.getResumeStatus(),
                     userAPI.getInterviewStatus()
                 ]);
-                setHasJD(!!jdData);
                 setStatus(resumeData);
                 setInterviewSession(interviewData);
             } catch (err) {
@@ -253,16 +321,16 @@ function ResumeUploader() {
             }
         };
         checkStatus();
-    }, []);
+    }, [selectedJobId]);
 
     const handleUpload = async (e) => {
         e.preventDefault();
-        if (!file) return;
+        if (!file || !selectedJobId) return;
         setUploading(true);
         try {
-            const data = await userAPI.uploadResume(file);
+            const data = await userAPI.uploadResume(file, selectedJobId);
             setStatus(data);
-            alert('Resume uploaded successfully!');
+            alert('Resume uploaded successfully for ' + selectedJobId + '!');
         } catch (err) {
             alert('Upload failed: ' + (err.response?.data?.detail || err.message));
         } finally {
@@ -270,17 +338,17 @@ function ResumeUploader() {
         }
     };
 
-    if (!hasJD) {
+    if (!selectedJobId) {
         return (
             <div style={{ padding: '24px', background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '16px' }}>
                 <p style={{ margin: 0, color: '#92400e', fontSize: '14px' }}>
-                    <strong>Hold Tight!</strong> Job descriptions are being finalized before applications open.
+                    <strong>Hold Tight!</strong> Select a job brief to begin your application.
                 </p>
             </div>
         );
     }
 
-    if (status) {
+    if (status && status.job_id === selectedJobId) {
         const isSelected = status.status === 'SELECTED';
         const isShortlisted = status.status === 'SHORTLISTED';
         const isRejected = status.status === 'REJECTED';
@@ -333,30 +401,37 @@ function ResumeUploader() {
                             </p>
 
                             {interviewSession ? (
-                                <div style={{ padding: '24px', background: '#f5f3ff', borderRadius: '16px', border: '1px solid #ddd6fe' }}>
-                                    <button
-                                        onClick={() => navigate(`/user/interview/${interviewSession.interview_id}`)}
-                                        style={{
-                                            width: '100%',
-                                            padding: '16px',
-                                            background: '#6366f1',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '12px',
-                                            cursor: 'pointer',
-                                            fontWeight: '800',
-                                            fontSize: '16px',
-                                            boxShadow: '0 10px 15px -3px rgba(99, 102, 241, 0.3)'
-                                        }}>
-                                        Start Interview 🚀
-                                    </button>
-                                </div>
+                                ['COMPLETED', 'COMPLETED_EARLY'].includes(interviewSession.status) ? (
+                                    <div style={{ padding: '24px', background: '#f0fdf4', borderRadius: '16px', border: '1px solid #bbf7d0', textAlign: 'center' }}>
+                                        <p style={{ color: '#15803d', fontWeight: 'bold', margin: 0 }}>✅ Interview Completed</p>
+                                        <p style={{ color: '#166534', fontSize: '13px', marginTop: '4px' }}>Your responses are currently being evaluated. Thank you!</p>
+                                    </div>
+                                ) : (
+                                    <div style={{ padding: '24px', background: '#f5f3ff', borderRadius: '16px', border: '1px solid #ddd6fe' }}>
+                                        <button
+                                            onClick={() => navigate(`/user/interview/${interviewSession.interview_id}`)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '16px',
+                                                background: '#6366f1',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '12px',
+                                                cursor: 'pointer',
+                                                fontWeight: '800',
+                                                fontSize: '16px',
+                                                boxShadow: '0 10px 15px -3px rgba(99, 102, 241, 0.3)'
+                                            }}>
+                                            Start Interview 🚀
+                                        </button>
+                                    </div>
+                                )
                             ) : (
                                 <p style={{ textAlign: 'center', color: '#6366f1', fontSize: '14px' }}>Preparing your interview link... Please wait.</p>
                             )}
                         </div>
                     ) : !isSelected && !isRejected ? (
-                        <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Our team is currently reviewing your profile. We'll update you soon!</p>
+                        <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Our team is currently reviewing your profile for <strong>{selectedJobId}</strong>. We'll update you soon!</p>
                     ) : null}
                 </div>
             </div>
@@ -365,11 +440,11 @@ function ResumeUploader() {
 
     return (
         <form onSubmit={handleUpload}>
-            <p style={{ fontSize: '15px', color: '#64748b', marginBottom: '24px' }}>Upload your latest resume to begin the AI matching sequence.</p>
+            <p style={{ fontSize: '15px', color: '#64748b', marginBottom: '24px' }}>Upload your latest resume to apply for <span style={{ fontWeight: '700', color: '#6366f1' }}>{selectedJobId}</span>.</p>
             <div style={{ background: '#f8fafc', border: '2px dashed #cbd5e1', borderRadius: '20px', padding: '30px', textAlign: 'center' }}>
                 <input type="file" onChange={(e) => setFile(e.target.files[0])} accept=".pdf,.docx" style={{ display: 'block', width: '100%', marginBottom: '20px' }} />
                 <button type="submit" disabled={uploading || !file} style={{ width: '100%', padding: '16px', borderRadius: '12px', border: 'none', background: '#6366f1', color: '#ffffff', fontWeight: '800', opacity: (uploading || !file) ? 0.5 : 1 }}>
-                    {uploading ? 'Uploading...' : 'Deploy Resume'}
+                    {uploading ? 'Transmitting...' : 'Upload for ' + selectedJobId}
                 </button>
             </div>
         </form>

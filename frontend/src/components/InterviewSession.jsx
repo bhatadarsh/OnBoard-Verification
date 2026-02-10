@@ -13,6 +13,7 @@ const InterviewSession = () => {
     const [error, setError] = useState(null);
     const [latestWarning, setLatestWarning] = useState(null);
     const [cheatingScore, setCheatingScore] = useState(0);
+    const [showEndModal, setShowEndModal] = useState(false);
 
     const isSubmittingRef = useRef(false);
 
@@ -64,7 +65,7 @@ const InterviewSession = () => {
             setStatus('loading');
             const data = await interviewAPI.getQuestion(interviewId);
 
-            if (data.status === 'COMPLETED') {
+            if (['COMPLETED', 'COMPLETED_EARLY'].includes(data.status)) {
                 setStatus('completed');
                 return;
             }
@@ -293,6 +294,38 @@ const InterviewSession = () => {
         }, 1000);
     };
 
+    const handleEndInterview = async () => {
+        if (isSubmittingRef.current) return;
+        isSubmittingRef.current = true;
+
+        setStatus('submitting');
+        clearAnyTimer();
+
+        const recorder = mediaRecorderRef.current;
+        const capturedChunks = [...audioChunksRef.current];
+
+        try {
+            let audioFile = null;
+            if (recorder && recorder.state === 'recording') {
+                const audioBlob = new Blob(capturedChunks, { type: recorder.mimeType || 'audio/webm' });
+                const mimeType = recorder.mimeType || 'audio/webm';
+                const extension = mimeType.includes('wav') ? 'wav' : 'webm';
+                audioFile = new File([audioBlob], `final_answer.${extension}`, { type: mimeType });
+            }
+
+            stopRecording();
+            await interviewAPI.endInterview(interviewId, audioFile);
+            setStatus('completed');
+        } catch (err) {
+            console.error('Failed to end interview:', err);
+            setError('Failed to end interview: ' + (err.response?.data?.detail || err.message));
+            setStatus('error');
+        } finally {
+            isSubmittingRef.current = false;
+            setShowEndModal(false);
+        }
+    };
+
     if (status === 'completed') {
         return (
             <div style={containerStyle}>
@@ -335,7 +368,7 @@ const InterviewSession = () => {
             <div style={headerStyle}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                     <span style={{ fontWeight: 'bold', color: '#4a5568' }}>
-                        Question {question.question_index} of {question.total_questions}
+                        {question.question_index}
                     </span>
                     <span style={{
                         color: status === 'reading' ? '#3182ce' : '#e53e3e',
@@ -387,38 +420,127 @@ const InterviewSession = () => {
                     {status === 'submitting' && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <div className="spinner-small"></div>
-                            <span>Processing your response...</span>
+                            <span>Processing your request...</span>
                         </div>
                     )}
                 </div>
 
-                {/* Video Monitor */}
-                <div style={{ marginTop: '20px', borderRadius: '12px', overflow: 'hidden', background: '#000', height: '180px', width: '320px', margin: '20px auto', position: 'relative' }}>
-                    <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <canvas ref={canvasRef} style={{ display: 'none' }} />
-                    <div style={{ position: 'absolute', top: '10px', right: '10px', color: 'red', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <div style={{ width: '8px', height: '8px', background: 'red', borderRadius: '50%', animation: 'pulse 1s infinite' }} />
-                        LIVE MONITORING
-                    </div>
-                </div>
-
-                {/* Misconduct Warnings */}
-                {latestWarning && (
-                    <div style={{
-                        marginTop: '20px',
-                        padding: '12px',
-                        background: '#fff5f5',
-                        border: '1px solid #feb2b2',
-                        color: '#c53030',
-                        borderRadius: '8px',
-                        fontSize: '13px',
-                        fontWeight: 'bold',
-                        animation: 'shake 0.5s'
-                    }}>
-                        ⚠️ {latestWarning}
+                {/* Optional early termination button */}
+                {!['loading', 'submitting', 'error', 'completed'].includes(status) && (
+                    <div style={{ marginTop: '20px', borderTop: '1px solid #edf2f7', paddingTop: '20px' }}>
+                        <button
+                            onClick={() => setShowEndModal(true)}
+                            style={{
+                                background: 'transparent',
+                                color: '#a0aec0',
+                                border: '1px solid #e2e8f0',
+                                padding: '8px 16px',
+                                borderRadius: '6px',
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                            }}
+                            onMouseOver={(e) => { e.target.style.color = '#e53e3e'; e.target.style.borderColor = '#feb2b2'; }}
+                            onMouseOut={(e) => { e.target.style.color = '#a0aec0'; e.target.style.borderColor = '#e2e8f0'; }}
+                        >
+                            End Interview Early
+                        </button>
                     </div>
                 )}
             </div>
+
+            {/* Confirmation Modal */}
+            {showEndModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000,
+                    backdropFilter: 'blur(4px)'
+                }}>
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '16px',
+                        maxWidth: '400px',
+                        width: '90%',
+                        textAlign: 'center',
+                        boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)'
+                    }}>
+                        <div style={{ fontSize: '40px', marginBottom: '10px' }}>⚠️</div>
+                        <h3 style={{ margin: '0 0 10px 0', color: '#2d3748' }}>End Interview?</h3>
+                        <p style={{ color: '#718096', fontSize: '14px', marginBottom: '24px', lineHeight: '1.5' }}>
+                            Are you sure you want to end the interview now?
+                            <strong> Remaining questions will be skipped</strong> and your current progress will be submitted.
+                        </p>
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                            <button
+                                onClick={() => setShowEndModal(false)}
+                                style={{
+                                    flex: 1,
+                                    padding: '12px',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e2e8f0',
+                                    background: 'white',
+                                    fontWeight: '600',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Keep Going
+                            </button>
+                            <button
+                                onClick={handleEndInterview}
+                                style={{
+                                    flex: 1,
+                                    padding: '12px',
+                                    borderRadius: '8px',
+                                    border: 'none',
+                                    background: '#e53e3e',
+                                    color: 'white',
+                                    fontWeight: '600',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                End & Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Video Monitor */}
+            <div style={{ marginTop: '20px', borderRadius: '12px', overflow: 'hidden', background: '#000', height: '180px', width: '320px', margin: '20px auto', position: 'relative' }}>
+                <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <canvas ref={canvasRef} style={{ display: 'none' }} />
+                <div style={{ position: 'absolute', top: '10px', right: '10px', color: 'red', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div style={{ width: '8px', height: '8px', background: 'red', borderRadius: '50%', animation: 'pulse 1s infinite' }} />
+                    LIVE MONITORING
+                </div>
+            </div>
+
+            {/* Misconduct Warnings */}
+            {latestWarning && (
+                <div style={{
+                    marginTop: '20px',
+                    padding: '12px',
+                    background: '#fff5f5',
+                    border: '1px solid #feb2b2',
+                    color: '#c53030',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    animation: 'shake 0.5s'
+                }}>
+                    ⚠️ {latestWarning}
+                </div>
+            )}
 
             {/* Transcribed Answer Display */}
             {transcript && (
