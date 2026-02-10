@@ -464,6 +464,55 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
         candidates.append(c)
     return candidates
 
+def build_comprehensive_report_data(candidate_id: int):
+    """Gathers all details for the single unified interview report."""
+    resume = next((r for r in db.resumes if str(r["candidate_id"]) == str(candidate_id)), None)
+    if not resume:
+        return {}
+        
+    user_obj = next((u for u in db.users.values() if str(u.get("id")) == str(candidate_id)), None)
+    job_id = resume.get("job_id")
+    jd = db.jds.get(job_id) if job_id else None
+    
+    jd_intel = jd.get("intelligence", {}) if jd else {}
+    res_intel = resume.get("intelligence", {})
+    shortlist_reason = res_intel.get("shortlist_reason", {})
+    exp_meta = shortlist_reason.get("experience_metadata", {})
+    
+    # SECTION 1: CANDIDATE PERSONAL DETAILS
+    personal_details = {
+        "candidate_name": user_obj.get("name", "Unknown") if user_obj else "Unknown",
+        "candidate_id": str(candidate_id),
+        "email": user_obj.get("email", "N/A") if user_obj else "N/A",
+        "applied_role": jd_intel.get("role_context", {}).get("job_title") or job_id or "N/A",
+        "total_years_experience": f"{exp_meta.get('candidate_years', 'N/A')} years"
+    }
+    
+    # SECTION 2: RESUME & JD SHORTLISTING SUMMARY
+    match_score = round(res_intel.get("final_score", 0.0) * 100, 1)
+    
+    shortlisting_summary = {
+        "jd_experience_required": f"{exp_meta.get('jd_required_years', 'N/A')}+ years",
+        "candidate_experience": f"{exp_meta.get('candidate_years', 'N/A')} years",
+        "resume_jd_match_score": match_score
+    }
+    
+    # SECTION 3: SHORTLISTING INSIGHTS (PARAGRAPH)
+    insights = res_intel.get("admin_insights", {})
+    alignment_para = insights.get("matched_skills_summary", "The candidate's profile shows a professional alignment with the technical requirements of the role.")
+    
+    shortlisting_insights = alignment_para
+    if exp_meta.get("flexibility_applied"):
+        shortlisting_insights += " While the candidate's aggregate years of experience were slightly below the stated requirement, their exceptionally strong alignment in core technical skills and project relevance qualified them for shortlisting through our experience-flexibility framework."
+    else:
+        shortlisting_insights += " The candidate was shortlisted due to their robust match in key competencies and meeting the foundational experience criteria defined for this position."
+
+    return {
+        "candidate_personal_details": personal_details,
+        "shortlisting_summary": shortlisting_summary,
+        "shortlisting_insights": shortlisting_insights
+    }
+
 # Helper auth function for report downloads (supports both header and query param tokens)
 async def admin_report_auth(token: Optional[str] = Query(None), credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)):
     auth_token = token or (credentials.credentials if credentials else None)
@@ -483,8 +532,8 @@ async def generate_interview_report(candidate_id: int, current_user: TokenData =
         raise HTTPException(status_code=404, detail="Candidate not found")
         
     interview = next((i for i in db.interviews if i["candidate_id"] == candidate_id), None)
-    if not interview or interview["status"] != "COMPLETED":
-        return f"<html><body><h1>Report not ready</h1><p>Interview for candidate {candidate_id} is not yet completed.</p></body></html>"
+    if not interview or interview["status"] not in ["COMPLETED", "COMPLETED_EARLY"]:
+        return f"<html><body><h1>Report not ready</h1><p>Interview for candidate {candidate_id} is not yet completed (Current Status: {interview['status'] if interview else 'None'}).</p></body></html>"
 
     eval_data = interview.get("evaluation", {})
     trace = interview.get("interview_trace", [])
@@ -515,12 +564,18 @@ async def generate_interview_report(candidate_id: int, current_user: TokenData =
         severity = "MEDIUM"
     else:
         severity = "LOW"
+    
+    # Fetch unified report data
+    unified_data = build_comprehensive_report_data(candidate_id)
+    pers = unified_data.get("candidate_personal_details", {})
+    sh_sum = unified_data.get("shortlisting_summary", {})
+    sh_ins = unified_data.get("shortlisting_insights", "")
 
     html_content = f"""
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Interview Report - Candidate {candidate_id}</title>
+        <title>Interview Report - {pers.get('candidate_name', 'Candidate ' + str(candidate_id))}</title>
         <style>
             body {{ font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; color: #1a202c; max-width: 900px; margin: 0 auto; padding: 40px; background: #fff; }}
             .header {{ border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }}
@@ -532,6 +587,9 @@ async def generate_interview_report(candidate_id: int, current_user: TokenData =
             .metric-box .value {{ font-size: 24px; font-weight: bold; color: #2d3748; }}
             .section {{ margin-bottom: 40px; }}
             .section-title {{ font-size: 18px; font-weight: bold; color: #4a5568; margin-bottom: 15px; border-left: 4px solid #4299e1; padding-left: 12px; }}
+            .personal-details {{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px; background: #f8fafc; padding: 20px; borderRadius: 8px; margin-bottom: 30px; }}
+            .personal-details div {{ margin-bottom: 5px; }}
+            .shortlist-summary {{ background: #ebf8ff; padding: 20px; borderRadius: 8px; border: 1px solid #bee3f8; margin-bottom: 30px; }}
             .turn {{ background: #fff; border: 1px solid #e2e8f0; borderRadius: 8px; padding: 20px; margin-bottom: 20px; page-break-inside: avoid; }}
             .turn-header {{ display: flex; justify-content: space-between; margin-bottom: 15px; background: #f8fafc; padding: 8px 12px; borderRadius: 6px; }}
             .question {{ font-weight: bold; color: #2d3748; margin-bottom: 10px; font-size: 15px; }}
@@ -554,15 +612,50 @@ async def generate_interview_report(candidate_id: int, current_user: TokenData =
         
         <div class="header">
             <div>
-                <h1>Interview Performance Report</h1>
+                <h1>Shortlisting & Interview Report</h1>
                 <div style="color: #718096; margin-top: 5px;">Candidate ID: {candidate_id} | Status: <span class="status-{resume['status'].lower()}">{resume['status']}</span></div>
             </div>
             <div style="text-align: right;">
                 <div style="font-size: 12px; color: #a0aec0;">Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</div>
-                <div style="font-size: 12px; color: #a0aec0;">System Ver: 1.0-Admin-Core</div>
+                <div style="font-size: 12px; color: #a0aec0;">System Ver: 2.0-Audit-Ready</div>
             </div>
         </div>
 
+        <div class="section">
+            <div class="section-title">Candidate Personal Details</div>
+            <div class="personal-details">
+                <div><strong>Name:</strong> {pers.get('candidate_name', 'N/A')}</div>
+                <div><strong>Candidate ID:</strong> {pers.get('candidate_id', 'N/A')}</div>
+                <div><strong>Email:</strong> {pers.get('email', 'N/A')}</div>
+                <div><strong>Applied Role:</strong> {pers.get('applied_role', 'N/A')}</div>
+                <div><strong>Total Experience:</strong> {pers.get('total_years_experience', 'N/A')}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Resume & JD Shortlisting Summary</div>
+            <div class="shortlist-summary">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                    <div>
+                        <div style="font-size: 12px; color: #2b6cb0;">JD Experience Req.</div>
+                        <div style="font-size: 18px; font-weight: bold;">{sh_sum.get('jd_experience_required', 'N/A')}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #2b6cb0;">Candidate Experience</div>
+                        <div style="font-size: 18px; font-weight: bold;">{sh_sum.get('candidate_experience', 'N/A')}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #2b6cb0;">Resume-JD Match</div>
+                        <div style="font-size: 18px; font-weight: bold; color: #2b6cb0;">{sh_sum.get('resume_jd_match_score', 0)}%</div>
+                    </div>
+                </div>
+            </div>
+            <div style="background: #f0faff; padding: 15px; borderRadius: 8px; border-left: 4px solid #4299e1; font-size: 14px; color: #2c5282;">
+                <strong>Shortlisting Insights:</strong> {sh_ins}
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 50px;">Interview Performance Metrics</div>
         <div class="metric-grid">
             <div class="metric-box">
                 <div class="label">Total Adjusted Score</div>
@@ -579,7 +672,7 @@ async def generate_interview_report(candidate_id: int, current_user: TokenData =
         </div>
 
         <div class="section">
-            <div class="section-title">Evaluation Summary</div>
+            <div class="section-title">Interview Evaluation Summary</div>
             <p style="font-size: 14px;">This candidate was evaluated across {len(trace)} interactive turns. The system analyzed technical depth, communication clarity, and situational reasoning. {f'A cheating penalty was applied due to suspicious events (Score: {c_score}).' if c_score > 0 else 'No major misconduct was detected.'}</p>
         </div>
 
@@ -878,10 +971,10 @@ async def submit_answer(
     if session_data["candidate_id"] != current_user.user_id:
         raise HTTPException(status_code=403, detail="Not authorized for this interview")
         
-    if session_data["status"] == "COMPLETED":
+    if session_data["status"] in ["COMPLETED", "COMPLETED_EARLY"]:
         # Handle idempotency: if already completed, just return current state
         return {
-            "status": "COMPLETED",
+            "status": session_data["status"],
             "next_question": None
         }
 
@@ -1061,7 +1154,7 @@ async def submit_answer(
                 print(f"DEBUG: Turn trace and text answer persisted to Azure container: {container}")
                 
                 # 5b. If completed, upload the final evaluation report and full trace
-                if session_data["status"] == "COMPLETED":
+                if session_data["status"] in ["COMPLETED", "COMPLETED_EARLY"]:
                     # Upload individual evaluation.json (legacy/compact)
                     if session_data.get("evaluation"):
                         eval_blob_name = f"{interview_id}/evaluation.json"
@@ -1074,6 +1167,7 @@ async def submit_answer(
                     
                     # Upload FULL COMPREHENSIVE REPORT
                     report_blob_name = f"{interview_id}/full_interview_report.json"
+                    unified_report_meta = build_comprehensive_report_data(session_data["candidate_id"])
                     full_report = {
                         "candidate_id": str(session_data["candidate_id"]),
                         "interview_id": str(session_data["interview_id"]),
@@ -1082,6 +1176,7 @@ async def submit_answer(
                             "cheating_score": session_data.get("cheating_score", 0.0),
                             "completed_at": datetime.now().isoformat()
                         },
+                        **unified_report_meta,
                         "interview_trace": session_data["interview_trace"],
                         "evaluation_summary": session_data.get("evaluation")
                     }
@@ -1205,10 +1300,24 @@ async def end_interview_early(
     try:
         container = "interview-traces"
         report_blob_name = f"{interview_id}/early_termination_report.json"
+        unified_report_meta = build_comprehensive_report_data(session_data["candidate_id"])
+        full_report = {
+            "candidate_id": str(session_data["candidate_id"]),
+            "interview_id": str(session_data["interview_id"]),
+            "overall_metrics": {
+                "total_score": session_data.get("evaluation", {}).get("overall_score", 0.0),
+                "cheating_score": session_data.get("cheating_score", 0.0),
+                "completed_at": datetime.now().isoformat(),
+                "termination_type": "EARLY_SUBMISSION"
+            },
+            **unified_report_meta,
+            "interview_trace": session_data.get("interview_trace", []),
+            "evaluation_summary": session_data.get("evaluation")
+        }
         azure_blob_helper.upload_file(
             container_name=container,
             blob_name=report_blob_name,
-            file_content=json.dumps(session_data).encode('utf-8'),
+            file_content=json.dumps(full_report).encode('utf-8'),
             content_type="application/json"
         )
     except: pass
