@@ -277,8 +277,11 @@ function JDManager({ jds, onRefresh }) {
                     {jds.map(jd => (
                         <div key={jd.job_id} style={styles.jdItem}>
                             <div>
-                                <div style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}>{jd.job_id}</div>
-                                <div style={{ fontSize: '11px', color: '#64748b' }}>{new Date(jd.uploaded_at).toLocaleDateString()}</div>
+                                <div style={{ fontWeight: 'bold', fontSize: '14px', color: '#1e293b' }}>{jd.jd_name || jd.job_id}</div>
+                                <div style={{ fontSize: '11px', color: '#64748b' }}>
+                                    {new Date(jd.uploaded_at).toLocaleDateString()}
+                                    <span style={{ marginLeft: '8px', color: '#94a3b8' }}>• ID: {jd.job_id}</span>
+                                </div>
                             </div>
                             <button onClick={() => handleDelete(jd.job_id)} style={{ color: '#ef4444', border: 'none', background: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Delete</button>
                         </div>
@@ -401,7 +404,7 @@ function ResumeList({ allJds, filterJobId, setFilterJobId }) {
                     >
                         <option value="ALL">All Applicants</option>
                         {allJds.map(j => (
-                            <option key={j.job_id} value={j.job_id}>{j.job_id}</option>
+                            <option key={j.job_id} value={j.job_id}>{j.jd_name || j.job_id}</option>
                         ))}
                     </select>
                 </div>
@@ -428,7 +431,12 @@ function ResumeList({ allJds, filterJobId, setFilterJobId }) {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
                                 <div>
-                                    <div style={{ fontSize: '20px', fontWeight: '900', color: '#0f172a' }}>Candidate #{r.candidate_id}</div>
+                                    <div style={{ fontSize: '20px', fontWeight: '900', color: '#0f172a' }}>
+                                        {r.candidate_name}
+                                        <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '500', marginLeft: '8px' }}>
+                                            ID: {r.candidate_id}
+                                        </span>
+                                    </div>
                                     <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
                                         <span style={{
                                             ...styles.badge,

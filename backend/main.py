@@ -200,8 +200,14 @@ async def upload_jd(
     except Exception as e:
         print(f"JD Graph Error: {e}")
     
+    # Extract human-readable JD name
+    jd_name = intelligence.get("role_context", {}).get("primary_role")
+    if not jd_name:
+        jd_name = file.filename # Fallback to original filename
+
     jd = JobDescription(
         job_id=job_id,
+        jd_name=jd_name,
         jd_blob_path=blob_name,
         status="ACTIVE",
         uploaded_at=datetime.now(),
@@ -217,7 +223,21 @@ async def upload_jd(
 @app.get("/admin/jd", response_model=List[JobDescription])
 async def get_all_jds(current_user: TokenData = Depends(require_admin)):
     """List all non-deleted JDs for admin."""
-    return [JobDescription(**jd) for jd in db.jds.values() if not jd.get("is_deleted", False)]
+    jds = []
+    for jd_data in db.jds.values():
+        if jd_data.get("is_deleted", False):
+            continue
+            
+        # Ensure jd_name exists for UI
+        if not jd_data.get("jd_name"):
+            intel = jd_data.get("intelligence", {})
+            name = intel.get("role_context", {}).get("primary_role")
+            if not name and jd_data.get("jd_blob_path"):
+                name = jd_data["jd_blob_path"].split("/")[-1].split("_", 2)[-1]
+            jd_data["jd_name"] = name or "JD (Name unavailable)"
+            
+        jds.append(JobDescription(**jd_data))
+    return jds
 
 @app.delete("/admin/job-descriptions/{job_id}")
 async def delete_jd(job_id: str, current_user: TokenData = Depends(require_admin)):
@@ -241,13 +261,29 @@ async def get_active_jd(current_user: TokenData = Depends(require_user)):
     # Return the first active and non-deleted JD found
     for jd_data in db.jds.values():
         if jd_data.get("status") == "ACTIVE" and not jd_data.get("is_deleted", False):
+            if not jd_data.get("jd_name"):
+                intel = jd_data.get("intelligence", {})
+                name = intel.get("role_context", {}).get("primary_role")
+                if not name and jd_data.get("jd_blob_path"):
+                    name = jd_data["jd_blob_path"].split("/")[-1].split("_", 2)[-1]
+                jd_data["jd_name"] = name or "JD (Name unavailable)"
             return JobDescription(**jd_data)
     return None
 
 @app.get("/user/jds", response_model=List[JobDescription])
 async def get_all_active_jds(current_user: TokenData = Depends(require_user)):
     """Candidate lists all active JDs."""
-    return [JobDescription(**jd) for jd in db.jds.values() if jd.get("status") == "ACTIVE" and not jd.get("is_deleted", False)]
+    jds = []
+    for jd_data in db.jds.values():
+        if jd_data.get("status") == "ACTIVE" and not jd_data.get("is_deleted", False):
+            if not jd_data.get("jd_name"):
+                intel = jd_data.get("intelligence", {})
+                name = intel.get("role_context", {}).get("primary_role")
+                if not name and jd_data.get("jd_blob_path"):
+                    name = jd_data["jd_blob_path"].split("/")[-1].split("_", 2)[-1]
+                jd_data["jd_name"] = name or "JD (Name unavailable)"
+            jds.append(JobDescription(**jd_data))
+    return jds
 
 @app.post("/user/resume/upload", response_model=Resume, status_code=status.HTTP_201_CREATED)
 async def upload_resume(
@@ -342,6 +378,7 @@ class ShortlistRequest(BaseModel):
 
 class CandidateResponse(BaseModel):
     candidate_id: int
+    candidate_name: str = "Candidate (Name unavailable)"
     resume_id: str
     resume_blob_url: str
     jd_id: Optional[str] = None
@@ -441,21 +478,31 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             else:
                 interview_rec = "NO HIRE"
 
+        # Get candidate name
+        user_obj = next((u for u in db.users.values() if str(u.get("id")) == str(r_dict["candidate_id"])), None)
+        candidate_name = user_obj.get("name", "Candidate (Name unavailable)") if user_obj else "Candidate (Name unavailable)"
 
-        # Get JD name
+        # Get JD name (prefer stored name or intelligence, else original filename)
         target_jd_id = r_dict.get("job_id")
         jd_info = db.jds.get(target_jd_id)
         jd_name = "Unassigned"
-        if jd_info and jd_info.get("jd_blob_path"):
-            jd_name = jd_info["jd_blob_path"].split("/")[-1].split("_", 2)[-1] # Extract original filename
+        if jd_info:
+            jd_name = jd_info.get("jd_name")
+            if not jd_name:
+                jd_intel = jd_info.get("intelligence", {})
+                jd_name = jd_intel.get("role_context", {}).get("primary_role")
+                if not jd_name and jd_info.get("jd_blob_path"):
+                    jd_name = jd_info["jd_blob_path"].split("/")[-1].split("_", 2)[-1]
+            jd_name = jd_name or "JD (Name unavailable)"
 
         c = CandidateResponse(
             candidate_id=r_dict["candidate_id"],
+            candidate_name=candidate_name,
             resume_id=r_dict["resume_id"],
             resume_blob_url=blob_url,
             jd_id=target_jd_id,
             jd_name=jd_name,
-            system_score=intel.get("final_score", 0.0) * 10,
+            system_score=r_dict.get("intelligence", {}).get("final_score", 0.0) * 10,
             system_shortlisted=intel.get("shortlist_decision", False),
             system_reason={"summary": summary},
             admin_status=r_dict["status"],

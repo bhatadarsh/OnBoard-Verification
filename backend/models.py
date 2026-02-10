@@ -31,6 +31,7 @@ class TokenData(BaseModel):
 
 class JobDescription(BaseModel):
     job_id: str
+    jd_name: str = "JD (Name unavailable)"
     jd_blob_path: str
     status: Literal["ACTIVE", "INACTIVE"] = "ACTIVE"
     uploaded_at: datetime

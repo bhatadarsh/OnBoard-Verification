@@ -232,7 +232,7 @@ function JDPreview({ jd }) {
         <div>
             <div style={{ marginBottom: '24px' }}>
                 <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' }}>Target Role</div>
-                <div style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a' }}>{roleContext.job_title || jd.job_id}</div>
+                <div style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a' }}>{roleContext.primary_role || jd.jd_name || jd.job_id}</div>
                 {(roleContext.department || roleContext.team_name) && (
                     <div style={{ fontSize: '14px', color: '#475569', marginTop: '2px' }}>
                         {roleContext.department} {roleContext.team_name ? `• ${roleContext.team_name}` : ''}
