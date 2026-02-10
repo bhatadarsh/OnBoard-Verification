@@ -29,6 +29,7 @@ const InterviewSession = () => {
     const ANSWER_TIME = 45;
 
     useEffect(() => {
+        initializeMonitoring();
         loadQuestion();
 
         // 1. Detect Tab Changes / Visibility
@@ -48,7 +49,7 @@ const InterviewSession = () => {
 
         return () => {
             clearAnyTimer();
-            stopRecording();
+            stopRecording(true);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
     }, []);
@@ -66,6 +67,7 @@ const InterviewSession = () => {
             const data = await interviewAPI.getQuestion(interviewId);
 
             if (['COMPLETED', 'COMPLETED_EARLY'].includes(data.status)) {
+                stopRecording(true);
                 setStatus('completed');
                 return;
             }
@@ -98,7 +100,50 @@ const InterviewSession = () => {
     const activeAudioStream = useRef(null);
     const activeVideoStream = useRef(null);
 
+    const initializeMonitoring = async () => {
+        if (activeVideoStream.current) return; // Already running
 
+        try {
+            console.log('Initializing continuous camera monitoring...');
+            const videoStream = await navigator.mediaDevices.getUserMedia({
+                video: { width: 640, height: 480 }
+            });
+            activeVideoStream.current = videoStream;
+            if (videoRef.current) {
+                videoRef.current.srcObject = videoStream;
+            }
+
+            // Start YOLO-based frame capture immediately
+            if (frameIntervalRef.current) clearInterval(frameIntervalRef.current);
+            frameIntervalRef.current = setInterval(captureAndSendFrame, 8000);
+
+        } catch (vErr) {
+            console.error('Initial camera setup failed:', vErr);
+            setError('Camera access is required for this interview. Please enable it.');
+            setStatus('error');
+        }
+    };
+
+    const captureAndSendFrame = () => {
+        if (!videoRef.current || !canvasRef.current || !activeVideoStream.current) return;
+
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+
+        // Only capture if video is actually playing and has data
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Export to base64 (JPEG 0.5 quality for performance)
+            const frameB64 = canvas.toDataURL('image/jpeg', 0.5);
+            interviewAPI.sendVideoFrame(interviewId, frameB64).catch(err => {
+                console.warn('YOLO frame transmit failed:', err);
+            });
+        }
+    };
 
     const handleSubmit = async (submissionType) => {
         if (isSubmittingRef.current) return;
@@ -137,6 +182,7 @@ const InterviewSession = () => {
                 setCheatingScore(res.cheating_score || 0);
 
                 if (res.status === 'COMPLETED') {
+                    stopRecording(true);
                     setStatus('completed');
                 } else if (res.next_question) {
                     setQuestion(res.next_question);
@@ -158,36 +204,28 @@ const InterviewSession = () => {
                 // Use the chunks captured at the moment submission was triggered
                 const audioBlob = new Blob(capturedChunks, { type: recorder.mimeType });
 
-                // Stop tracks fully
-                stopRecording(true);
+                // Stop only audio, keep video monitoring ACTIVE
+                stopRecording(false);
 
                 finishSubmission(audioBlob);
             };
             recorder.stop();
         } else {
-            stopRecording();
+            stopRecording(false);
             finishSubmission(null);
         }
     };
 
-    const stopRecording = (keepRecorderActive = false) => {
-        if (frameIntervalRef.current) {
-            clearInterval(frameIntervalRef.current);
-            frameIntervalRef.current = null;
-        }
-
-        // 1. Handle Recorder
+    const stopRecording = (fullStop = false) => {
+        // 1. Always stop audio recorder when phase ends
         if (mediaRecorderRef.current) {
             const recorder = mediaRecorderRef.current;
-
-            // If we're fully stopping, remove handlers so no ghost calls back
-            if (!keepRecorderActive) {
-                recorder.ondataavailable = null;
-                recorder.onstop = null;
-                if (recorder.state !== 'inactive') {
-                    try { recorder.stop(); } catch (e) { }
-                }
+            recorder.ondataavailable = null;
+            recorder.onstop = null;
+            if (recorder.state !== 'inactive') {
+                try { recorder.stop(); } catch (e) { }
             }
+            mediaRecorderRef.current = null;
         }
 
         // 2. Stop ALL Audio tracks
@@ -198,86 +236,69 @@ const InterviewSession = () => {
             activeAudioStream.current = null;
         }
 
-        // 3. Stop ALL Video tracks
-        if (activeVideoStream.current) {
-            activeVideoStream.current.getTracks().forEach(track => {
-                try { track.stop(); } catch (e) { }
-            });
-            activeVideoStream.current = null;
-        }
+        // 3. ONLY stop video and YOLO if fullStop is requested (interview end)
+        if (fullStop) {
+            if (frameIntervalRef.current) {
+                clearInterval(frameIntervalRef.current);
+                frameIntervalRef.current = null;
+            }
 
-        if (videoRef.current) {
-            videoRef.current.srcObject = null;
+            if (activeVideoStream.current) {
+                activeVideoStream.current.getTracks().forEach(track => {
+                    try { track.stop(); } catch (e) { }
+                });
+                activeVideoStream.current = null;
+            }
+
+            if (videoRef.current) {
+                videoRef.current.srcObject = null;
+            }
         }
     };
 
     const startAnsweringPhase = async () => {
-        // Ensure ALL previous resources are cleared
+        // Stop only audio from previous question if any
         clearAnyTimer();
-        stopRecording();
+        stopRecording(false);
 
         setStatus('answering');
         setTimeLeft(ANSWER_TIME);
 
-        // Reset state for new recording
         audioChunksRef.current = [];
         isSubmittingRef.current = false;
 
-        // Start Recording
+        // Ensure camera is still up (idempotent)
+        if (!activeVideoStream.current) {
+            await initializeMonitoring();
+        }
+
+        // Start Audio Recording
         try {
-            console.log('Requesting media devices...');
+            const audioStream = await navigator.mediaDevices.getUserMedia({
+                audio: { echoCancellation: true, noiseSuppression: true }
+            });
+            activeAudioStream.current = audioStream;
 
-            // 1. Get Video
-            try {
-                const videoStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
-                activeVideoStream.current = videoStream;
-                if (videoRef.current) {
-                    videoRef.current.srcObject = videoStream;
+            const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg', 'audio/mp4', 'audio/wav'];
+            const mimeType = types.find(type => MediaRecorder.isTypeSupported(type)) || '';
+
+            const recorder = new MediaRecorder(audioStream, { mimeType });
+            mediaRecorderRef.current = recorder;
+
+            const turnChunks = [];
+            audioChunksRef.current = turnChunks;
+
+            recorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    turnChunks.push(event.data);
                 }
-            } catch (vErr) {
-                console.warn('Camera failed:', vErr);
-            }
+            };
 
-            // 2. Get Audio
-            try {
-                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-                activeAudioStream.current = audioStream;
-
-                const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg', 'audio/mp4', 'audio/wav'];
-                const mimeType = types.find(type => MediaRecorder.isTypeSupported(type)) || '';
-
-                const recorder = new MediaRecorder(audioStream, { mimeType });
-                mediaRecorderRef.current = recorder;
-
-                // Closure-safe chunk handling: This array belongs ONLY to this recorder
-                const turnChunks = [];
-                // Store in ref so handleSubmit can access it
-                audioChunksRef.current = turnChunks;
-
-                recorder.ondataavailable = (event) => {
-                    if (event.data && event.data.size > 0) {
-                        turnChunks.push(event.data);
-                    }
-                };
-
-                recorder.onstop = () => {
-                    console.log(`Recorder onstop. Accumulated chunks: ${turnChunks.length}`);
-                };
-
-                recorder.start(1000);
-                console.log('MediaRecorder started with mimeType:', mimeType);
-            } catch (aErr) {
-                console.error('Audio access denied:', aErr);
-                setError('Microphone access denied. Please enable it to record.');
-            }
-
-            if (activeVideoStream.current) {
-                if (frameIntervalRef.current) clearInterval(frameIntervalRef.current);
-                frameIntervalRef.current = setInterval(captureAndSendFrame, 8000);
-            }
-
-        } catch (err) {
-            console.error('Media init failed:', err);
+            recorder.start(1000);
+            console.log('Audio recording started for answer phase.');
+        } catch (aErr) {
+            console.error('Audio access denied:', aErr);
+            setError('Microphone access denied. Please enable it to record your answer.');
         }
 
         // START ANSWER TIMER
@@ -313,8 +334,8 @@ const InterviewSession = () => {
                 audioFile = new File([audioBlob], `final_answer.${extension}`, { type: mimeType });
             }
 
-            stopRecording();
             await interviewAPI.endInterview(interviewId, audioFile);
+            stopRecording(true);
             setStatus('completed');
         } catch (err) {
             console.error('Failed to end interview:', err);
