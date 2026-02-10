@@ -16,6 +16,7 @@ const InterviewSession = () => {
     const [showEndModal, setShowEndModal] = useState(false);
 
     const isSubmittingRef = useRef(false);
+    const isInitializingRef = useRef(false);
 
     const timerRef = useRef(null);
     const mediaRecorderRef = useRef(null);
@@ -23,6 +24,9 @@ const InterviewSession = () => {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const frameIntervalRef = useRef(null);
+    const videoRecorderRef = useRef(null);
+    const chunkIndexRef = useRef(0);
+    const pendingUploadsRef = useRef(0);
 
     // Constants
     const READING_TIME = 20;
@@ -97,11 +101,19 @@ const InterviewSession = () => {
         }, 1000);
     };
 
+    useEffect(() => {
+        if (status === 'completed' || status === 'error') {
+            console.log(`Interview phase finished (${status}): Automatically releasing camera and microphone.`);
+            stopRecording(true);
+        }
+    }, [status]);
+
     const activeAudioStream = useRef(null);
     const activeVideoStream = useRef(null);
 
     const initializeMonitoring = async () => {
-        if (activeVideoStream.current) return; // Already running
+        if (activeVideoStream.current || isInitializingRef.current) return;
+        isInitializingRef.current = true;
 
         try {
             console.log('Initializing continuous camera monitoring...');
@@ -115,12 +127,17 @@ const InterviewSession = () => {
 
             // Start YOLO-based frame capture immediately
             if (frameIntervalRef.current) clearInterval(frameIntervalRef.current);
-            frameIntervalRef.current = setInterval(captureAndSendFrame, 8000);
+            frameIntervalRef.current = setInterval(captureAndSendFrame, 3000);
+
+            isInitializingRef.current = false;
+            console.log('Camera monitoring active (No full recording).');
 
         } catch (vErr) {
             console.error('Initial camera setup failed:', vErr);
             setError('Camera access is required for this interview. Please enable it.');
             setStatus('error');
+        } finally {
+            isInitializingRef.current = false;
         }
     };
 
@@ -133,12 +150,24 @@ const InterviewSession = () => {
 
         // Only capture if video is actually playing and has data
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // Force 640x480 for better YOLO accuracy without being massive
+            canvas.width = 640;
+            canvas.height = 480;
+            context.drawImage(video, 0, 0, 640, 480);
 
-            // Export to base64 (JPEG 0.5 quality for performance)
-            const frameB64 = canvas.toDataURL('image/jpeg', 0.5);
+            // Export to base64 (JPEG 0.3 quality for minimal size)
+            const frameB64 = canvas.toDataURL('image/jpeg', 0.3);
+
+            // Log size if it seems unusually large
+            if (frameB64.length > 500000) {
+                console.warn(`Frame B64 size warning: ${Math.round(frameB64.length / 1024)} KB`);
+            }
+
+            // Heartbeat for debugging
+            if (Math.random() > 0.8) {
+                console.log(`[YOLO] Transmitting frame to backend (${Math.round(frameB64.length / 1024)} KB)`);
+            }
+
             interviewAPI.sendVideoFrame(interviewId, frameB64).catch(err => {
                 console.warn('YOLO frame transmit failed:', err);
             });
@@ -158,6 +187,24 @@ const InterviewSession = () => {
 
         const finishSubmission = async (blob) => {
             try {
+                // Determine if this is the FINAL question
+                const isLastQuestion = question?.question_index === question?.total_questions;
+
+                if (isLastQuestion) {
+                    console.log("Last question detected. Finalizing video recording...");
+                    if (videoRecorderRef.current && videoRecorderRef.current.state !== 'inactive') {
+                        // Stop recorder, which triggers the final ondataavailable
+                        await new Promise(resolve => {
+                            videoRecorderRef.current.onstop = resolve;
+                            videoRecorderRef.current.stop();
+                        });
+                    }
+                    // Wait for all chunk uploads to finish
+                    while (pendingUploadsRef.current > 0) {
+                        await new Promise(r => setTimeout(r, 200));
+                    }
+                }
+
                 if (!blob || blob.size === 0) {
                     console.warn('Empty audio blob captured for submission:', submissionType);
                 } else {
@@ -217,11 +264,11 @@ const InterviewSession = () => {
     };
 
     const stopRecording = (fullStop = false) => {
+        console.log(`[Hardware] Turning OFF. FullStop: ${fullStop}`);
+
         // 1. Always stop audio recorder when phase ends
         if (mediaRecorderRef.current) {
             const recorder = mediaRecorderRef.current;
-            recorder.ondataavailable = null;
-            recorder.onstop = null;
             if (recorder.state !== 'inactive') {
                 try { recorder.stop(); } catch (e) { }
             }
@@ -231,13 +278,24 @@ const InterviewSession = () => {
         // 2. Stop ALL Audio tracks
         if (activeAudioStream.current) {
             activeAudioStream.current.getTracks().forEach(track => {
-                try { track.stop(); } catch (e) { }
+                try {
+                    track.enabled = false;
+                    track.stop();
+                    console.log(`Stopped audio track: ${track.label}`);
+                } catch (e) { }
             });
             activeAudioStream.current = null;
         }
 
         // 3. ONLY stop video and YOLO if fullStop is requested (interview end)
         if (fullStop) {
+            if (videoRecorderRef.current) {
+                if (videoRecorderRef.current.state !== 'inactive') {
+                    try { videoRecorderRef.current.stop(); } catch (e) { }
+                }
+                videoRecorderRef.current = null;
+            }
+
             if (frameIntervalRef.current) {
                 clearInterval(frameIntervalRef.current);
                 frameIntervalRef.current = null;
@@ -245,13 +303,33 @@ const InterviewSession = () => {
 
             if (activeVideoStream.current) {
                 activeVideoStream.current.getTracks().forEach(track => {
-                    try { track.stop(); } catch (e) { }
+                    try {
+                        track.enabled = false;
+                        track.stop();
+                        console.log(`Stopped video track: ${track.label}`);
+                    } catch (e) { }
                 });
                 activeVideoStream.current = null;
             }
 
             if (videoRef.current) {
+                if (videoRef.current.srcObject) {
+                    const tracks = videoRef.current.srcObject.getTracks();
+                    tracks.forEach(t => {
+                        try {
+                            t.enabled = false;
+                            t.stop();
+                        } catch (e) { }
+                    });
+                }
                 videoRef.current.srcObject = null;
+                videoRef.current.load(); // Force release of hardware decoder
+            }
+
+            // Release YOLO references
+            if (canvasRef.current) {
+                const context = canvasRef.current.getContext('2d');
+                if (context) context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
             }
         }
     };
@@ -275,14 +353,18 @@ const InterviewSession = () => {
         // Start Audio Recording
         try {
             const audioStream = await navigator.mediaDevices.getUserMedia({
-                audio: { echoCancellation: true, noiseSuppression: true }
+                audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
             });
             activeAudioStream.current = audioStream;
 
-            const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg', 'audio/mp4', 'audio/wav'];
-            const mimeType = types.find(type => MediaRecorder.isTypeSupported(type)) || '';
+            const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4', 'audio/wav'];
+            const mimeType = types.find(type => MediaRecorder.isTypeSupported(type)) || 'audio/webm';
+            console.log(`Selected Audio MimeType: ${mimeType}`);
 
-            const recorder = new MediaRecorder(audioStream, { mimeType });
+            const recorder = new MediaRecorder(audioStream, {
+                mimeType,
+                audioBitsPerSecond: 16000 // Ultra low bitrate to stay under 2.1MB limit
+            });
             mediaRecorderRef.current = recorder;
 
             const turnChunks = [];
@@ -326,6 +408,17 @@ const InterviewSession = () => {
         const capturedChunks = [...audioChunksRef.current];
 
         try {
+            // Stop video recorder and wait for last chunks
+            if (videoRecorderRef.current && videoRecorderRef.current.state !== 'inactive') {
+                await new Promise(resolve => {
+                    videoRecorderRef.current.onstop = resolve;
+                    videoRecorderRef.current.stop();
+                });
+            }
+            while (pendingUploadsRef.current > 0) {
+                await new Promise(r => setTimeout(r, 200));
+            }
+
             let audioFile = null;
             if (recorder && recorder.state === 'recording') {
                 const audioBlob = new Blob(capturedChunks, { type: recorder.mimeType || 'audio/webm' });

@@ -62,3 +62,5 @@ class InterviewSession(BaseModel):
     cheating_score: float = 0.0
     cheating_events: list = []
     warnings: list = []
+    video_blob_path: Optional[str] = None
+    video_blocks: list = []

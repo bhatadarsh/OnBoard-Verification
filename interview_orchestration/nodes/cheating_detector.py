@@ -81,14 +81,16 @@ def detect_misconduct(state: dict, current_answer: str, time_taken: float, video
     if video_frames:
         visual_flags = _analyze_visuals(video_frames)
         flags.extend(visual_flags)
-        if "HUMAN_DETECTED" in visual_flags:
-            cheating_score += 0.5
-        if "MOBILE_USAGE_DETECTED" in visual_flags:
-            cheating_score += 0.6
+        if "MULTIPLE_PEOPLE_DETECTED" in visual_flags:
+            cheating_score += 1.0 
+        if "MOBILE_DETECTED" in visual_flags:
+            cheating_score += 1.0 
+        if "COMBINED_MISCONDUCT_PEOPLE_AND_MOBILE" in visual_flags:
+            cheating_score += 1.5 # Extra penalty for combined case
         if "NOT_IN_FRAME" in visual_flags:
-            cheating_score += 0.2
-        if "SUSPICIOUS_OBJECT_DETECTED" in visual_flags:
             cheating_score += 0.3
+        if "SUSPICIOUS_OBJECT_DETECTED" in visual_flags:
+            cheating_score += 0.5
 
     # ------------------------------------------------
     # MODE 3: AUDIO / SPEECH (Partial implementation)
@@ -115,52 +117,87 @@ def detect_misconduct(state: dict, current_answer: str, time_taken: float, video
         "timestamp": time.time()
     }
 
-def _analyze_visuals(frames_b64: List[str]) -> List[str]:
+def _analyze_visuals(video_frames: List[str]) -> List[str]:
     flags = []
     person_counts = []
     mobile_detected = False
 
-    for img_b64 in frames_b64:
+    if not video_frames:
+        print("DEBUG YOLO: No video frames received for this turn.")
+        return []
+
+    print(f"DEBUG YOLO: Starting analysis of {len(video_frames)} frames...")
+    
+    # Check model health
+    if _yolo_model is None:
+        print("CRITICAL YOLO: Model is None - cannot process visuals")
+        return ["VIDEO_SYSTEM_ERROR"]
+
+    for i, img_b64 in enumerate(video_frames):
         try:
+            if not img_b64:
+                print(f"DEBUG YOLO: Frame {i+1} is empty string")
+                continue
+                
             # Decode image
             img_data = base64.b64decode(img_b64.split(",")[-1])
             nparr = np.frombuffer(img_data, np.uint8)
             frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
             if frame is None:
+                print(f"DEBUG YOLO: Frame {i+1} decoding failed (imdecode returned None)")
                 continue
 
             # Run YOLO
             results = _yolo_model(frame, verbose=False)[0]
             
-            # 1. Count persons
-            people = [r for r in results.boxes if results.names[int(r.cls[0])].lower() == "person"]
+            # Detect objects
+            detected_classes = [results.names[int(r.cls[0])].lower() for r in results.boxes]
+            confidences = [float(r.conf[0]) for r in results.boxes]
+            
+            # 1. Count persons (threshold 0.4)
+            people = [r for r in results.boxes if results.names[int(r.cls[0])].lower() == "person" and r.conf[0] > 0.4]
             person_counts.append(len(people))
 
-            # 2. Detect Cell Phones
-            phones = [r for r in results.boxes if results.names[int(r.cls[0])].lower() in ["cell phone", "phone"] and r.conf[0] > 0.5]
+            # 2. Detect Cell Phones (threshold 0.3)
+            phones = [r for r in results.boxes if results.names[int(r.cls[0])].lower() in ["cell phone", "phone"] and r.conf[0] > 0.3]
             if phones:
                 mobile_detected = True
 
-            # 3. Detect Suspicious Objects (laptop, book, remote)
+            # 3. Detect Suspicious Objects
             suspicious_classes = ["laptop", "book", "remote"]
-            found_suspicious = [r for r in results.boxes if results.names[int(r.cls[0])].lower() in suspicious_classes and r.conf[0] > 0.4]
+            found_suspicious = [r for r in results.boxes if results.names[int(r.cls[0])].lower() in suspicious_classes and r.conf[0] > 0.3]
+            
+            print(f"DEBUG YOLO: Frame {i+1}/{len(video_frames)} Breakdown:")
+            print(f"   - Objects: {detected_classes}")
+            print(f"   - Conf: {confidences}")
+            print(f"   - Persons found: {len(people)}, Mobile found: {len(phones)}")
+
             if found_suspicious:
                 flags.append("SUSPICIOUS_OBJECT_DETECTED")
             
             if len(people) > 1 or phones:
-                print(f"DEBUG: Visual match! People: {len(people)}, Phone: {bool(phones)}")
+                print(f"CRITICAL MISCONDUCT DETECTED in Frame {i+1}: People: {len(people)}, Phone: {bool(phones)}")
         except Exception as e:
-            print(f"Error analyzing frame: {e}")
+            print(f"Error analyzing frame {i+1}: {e}")
 
     if person_counts:
-        if max(person_counts) > 1:
-            flags.append("HUMAN_DETECTED")
-        if min(person_counts) == 0:
+        max_p = max(person_counts)
+        min_p = min(person_counts)
+        avg_p = sum(person_counts) / len(person_counts)
+        print(f"DEBUG YOLO: Turn Visual Stats - Max People: {max_p}, Min People: {min_p}, Avg People: {avg_p:.2f}")
+
+        if max_p > 1:
+            flags.append("MULTIPLE_PEOPLE_DETECTED")
+        if min_p == 0:
             flags.append("NOT_IN_FRAME")
     
     if mobile_detected:
-        flags.append("MOBILE_USAGE_DETECTED")
+        flags.append("MOBILE_DETECTED")
+
+    # Combined Case (High Severity)
+    if "MULTIPLE_PEOPLE_DETECTED" in flags and "MOBILE_DETECTED" in flags:
+        flags.append("COMBINED_MISCONDUCT_PEOPLE_AND_MOBILE")
 
     return flags
 

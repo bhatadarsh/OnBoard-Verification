@@ -489,7 +489,15 @@ function ResumeList({ allJds, filterJobId, setFilterJobId }) {
                                     <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                         {r.misconduct_events.map((evt, i) => (
                                             <div key={i} style={{ padding: '12px', background: '#fef2f2', borderRadius: '8px', border: '1px solid #fee2e2', fontSize: '13px', color: '#b91c1c' }}>
-                                                <strong>{new Date(evt.timestamp * 1000).toLocaleTimeString()}</strong>: {evt.cheating_flags ? evt.cheating_flags.join(', ') : (evt.event_type || 'Unknown Event').replace('_', ' ')}
+                                                <strong>{new Date(evt.timestamp * 1000).toLocaleTimeString()}</strong>: {
+                                                    evt.cheating_flags ? evt.cheating_flags.map(f => {
+                                                        if (f === 'COMBINED_MISCONDUCT_PEOPLE_AND_MOBILE') return '🚨 CRITICAL: Multiple people detected with mobile usage';
+                                                        if (f === 'MULTIPLE_PEOPLE_DETECTED') return 'Multiple people in frame';
+                                                        if (f === 'MOBILE_DETECTED') return 'Mobile phone detected';
+                                                        if (f === 'NOT_IN_FRAME') return 'Candidate not in frame';
+                                                        return f.replace(/_/g, ' ');
+                                                    }).join(' | ') : (evt.event_type || 'Unknown').replace(/_/g, ' ')
+                                                }
                                             </div>
                                         ))}
                                     </div>
@@ -539,6 +547,7 @@ function ResumeList({ allJds, filterJobId, setFilterJobId }) {
                     ))}
                 </div>
             )}
+
         </div>
     );
 }

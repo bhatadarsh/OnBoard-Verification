@@ -83,6 +83,18 @@ def evaluate_interview(state: dict) -> dict:
             
             eval_data = extract_json(response.content)
             if eval_data:
+                # MANDATORY SCORING FLOOR (Safe Guard)
+                raw_score = float(eval_data.get("score", 0.0))
+                answer_text = turn.get("answer_text", "").strip().lower()
+                question_text = turn.get("question", "").strip().lower()
+
+                # Rule: ONLY assign 0.0 if actually empty or verbatim question repetition
+                if answer_text and answer_text not in ["(no response)", "n/a", ""] and answer_text != question_text:
+                    if raw_score < 1.0:
+                        print(f"DEBUG: Applying scoring floor. Answer '{answer_text[:30]}...' was {raw_score}, bumped to 1.0")
+                        eval_data["score"] = 1.0
+                        eval_data["reasoning_notes"] = f"(Floor Applied) {eval_data.get('reasoning_notes', '')}"
+
                 # Attach evaluation directly to the turn for persistence
                 turn["evaluation"] = eval_data
                 evaluation_reports.append(eval_data)

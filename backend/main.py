@@ -18,6 +18,7 @@ import logging
 import time
 from pydub import AudioSegment
 import io
+import base64
 
 from config import settings
 from models import UserCreate, UserLogin, User, Token, TokenData, JobDescription, Resume, InterviewSession
@@ -54,6 +55,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def log_request_size(request, call_next):
+    # Skip for large bodies to avoid reading into memory twice, but we can't easily check size without reading
+    # However, for debugging we will just check Content-Length header
+    content_length = request.headers.get("Content-Length")
+    if content_length and int(content_length) > 1024 * 1024: # 1MB
+        print(f"CRITICAL DEBUG: Large Request Detected! Path: {request.url.path}, Size: {content_length} bytes")
+    return await call_next(request)
 
 @app.get("/")
 async def root():
@@ -430,6 +440,7 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
                 interview_rec = "HIRE"
             else:
                 interview_rec = "NO HIRE"
+
 
         # Get JD name
         target_jd_id = r_dict.get("job_id")
@@ -923,12 +934,14 @@ async def store_video_frame(interview_id: str, frame_data: dict, current_user: T
     if not session_data:
         return {"status": "error", "message": "Session not found"}
         
-    # Buffer up to 5 frames per question to avoid memory bloat
+    # Buffer up to 30 frames per question (~90 seconds of answer time)
     frames = session_data.setdefault("buffered_video_frames", [])
-    if len(frames) < 5:
-        frames.append(frame_data.get("frame")) # Expecting base64 string
-        # db.save() is expensive for every frame, we rely on in-memory until next save
-        # or we could just skip saving frames to disk at all if we process them instantly
+    if len(frames) < 30:
+        frame_str = frame_data.get("frame")
+        if frame_str:
+            frames.append(frame_str)
+            if len(frames) % 5 == 0:
+                print(f"DEBUG: Interview {interview_id} has {len(frames)} frames buffered.")
     return {"status": "success"}
 
 @app.post("/interview/{interview_id}/event")
@@ -1189,6 +1202,7 @@ async def submit_answer(
                     print(f"DEBUG: Full comprehensive report persisted to Azure: {report_blob_name}")
         except Exception as storage_err:
             print(f"Trace Storage Warning (Non-blocking): {storage_err}")
+
         
         # 6. Return Structured Response for Smooth UX
         return {
@@ -1321,6 +1335,7 @@ async def end_interview_early(
             content_type="application/json"
         )
     except: pass
+
 
     if file_path and os.path.exists(file_path):
         os.remove(file_path)

@@ -89,12 +89,12 @@
       "hashed_password": "$2b$12$qc/m1rbR63FXSFjK6S0ov.AbVMj4WwtzsljqIqsrtEBqCSTXHZ/HG"
     },
     "user7@u.com": {
-      "id": 46,
+      "id": 54,
       "name": "user7",
       "email": "user7@u.com",
       "role": "user",
       "status": "active",
-      "hashed_password": "$2b$12$fBPovS9tXXTFnLo2Kd.gAuHy7nqtC19i79y2KU02Ks.Pu/kdm4JLO"
+      "hashed_password": "$2b$12$x2K7fwx.VERA5iveXTVKiuud8BbDqKAxXKvLnk8YKmJtwP0ZniEf6"
     }
   },
   "jds": {
@@ -1309,15 +1309,15 @@
       }
     },
     {
-      "candidate_id": 46,
+      "candidate_id": 54,
       "job_id": "JOB_6",
-      "resume_id": "556953a9-03ca-4900-89bd-634e0b3adaed",
-      "resume_blob_path": "resumes/CAND_46/20260210_131650_Matching_Resume_AI_Engineer.docx",
-      "status": "SHORTLISTED",
-      "interview_unlocked": true,
-      "uploaded_at": "2026-02-10 13:16:57.750407",
+      "resume_id": "25a38760-6314-4b59-977c-c5038e010ef8",
+      "resume_blob_path": "resumes/CAND_54/20260210_163242_Matching_Resume_AI_Engineer.docx",
+      "status": "SELECTED",
+      "interview_unlocked": false,
+      "uploaded_at": "2026-02-10 16:32:49.968602",
       "intelligence": {
-        "candidate_id": "46",
+        "candidate_id": "54",
         "raw_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\n\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\n\nTECHNICAL SKILLS\n\t\u2022\tProgramming: Python (Pandas, NumPy)\n\t\u2022\tDatabases: SQL (MySQL, PostgreSQL)\n\t\u2022\tData Visualization: Power BI, Tableau\n\t\u2022\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t\u2022\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\n\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t\u2022\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t\u2022\tDeveloped complex SQL queries to extract and transform data for reporting\n\t\u2022\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t\u2022\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t\u2022\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t\u2022\tEnsured data accuracy, consistency, and integrity across reports\n\t\u2022\tPresented data findings and recommendations to non-technical teams\n\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\n\nCERTIFICATIONS\n\t\u2022\tData Analysis with Python\n\t\u2022\tSQL for Data Analytics\n\nKEY ACHIEVEMENTS\n\t\u2022\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t\u2022\tSupported strategic business decisions by delivering actionable data insights",
         "normalized_resume": "Name: Rahul Sharma\nLocation: Bengaluru, India\nPhone: +91-9XXXXXXXXX\nEmail: rahul.sharma@email.com\nLinkedIn: linkedin.com/in/rahulsharma\nPROFESSIONAL SUMMARY\nDetail-oriented Data Analyst with 3 years of experience in collecting, cleaning, and analyzing large datasets to drive business insights. Strong expertise in SQL, Python (Pandas, NumPy), and Power BI, with proven ability to present actionable insights to stakeholders.\nTECHNICAL SKILLS\n\t-\tProgramming: Python (Pandas, NumPy)\n\t-\tDatabases: SQL (MySQL, PostgreSQL)\n\t-\tData Visualization: Power BI, Tableau\n\t-\tData Analysis: Data Cleaning, Data Modeling, Exploratory Data Analysis\n\t-\tTools: Excel (Pivot Tables, VLOOKUP, formulas)\nPROFESSIONAL EXPERIENCE\nData Analyst\nABC Technologies Pvt. Ltd. | Bengaluru\nJune 2022 \u2013 Present\n\t-\tCollected, cleaned, and analyzed large datasets from multiple business sources\n\t-\tDeveloped complex SQL queries to extract and transform data for reporting\n\t-\tPerformed data analysis using Python (Pandas, NumPy) to identify trends and patterns\n\t-\tDesigned and maintained interactive dashboards using Power BI and Tableau\n\t-\tWorked closely with business stakeholders to gather requirements and deliver insights\n\t-\tEnsured data accuracy, consistency, and integrity across reports\n\t-\tPresented data findings and recommendations to non-technical teams\nEDUCATION\nBachelor of Technology in Computer Science\nXYZ University | 2018 \u2013 2022\nCERTIFICATIONS\n\t-\tData Analysis with Python\n\t-\tSQL for Data Analytics\nKEY ACHIEVEMENTS\n\t-\tImproved reporting efficiency by 30% through automated Power BI dashboards\n\t-\tSupported strategic business decisions by delivering actionable data insights",
         "resume_claims": {
@@ -2370,11 +2370,11 @@
       "buffered_video_frames": []
     },
     {
-      "interview_id": "32bbe238-5a84-4735-94b3-14d232f104d0",
-      "candidate_id": 46,
-      "current_question": "How would you implement the query optimization steps you mentioned earlier in a real-world scenario, considering the potential trade-offs between query complexity and performance?",
-      "status": "COMPLETED_EARLY",
-      "created_at": "2026-02-10 13:17:31.042502",
+      "interview_id": "9c450f82-d82a-41d4-b56f-f3abdfdda372",
+      "candidate_id": 54,
+      "current_question": "How would you handle a situation where your automated data validation process fails, and incorrect data is still inserted into the system?",
+      "status": "COMPLETED",
+      "created_at": "2026-02-10 16:33:15.306970",
       "focus_areas": [
         {
           "order": 1,
@@ -2410,147 +2410,668 @@
           "interview_goal": "Assess implementation understanding and practical experience"
         }
       ],
-      "current_topic": "write complex sql queries",
-      "current_topic_index": 0,
-      "current_followup_count": 2,
+      "current_topic": "ensure data accuracy consistency and integrity",
+      "current_topic_index": 2,
+      "current_followup_count": 5,
       "interview_trace": [
         {
           "topic": "write complex sql queries",
           "question": "Can you describe a recent situation where you had to optimize a slow-running SQL query, and what steps you took to improve its performance?",
-          "answer_text": "Can you describe a recent situation where you had to optimise slow running SQL career in odd steps you took to improve its performance?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
           "raw_audio_blob": null,
           "followup_index": 0,
           "question_type": "initial",
-          "timestamp": 1770709710.149906,
+          "timestamp": 1770721507.17971,
           "evaluation": {
             "answer_id": "turn_1",
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "Repeats the question",
-              "Lacks technical substance",
-              "Poor communication",
-              "No relevant experience"
+              "Relevance: The candidate did not provide a relevant response.",
+              "Depth of Understanding: The candidate did not demonstrate any technical understanding.",
+              "Technical Correctness: The candidate did not provide any accurate statements.",
+              "Practical Experience Evidence: The candidate did not provide any real-world example.",
+              "Reasoning Ability: The candidate did not explain any logical flow or trade-offs.",
+              "Communication Clarity: The candidate did not provide a structured response."
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Relevant situation",
-                "Problem identification",
+                "Situation description",
+                "Problem statement",
                 "Optimization steps",
-                "Performance improvement"
+                "Technical details",
+                "Real-world example",
+                "Conclusion"
               ],
               "covered": [],
               "missed": [
-                "All aspects of the expected answer outline"
+                "Situation description",
+                "Problem statement",
+                "Optimization steps",
+                "Technical details",
+                "Real-world example",
+                "Conclusion"
               ]
             },
-            "reasoning_notes": "The candidate's answer is a clear example of a non-answer, lacking technical substance, poor communication, and no relevant experience.",
+            "reasoning_notes": "The candidate's answer did not meet any of the evaluation criteria, indicating a lack of preparation or understanding of the topic.",
             "confidence_level": "LOW"
           }
         },
         {
           "topic": "write complex sql queries",
-          "question": "Can you walk me through the specific steps you took to identify the bottleneck in that slow-running SQL query, and what metrics or tools you used to measure the improvement in performance?",
-          "answer_text": "Can you walk me through the specific steps you could identify the bottleneck in the slow running SQL query and what matrix outputs you urge to measure the improvement in purpose?",
+          "question": "Can you provide a concrete example of a complex SQL query where you would use a subquery to improve performance?",
+          "answer_text": "A common concrete example of losing is a variable. Input performance means optimizing a query that calculates maintenance of whole numbers across average data. Software teams of middle functions are very large. Demands can sometimes be less efficient and close to the scenario.",
           "raw_audio_blob": null,
           "followup_index": 1,
           "question_type": "followup",
-          "timestamp": 1770709746.5107179,
+          "timestamp": 1770721567.3328772,
           "evaluation": {
             "answer_id": "turn_2",
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
               "Lack of technical substance",
-              "Repetition of the question",
-              "No specific steps or metrics provided",
-              "No real-world examples or hands-on exposure"
+              "Vagueness and unclear statements",
+              "Failure to provide a concrete example of a complex SQL query",
+              "No demonstration of understanding of underlying principles"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Identifying the bottleneck",
-                "Metrics or tools used",
-                "Improvement in performance"
+                "Introduction to the scenario",
+                "Problem statement",
+                "Subquery explanation",
+                "Example query",
+                "Performance improvement"
+              ],
+              "covered": [],
+              "missed": [
+                "Introduction to the scenario",
+                "Problem statement",
+                "Subquery explanation",
+                "Example query",
+                "Performance improvement"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer does not demonstrate any understanding of the question or the underlying principles. The answer is vague and lacks specificity.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "How would you handle indexing in this query, considering the large dataset and the fact that it's calculating averages across whole numbers?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770721625.5477371,
+          "evaluation": {
+            "answer_id": "turn_3",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "No audible response",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identifying the need for indexing",
+                "Choosing the right index type",
+                "Considering the query pattern",
+                "Optimizing the index",
+                "Monitoring and maintaining the index"
+              ],
+              "covered": [],
+              "missed": [
+                "All points in the expected focus"
+              ]
+            },
+            "reasoning_notes": "The candidate's inability to provide an audible response and lack of technical substance make it difficult to evaluate their understanding of indexing in complex SQL queries.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "write complex sql queries",
+          "question": "Can you walk me through your thought process when deciding to structure the query in the way you did, and how you determined that approach was the most efficient?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770721670.017338,
+          "evaluation": {
+            "answer_id": "turn_4",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "No audible response",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Thought process",
+                "SQL query optimization techniques",
+                "Practical experience evidence",
+                "Reasoning ability",
+                "Communication clarity"
               ],
               "covered": [],
               "missed": [
                 "All expected points"
               ]
             },
-            "reasoning_notes": "The candidate's answer lacks technical substance and fails to address the question directly. The response is a repetition of the question, and the candidate does not provide any specific steps or metrics used to identify the bottleneck or measure the improvement in performance.",
+            "reasoning_notes": "The candidate's lack of audible response and failure to provide any technical substance make it impossible to assess their thought process, depth of understanding, technical correctness, practical experience evidence, reasoning ability, or communication clarity.",
             "confidence_level": "LOW"
           }
         },
         {
           "topic": "write complex sql queries",
-          "question": "How would you implement the query optimization steps you mentioned earlier in a real-world scenario, considering the potential trade-offs between query complexity and performance?",
-          "answer_text": "[SKIPPED] (Candidate ended interview early)",
-          "timestamp": 1770709753.11741,
-          "followup_index": 2,
+          "question": "What are some potential edge cases or failure scenarios you'd anticipate when executing this query, and how would you handle them?",
+          "answer_text": "When executing a user query, several potential edge cases and failure scenarios can arise. These issues are generally categorized by the nature of the user input system limitations, and the inherent behavior of the AI models. Potential edge cases and failures in areas are ambiguous or vague queries, out-of-scope requests from ingestion and jailbreaking, actual inaccuracies, data and context limitations, complex or multi-step regime failures, input boundary violations.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
           "question_type": "followup",
+          "timestamp": 1770721737.865112,
           "evaluation": {
-            "answer_id": "turn_3",
-            "score": 0.0,
-            "strengths": [],
-            "weaknesses": [],
+            "answer_id": "turn_5",
+            "score": 8.0,
+            "strengths": [
+              "Demonstrated awareness of potential edge cases and failure scenarios in executing SQL queries.",
+              "Identified various categories of potential issues, including user input system limitations and AI model behavior."
+            ],
+            "weaknesses": [
+              "Lacked specific examples or real-world experiences to support their claims.",
+              "Failed to provide a clear, step-by-step approach to handling edge cases and failure scenarios."
+            ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Query optimization steps",
-                "Trade-offs between query complexity and performance",
-                "Practical experience evidence",
-                "Reasoning ability",
-                "Communication clarity"
+                "Potential edge cases and failure scenarios in executing SQL queries, such as ambiguous or vague queries, out-of-scope requests, and data limitations.",
+                "Approaches to handling these edge cases, including error handling, data validation, and query optimization."
+              ],
+              "covered": [
+                "Potential edge cases and failure scenarios in executing SQL queries",
+                "Categories of potential issues, including user input system limitations and AI model behavior"
+              ],
+              "missed": [
+                "Specific examples or real-world experiences to support their claims",
+                "Clear, step-by-step approach to handling edge cases and failure scenarios"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of potential edge cases and failure scenarios in executing SQL queries. However, they lacked specific examples or real-world experiences to support their claims, and failed to provide a clear, step-by-step approach to handling these edge cases. Overall, their answer was relevant and showed a good depth of understanding, but could be improved with more practical experience evidence and technical correctness.",
+            "confidence_level": "MEDIUM"
+          }
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you describe a time when you had to analyze a large dataset in Python and identify a key trend or insight that informed a business decision?",
+          "answer_text": "In my previous role as a data analyst, I was responsible for analyzing the large scale customer transactional data set for an e-commerce client to identify why customer retention was declined in the last quarter of 2024. Here is how I tracked the problem using Python And influenced the business decision. The challenge is data cleaning and processing key insight identification. The business decision outcome is the company implemented this targeted marketing.",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770721814.759947,
+          "evaluation": {
+            "answer_id": "turn_6",
+            "score": 0.0,
+            "strengths": [
+              "Provides a real-world example",
+              "Demonstrates basic understanding of the problem and approach"
+            ],
+            "weaknesses": [
+              "Lacks specificity and clarity",
+              "Inaccurate technical details",
+              "Lacking logical flow and cause-effect explanation",
+              "Unclear communication"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Introduction",
+                "Problem Statement",
+                "Methodology",
+                "Key Insight",
+                "Business Decision",
+                "Technical Details"
+              ],
+              "covered": [
+                "Problem Statement",
+                "Methodology",
+                "Business Decision"
+              ],
+              "missed": [
+                "Introduction",
+                "Key Insight",
+                "Technical Details"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates a basic understanding of the problem and approach, but lacks specificity, clarity, and technical details. The answer is somewhat relevant, but it lacks logical flow and cause-effect explanation. The candidate's experience is evident, but it is not well-articulated.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through a specific data cleaning step you performed during this analysis, and how you determined it was the most effective approach?",
+          "answer_text": "Critical data cleaning step by performance handling missing values in a customer income column. Near approximately 15% of the data was missing. Here is the workthrough of that process. Instead of removing the rows or losing the overall name, I decided to fill the missing income values. Using the median income of customers professional role processes, I calculated the median income for each category in the job title application.",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770721890.926733,
+          "evaluation": {
+            "answer_id": "turn_7",
+            "score": 8.0,
+            "strengths": [
+              "Demonstrated a clear understanding of data cleaning and handling missing values",
+              "Provided a specific example from the analysis",
+              "Showcased practical experience with data analysis using Python"
+            ],
+            "weaknesses": [
+              "Lacked a clear explanation of the trade-offs between different approaches",
+              "Did not provide a detailed step-by-step process for the data cleaning step"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Specific data cleaning step",
+                "Rationale for choosing the approach",
+                "Trade-offs and potential pitfalls"
+              ],
+              "covered": [
+                "Specific data cleaning step (handling missing values)",
+                "Rationale for choosing the approach (using median income)"
+              ],
+              "missed": [
+                "Trade-offs and potential pitfalls of the chosen approach",
+                "Detailed step-by-step process for the data cleaning step"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of data cleaning and handling missing values. However, they lacked a clear explanation of the trade-offs between different approaches and did not provide a detailed step-by-step process for the data cleaning step. The answer was specific and provided a real-world example, but could be improved with more depth and clarity.",
+            "confidence_level": "MEDIUM"
+          }
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "How did you handle the case where a job title had no observations, resulting in a median income calculation of NaN?",
+          "answer_text": "Mix for handling the missing data is lift wiser case deletion. Pairwise deletion means substitution, regression, imputation, last observation carried forward, maximum likelihood, expectation maximization, multiple implications.",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770721938.294815,
+          "evaluation": {
+            "answer_id": "turn_8",
+            "score": 0.0,
+            "strengths": [
+              "Mentioned some relevant methods"
+            ],
+            "weaknesses": [
+              "Lacking in clarity, specificity, and technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identify issue, propose solution, justify choice, provide code snippet"
+              ],
+              "covered": [
+                "Mentioned some relevant methods"
+              ],
+              "missed": [
+                "Justification, code snippet, deep understanding of principles"
+              ]
+            },
+            "reasoning_notes": "The candidate's response lacks clarity, specificity, and technical substance. They fail to demonstrate a deep understanding of the underlying principles and provide no justification or code snippet to support their choice.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "Can you walk me through your thought process when deciding to use case deletion over other methods, such as imputation or regression, for handling missing data in this particular analysis?",
+          "answer_text": "Mobile Detect Manatella.",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770721994.937119,
+          "evaluation": {
+            "answer_id": "turn_9",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Lack of technical substance",
+              "Failure to address the question",
+              "No demonstration of understanding of missing data handling methods"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identifying the type of missing data",
+                "Assessing the impact of missing data",
+                "Choosing a method for handling missing data",
+                "Considering the analysis goals and data characteristics",
+                "Evaluating the results"
               ],
               "covered": [],
               "missed": [
-                "Query optimization steps",
-                "Trade-offs between query complexity and performance",
-                "Practical experience evidence",
-                "Reasoning ability",
-                "Communication clarity"
+                "All points in the expected focus"
               ]
             },
-            "reasoning_notes": "The candidate's incomplete response and lack of technical substance make it difficult to evaluate their strengths and weaknesses.",
+            "reasoning_notes": "The candidate's response is not relevant to the question and lacks any technical substance. This suggests a lack of understanding of the topic and a failure to demonstrate any relevant skills or knowledge.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "perform data analysis using python",
+          "question": "How would you handle a situation where the Mobile Detect Manatella library is not available or returns incorrect results, and you need to switch to a different library or implement a fallback solution?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770722026.725004,
+          "evaluation": {
+            "answer_id": "turn_10",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "No response",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identify the issue",
+                "Assess alternatives",
+                "Implement a fallback solution",
+                "Provide a code example"
+              ],
+              "covered": [],
+              "missed": [
+                "Identify the issue",
+                "Assess alternatives",
+                "Implement a fallback solution",
+                "Provide a code example"
+              ]
+            },
+            "reasoning_notes": "The candidate failed to provide a response, indicating a lack of understanding of the topic and inability to apply technical knowledge to solve the problem.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you describe a time when you identified and corrected a data inconsistency in a production system, and what steps you took to prevent it from happening again?",
+          "answer_text": "In the previous call, I identified a significant data inconsistency in a production e-commerce system where the inventory management system showed items in stock, but the content storefront showed them as out-of-stock, resulting in lost sales. Here is a breakdown of how I identify, corrected and prevented preventable issues. Identification of the data inconsistency, Correction of the data, Steps taken to prevent recurrence.",
+          "raw_audio_blob": null,
+          "followup_index": 0,
+          "question_type": "initial",
+          "timestamp": 1770722090.391008,
+          "evaluation": {
+            "answer_id": "turn_11",
+            "score": 4.5,
+            "strengths": [
+              "Provides real-world example",
+              "Attempts to describe correction and prevention steps"
+            ],
+            "weaknesses": [
+              "Lacks specificity and depth",
+              "No clear explanation of data inconsistency causes",
+              "Lacks logical flow and cause-effect explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Problem Identification",
+                "Impact Analysis",
+                "Correction",
+                "Prevention"
+              ],
+              "covered": [
+                "Problem Identification (partially)",
+                "Correction (partially)",
+                "Prevention (partially)"
+              ],
+              "missed": [
+                "Impact Analysis",
+                "Clear explanation of data inconsistency causes",
+                "Logical flow and cause-effect explanation"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some understanding of data consistency and integrity, but lacks specificity and depth in certain areas. They provide a real-world example, but it is not well-articulated.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you walk me through a specific step you took to correct the data inconsistency, and how you ensured that the correction didn't inadvertently introduce new inconsistencies elsewhere in the system?",
+          "answer_text": "A common high-stakes data inconsistency occurs when a customer updates their shipping address in a CRM, but due to a failed API sync, the order management systems still holds the old address in step-by-step walkthrough of how I corrected this is specially focusing on ensuring no new inconsistencies were introduced based on a standard data management practices. The scenario is in the CRM showed customer A at 1:23.",
+          "raw_audio_blob": null,
+          "followup_index": 1,
+          "question_type": "followup",
+          "timestamp": 1770722186.823761,
+          "evaluation": {
+            "answer_id": "turn_12",
+            "score": 6.0,
+            "strengths": [
+              "Demonstrated some understanding of data inconsistency correction",
+              "Mentioned a real-world scenario"
+            ],
+            "weaknesses": [
+              "Lacked specificity and detail in the correction process",
+              "Failed to explicitly address the question's second part (ensuring no new inconsistencies)"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Specific step-by-step walkthrough of the correction process",
+                "Explicitly addressing the risk of introducing new inconsistencies"
+              ],
+              "covered": [
+                "Mentioned a real-world scenario",
+                "Data management practices"
+              ],
+              "missed": [
+                "Detailed correction process",
+                "Explicit consideration of new inconsistencies"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated some understanding of data inconsistency correction and mentioned a real-world scenario. However, they lacked specificity and detail in the correction process and failed to explicitly address the question's second part. This indicates a moderate level of technical knowledge but poor application.",
+            "confidence_level": "MEDIUM"
+          }
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "How did you implement data validation checks to prevent similar inconsistencies from occurring in the future, especially when dealing with external API integrations?",
+          "answer_text": "The prevention of data inconsistencies, especially with external API integration, is handled with the robust engineering and data governance practices established by my developers. These practices cope for mineral schema validation, input sanitization and validation, automated testing, monitoring and alerting, data observability, retry mechanisms, and circuit Breakers.",
+          "raw_audio_blob": null,
+          "followup_index": 2,
+          "question_type": "followup",
+          "timestamp": 1770722246.758949,
+          "evaluation": {
+            "answer_id": "turn_13",
+            "score": 4.5,
+            "strengths": [
+              "Mentions various data validation techniques",
+              "Demonstrates some knowledge of data validation concepts"
+            ],
+            "weaknesses": [
+              "Lacks specificity and real-world examples",
+              "Unclear and lacks structure"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Data validation strategy",
+                "External API integration",
+                "Real-world experience"
+              ],
+              "covered": [
+                "Data validation techniques"
+              ],
+              "missed": [
+                "Clear strategy or approach to data validation",
+                "Real-world examples or experience"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some knowledge of data validation concepts, but lacks specificity and real-world examples. The candidate's response is unclear and lacks structure, making it difficult to understand their thought process.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "Can you walk me through your thought process when deciding to implement circuit breakers versus retry mechanisms in your data integration pipeline?",
+          "answer_text": "[MANUAL] (No audible response captured: STT_NO_SPEECH_RECOGNIZED)",
+          "raw_audio_blob": null,
+          "followup_index": 3,
+          "question_type": "followup",
+          "timestamp": 1770722301.540334,
+          "evaluation": {
+            "answer_id": "turn_14",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "No response",
+              "Lack of technical substance",
+              "Failed to address the question"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Understanding of circuit breakers and retry mechanisms",
+                "Decision-making criteria",
+                "Implementation considerations"
+              ],
+              "covered": [],
+              "missed": [
+                "Entire question, including key concepts and considerations"
+              ]
+            },
+            "reasoning_notes": "The candidate failed to provide any response, indicating a lack of understanding of the topic and inability to address the question.",
+            "confidence_level": "LOW"
+          }
+        },
+        {
+          "topic": "ensure data accuracy consistency and integrity",
+          "question": "How would you handle a situation where your automated data validation process fails, and incorrect data is still inserted into the system?",
+          "answer_text": "Handling the saturation, where incorrect data bypasses automated validation, requires immediate action to delete impact, investigate the root cause, and prevent recurrence. The process involves continuing analysis, containment and immediate action, investigation and analysis, data correction and recovery, prevention, and failure in future mitigations.",
+          "raw_audio_blob": null,
+          "followup_index": 4,
+          "question_type": "followup",
+          "timestamp": 1770722357.3887942,
+          "evaluation": {
+            "answer_id": "turn_15",
+            "score": 4.0,
+            "strengths": [
+              "Attempts to address the question",
+              "Mentions investigation and analysis"
+            ],
+            "weaknesses": [
+              "Lacks specificity and real-world reasoning",
+              "Contains vague statements and technical inaccuracies",
+              "Lacks practical experience evidence and hands-on exposure",
+              "Lacks logical flow and cause-effect explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Immediate Action",
+                "Root Cause Investigation",
+                "Data Correction and Recovery",
+                "Prevention and Mitigation"
+              ],
+              "covered": [
+                "Immediate Action",
+                "Root Cause Investigation",
+                "Data Correction and Recovery",
+                "Prevention and Mitigation"
+              ],
+              "missed": [
+                "Specificity and real-world reasoning",
+                "Technical accuracy",
+                "Practical experience evidence and hands-on exposure",
+                "Logical flow and cause-effect explanation"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates a lack of understanding of the underlying principles and concepts related to data accuracy, consistency, and integrity. The answer lacks specificity and real-world reasoning, and contains vague statements and technical inaccuracies.",
             "confidence_level": "LOW"
           }
         }
       ],
-      "cheating_score": 0.0,
-      "cheating_events": [],
-      "warnings": [],
-      "last_question_served_at": 1770709746.864452,
-      "buffered_video_frames": [
-        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAHgAoADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAwQBAgUABgf/xABCEAABBAECBAIHBQcDAwQDAQABAAIDEQQSIQUxQVETYRQiMlJxkaEVI0JigQYzU3KSscFDgtFUY+EWJCU0c5Oi8P/EABkBAQEBAQEBAAAAAAAAAAAAAAABAgMEBf/EACQRAQEBAQACAgIDAQADAAAAAAABEQISIRMxA0EUIlEEIzJS/9oADAMBAAIRAxEAPwDIIpdSYkircDZD00VBQC0VoVQERoQWaNlxarhTzQDA3pXAXFvVWAtB1Kr22L7IoC4jZRqUEC11K2mj5FWpUsUpdpLuSvSLA25KqydgiFzE4uBH6qSwtO60hjScw0HytAyY7F6dJGxU0KUupX0rtKqKUupE0rtKAeldpRKpdSAdLtKJpUaVAMAp7h2F6ZlxMZQe06hq8ksAtbgM0UOa0vHSrrkqJ/ajhs0uXHkNDnMayia2H6rz7o6Pde942+McLlDzbXbbdV4l7WX6mw7FKQoRuqkbo72oekIodLqRKUUoKhvVcQrHbmql4aoqnVXBVNTa2Ua6O6CXP3Qi7elxUbIqQV1lcArhu3JQVXaUTSpDPii4q1qu1hvdEbFYtEEfdTVkD0G7tQY7BRxETyKnwiBupq4WGOHHcdFzsTmQByTjI6KOGgt3Cnkvi89LC5oBrmEBxoL0E+M0jYBZeTiEXS1LrNmM/VZRGOCE5pY7dQCQtMmbUGkJrqCtaItau1yCTuuEm6BoclUi1DXagFdBSt1BVq2VSgjZUl5BvfcooA/QCyhxjxJLKx1W56miRN0t35lXpT/ZSsOaFyml1IIC5WIChEQuUrkELly5QRSilalCohcppT1QR8Fymt1wFoIAsrc4PwzlkTN/laf7oPCOHmd4mlH3bTsPeK1845Ah8PFDWlw3kcaDAtSKzSyxyQXxFvwT2hQ6Owux6Z4ZurhqO6Kio0UqKNaraUUMVgxQwHSoqjaY0LtHkrhgQFq2lEDKVtCmGAFlhVDb+KYLFVzKN/NMazYDRCtC5zHh45gomnZc1myMYbbNA4W9pDvJBzJxI1rWA11J6qgauLdqTFwGl1K4bWytpRMCpdpKLpU6UwwLSu0ouhRpQwPSopF0rtKAVK7HFjgRYPkrBq4tKDU4hkP8CIO9l7eQPNYThutvibR6JhuFcq+iyXx04+aW6khYgoR5pqRtDdLlqKpSkDqporjs1RQJilHSG+aYyHUEpVoorXEhEDSRarCKTDfNRQfDPVSIieW4TDYy53knIcewAAs2rIRZAdr2RxGGtrmVpx4WroEZvD2kWVnW5yxxCTvSvHjknuFsjDjb0UjGH4Qmr4szwNuSh0W3JahxSVU4xU1cZbWEEVaYERPMJsY5RmxUOSVcZ5hrdRRtaLotkF0Fnks6pF45pSZoIOy05IPJKTREAqypYwcqIWSEk5ula+VHzpZsraK6yuVgQKm/JdS6iqyhx2pCLqKKQgO5ohuF1hMsF81nwyaXfFPwuttoOeKVALKO8WwkdENrRXl1UA5Nmho680WNmlvmUGMeJJfRNczaxV6qtKaU0uWWEUpXUupBBXKeq6kEKKUrkEKFZQgjZdSlcg5cpq11eSDk9wzAOXLbhUTfaPfyQsHDfmTBjR6o3c7sFu5uXBwfCAaBqqmN7nutSKpxTiMXC8cMjDTIRTGdvNeVyuI5OW65ZXEe7dD5IORPLlTulldqe47qoaq3I9rS6kXwyu8Mrv4OPh0A5loeik34Z7KDFfRPGnj0XDVOkIvhkLvDPZPGmdKUpDVfQVbQVPGmdBaVICLoPZRopPGn9lKUaUXQu0lMpvQGmtipDUVzCRyUBiZVuqaV2lX0lSAmVNoTm9V2lF0qA08kyrtU0rtKJpXaUTyoeldpRdKjSns8qHpXaETSp0qezzB0rtCIGqaRfIfKOvDxx7qSezZNv3x2DsUAilF8ikjaFoDwHDYJyZvqlKgUSCi/YNbqrxW3dMaLdRtBd7BvmOSDOn5obG2rynU6ioCiiMbSYYzVWyHG2yE/BDZ8gpa3ItBDdUKWnBCABsqQxgUnY20FytdZFmM7Iuhc0Im1LKh6F2nsrEqCUFaUFoU2usIqgCmt1K4oIIVC3dXJXFAF7QQlJ47atAhLyt2QYWXFzKyJWbuC9DltvosednrFdOax1GY8Fuyhhvbqi5DaGyWLiNwtxysFcNku8esUTxbCE42VUQRW6cgeaCTCYxjT9zsiNEbiu6FNs0AXZKm91cM1v1HksqrFHpby3KvVK9KaWGdUpdSvSnSgpS6lfSF1IKUqkbotIR5oIpQpXc1EQV3VSuIQRS6lKj6oOCYxcaTKmEbBv1PZUghfNIGRi3OK9JBDBwnCdJI4WBbndz2Csioe7G4NgFzunzeV4/Ny5c7JMspNnkOgCYz8ubieVqN0PYYOiLj8IyZG6nNEbfeeaWq3JjOazyRY4XPcA1pJ7ALSMfDcQfeyuyHj8MfL5oUnGXMGnDhjx29wLKi69x6KoOKtHZVIC14/kcv5DOOMuGMeyfcAuaAmfkX+RCBxPJVOKVqjSeihzW9k/wDIv8iMv0Y9l3ox7LR0hWDWpv5D+RGb6Mey70YrU0N7LtDU38h8/LK9GK70c9lqmNq4RtKvl2fNyyvRyq+jnstfwmrvBanl2vzcsj0c9l3gHstbwQu8EJ59f4fLyyfAPZR4B7LXMIUeAE8+v8Pk4ZPgHsu8A9lreAOyn0ceSfJ1/h58MjwD2XeAey1/Rx5LvRx5K/Jf8PLhj+AexXeAtj0YeS70YeSvy3/DeGN4C7wfJavgCyKUnG8k+Q/oynRHQB2QzEey1jj10VTjAhT5Iv8ARiyRnSbCTfGQ6wt+fGAYSFlyw6Hbj1TySdSpZP0SeBpu90jkTAnS3k1O5I+6JHIc1kOGknzVQJ5txPdSzchQRuj48ZcVFhnGj2WnAwAAIEEVAbJ6Nq5dV25g0bapMNNIIKuCsNjhynWgalxchgpcqlyHqUFyi4uXKNaoSqkouDalJdsl7U6qQwUPUhyDa66KGD6ghS8lHiIcj0MJ5Au1mzx2Vpy72kZRa1zWax8pm6znjmtjLFMWVMF1jj0X3XFda4FbYSzmmYr8QJdntJqAHWNiUQ7VmgjAUAFWJvrjyRyyysU+1QFJARGxdVPhlTEwHSppF8M9l3hpiZQ6UbI3hLtHdMPGgkbFAPMptzClHe0VKIXKd+y5QRSilPRcghWYwvcGtFuJoBdp+a9Bwrh7cWP0jIoOqxf4QkijcNwW4cWuSvEI3J6LP4pkYUs15WSXtb7MMX+Vn8a4y/NlMOOS2Bh5+95/BZAB6rf01I138YZCC3BxY4vzHcrPnzMjJJM0rn/EoNKzY7U1rFaU0iCOuiPBiTTmoonO+AUV9R8B/ZQYH9k6uXp8q83hyz3RP7FcIn9itBcr5nhySEb+xU+C+uScXKeR4QgYn9lwjf2KfXJ5HhySEb+xU6H9inFyeSfHCmh1ciq6XDonVyeR8cJesu9bsU6uodk8j44SN9l1lO0OwUUOwTT44TsrrKcodgu0jsE1PjhTUVIKa0t7BdQ7BNPjLWutNUOyih2Cmnxl7XWmNI7Bdob2CbDwKavvCr2jeCy7pcY2kVSejwpVzrJUtIpHOO3uo9HHdX+q+FKTAaSsjNaRp8gvQyY9xkXusHioMcOqljqT9N8zHm8uQiR2lxrlSSPrblMy9bKW+CjaGsLjS0sWGqKBjQ9aWnCygsdV04gjGUEZiq1WBXKuy9qdSopFqKtqXaiqrioq2pcCqKw5Iqb3VSuKhB1rrUHmoJQXtQSqWutBYlCcVJKG4ogch2KVkCZfyQXC1YzWflMuMlY2QN16Cdh0ELFzGUTQXXly6IEbqvVWOy5ot3wXRyXY0lwWhE0MZfVLRCiD3TrRrIpEHxxu3uU8yOzySUR+9+CfYQSVLzqWjCJd4QVw5dqU+JnzqvhBT4Q7LtRU6k+KnnUeGFBiHkra1GvdPip50GWMBhPkso81q5D/ALsrLPNZvOLLqFy5csq5SAuAWtwjhpmcJ5h6g9kd0BOEcNArJnAA5taf7pDj/F/SScXHP3Q9oj8X/hMce4sTeHiu8nvH9gsjG4fkT7sicR3PJb+m5CbWK4jK1Bw+CD/7WWwEfgj3Kg5uJjj/ANrihx9+U39FGisGFPOfu4nEd62TQ4dFBvl5LGflZ6xQJ+JZU4p0lN6NbsErZ+aDR9KwoP3GMZXe9If8IM3E8mUaQ/Q3szYJRSB5KD7EuXLl3cnLly5By5cuQcuXLkHLly5By5cuQcuXLkHLly5By5cuQcuXLkHLly5By5cuQcuXLkHLly5ByxP2lZ/7ZrgNr3W2kOONDuGSX0II+aDwEou/JDjbbkfJqzXNditBPLks1qG4WU0JpmypG26R2sXG135iWhXAtSGIjWFYbUApW02i+Gu0kIoOlTpRdKilAItXUiFVKKpSghXUFFDpcQrLkA6XEK6gjZECKo5FIVS00UCz+aH1R3sQnClWaFI2wVlZsWxNLVduk8llt5LfLHTz0jaKmNtbo+RH6yEBtS7OFEYbIC0cYDZZsfP4rZ4dA/Ik0RNLnAXt2RBcHFdNluFWAC6gtqDDB30AfomOEcHyBJJI9hbY0i1rQ8NkaNwBv3T2jL9EHurvQx7q2/QXflUegv8Ay/NMq6xfQx7v0Xehj3fotn0J/ZvzXehSdm/NMprGOG33foqnDb7o+S2jhSdh81U4Mnuj5plNedz8ZrMV7g0Agdl51w3XuOI8OmfjPAZ0Xi526HkbWDSz1LiaCpXJvh+E/Mmrkwe0VgF4XgHKk1vFRN5nv5LU4hm42PCYfHEZqiGbkBB4rxCPhmMMfHrxSKA90d15ZznPeXOJLibJPVXGpGj6diY9+iYgLvflNn5JefiOVkbPlcG+6Nh8kvpKkMcU1vFTZXUmIsaSQ0xjnHyCa+zTGNWRJHCPzGz8kVnBtojIXO5An4BOGXh+OKaH5Dh/tahv4tNu2BkcLemlu/zQXj4dMRqeBG3u/ZSW4EAuWcyn3Yx/lZ8sskpuR7nnu42qUSoPsq5cuXdxcuXLkHLly5By5cuQcuXLkHLly5By5cuQcuXLkHLly5By5cuQcuXLkHLly5By5cuQcuXLkHLK/aGYMwgy61Ov5LVXmP2jke/wyeQJpB5qfd23dMYkeyAQXSb91rYsNMCx1fTpxNq7GUEdjdlAbStra1u64O69UrhzR1SE2ZWzUB2WaV8UvTWMje6r4g7rG9MUtzN08TyjY1qpes5uXfVX8e+qzjWnC8KupLCS1IepjWmLVXFUD7XFyCdSnUgly7WgLqXakHUoL0w0a7VttKX1qfFAVxNXcLQXMRBID1XFwKqaVdGl5o7HJaBooMjFZUrByoOaz3MINL0U8IcCsfLh0OXbmuHULxirK3P2bzBhcQbK8EsI0uA7c1iAeqmsF9LTD6XgcWglx2mQlr61H9d02zNx3+zIPkvE4rnOZd9KTcD3nYOKrNeu9Jh/iBd6RD/EC8xqePxLvEf3RNeo9Ii/iNXePF/EavLeLJ3U+NIOqGvU+NF/Eb813jRfxG/NeVM8ndVdPL3Q1s8a4lHBhvZG8F7xW3ReAePWNrS4jI4kWd0jHG+eURxttzuS59VY7ExpMmYRxj4nsFtZmVDwXCEcVOmcPVHc9ymIIG8OxDpDTJW5JoE/8LAyfQzO6bMyzNK7m2IWPhazG5Ga8yTyukkcXOcbJKYgwZ5v3cTj51siHicMO2JiMafef6xS0+flZO0sziPdBofJK2d9Bhh/+zlRtI/C31iq+mYUH7jHMh96U/4WaLU0opyTieVKNLX+G3swaUo4l27iSfNS0WaCZiwciUWIyG93bBAoGrtIT4xceP8Af5TSRzbENRXek4sX7jG1H3pTf0Q0pHjySGmRucfIJpvD3sGrIfHA38zt/kqSZ+S/YSaG+6wUEuSXEkklB9a9JYo9JYsvxj3VTN5rrlc8jVOU3sq+mDsFlmbzVfG81Mpka4y29lPpTOxWQJlPjeauU9Nf0pnZd6U3ssnxvNd43mmVPTWGSzzU+ks81kibzU+N5plPTW9IYo9JYsvxvNcZfNXKemn6SzzU+ksWT4y4TJlPTX9IZ3XekMWV43mu8bzTKemt48fdd47O6yfG81PjJ7PTV8dndT4zPeWT43muE3mnsxreKz3gp8RvvBZIm81PjeauUxq62+8FOpvcLK8dSJ/NPZjTMjAatR4jO6zDNuN1HjeansxpmZg6qfFZ3WU6auqjx/NPZjUdOwNNHel5vjDnSRUa2Tzpdjvayc2U+E8nkCpdXGRit15NLfZHpbSxuFs15nK9lv6dljt04LyHS0pCSRzyncjlSSdQK5x0oTmkm0F4NVSZAtQ5lrWs2EXsPRBJcD1TzmUgvAHNXUwJjj3RmyFCpWAUDEcpO1ozHpRgoow6KNSm2uXFyG07KXclnG9cXKhco5lDeatXDVzLSG6ZCcUF5NK4zaO7I2VDkEJYuIG6GXEq4zab9LrqpbmWeaQLHOKnw3K4ztabMoE7lHErXdVksa4c0VjywqYvk0HC1n58FtsJ2CTWFORHqhf8Fvlnp5lp3pHxxTjSFX3hHmmImbrbm3MOQCHzT2O8A35LHgcQ0Dsm2S007m1i6Y0jK0lR4jVneKe6nxiOqzvRkaHiNXeIFn+N5rvGTejI0C9qq5zaSPjFR4hJoblTejIFnfezhjBZOwAT8TIOD4ZnnIMh6dSewVooosCF2ZlEBwG3l5fFebz8yXiGR4j/AGeTGDoFSQPNzZs6Z0krjROzRyCBpvlyTkPDsiRtiIhvvO2H1RfRsaEffZLSR+GIak10hDwz3RI8aWXaNjnnyCa9JxYv3GLqPvTOv6KkmfkyChJob7rBpCirN4a9gueSOAfndv8AJTWDF+KSdw7DSEoQSbJJPmp090DP2g5m2PDFEO4Fn5oEs0sxuSRzviVLInPNNaXfAWmW8NnLdTw2JveR1IEaVtKc8LDi/eZWs9WxNv6qPTMeO/AxAT0dIb+iAEeO+Q0xhcfIJkcOe0XM+OId3uQZOIZUgrxdDezBpSx1ONkknuVR7cyqpl80qZCVUvoLs4mjKe6oZUq6QqhkRDwm81Im81neKu8ZBpeOp8bzWZ41dVInRWl4/mpE/ms7xl3jeaexp+Op8bzWaJVYSp7MPOl2tU8eksJFSQkbhEOjIU+P5rM8Yg7lWE3mqNLx/NcJz3WeJfNd4tdVBo+OuM3mkBNtzVg4lpI3pFlOjIVxOFmCVSJSi/TSM3mu8dZ/iFd4lIh/x9+a4z7JDxD3UGTzQOOnNqvjkdUmZCo1+aB4ZNHmk891wurk4hTCDNKIx1QeJNEQa1velmtSJ4E255HdAFtu2as7gcenFkk7mk5K7alz7vt24norkPslJSOCNMbJSxbZ35LDa7XbClfS8jYIbXsZzK52dG3keSqVD2SDmkpnOa42Ey/ibCCNikZslsp25rWM+kCauZRGyXuCk3c1DHlrkwaTHgo7DaSjcHC0aKQ6qWWjzOSl3JdG0lXfGQ3kooBoIEh2KvM7SEnLN0tVKJfdUNIIequmpVF3tbfMLmhqB4tlGhaXuVZHa0dlxaO1JqNrGsoi1EgZ+FRcK02qpWbEHKzoiBY3arR86VTBceEtdfRNuYNBscwiY0YcLCPNFUZFblbkc7XiXDTkS7cnFMY91qKrnN0Z07exRoWfcgq1kZpICI1+yCDtSnfks6D6/NSHWUvqUh5CA97lSShtPqq7Wkojlq4OM3Hi9KySG0LAPTzQcDEbfpE1CNu4v+5Wdxfibs2Tw4toW8vzeaLIJxXiOHkS+sJZwz2WA6WpE8SkaKxoYYB3a23fMpQtJPmmIMHIm3ZE4juRQ+aldJAZJpZjcsj3n8xtVDSU87Dhh2ycqGM+6DqPyCr6RgRexFLOR1edA+QWVKhpPIJuLh2RIL8PS33n7Kh4pMBUDIoB+Rm/zS8sksxuWR7/AOY2gdMGLD++y2E+7ENRUHLxIv3WKZT70jv8JCiiRwSSkCNjnHsBaBh/FMpzdLHCFvaNtJRz3vdqe4uPcm02OHSNGqZ8cI/7jq+i4twYj600kx7RtofMoFa2V44ZJNmMc4+QRvTImfuMRgPvSHWVSXNypBpMzmt91vqj6KoL6BK0XKWQj/uOAXacKL2pnynsxtD5pSr57/FdoCD0mojZR8URwLhuAgutp35Lrrljnb8kNyvqvkqO5eaAZ5qCaXFUJVRNqNR7qtriUMX1qfEQtS7UqYO2XuiB6UtWa/dDDrXK12N0q2RED1FRMK3CDrpMEhwopWVpa5ExfWp8TzQAVKpg4k7lOYc+OInNleWG9tuazAp/VQw/M6HW1sUgcCPqgmQtNFLWbsFEedbL6hGs0TxvNSJr6pXpzXN580TDXjjuu8fzSzhvzVTyG6GGTNvzUeP5pa72JXEA/i+ihh/CmPpTad3/ALKuU4veL6IOG4NyWbouR+/IWb9tz6bfDW+Hwtn5rKrJdJoN0YcTar1UEtsLj1fbtxPTOkB7JWawNlrmAHmEtkY21gJK1WXHDreNZoO5IfEY2QRt0jmaJRpQWmuVckHKd6RCY3miNwV0lc7GY+F8bQ54NHtuqUGNDwfWvkrmWRvqkmuW6pZkduPotubRMDXwMeNiRdpRwoo78n7tscYIAFbpUiQ81luGYHEWOiZgGp6VhaXUFq4mObutysdNxoYMJdzWi/FBadkPDYGiloVbLXLXS+nleJxeGCsUut269TxSEPY5eSeCHuB52t8sdLSSUKagWSaKh7qKvGGveLpdJGLVm8xeybxshjPaKDnaceBulot2yzWspjXVzuqTNTXpm5kLuqkujfu0hecIdGyy4rXixy/GY8Hm26U8TyaMTLB/ylwKlpFD3cOzpMTKp2n1S5p5bWrStaZtTVrPRL7aPDhdJzIaKSmAQwC0092pbn0537eL4k3/AOSn/mVonDQ1vcK3Fh/8nOB7yARVAdFKhp7DHI5p3I22UXpHJDjJO53KudysChcu1Lne0oH1UU1jnYrSwsVrwC5poefNJcPxnTOqvVHMq3F+JiNvomKarZzwfoqmD8WlL/uHTxY8I56nbu/QLLL8CH+NkEcgBoakAy3EkWTzKKyF7zTGlx7AWlrcg54m5v8A9bGhg89Op3zKXmycnI/fSvePM7fJMDh8zRcpjhHeV4H0VT6FF7c75j2iZt8yo0UayuWyLHA+V1MYXHsBaL6bEwVBhxj80pLz8uSrLnZco0mYtb7sY0j6KA3oEjG6pyyAf9xwH0UVgRe1O+Y9om0PmUjpN3VnuiMjc801rnHsBaBj02Nn7jDY380h1lDkzsqQaTM5rfdZ6o+iIMCcC5GiNveQhq7w8SOvEydZ92Jmr6qhUAk2dz5qwYTsOfkmDk47D91il/nK/wDwEbF4rJDLfgxBnVrWV9UAo8Gd4vwyG+87YfVS6HHi/fZTB5M9YrTfDj8TYXwvPiVuxx3Cx8jDfC4gtITE1JyMJnsRSzHu92kfJQeJStP3McMI6Uyz8ylSylFKj1n6OVXNBG7SVG/dy63dytMBOaW8hsqXvujuBPUoL4zzC1Kih9ZUc1E+Oy6rFKoXIUFGcyuSG5qAZUKxChURa4Fca6KERdrz15IrXeaXsqQe6BsOXPp7a6oA+JU7dz80UNwLHKzXKzmgjqT5oO7SiDg2po0hMfRTLXBwRQ6K7cIhpUKGhjZ1dCrqrm9lzHAijzUWrfELqUqEQN2y4dlZ1Lm0irRerI09im3xl2U2xtsErYq1p0HS4594hY6b5mtucVG0dgEAC0xPuwILNlw6+3bn6W0bIckeyZbuFDmWsyqw8vGuyAsuWMtO4Xp5YgUjNjNIO266Spjz72NJsjdCc0dlryY7ewS5xx0C1rOM4jyVmRucQACtOLBL/wAOy0cbhzWbkJasjPwsI8yFrQxBg5bppsAa3bZUIXLq66cxeHmtIN+7/RZ0Q9YLSHsfopynbHzwLIK8xxHFIkL2jmvUcQ9tZ0sYkFELU9Fmx5V7R1G6qLabC183BO7mhZbmFpp1grpK52IypHTQgHcgpeKVzBWxHRMgKzY2u5ha1jAWNfkvDTsOtBbQyo4I2xxesWigkGxgDY0jMbyAFpqzk6Y3TY7ppyXzSu1WTurY8emu6vExzwLuhyTDY66KXpZyLC/SQE7G60gGm07jb0kus9R5fjY08UlPmD9Es1pLgFocdjLuKSADsfokY9jZC3a5jNaBsApcKK5hs7LiPWXMQR1pMY2O6Z4aOXUqkUTnvDQDfZM5k/oGP4cR+9caJ7IpjMk9HxvBgeyK+b3uAWIW4Uda53yu6iJu3zKCGOdbiLKvHiTSbsjcR8NlWpF/S4mCoMOP+aVxeflsFD83Lkbp8ZzW+6waR9FY4scZqbJhYewdqPyCjxMOP2RNMR5Bg/yVGirmG7PPqSiRYss5qNj3nybaL6cR+5x4Y/MjWfqhSZWVNYfPI4drofIKAzsB0dGaSKHye8X8lxGFHzmklPaNlD5lKCOz5lHjwp5BbInkdyKHzKC/pMLL8HEZfeVxf9OSq/NynihLob7sYDR9ET0RrP3uTCzyB1n5Bd/7NnITTH9GD/KBQjUbdZPcq8cEkhpjHO+AtMekhv7rHhj8yNZ+qrJk5Egp0zy3sDQ+iok4MjADK6OIf9xwClsWIyteQ557RM2+ZQmQuefVaSfhaOMKUbv0sHd7gERZmTFC4GCAhw5Oe+/oE5FxFmQ3w82Mb8ntHJJaMZnt5Ad5RtLl3pGOz93A9/m91fQKhnL4ZTfEhIfGeRCy3wFp3BWhDxTIiP3bImsvdoB3Tobj8Rb6lRze6eqIP+rvkuvzd8l1/wA66/JyqIvzPyUEef0U/wBSj9HIgb4wRYu0LccxSZ3/ADKHMDxuHWrqYCFVzB0V9JYd1wPzWkLuZSEQm3Cx5oL2qoAQoV3KpQQuXWoQXBVr2Q7XWUBQVV4Dh5qgcVdptALkURrt+ah7drVLQHs9yiY5aJfvCNJHVLhxpWJJ6IrS0RuBAa031CSrw5SHDdBa48q5K4JOxCi6480eNgLQUsTvyUtkc3YagiJl2cR2VW9Vz3Xz5lcADuEVcAkrWh3ixz1Cy43U66K08M6omkdCsdOnDckNxBBDlLn2wDyQbXDp25MseiBwISgOynW5ZawZ9EoEsdhXAJRA1XTCBxtR3CszCANkJ/QB0VXGldAWxBo5K7XNCHI8lUDlNMNagRsgHmVAeotRZBoPbC02EaFmQD1k9qpq1yz3NZ3EBZWb1Wnl7lZUh0uSL+ly1r9is/LwQ4ktG6ea9X9oK7hZrzzsZzTRauGOSt5+O13TdC9FF8lryY8WWzELu6cgxdPROsgrojNi7p5GBRx0EUMpEDaU0sauBhiZxG+sqBibxo+RK68Ofd9PM8aNcTnNdQPos7mVp8Wp2RK7q6Q/JZ2n1qWuq4pG3JEjaXuAG57Klb7bp+FjcOHxHi5HeyOyyq+qLAhJe6pCOgulmyZOOXF3hySuPMvNf2Vp4p8l5dpJvvsEP0VrD95NG3yuz9EbkVGU9o+6ayMflbZ+qBJJNL+9ke/+Y2mm+iss3LIR0ADQquyAD91jRNPd1v8A7qKVZC5xpjXO8mtv+yYGBMBcobE3vI4N/wDK5+Vkv2dM4N91p0j5BVZiyynUyJ7vOv8AKCTFjM9vJ1HtEwn6mlPi47PYxnP85X/4CscURn76aGP4vs/IKLxGc5JZD+RmkfMoIGXOP3fhxf8A42AH5obzJMfvHvefzElE9KjaKixWX3kcXKDmZJFB4jH/AG2hqCWYU5F+EQ3u71R9VPgws/eZMQro0lx+iEIZZ3XpfI7vuUT0KRu8hZGPzvAQT4mIzkyWQ+dNH+VX0uv3UETPMjUfqpMWOz2sjV5RsJ+pUeJjt9mB7z+d9fQIKvysl+xmdXZuw+iozHklPqxvcT1AtGGVIP3ccUf8rN/mVBkyJtnSSP8AIE/4VE+hvb+8dHH/ADuA+isGYrPamLz+Rp/yuZhS1bmaB3cQP7qfBhZ7eSzboy3H6KokSY7fZgc7ze//AAFZuVID901kfm1u6gPxm7hssnls0KRkgfu8eNvm63FVGo14cLbpI+K6/IfNZEeaY/YYQO2pPQZkc2zvUd5qYhix+X5qLHl81xBAveu6iz3PzRU2PJcCPL5qLPf6qQb6/VBcAP5hqo+GtwUxALPP6pjTtz+qeViemXpPZQYyVougad6+qGY6WvNPTMfCQhOjPZaxjBCG6Fqvmn9WSWOVSCOa03QDshmAJ5n9WfZ81YOA7pvwAp9HCea/1InyVmE9k56O1WELQnnDOS4GyFLGW7gbFPiNoVvDYRRKeUMjLa+kQSN7pl+K3VtSr6IO4Tzi+MB8RvPUFYSM98fNE9DBPNT6E3uE8ovjAtTTuHA1zpcHtP4gEZuIWmwQqnC51SeUPBUhjme227+S5oA/ECfJLz4cgfWx2U48DhbXCr5FNPEyHgbWLWpw/SMYuLgLdsFhyYrtVt3HmtXhscbsIMe/TJFJqA6ELPX0smNi9lS91F7Kl7rhXeDBXbsgtcrhyy0YaVcPACW1LtaGGC8UhOcqalRzkMRI5AL65LpX+aE0kuHmqpqKzuiDmuYA1ldVF7qBuAAC0Rz0o2am0qPl2VTE5DgUhOwu5BGkktc5hMQcB+qshWe15BpMxm0tKwsIJ6o8HRWpDkbbRREChxhHCyoZjpVIpGKG/kgEbUs3Kgq0Y9ZWRmmGMsgJttMjJ5AC0GEbWrZjtOK4D8Xqr0cx5u68rnHXK0c9rSfUlN5G+RIexofpsi4OIwMOVlHTAzkD+JZv2iuNjtx4vScgbkHQ1CmypXG7AHkOSvkZUeVJrPiED2WjYAIRl8Meqxg+IsqNyF3CWYmtbz23K4YUg3kDYh+dwaiOmyZBXiPN9G/+FVuHKXant0Du80oqDFjsFvm1eUYv+6q6XHafUx3vPd76HyCIYoeTshu3RgLiqk4zRtHLIfzO0/2UVQZczQfDZFF/Izf5lUPpGSdLnyy+VkohyXA/dwQs/wBuo/VTrzJttUzx2aNvogH6DIweuGxju9wCkQ47fbyA49o2kqTiPG8hjj83vFrvDx2+3kavJjCf7oI8TGZ7EEkh7vfX0C45Tx+7hhj+DLPzKkyYzfZhkf5ufX0C70pwP3cMMf8Ats/VERryZ9vElffQX/hd6HI0W9ojHd5A/upLs2f8Uzgeg2CGcRzT946Nn8zxaov4eOz28hp8owXKpkxm+yyWT4kNCqWY7fanLv5GE/3UeJjt9mGR57ueB9Agv6UR+7x4W/Eaj9VImy5TpbI+uzNh9EL0p9/dxws/22fqpDsyba5nDyFBVBPRJDvINPm91f3XCOFvtZDP9tuQxjOB+8dGz+d4tXEcDR601/yNJVFw/GHISP8Ak0LvSGg2yBg/mJKjVAwbRvd5udX0CkTHlHDGP9uo/VBTwwu8NaRxG9iqnFA6ErWxjAIMmSIaT6zexT0bo5hcbjfaku3HjI2Vm47QbBo/BS4vseiDRv5KRfY/JQLr1gD50uDbOwUDEJrofojh9d0HFhMhPqcvJNeiu9z6LU6kS86p4nx+Sq4go3ox6s+ig4p6Cv0WvPlm8lHEg7KhdfxTnop//wAFR2Gea1O+WfAoXITnbWnThuVThk81ry5T4yOpTqTgwb6qfs93cfNPPg+MjqXB3knfs93l8132e4dk8uD46T1BdqTnoD+yj0B/ZPLg+OlNXkotOegvUHCd2TeDwpMHfkrWEf0J6n0J6f0XxpYlVs96TXoT1BxHp/Q8emRngmYbn2ehSwDu5+a1crGfrFtugl/R3H8Nfqudz9Nz6PQYw8NpJNloJRo4Ax4cCexWnDiNfjxuMjQS0bX5KXYbQCRI35rFblDv1VFrjtsqWuFeiCAq1qgKm1G1tSsChWpulBcuQ3OVXv2QmW91BaFw0yOXGMxuBI2T0EIaF2TCHxEDYomk3ZIY2yUp9qQOeG+IASaQsmOSy15NeSQdgx8zuriWt9snmoe+1m40xYNDjy5FMmQVuUxdWe/dGhygI/DcNlkZuQ8xuERIPQhKYk2Vr++ca81uTHO1v5QY6K2mzaHFYKHiEzONnYJos0lZrUMRFHadkm11FGD9lhoQlCe9c5yETumC7UaEbk90Bu5TUI9UFdOZ7c+6aYNgFD5GCeCKSIvbO8xh3umlwdQ8gELF4mWyOi8BsmlxcH37Gy7/AE832xGYTX5UpeSII3HUTtfkluIy+lSBvisZCzZrG7/qmOKzvyXlkb2RwA7ku3cfgs4Mgbzkc8/lbX91ytb5i0bYmimkkDmVDp6cdLGfFwsq7ZIWj1YL/mcu15Dv3TNP8jFnW8QHZUwOnxK/KKCo6Bzf3skbP5n2VZ0OQ/8AevI/nfSH4ETfalH+1pKmiA3HYbMr3+TGf8rjNC32ccu83v8A8BS90DOUb3/EgBCOTv8AdwRNPwLj9UFxkymxE1jP5GC/mofHlyj13S1+Z1BcXZzxsJGjyGkILsd13LLED1t+o/RUSII2+3PEPgdR+im8Zo9qR/kG1/dU8OBu5lc7+Vn/ACu1wj2IXO/mf/gIJM0Q9nHb8XuJUtnyHbRAN/8AxsVmnIO8cDWeYj/yVD3ycpslrPIyf4Co50WTILlc6v8AuPr+6H4MbfanjH8oLkWCCCaw3LjL/d5E/NVnY3Hdpdjyk93mh9ERS8dvPxJPk1VEsZPqY7CfzOLkOTKc0epBC34gu/uug4rPESHtjkYeYDdJ/QhXEMB2UR6jNA7tYG/VUc2R372dvwMl/QKPDxc948PIMbzzjnP9iqywx4p0yCXV5NpUW0QDnK5x/Kz/AJVhJE0bROd5udSrG9hFNgJP5nWjNExHqRBvwb/yoKCZ5PqQs/ptXPpZ5l7R8dIUETcny6R21UhkRg+tJZ8gSqNYZEg6j5KfSZPy/JL2p1K5GNHdMXGy1t9wqmd1ey0hCsKwKYaIJ3Bt00hFjfYBqkq8AjsUzjhpeBKdLe43TDWxw6IvaT6zvgFoCA+7J/SU3wqHFixR6K/WDuXdf/CdWvGM7WT4B92T+krvA/LJ/SVrLlcgyPA8pP6So8A9n/0rYXK4jGMH8/8ASo9HPd3yW0uUwYoxj7x/pVhjkfi//lbC5XFZHgH3h8lHgO94fJbC5TBjGEjm5q7wfzNWyuTEYvg+bVBh/Mxba6vJMisLwPzMU+j3+Ji29I7D5LtLfdHyTBh+jn3mKDjebCtzQ33W/Jd4bPcb8kyDx/EYHNnBaARp6FJejyuPqsJ8qXssrEgLxM5gsCqrZZ8ztF19Fz6vi6cc+Tz/AKDlP/0XfqVP2flg2WAAfnC0ZJXOs2UrLJQNlZ83X4h3EdFRCieC0K2relzrpBWlTaoDsutRVyVUuHNVcaQy60EuJcaTeLDW5S0VXZTLZdq5KhwODUNz0HxPNVL7RMUyGtfdrPmjAGydeSSlpgdNqjOeaKh0ji3mqzH1iFYNuNaZCEtDuo1F5poUBluTMMYC0y0OHN8OKk66iLSUBoBNBwIWK3FLoq7XbIMw3sKrJFMUyXbKlqupcDaYgrE5H6rQEpGEy0+qu3Ece6LI4+HQ5nZZOa+o/Ahe1kfN7id3FNcRcfRS0O0l21rIZExooucfgKTvrGeOd9gmOEH1pS7+Vq64BsIyf5nJgQxE2Ii4+ZKuGOaPVjY2vILz674Wa5/+nEAPJq54yHe04gebqUyZsDCQ7IBI5hoJSj+I4jXbtmcOpAASanoUxDm+Zv8AtBKgmFo9l7viaUHMgl2xXxaujZraf+EtkT5sXtAxDoWsFfNakqaas/6eO0fEEqskkzB68rIh/MGrPHEcprdLpBLGebJBqCGZsKU1JC/Hd70R1D5FanLOm3S47nDxMsG+ZDXORfCjLS/GvKA9xwH05rP9CMovGmjnHZpp3yKBJG+F9HUx4+IIWsTTkmW5jqbjRsI96yfqqx8UyonW3wyOrTGK+iE3iE+nTOG5Le0o3/q5qQcOc7Ofju7PGpvzCYmiPnxMv96Zcd/fUXs/5Cj7PfWuHTNH70RsfLmEN+HM1utoEjPejOoIUWqN4dG4td3BpXEG0VsRujxZc8LdAfrZ7jxYUjMc8AZEbZh3Ozvmu8KCX91Lod7su31TE9ufLhzj1wcd3ces3/kJeXCka3WypI/eYbC7Jx5Yh67CB0PMH9UtHJJC7VE9zD3BVwQW9wmMfOngAZYkj9yQWP8AwuGWyXbJhBPvx7H5ciu9GbLvjyNk/KdnfJA8MqLJFMlOK8/hPs/oQukgMIBnkc4Hk4bg/qs1zS11OBB7FEhyZoNmO9U82ncH9Ew02HQ3s17vorajfqQD9d1QZcUwpxOO7u0er/4USt8MBznPkaeTm7hTF1tSYoq2GvIpV7XRn1gVrEIMjQea1rDNDlIejy47XWW+qUB0EjOoPmFRxeDQ80ZktJXS6xyRAHdwg1sPJewXE8jyWgziWRXtu+ayMEWw3XNaEcnh3tf6rUsSnBxOf+IfmrN4pP1e76LOO5tSD3Kuxn21BxGc8pCfku+0cj3z9Fmh1IgkB5lTYbT/ANoZHvld9o5Hvf2SVjuusd1dh7O/aU/vf2XfaU/vfQJOx3Xbd09G039qT+99Au+1Z+/0CTpqih3TeTacPF8gdR8lU8ZyB1b8koWgoZYE3lNp77ayO7fko+28ju35LPLB3VSwK/1NrSHHMjuz5Kw41Ofc+SyQ0XzVwB3T+ptah4zPWwZ8kxgZ+Tl5AYQ0NG7jXRY7G6iABZK9DwzE9Fgtw9d+58lLjUFy3ANAJWTM4XuVoZht5Cycre915u7ter8U9Mfiua+EjRtZpZMvEHyAgrTfB6S+Tx60Ru27lAe7CgsNjbqSY3UcOyNcZB2IKeLlmMyWyS0wAJxklgKdQhtj9lOrdLsd0RQVlpZxQiUQnZLyOopEomugrsekJJ9DSSgjikTXaSd+y1ia2gSri1jHiLjypd6ZIReuv1Txq62HUHW80EGSaIigVluyHP5uJ/VU1k9VfFNFniGvU080TQAwboGqhZKC6dwNAq4mmPCrkixikmzJI5pqHIjcK5FE00w0ieIAOaCKI2KG51bKYumHyWOaG1/rFB1fFQwkuJVNOByuw7oDeSO0UFIlpmM7IzTeyXaaGyMxwDbdyAtdY49AcWnDIo2BocRbjfJZbM72wYm+q3V6p3Q8njMYnf6kjt+jhSri5MeUMl3o0hayIlxFDqNljqbV56yJMwyGksne38r9v7JCSDJit0YeQPxMddI7J8VoIayYWeTiLXeNBdt8Zp77LGYvlCJz5r0ztZOO0jd/mN1UPxJjpLJMdx7HW3/laDpoZG1K10g/O0f3S78fDJthljPbYhaTyhd2E94uBzJh+Q7/ACKA2TJw3FrXyRHq08j+hT3gQfxJP6R/yig03Sch7m+6+MOH1KHkQ9Na8f8AuMZj/wA0Z0H/AIU+DjzAGGbST+GUV9Rsmn4+E/m17Xd4xQ+RQvRYh7Mrq82/+VdTYVkxZoqc+M10c3cfMKzc3JaNL3iVnuyjUEy2IRWW5Lmd6bShz8VxqZwk25tiIPzCpsAD8Wb24347u7Dqb8jupOE928D2TN/KaPyK5zMMOuOaQDs6MlSPAuxOb/8AxuTDQGmXHktpfE8foU5j5JnfpyYWS/nHqu+YVm5DS3S/IEjPdkiJRoRgufbXGJw90OI+u6qaYbhQv9iQg+68V9VWTAcxvrNI801G6Gv3oP8AtKJ4zG+zM0eW6xnTXyRiymXGYTG8ge7zB/RLGSCY1LCY3e/F/wALWzXY8kZ1vYPNtj6LJMULT6uVG4eYIW5v7ZvUqDhuILoXtlHlsfkly0tdvYcPmmgIwbE7L7glE8VpoSSxyN8+fzVTVY55C0NlaJW9A7mP1RDixPH3byw+6/l80ZsWPQLJmjyJVtEdfvGfNTabCMuM+L22kDv0QBJJC8mNxb8ORWrqDQQ2ZldQTsk5GQyE25jD5HZWX/TXrigyJhzUCUGkQtI6lZu4QZT66MzcbKooYWveenwQpozE0uJtoTUQJc8lBzxWM7zoIIx8hjW80Y5be6y47AUucQN1bzFaXpbfeU+mM7rJ1LtZU8YutU5gHI35KW5gI32+KydZXa08Ya2RmNH4x80VuSH+y61g+IrNlc02DSeMNb3iu7rvHd3WXFm1tJ800JA8W02phpnx3d1YTmuaT1K4JpMhpgzEdVHpBQLVTY5K5EGM19UN05CGbVHtJCZBYZHrIjcg+aRNh9FbvAOG+mPE0rSIm/VLINXgWEQz0mYbn2Aei1J5dAoIlBjaAAA6BJzvtxWOrkXmbSuQ8m91mzy1dp6c81k5jtiuL18zIzuISuZE4sNLBOuWTk5xPZa+RLrBHTqgDJgwY/ugHyH6Lryx07F4ZlamyuLIwDdOKZa6uqyZcjJyXanPJ8rTGPIQ0Mcdx3SxJcajXorX7JNjrRWu81zsdJTOvakGTdcCp5oFZYC8JccOaXh29hazWq4A7K6zjM9DaTyItcOHS8myb+YWg8AWVUSaea1qyM93Dc9osMDh5IDvGiNSQOtbseXIBTXbK5yAWjW0GldXxeadmAEhzSFT0mM/iW7NHjzt1SRNJvsl3YuMwhwiafIq7GbzWX6RGQrCePuVoSQQStDTGxtdQErNgxNPq77WqxfSrM0MPt7K4zQ87blA9CMhAqkePFEfIbpkTaYa8kJiJu1oETdk0w8lhoWNqOOyG3YLi9WM2ig70gcVyTDhFrT6z9h8ERiweKZgnySAfUbsFuOfSeE4IyZHzSttjTQB5EreawAUAAB0HRZ3A3jwHsHtA3S03Rl7aLa+BUIXyMaLJaQ4DV0d1CwpI3RSOY7m00vTsj0iqWFxMg5sld6UsSkwpC5SsMoXUpVXuaxtuNIJQZshkXM2eyVnzS62x7DulCXON81ucg8mU+SRo2Db5IhkcJG1tYpJkFr23t1TP42rpmAu6mipHJSAggD5pjGjc9/qhUayytXhOIZJttgApasjmYs1bK3ok1c1vMwDpG6t6DXVY8614x5LLhkY06kibXqeK4ZZjvd2XnHsN8qW5dZswGz3XAm1bSVLWWQOarIjHvrYq2txO6aixjp2aijFdz0ppjOcXX5JWZttcT0K2JcZ1eysyZhAkCaj3BiQZovVK0fQsv8Agn5qrsHLP+iVnG9ealid4horh47eTq+S238GyHOvw3j9FU8GyPck/pVRjNfkM5PHyCrJJNI3S8gj4LZ+xskfhk/oKj7IyOsbz/sVNYYYewQZzoqwF6L7Hn/hSf0pbI4WWtt7XCjyIpBga7OzQut3uhajsKMdwqHGjHMlRWdZ91RZ91OlkHvqAzHP+ogTs+6os9Gp/wAPH/jD5qGxQED74WgSt3ZcyWWN1sNJ7wIP44UGGHpO1UTDmB+0rdJ7jknmgaQb5oOBw70zIbFG5riSvRt/Z0gbOiHwBQYekd12nzW9/wCnj78fyK7/ANPH32fIpiMDR5qDH2K3/wD06ffj+qh37Ov6GM/qUGDg8Pfm5gjF1+I1yC9zjwsx4GRRimtFJXhnD24MTthrdzITjnaWkrNqhzyV6oSMjt0SR1k2UvIaC4dXXfjnAJnbFZGc6rWnKdlj8SdpjJ7KT7dv0yJHkudR6pLKxpMaangU7cFpsEIzjbiQVaV2qINdzA2XZyKNJ6FXdqaA/tyKmKNz5GsjaXPdsGgXZW1jfszxLIc0TYzo4x7xH9lYzbjPx59TQT1TTXdir8Rbw3BgkgEjXTDZoZvR+KThmsLFjXNaDTYRWdEtG7ZMsNhYrYqgupSFOm1FBe9Bc8OCO9nZLvaQFqIgOLSufKQEIuLUN0lnktQ0cS7bqrpe4Qg4dlO1d1U1PiFx2Cs1pduVzfJEBVYqWtDapSW7KWjyV6UoG0IzFAZvzU8kwtE1bKA7dDsnYFL5eY3Fj5288grGLVuIZXhRGOP23cz2Cw3jZWfP4riSbJQ3WRa0xabwMp2LKHt3objut+HjGE9lvk8N3VrgvKiwNlLyaB60omvT5PF4AwjGJkcfxVQCxXuLiSefVCh3YEQDfyWbRyNDjyTEBo3dyQpHRwjU/fy7pPIzi4aWWy+QtJyjRmyIcXIc2eBlhlAAmie5We3Ix3ROEmrUT8h5JKaZ5Gp315oDnPFEir5LpIDSFhcaG17DyXRvZy5FLlxPRdQJVB5/aBTBbbm/FJB22km+xWhGNUkQ7lEWA2VxyXNHfcq7WoC4zA5wtey/Z7h+NMwvc8hw/AOa8bGdJFLV4fmOikFX/wAKVZXvW4WOB7F/ElScPH/hj6rzcfFXgVbh+qs7ijyNy4/qnpWtncMwZIXeK7whXPVt9V4HOgZFM5rH62g7Fa2fnyOYRuL6rFleXHfcKpaX8OzsU5gcPkypQyJjnEnol6TWHlyYsjXRvcwg2CCjL1ONwHJaz1hG34utNDgctfvIx+hWdD+0WRpGqZp26tCIf2imr22/0hMUxN+z872ENmiv4FeS4vwrJwclzZ2WHAnU3cFbc/7QZLmkDILP5QFgZWTJkTl73ucT1cbJQfQftI+4PmpHEx1j+qz6VUNaX2oP4R/qUHijR/pO+YWcAbVXDdDWn9qs/hO+a77Wj/hO+ayqUOGyaNQ8YjH+k75pPiHExkR+GyPSOdk2kjaE8bpqgShAc20y8ILhusqHpHYKQ3yCvpKmigGWjSTQ5dlzI2hjbaOXZXeCGO+CuG1t2QU8Jvuj5LhDGPwN+SJpXUpqr47vR5A+IBrh1AWiOL5IG7/oFmAKx5EJKjTHGcj3gf0Cn7YyK2I+QWDFJM7iEjHavCA222Ta1ph9/HMuPmGkd6WjwrMyc0GSTSIxyoc1hwxGWVrB1K9PjxNggbGwAAdAs3owUuCBK9EdyKXeudrXMCcLQJeSM87JeRYejkrLyWHxY1GfNbkvIrC4xuwDuVZ9tX6Y9qrnWOSuYyrNiBO66uR/g0TcZzc+SQANO3xTPF/2sysqN0WM8xRkUXN5lZUuM17NOstF3Q5IBia0Ud6VlZvPsk82SSSSedqseSYnjewrzjTaTPteSK9BjZDZGggp+F+6xMXh2fFiOyzGI4WjUdZokeQT+NkBw35rHUa56azXIjd0rFICOaM1w7rDoIW2gyR38UYFQ4qBCSJLOZpWg7dBkYCFuVmwnyKsFcxG1dkSqKsFhFaxEawAKwCIhoVw1S1vVWugrIzaggAC0JzxyXPk2XY7RJJ63ILTOkc/PZiAi/vCLAWEJZsyckbuPcp79rQG8WAH8Nqy8OXw8gFakxzt0dzJYZQyZpY4jZGaCOtgrdysX7Q4MdLbmh9ZvcjqFl4eDmUQYhQ3vWLRAiw1YVHA0U/6NLCfvWOaO/RFBo7Ch8FKuE4XARNJ6ozX6QXO2HRXeNThq+fZLcSc0U1p2AWZCwpJI6eVxc71QhNAb6/tOPLyXNHbkUNxppF73a6Il8jddEXX1QZZPEkJHJQAXuJvZdpoKiA4g/Bc9+pxNV5BRXZdSCQbT+NJqDL5tICzzzTuJu9oHdEaDW81YVy6LS+yM3/o5q5j1Co+y8oDfEmH+whTTCAHkmsT94iHClAr0eQHzaVaLHfG6ywhSh5lUrE0EMbAWFzisNls32Cs9aU9OFFu3xSphB6LcZpfYlcG+sEfwK6fVcId7AoK6ziY2+r3V6BV42AbG1fwxdcvipqYWc3ZKm9RK0XxV1tLPi9Y1+io939nT17UZ+aj7On/ACfNLDiWUD+81foFYcWlHtWP0BXCfn4d/i6HGBkA3TD/ALlU4GTfss/qVG8XJ/1B+oVxxN5/1B8gr8/B8XSPs/J9xv8AUuPDsg/gb/UiDiT+7Vb7Td+T9Vqfl4v7T4+iruGZPRjf6ghu4VlH/TH9QT32k/oI/qqu4nKBYZH9VuWVnLCDuD5Z/wBMf1BU+xcz+GP6gnzxacf6cf1QzxuUH93H8j/yrkQn9jZg/wBMf1Bd9kZY/wBI/MJwcblP+nH8ip+25f4bPkU9DPk4TmFpAhO677NzeuOVofbUn8NnyKn7ak9xnyKmRWceHZYH/wBd6XkjdG8te0tcOYIWweNyVtGy/gVl5Er55nSSG3ONmlLhAQFx5hTS4e0sq6117rlqcK4f4jhNKPVHId0UzwnC8NgmkHrHktMruQoLjyWWQ3OpLudaJIUu96y68xR5pBedldzu6A5yy7QCY7FYWf67gOy3ZdwQsjKjAkPnurFrJcNJoqzU06IHmKQHxabLdgt6xiHPDQkp36Xbojnkpd0b53CONpLj0CqUu/VI+gLtM4+J4b2yEBxBuim8XC8E28DWmnNFJpmgcQ4lmZEBjlLdB22FbLNY4tNgpzMFRlIsIIsJqZh+HMIoOKfjyQ4LEAV2Pcw2Cpi63mz+al03mshmbpIDh+qO3Kjd+IKeLXkdMlqNdpbx2nqu8YJhpm1IKAJmnlurh7e4VTRtSkFBMrW81Q5QHJXGbTmoN58kvLNZ25IBlLyoPJaZrnSElO4RpIJzENXaT7SxlftSzxMxrxz8MBefj3kaOpIC9Jxg+LOCPwiliMhvPia0bOeFrWLHt+Dx0wh3VtIDW6Sa6GrWhgt8OIu6gWkul9VXK/ZjFeGmpBqY7ZwKpl8KjfIX48oaDyY7p+qiM72mXE6NuaYbjNPCpwNtLv5TaTy/2e4hkvBibGKH4nUtoSEHmUTHlcchtna1PFfOvET4s+LM+GdhZIwbgpB5OuivYftFj5OW5kscLpHMYWu0jzXmcnDmY4F0EjBXtOYQFVl0uHgAAKjnbrntLTZ6qh5qqsSD5LrB2VVPNBdoBO+6cwxUpPYWkWncJ7F2J+SD6tiSPlxIZHF7S9gJGo9kcF45Pd80vwmZuVw3HlYKGgCuxGydDFE1UOf7xRWFxO5UBiIBSI7Q082NP6KpiiPONn9IRFCKC+CCt4Iz/tCC7GxXc8WI/wC1OUoLAVT2zjw/Bcd8ONDfwXh8jr9GDfJpIWnpAUgIz7ZjeAcO/gn+oog4JgjlEfmtClNJis93BsJ3OL5Fc3g+I3ZrXgdtS0aUUgxm8McxwM0g8PqW80c43DhzeP1cn5OSycyKiaXzeuufw3LNenm3v9iHG4Ueb2/1KRh8L6Ss/wD2BZLozqKs2Iq/yfx/46fF1/rW9B4d0lb/APsC77Pwf44/rCzBGVPhHsn8j8f/AMnx9f60fs7C/wCp/wD7Cj7Ow/8Aqj/WFnmIqBAS4bLXP/T+PckS/j6/1q/ZkFbTur4hCfwfHO5yHD5IB22SudrdCGMBc5z2igLJ3Xujy/tojgsHTIP0XfYsfTIPyCzXamv0u1NPZ2ygucORJ+CDT+w2/wDUO/pXfYbf+od/SFl+I73j81dr3E0HH5p6NaP2G3/qD/So+wm/9Qf6f/KY1uArUeSx5+LyxZMjCQ5rXUASpcJ7aH2EP+oP9KgcBaHW7IJHUAUgYvExkyNjDXhx7GwtkN8OGibJTIW2M88PwmO2a+v5k/G+LSGsNADYJeQgoJsGws2ank0dQ7ockoASrZrFFByJHAnsudmOnEnS8swA2KVM4JS803mlxKS7yWXpkkPGTUqk7IIera0xUuSkrA47hHc8IdaiqgPo4I5IM+O2uVBabBQXPjDhyTR5PNibG7U3ffkj4zPQ4Gy2BJLsO4Wpk8PYX69INLP4jDJJkNeKDWtoDstysWJYBW5s9yoeAgCNw6lcXvZsTso2UzX00hZ8TuiPxOT1SRtaRx3dOy1I52+z7eSlDjKKAsijm2EMCimKVC3dUcwkBEBKq1tIjW7qDrd0UtfJe52Vw3urBiaYqCSrAbrtKvSC7eS4mlUGl191dTFgiiTS0gICq53QFNMByXF5NoPCoTPxeMAGmW4nsiSEXun/ANm8XeXJP4jpb8ArPbPXqPQNGnFf5ikmGeSdk2ZpQaC6vMGxoBR3N9W1QDdG/CiUq/mrwD7wKzmhTGKNoLzgtm1sNEqwf4kTmTfeRuFOBXPGpUd6kddTsERku/ZTh027cidhPyWflfsXnR+tiSR5De105enhTFkbgkI15V82yuFZ2ISMjGkYb90pUC19YZkuI0vpw80vkcL4Zmbz4URPvNFFF8nzADfcJ7GG69dP+x+BILxsmSE9A4BwQG/shPHMwRTxyMLhZOxG/ZNXXrP2bg8LgmK08yzUf1WrQSvDo/AxhDd+GS0HuL2TaK5cuXIOXLlyK5cuXIOpdS5ciOXLlyDly5cihPNhJ5LdTU047Jebdq+L/wBPW1149VnmOyiNiRdI5lea43xoyPdjYjyIxs57T7X/AIXDjjr8lyPRe8aGbxfFxLYz76QdGnYfErMd+0ORezIx8AsIyEFV8RxPP9KX1OP+TiT37cL+W/p6nD/aGF405TNDveatnDnx8saseVrwOdc18+LrG42TnCs6TEna+M0BzS/8nO7D5K9s8bpWeWWGWAwu0uMlXXSimBIJYmSDk4Wheq7Px2uFgBzvovXPTgOzLyXu+8DH1yDmhDnyp2zFrKi2FtYKF900A1lloSz2iSVz3c3FTVqGZGUecz/omofS30Q8kX1IQmsoclcCt01DlZF+XxCxHfaUuSQHEBziL9XZabGPkNNCZgx4sZuwGrqVftZcRjQejxAyP1vrcmlSWUuKmaQuPkgkWjFqCVRxUlUNoipKnaRul3zUEqllLNWWxn5Ubo5C07+fdBGy1XtbMzS7n0Kz5Yyxxa4fArjZj18d+TmuBCgupCotXaiVG19WrkixiuarGyhZRLQXBV7sINq4dtuoqH0QkslgIOybc5LzbgqwZcja2SM7i1x7LQm2Kysl3r6e61GNZ2WfEeWeaVYCySuRC0TANd7kFEzsPxIRLGPvGC/iuknpy8vZeNw5I4PZIRyck5E/U1YrcFXUuBVlFQAEVoVAN1duyAgAVqCqDYVgoOOyhcSoVEqLC61BKCSSgvf2UyPAS7n/ACQWEbsiRsTN3PNL1WHC2DHZEwUGhZnBsXS3x3j1nChfQLWc6m0Oa6cxw/J1+ly7U5UJ3UjZu/NQtuSzUQckNvJXB2REEWpaF1LgiL2ACTyCU8QyyF34RsFTKyNcgx4zz9o9kRwDGNDR5IGoRsiu5IcHIIruSAYCIxyopuioDKwcR1QwbVgUUVsrm72UzHmvaNzq+KSUoa1Ysxj/AGvVKYBDhYIIWGCQUWPIfGbaSq1OmwuSkOc1+z9img4EWNwjWxK5Ra60ErlFqUHLly5FcuXLiiFiUKXkvLN/bKSvWxIz8HkIg/bCB373GcP5XWvi/k/B+S/p2h/j8xg4VKWu0uf6o814Vzg08+S2uNcWi4qImwO0NaPZkNG15/KEkNCRpAPI8wf1Xs/5fxXjn2dVDprOwKjxj2pLmYjpaoZj8F7WDvi6mAK8byaa3kkGvcSBey0cOEveCBZRHtuGZEbsKCOxqA01e6MXVxJv5Ij9SvPcOayLI1yAB1EBx6HonIOJvkyjJM1upzQ3bZXEbxf6qhm6Q9Nj5Eu/QJzFkbKzUy6ut1jA0AixQukO2w7roIjKb/D3R3yNjGliSJV/UhbTQhPfZVC+1UkLTNqDuVVykkWqkhEQoKklQSgoW2VQgIhcqEoK12VJoxKyjz6IlhVJrcFSzVly6zHMIJB5hUa31k3lxkt8RvMc0o1+y42Y9fPXlNHLgAqh4QXSUSEMS7o0cDlN7JZsivrCYas5yE91hVkegufsrhaVyzzKxct/rhauTICSsqdtutakcu76EgcHNp3PzTra07LMjtruafheK35ro4kOI4ZjJmiHqn2mj+6Uilo+S9EWh7aO4Kwc7EdiyWBcZ5Hss2OnPRljtQ2RAkYJNhvSZa++oXN1GCuEEO3Vw5AUFWHmhhXtBJ5qDa4lUc5FSXIL5a6qHyUlZHkoi7pbKb4XiemTanX4bTv5pPFxpcyTREPV6u6BerwMdmJA2JnTme5W5HPvrB2tDQAOii9TvguldpHPc8lDNmrpHnohI5FR1ULgiCNNClZvNUVr2RF0pm5YhHhx7yO6IWXm+HbI93eSHg4rnyeNN6zkUxhYxazW8W47kq2SdLgmvZCVzBsCiGsZ1tCO7klMQ+qE2/koKqCoulxIVFmuRAUEFSCQoDgq1oIcrakBVCpqpWBtBNp3EySPVduEmrMOkFUbINiwuWbG4OoF7wPyupaDJGhgG5ocyq1KtaqZKXGcD8NpeZ/iOsW1RTAlVhICkN/eKgA/xHKa00dYUFyzgx9kid9Hoixuc1tGV5pajFr5MZihmdLmRVL7KxHUz6QQdijw5uxjcAWnm07grNtSHFUOz4oI1w8urb5IYxJHV/hHwpdbdPUJwbIsAxsBw3cm4XT4eRohe0FwFmrryVmSaOoKHJI8nUwDUe5Ua9Qd+W/01rXvLqPrDuntbA77uNtH5rFx4niUvkruKeFr8LxpslwjjFA8yTdrcTTjJPWEZovdyDdyvTcL4cYYQZtr309lTh/B4eHDxWnXNW5KdMxcN1m1i1eWUNbpZsPJKk2rndV0FRioC4mlJaQhOsIiXOVC5coRE6lBcoOygm0EE7qCVxXUqKlyrdqzguAKiuG4o8iszLhdA8kC2Hr2WoAqTxNnhdGeopSzW+OvGvPyzAcjuEFstnmhZbH40zopBRHLzCCJAOixj0a0mSIviAdVnMlvyRDN50mLpiSbqlZZtkN8hJJ6ITnX13VkZtDlcXPoc0q9xa9zXAgg8ijytPO7tJS2TfNbjl1RA4FwTTTss6nDcA0jQZOk05VhpxSEbFFkYyeMseLB2ISJfdFpTWNNrto9oBBkZOFJiPvfw72cuad9jS3HSMcCyVux6FZuRw9zCXQHW3np6hYsduev9ADr5ojXeaX1UaIII6FSDXVZbNh2ysHJdj0QSClFEJCE+SlV0g5oe7iK3JVHPdsUbF4bLkkOk+7j7nmU5h4LWVJOLd0HZOPkI3F/BanLl13nqDxsix4gxlNaE3w6M51ujdUYNXV2saYTSMIF1S9D+zDNHC2eZJ+q1fUc57C4hhtiyITqLiGEn5obRZ25J7ijtWU1o/C2ilQQArPpi/btKkNpVdK1u52SOTxMMOmIanKofc9sbdTyAO5WZJxF2VL4OICehd2Wdky5ObKIrJ7rd4bgMxYhtbjzQUgwtLhq3PUlaDG6QABspOxUomoI2S+ULYmCgT7NQdieyPJOndiRxzXJOsNsUAbIPJWJsKr76Kmp3kqLgqbKHqK60BA5Xa5BtSDSgYBFLgaVGusLiaQGDtlYO9UpcORA62lEHY6k3DKLAcaB6pBqKxysGmY2n/UCDkNEYBa7XfZL6iWkNI1dL5JRue9uWMXJh8NzgS14PqlK1KLLkPadoXOSx4lKHEDCmNGr7oz5d9iqeIe6zrolnEJnDfBmBRsfKklyGxyYskTHHd5OwVGS9yjNeK3I+a1KxXx5cuXKOjly5cqCwSGOQELYY8PbYWIwW4Ba0dRQFx30i67qAxrkpMcrWFxifXO6TnDMmOWEFjWh3UgLe4Xw2bOfrIIiHXuorO4JwQ5X32UC2PoB1XsMNmLisEePEGikHIxZIYw1hpoHRAhmLTTijFrRdtu3cdkM+tvyUxSBys8b2AjKrX9CN1JcquIdz9ruh6iNnHdBcuVHLtStsgqAoI3V1RxQRSrSklRqRHEClUhW1Kr30gqFyrqCsg5dS6lYIrN4vw4ZkGtgqZg28/JeX8OUGnRPFeS95sksyGrc3qpY6c948i0OugnIsRz22XV+iFMCzN8i5aMJpvxTFvf+FJMYRgH2u6Xmg1i2c/JazgKo8ikpY3RHbkrjHlWTJK+PaQWO6qNEotpv/C0J2skYQ5tmuayZsZ0biYjRv5qhuNjQKIsK78CORupvquWezLkZtI2j3TUOcBz3CCj4JYDyNdwj4UoiyWPOwunfAplmRHIKv5qXQRvG23mERqZGKzIhcHAbA1XNedgyHggF1jlRXqsL14N99qXkXRFuZJG3enGlI3fo45sOQPvAL79UvLw5wFxO1DsVNOb7QKKyUgDdLIk6sZ72PjP3jC1dqsArXD2vFOaCOxQJuHtd6+Pz91ZvLrPyS/bP3OwG5Wvg4YiAfILefohYOGWu8SRtEcgVqRxucnMZ77/UQGWVcRDqAitZXmraepW3ECVlQu2r1Vp8Ad/8fB0BG6SkBfG5o6ilf9nZCYZIDzidt8Daz19NcmeJu8PLdf4t0mZC4UAVq8RgE0bJa3bz+CRDWM/5V5vpOp7KTYk0woENHxQnYDIG89Up5J2bKbE3uTyCrAwv+8k9orTIWDhthfdbk2VpDZDjb1KuiOK4LlUikFrQp221FHJUk3agFAKTkaUj3OyajUA3giyhF1c0zM3e0nIKVFtagyUd0Jrq5qXG0BgbCkurql2Po0i6u6ArHq7jqS4dRRQbUFgaRGH1Sl3bFXY67CIZaURrkBrtldp3QGDlaSOPIY0StB0m2nqChKzXUUIWfF4bqIpcAnpGNkZuknxmN1Hl0WLHWdas0BHZoBBLQa7pYFRI+QMJjALuxNJCvly5cuXRpC5cuQGxG652jzWlkg+jvaN3EgABL8LjDnudXJOjiTWDSWihsDW6lCnDmZMMzRWmNx37r6vwumcOjoAWLXzWGePJyogwdRdlfSML/wCnGB0CVKpLI60rNGSC4c01M3dTGA5haQowzopzHJpctGKbW3mksrH3KHjzGN1ORNaJJFkCyquojfmrNcHNsFQ6hvW6KEDvR2KtfmocNQs7FQKIrqiLF3ZVsnmrAKaHVAOrUgIlDoF2lAOlV7SjUoLUC4b5Kw2RKVSEEKVFKUVKq4amlpGysF1KDzHF8V0OQHAHT0KLCCYmuWzn44yccsNAjkVlwN0xFh5hWVUUHbKpicRRFhXA0u3RdXkqjOfhNDba8tPzSGXAYpBZDg4cwtaY7lISst1jkiwj4MUgoobuHuaSWOBCfawdQiCJp9kkHyQY/hyxfhcP0RI8l7eZ/Ra4iePxAjzQ5MRr93wtPmENO8CyDNDOTyjHbyWXlxiHiTwejW38ls8GxmQ4sugOBmkaw2fn9Fi8Ya+TjExY6tTunwUn21foYOa5u6gxMPRTj4TiAXFxrryTYg976KsExEzpZKM2GS9hQ80y2OtmtrzUmI/ief0QVYxx9pwsIoLxy0lUEbQeZV2gauf1QcXS9Yz+htDfleGfXBb8QmWim7O3RdOvY0R5oE2ZkRrcIWDkiDjIcCAyT1T+qYm4VjT7ujDXd2bLFzOGyYbw7UdLTYSrHvmgPYQvL5D8hmRLBHGbY7SXEbL0nD5hkY0cg5OaDSzeL6m5DK21t+ZXPn1WuvpnQ4/ranuL3nmStBo0tAQ4I9Ld+aMAujlUjZqgKr3UFzLJVF+S6rXKQg4cqVJBsiEdlQoBMFFMR8ghAbojeagM8WxJSje08N2pSVtFAoTRVgbCiRp6KrD0Kog7ORLVJBVFc07IJJNorHXshKzNrRBSbCtGaVCpbaBhh2RGlLsNhFZzUBwdlINbql7KpdVDugchdYo9VDmi9LhYQ2OqiiP3RVfR+z/ooON+c/II0TrFHmqzyiBoc5kjgfcbqWcdZdfIaPZRpR9D65FVIc2y4HYLTQJUFTfna5vtD4qo1cECPCfIdiUpe/O1quxnuxooY2Oc5/QBMwfslxHLoCF0YJ5u2AUCPBo3S8Qia0dey+oY7PDgY3sFm8I/ZmDhUfiSHxZe/ZawdfJRmhStsILDRpHl2SztijC0jdQ3SEzC07BPB2yFM0FvJEUx37Ujg90i06HK8khAsFUMuIJsnkosE208knHlazuEdjuwARRg7UVYOCC81Thz6qwcCLCAupQHKlrrUBgbUobVa0HEKpC4vVS8IOIpcqly7WKRVwpQtYU6wguRfRZuZF4Uhka3nzT/AIiDOQ9tVagzCS7c8l3RDe8tkLSeXJStCsoBCSkFFOk90CWLawgWRW0qhtWrAUirtbfkr+EaNOr4hUa+lcvsbIjVwmn0WM377v8AAWPm4xHFzY20A2t3A3xYv5CfqlOJRgcSaTvcYWJfbpfoAMptdApDQOi42oNrbk5x2Q+asbCikFatQ4ECwrKeaBd0rmDc0qelkdUeSIPSz8Z17ILenvHVL5OYZm6XhS/GeBaUkaWncKrHq/2Zn8TA0G7jNfp0TnEomyFjyPYdt8CsH9mZxHkmIu2cN9+q9RkR+JGQBuRt8Vyvqun3GV+i66Ckkc7QpHgLo4qvd6yIzkgNJLrTAVFipChc3ZEWQ3CirqHCwiqhEb5oY5ogUBm8kCZtozTSpJugSc3zQQKKZkHNAdfRUc4amlCaSDSMCqObveyCQVLSqgqL3FoDBWbz8kNp2Vgd9kQaM7UjNP6JWM+sUbWoDB1qhNvQy4jYc1LT6wCobB2RdVtCANgpD+igM11OtMg2LCUBtHhNtI7IsuPlgmc3mfkh5ExcwAXvzWmzg0zgDK5rPIbrN4jC2DI8Bhc7QBZPco76S5fotTgHCpeJ5rWMoNafWKXweG5GbKGQxOcTzoL6Z+zvBm8JxQZaEh3IrkiNPhvCoMKJvqAyV7RWglXZPZAkyXO6ol6OzPYG0480nJkMbs0BJzZFBZ0+TZ2KjFutN+SHc1QyArGdkEHmuZlusb7K4jaDxyUv5JCKfVW9FNsl1CnIheU0qsIftaJkRmtknG8sk3QDluGWxytMxS6gN1GTGJYyQs+KUxv0noithj6vUbvkoEnhv/K5LNcHgHsiF4cKCIcuipBSrJSRRO4VxIB1RTN0EN8oHMpabKDRzScmUXcigfdkAdUI5Q7rOdIT1VC43zRWn6UPJQclZlldqKDSOUu9K7lZ2oqLPdBpelDoVV2TbatZxutiqanAqKPK7U+wrNJKC02N0eMBBR2zlPMK0grdQzfYqoCWqhYb8k54fZQYrQIOcRy2XeIQ3/KPLD1Sz2EjewOyK9Rw5pGJCDvbAfmUlxem8Sj84/8AK1MFmnHYPyNr5LJ47txOMf8Ab/yuc/8AZu/SlLtKq07c7Vwujkjwwo0i6RG7q1CkCjxvyVQCmXAEoZoKiAKG6kAdV2sdlABJQS5ocKpZ+VihwNBazIuSl+MCEGDw3/2/EIXn3qK93dxNK8fm4/h+uNqK9biO14w+AXPp04ZeYzwZ5I+gNj4FJPcbWpxuOhHMOo0O/wALKjBcVrn6YsyiRiqRmqrRSuFpmrrlwUoJrZUKvahyClUVdvJRVrrpQEad1Dwoad1LiqASAbpZ+x2TbhaXkbVoBLjuFCs0oBg7rjv8VzgQdlLeW6CzTturg7oakICMfblfVW6Ua4avijstx03tzKArb063cypiOp9oWRLZ0omMKbaIZLlVrrcqPdQVYnWe6inWmkWJ9O+KXYbCnVRRHg28TzNvWs9gBunuDfsxmcTl9IzCWMJskiiVvcC/ZaPFa2fPp8lWGdivROkbGwNYKA2AHRR2tDwcLE4ZAI8aNraHOuau+a+qVln3KAZieyMWm3SIL5CheL5qpfaM6HOSUjKE87dAexFZ8nNC1V3TskXkk5WFqqmMeYg81pQyWFgsk0urkn8ebkiNhrr2PJK5WOR6zeS6OXZNMkDhTkQnBL+FyV4hj0fFZ05rQlxaJew7LgzUKcixl42RyBTBlaw33SGZG7Fnto9UokU4czdA26Qg6+i7xzSWEhcNJ28lXXpdpJRUzSG7Sz5903Qe3dLy44VAfSCu9IKC+MsPdUUDQyFYTE8glAURhO1IGRJteyg5AHRDeKbaQbIfFIN80GqJgVa6STTtSKxyGja/WqkeIpVMQO2AQMlpc1BBLXJthGgIErad5ICRbohYECB3RNgWEC0jDV0lJBZIO+y03s9VJOZ6xRHpcNn3LKrYD+ywP2kscUj32EYpeiwwPBbXl/Zee/aYH7UZ5RgrnPt2v0DEfUFIo35IMOzAjNcAF0cU2rc1W12pUWPJBO5OyOBYUiIdUC7GElMsho2iMYByCM1qCjY9lfTturUoKISzow6Fw8lp8Pfq4dE8H2gOSzM5wETlpcA9bhMF9LWO/p04dmsdNiStAs1qH6LIh9lep0no35rFzeHPxLma4OiLuQ5hTm/pe4WAVgq7d1dtUujksCppVVgg5cVIC4tQVXKaUKDhzCu7khEorTqaiBEobtwruQ3qgDtj5qqu/mqWghzv1UB265RW6KtasqhSEC0btjfQp1lxw6iQCUjhjxJnX7LTv5ouXkb19EENJfJdrTjAEYros/CYXG0892hlKAU7xyHNWgOyTc8vfsnIG0AgabsFRzt1zneqhA24INl8toD3koAmB7Ige09VFocjSUu9paniLQ3RghEI6yD1UiTzRpMfUDXNJyMfGdwimg8Ec1LhYSbXkI8c3Qpg5zEvLHYTxIcEF7bJQYs7NDiVaCXum8mHULWabjeqNeKXkm45dllYz9VUU611N5ojQjn0lGEsZ5rFfk6dtQCp6Z+a/wBUwN8RiE0ZAG/RYkEmh5a5aTcjVzKQzoND/FbyPNFGcSQqPNi+RCnHcJBSl7dDqRUMkKJ4liilzs7ZSCgtIA4FLFlFMXarV9EAQ3uFdhDTSBlTGOq5dVWJ2o87VD7gHMKyJrjySK57rWZRaN1ncQaWet2Kgsx11SZYVnQPJA7pyNxPNUMg7IkbqdaCOSsCg1In2AryttqSxpK2KeDgWqAEfqlNxu2Sh2cjxuRDPMbpSZtONGk032Qlso1ZSrHoeH//AFY/gsL9oBq4nz3DRa3OHG8WP4LE42P/AJJ/wCxPt0v0TYOSIBuhs280VdHJKuGAqrG2UUDsoOa2kZrb3UAdOaK1qCQ1WpdVLiaRHIMrgFZz6SGRP0CoDnSDQUz+yma/73ELgBepu24WRkv1DYoOFkOw8yOYGqO/wUs2N8+n0Dwg46nOcSD1KmWESwvjPJwQvSWeGHl7Q0i+aWk4m0X4bSfPouWV1tZs0Jhlc0kGiqhXmkMsjnkUSqDmuscKsAiAbKgO6I0KokLqVuSjmoK7dVQq5AVCKtUDJ5q8buio7uoYd1Bd4N7ILymCUGQDmqgD+SoryDr0QiaRXFQVyhyC45KQoaTpXdUCkUvgROaCNzZQATJJvyVJXffPb5pvBg1nU4bINDHHhsS+VPZLQd0aeQMbQWcXF7tygYxxZsrQYaSmO0UjufpbaCZX9LXRG90m95e4BNx+q0WoP//Z"
+      "cheating_score": 1.4,
+      "cheating_events": [
+        {
+          "answer_id": "turn_3",
+          "cheating_flags": [
+            "SIMILAR_PATTERN"
+          ],
+          "cheating_score": 0.3,
+          "timestamp": 1770721625.666902
+        },
+        {
+          "answer_id": "turn_4",
+          "cheating_flags": [
+            "SIMILAR_PATTERN"
+          ],
+          "cheating_score": 0.3,
+          "timestamp": 1770721670.136827
+        },
+        {
+          "answer_id": "turn_10",
+          "cheating_flags": [
+            "SIMILAR_PATTERN"
+          ],
+          "cheating_score": 0.3,
+          "timestamp": 1770722026.827156
+        },
+        {
+          "answer_id": "REALTIME",
+          "cheating_flags": [
+            "TAB_CHANGE"
+          ],
+          "cheating_score": 0.1,
+          "timestamp": 1770722277.333463
+        },
+        {
+          "answer_id": "REALTIME",
+          "cheating_flags": [
+            "TAB_CHANGE"
+          ],
+          "cheating_score": 0.1,
+          "timestamp": 1770722285.874033
+        },
+        {
+          "answer_id": "turn_14",
+          "cheating_flags": [
+            "SIMILAR_PATTERN"
+          ],
+          "cheating_score": 0.3,
+          "timestamp": 1770722301.767013
+        }
       ],
+      "warnings": [],
+      "video_blob_path": null,
+      "video_blocks": [],
+      "last_question_served_at": 1770722302.098486,
+      "buffered_video_frames": [],
       "latest_warning": null,
       "evaluation": {
-        "overall_score": 0.0,
+        "overall_score": 8.0,
         "evaluator_ver": "llama-3.1-8b-instant",
-        "evaluated_at": "2026-02-10T13:19:16.776893",
+        "evaluated_at": "2026-02-10T16:50:46.182399",
         "per_answer_results": [
           {
             "answer_id": "turn_1",
             "score": 0.0,
             "strengths": [],
             "weaknesses": [
-              "Repeats the question",
-              "Lacks technical substance",
-              "Poor communication",
-              "No relevant experience"
+              "Relevance: The candidate did not provide a relevant response.",
+              "Depth of Understanding: The candidate did not demonstrate any technical understanding.",
+              "Technical Correctness: The candidate did not provide any accurate statements.",
+              "Practical Experience Evidence: The candidate did not provide any real-world example.",
+              "Reasoning Ability: The candidate did not explain any logical flow or trade-offs.",
+              "Communication Clarity: The candidate did not provide a structured response."
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Relevant situation",
-                "Problem identification",
+                "Situation description",
+                "Problem statement",
                 "Optimization steps",
-                "Performance improvement"
+                "Technical details",
+                "Real-world example",
+                "Conclusion"
               ],
               "covered": [],
               "missed": [
-                "All aspects of the expected answer outline"
+                "Situation description",
+                "Problem statement",
+                "Optimization steps",
+                "Technical details",
+                "Real-world example",
+                "Conclusion"
               ]
             },
-            "reasoning_notes": "The candidate's answer is a clear example of a non-answer, lacking technical substance, poor communication, and no relevant experience.",
+            "reasoning_notes": "The candidate's answer did not meet any of the evaluation criteria, indicating a lack of preparation or understanding of the topic.",
             "confidence_level": "LOW"
           },
           {
@@ -2559,58 +3080,398 @@
             "strengths": [],
             "weaknesses": [
               "Lack of technical substance",
-              "Repetition of the question",
-              "No specific steps or metrics provided",
-              "No real-world examples or hands-on exposure"
+              "Vagueness and unclear statements",
+              "Failure to provide a concrete example of a complex SQL query",
+              "No demonstration of understanding of underlying principles"
             ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Identifying the bottleneck",
-                "Metrics or tools used",
-                "Improvement in performance"
+                "Introduction to the scenario",
+                "Problem statement",
+                "Subquery explanation",
+                "Example query",
+                "Performance improvement"
               ],
               "covered": [],
               "missed": [
-                "All expected points"
+                "Introduction to the scenario",
+                "Problem statement",
+                "Subquery explanation",
+                "Example query",
+                "Performance improvement"
               ]
             },
-            "reasoning_notes": "The candidate's answer lacks technical substance and fails to address the question directly. The response is a repetition of the question, and the candidate does not provide any specific steps or metrics used to identify the bottleneck or measure the improvement in performance.",
+            "reasoning_notes": "The candidate's answer does not demonstrate any understanding of the question or the underlying principles. The answer is vague and lacks specificity.",
             "confidence_level": "LOW"
           },
           {
             "answer_id": "turn_3",
             "score": 0.0,
             "strengths": [],
-            "weaknesses": [],
+            "weaknesses": [
+              "No audible response",
+              "Lack of technical substance"
+            ],
             "expected_vs_actual": {
               "expected_focus": [
-                "Query optimization steps",
-                "Trade-offs between query complexity and performance",
+                "Identifying the need for indexing",
+                "Choosing the right index type",
+                "Considering the query pattern",
+                "Optimizing the index",
+                "Monitoring and maintaining the index"
+              ],
+              "covered": [],
+              "missed": [
+                "All points in the expected focus"
+              ]
+            },
+            "reasoning_notes": "The candidate's inability to provide an audible response and lack of technical substance make it difficult to evaluate their understanding of indexing in complex SQL queries.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_4",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "No audible response",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Thought process",
+                "SQL query optimization techniques",
                 "Practical experience evidence",
                 "Reasoning ability",
                 "Communication clarity"
               ],
               "covered": [],
               "missed": [
-                "Query optimization steps",
-                "Trade-offs between query complexity and performance",
-                "Practical experience evidence",
-                "Reasoning ability",
-                "Communication clarity"
+                "All expected points"
               ]
             },
-            "reasoning_notes": "The candidate's incomplete response and lack of technical substance make it difficult to evaluate their strengths and weaknesses.",
+            "reasoning_notes": "The candidate's lack of audible response and failure to provide any technical substance make it impossible to assess their thought process, depth of understanding, technical correctness, practical experience evidence, reasoning ability, or communication clarity.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_5",
+            "score": 8.0,
+            "strengths": [
+              "Demonstrated awareness of potential edge cases and failure scenarios in executing SQL queries.",
+              "Identified various categories of potential issues, including user input system limitations and AI model behavior."
+            ],
+            "weaknesses": [
+              "Lacked specific examples or real-world experiences to support their claims.",
+              "Failed to provide a clear, step-by-step approach to handling edge cases and failure scenarios."
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Potential edge cases and failure scenarios in executing SQL queries, such as ambiguous or vague queries, out-of-scope requests, and data limitations.",
+                "Approaches to handling these edge cases, including error handling, data validation, and query optimization."
+              ],
+              "covered": [
+                "Potential edge cases and failure scenarios in executing SQL queries",
+                "Categories of potential issues, including user input system limitations and AI model behavior"
+              ],
+              "missed": [
+                "Specific examples or real-world experiences to support their claims",
+                "Clear, step-by-step approach to handling edge cases and failure scenarios"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of potential edge cases and failure scenarios in executing SQL queries. However, they lacked specific examples or real-world experiences to support their claims, and failed to provide a clear, step-by-step approach to handling these edge cases. Overall, their answer was relevant and showed a good depth of understanding, but could be improved with more practical experience evidence and technical correctness.",
+            "confidence_level": "MEDIUM"
+          },
+          {
+            "answer_id": "turn_6",
+            "score": 0.0,
+            "strengths": [
+              "Provides a real-world example",
+              "Demonstrates basic understanding of the problem and approach"
+            ],
+            "weaknesses": [
+              "Lacks specificity and clarity",
+              "Inaccurate technical details",
+              "Lacking logical flow and cause-effect explanation",
+              "Unclear communication"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Introduction",
+                "Problem Statement",
+                "Methodology",
+                "Key Insight",
+                "Business Decision",
+                "Technical Details"
+              ],
+              "covered": [
+                "Problem Statement",
+                "Methodology",
+                "Business Decision"
+              ],
+              "missed": [
+                "Introduction",
+                "Key Insight",
+                "Technical Details"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates a basic understanding of the problem and approach, but lacks specificity, clarity, and technical details. The answer is somewhat relevant, but it lacks logical flow and cause-effect explanation. The candidate's experience is evident, but it is not well-articulated.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_7",
+            "score": 8.0,
+            "strengths": [
+              "Demonstrated a clear understanding of data cleaning and handling missing values",
+              "Provided a specific example from the analysis",
+              "Showcased practical experience with data analysis using Python"
+            ],
+            "weaknesses": [
+              "Lacked a clear explanation of the trade-offs between different approaches",
+              "Did not provide a detailed step-by-step process for the data cleaning step"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Specific data cleaning step",
+                "Rationale for choosing the approach",
+                "Trade-offs and potential pitfalls"
+              ],
+              "covered": [
+                "Specific data cleaning step (handling missing values)",
+                "Rationale for choosing the approach (using median income)"
+              ],
+              "missed": [
+                "Trade-offs and potential pitfalls of the chosen approach",
+                "Detailed step-by-step process for the data cleaning step"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated a good understanding of data cleaning and handling missing values. However, they lacked a clear explanation of the trade-offs between different approaches and did not provide a detailed step-by-step process for the data cleaning step. The answer was specific and provided a real-world example, but could be improved with more depth and clarity.",
+            "confidence_level": "MEDIUM"
+          },
+          {
+            "answer_id": "turn_8",
+            "score": 0.0,
+            "strengths": [
+              "Mentioned some relevant methods"
+            ],
+            "weaknesses": [
+              "Lacking in clarity, specificity, and technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identify issue, propose solution, justify choice, provide code snippet"
+              ],
+              "covered": [
+                "Mentioned some relevant methods"
+              ],
+              "missed": [
+                "Justification, code snippet, deep understanding of principles"
+              ]
+            },
+            "reasoning_notes": "The candidate's response lacks clarity, specificity, and technical substance. They fail to demonstrate a deep understanding of the underlying principles and provide no justification or code snippet to support their choice.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_9",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "Lack of technical substance",
+              "Failure to address the question",
+              "No demonstration of understanding of missing data handling methods"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identifying the type of missing data",
+                "Assessing the impact of missing data",
+                "Choosing a method for handling missing data",
+                "Considering the analysis goals and data characteristics",
+                "Evaluating the results"
+              ],
+              "covered": [],
+              "missed": [
+                "All points in the expected focus"
+              ]
+            },
+            "reasoning_notes": "The candidate's response is not relevant to the question and lacks any technical substance. This suggests a lack of understanding of the topic and a failure to demonstrate any relevant skills or knowledge.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_10",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "No response",
+              "Lack of technical substance"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Identify the issue",
+                "Assess alternatives",
+                "Implement a fallback solution",
+                "Provide a code example"
+              ],
+              "covered": [],
+              "missed": [
+                "Identify the issue",
+                "Assess alternatives",
+                "Implement a fallback solution",
+                "Provide a code example"
+              ]
+            },
+            "reasoning_notes": "The candidate failed to provide a response, indicating a lack of understanding of the topic and inability to apply technical knowledge to solve the problem.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_11",
+            "score": 4.5,
+            "strengths": [
+              "Provides real-world example",
+              "Attempts to describe correction and prevention steps"
+            ],
+            "weaknesses": [
+              "Lacks specificity and depth",
+              "No clear explanation of data inconsistency causes",
+              "Lacks logical flow and cause-effect explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Problem Identification",
+                "Impact Analysis",
+                "Correction",
+                "Prevention"
+              ],
+              "covered": [
+                "Problem Identification (partially)",
+                "Correction (partially)",
+                "Prevention (partially)"
+              ],
+              "missed": [
+                "Impact Analysis",
+                "Clear explanation of data inconsistency causes",
+                "Logical flow and cause-effect explanation"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some understanding of data consistency and integrity, but lacks specificity and depth in certain areas. They provide a real-world example, but it is not well-articulated.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_12",
+            "score": 6.0,
+            "strengths": [
+              "Demonstrated some understanding of data inconsistency correction",
+              "Mentioned a real-world scenario"
+            ],
+            "weaknesses": [
+              "Lacked specificity and detail in the correction process",
+              "Failed to explicitly address the question's second part (ensuring no new inconsistencies)"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Specific step-by-step walkthrough of the correction process",
+                "Explicitly addressing the risk of introducing new inconsistencies"
+              ],
+              "covered": [
+                "Mentioned a real-world scenario",
+                "Data management practices"
+              ],
+              "missed": [
+                "Detailed correction process",
+                "Explicit consideration of new inconsistencies"
+              ]
+            },
+            "reasoning_notes": "The candidate demonstrated some understanding of data inconsistency correction and mentioned a real-world scenario. However, they lacked specificity and detail in the correction process and failed to explicitly address the question's second part. This indicates a moderate level of technical knowledge but poor application.",
+            "confidence_level": "MEDIUM"
+          },
+          {
+            "answer_id": "turn_13",
+            "score": 4.5,
+            "strengths": [
+              "Mentions various data validation techniques",
+              "Demonstrates some knowledge of data validation concepts"
+            ],
+            "weaknesses": [
+              "Lacks specificity and real-world examples",
+              "Unclear and lacks structure"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Data validation strategy",
+                "External API integration",
+                "Real-world experience"
+              ],
+              "covered": [
+                "Data validation techniques"
+              ],
+              "missed": [
+                "Clear strategy or approach to data validation",
+                "Real-world examples or experience"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates some knowledge of data validation concepts, but lacks specificity and real-world examples. The candidate's response is unclear and lacks structure, making it difficult to understand their thought process.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_14",
+            "score": 0.0,
+            "strengths": [],
+            "weaknesses": [
+              "No response",
+              "Lack of technical substance",
+              "Failed to address the question"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Understanding of circuit breakers and retry mechanisms",
+                "Decision-making criteria",
+                "Implementation considerations"
+              ],
+              "covered": [],
+              "missed": [
+                "Entire question, including key concepts and considerations"
+              ]
+            },
+            "reasoning_notes": "The candidate failed to provide any response, indicating a lack of understanding of the topic and inability to address the question.",
+            "confidence_level": "LOW"
+          },
+          {
+            "answer_id": "turn_15",
+            "score": 4.0,
+            "strengths": [
+              "Attempts to address the question",
+              "Mentions investigation and analysis"
+            ],
+            "weaknesses": [
+              "Lacks specificity and real-world reasoning",
+              "Contains vague statements and technical inaccuracies",
+              "Lacks practical experience evidence and hands-on exposure",
+              "Lacks logical flow and cause-effect explanation"
+            ],
+            "expected_vs_actual": {
+              "expected_focus": [
+                "Immediate Action",
+                "Root Cause Investigation",
+                "Data Correction and Recovery",
+                "Prevention and Mitigation"
+              ],
+              "covered": [
+                "Immediate Action",
+                "Root Cause Investigation",
+                "Data Correction and Recovery",
+                "Prevention and Mitigation"
+              ],
+              "missed": [
+                "Specificity and real-world reasoning",
+                "Technical accuracy",
+                "Practical experience evidence and hands-on exposure",
+                "Logical flow and cause-effect explanation"
+              ]
+            },
+            "reasoning_notes": "The candidate's answer demonstrates a lack of understanding of the underlying principles and concepts related to data accuracy, consistency, and integrity. The answer lacks specificity and real-world reasoning, and contains vague statements and technical inaccuracies.",
             "confidence_level": "LOW"
           }
         ]
       },
-      "ended_at": "2026-02-10T13:19:13.117420",
-      "termination_metadata": {
-        "ended_by": "CANDIDATE",
-        "end_reason": "MANUAL_SUBMISSION",
-        "questions_at_termination": 3
-      }
+      "tab_change_count": 2
     }
   ],
-  "user_id_counter": 47
+  "user_id_counter": 55
 }

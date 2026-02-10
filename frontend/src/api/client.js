@@ -158,6 +158,15 @@ export const interviewAPI = {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
         return response.data;
+    },
+    uploadVideoChunk: async (interviewId, chunk, chunkIndex) => {
+        const formData = new FormData();
+        formData.append('chunk', chunk);
+        formData.append('chunk_index', chunkIndex);
+        const response = await api.post(`/interview/${interviewId}/video-chunk`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
     }
 };
 

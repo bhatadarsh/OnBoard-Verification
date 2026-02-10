@@ -1,5 +1,5 @@
 import os
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import BlobServiceClient, ContentSettings
 from datetime import datetime, timedelta
 from config import settings
 
@@ -22,6 +22,19 @@ class AzureBlobHelper:
         container_client = self._get_container_client(container_name)
         blob_client = container_client.get_blob_client(blob_name)
         blob_client.upload_blob(file_content, overwrite=True, content_type=content_type)
+        return blob_client.url
+
+    def stage_block(self, container_name: str, blob_name: str, block_id: str, data: bytes):
+        """Stage a block for a block blob."""
+        container_client = self._get_container_client(container_name)
+        blob_client = container_client.get_blob_client(blob_name)
+        blob_client.stage_block(block_id=block_id, data=data)
+
+    def commit_block_list(self, container_name: str, blob_name: str, block_ids: list, content_type: str = "video/webm"):
+        """Commit the list of staged blocks to finalize the blob."""
+        container_client = self._get_container_client(container_name)
+        blob_client = container_client.get_blob_client(blob_name)
+        blob_client.commit_block_list(block_ids, content_settings=ContentSettings(content_type=content_type))
         return blob_client.url
 
     def get_blob_url(self, container_name: str, blob_name: str):
