@@ -125,9 +125,9 @@ const InterviewSession = () => {
                 videoRef.current.srcObject = videoStream;
             }
 
-            // Start YOLO-based frame capture immediately
+            // Start YOLO-based frame capture immediately (1 frame per second for real-time detection)
             if (frameIntervalRef.current) clearInterval(frameIntervalRef.current);
-            frameIntervalRef.current = setInterval(captureAndSendFrame, 3000);
+            frameIntervalRef.current = setInterval(captureAndSendFrame, 1000);
 
             isInitializingRef.current = false;
             console.log('Camera monitoring active (No full recording).');

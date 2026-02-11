@@ -85,15 +85,53 @@ def evaluate_interview(state: dict) -> dict:
             if eval_data:
                 # MANDATORY SCORING FLOOR (Safe Guard)
                 raw_score = float(eval_data.get("score", 0.0))
-                answer_text = turn.get("answer_text", "").strip().lower()
+                answer_text = turn.get("answer_text", "").strip()
                 question_text = turn.get("question", "").strip().lower()
 
-                # Rule: ONLY assign 0.0 if actually empty or verbatim question repetition
-                if answer_text and answer_text not in ["(no response)", "n/a", ""] and answer_text != question_text:
-                    if raw_score < 1.0:
-                        print(f"DEBUG: Applying scoring floor. Answer '{answer_text[:30]}...' was {raw_score}, bumped to 1.0")
-                        eval_data["score"] = 1.0
-                        eval_data["reasoning_notes"] = f"(Floor Applied) {eval_data.get('reasoning_notes', '')}"
+                # Define what constitutes "no attempt"
+                no_attempt_phrases = [
+                    "(no response)",
+                    "n/a",
+                    "",
+                    "no audio detected",
+                    "transcription failed",
+                    "silence detected",
+                    "no audible response",
+                    "empty_audio_content",
+                    "audio_persistence_failed",
+                    "no_audio_provided"
+                ]
+                
+                # Check if answer is essentially empty or just whitespace
+                answer_lower = answer_text.lower()
+                
+                # Check for system-generated error messages
+                is_system_error = (
+                    "[timeout]" in answer_lower or
+                    "[manual]" in answer_lower or
+                    "no audible response captured" in answer_lower or
+                    "stt completed" in answer_lower or
+                    answer_lower.startswith("[") and "]" in answer_lower  # Any [ERROR] format
+                )
+                
+                is_empty = (
+                    not answer_text or 
+                    answer_lower in no_attempt_phrases or
+                    len(answer_text) < 10 or  # Less than 10 characters is likely not a real attempt
+                    answer_lower == question_text.lower() or  # Verbatim question repetition
+                    is_system_error  # System-generated error message
+                )
+                
+                # Rule: ONLY apply floor if there was a GENUINE attempt
+                if not is_empty and raw_score < 1.0:
+                    print(f"DEBUG: Applying scoring floor. Answer '{answer_text[:30]}...' was {raw_score}, bumped to 1.0")
+                    eval_data["score"] = 1.0
+                    eval_data["reasoning_notes"] = f"(Floor Applied) {eval_data.get('reasoning_notes', '')}"
+                elif is_empty and raw_score > 0.0:
+                    # Ensure no attempt gets 0.0, not 1.0
+                    print(f"DEBUG: No genuine attempt detected. Answer: '{answer_text[:50]}'. Ensuring score is 0.0 (was {raw_score})")
+                    eval_data["score"] = 0.0
+                    eval_data["reasoning_notes"] = f"No meaningful response provided. {eval_data.get('reasoning_notes', '')}"
 
                 # Attach evaluation directly to the turn for persistence
                 turn["evaluation"] = eval_data

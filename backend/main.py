@@ -43,6 +43,7 @@ from fastapi.security import HTTPBearer
 security_optional = HTTPBearer(auto_error=False)
 from interview_orchestration.nodes.initialize_interview import initialize_interview
 from interview_orchestration.nodes.evaluator import evaluate_interview
+from interview_orchestration.nodes.cheating_detector import analyze_single_frame
 from interview_orchestration.stt.factory import get_stt_engine
 
 app = FastAPI(title="Interview System API - Stage 5: Interview In-Progress")
@@ -981,14 +982,48 @@ async def store_video_frame(interview_id: str, frame_data: dict, current_user: T
     if not session_data:
         return {"status": "error", "message": "Session not found"}
         
-    # Buffer up to 30 frames per question (~90 seconds of answer time)
-    frames = session_data.setdefault("buffered_video_frames", [])
-    if len(frames) < 30:
-        frame_str = frame_data.get("frame")
-        if frame_str:
+    frame_str = frame_data.get("frame")
+    if frame_str:
+        # Buffer up to 90 frames per question (~90 seconds at 1fps capture rate)
+        frames = session_data.setdefault("buffered_video_frames", [])
+        if len(frames) < 90:
             frames.append(frame_str)
-            if len(frames) % 5 == 0:
+            if len(frames) % 10 == 0:
                 print(f"DEBUG: Interview {interview_id} has {len(frames)} frames buffered.")
+        
+        # REAL-TIME ANALYSIS (Immediate Notification)
+        # We run this on EVERY frame to catch fleeting misconduct
+        if len(frames) % 1 == 0: # Check every frame
+            real_time_flags = analyze_single_frame(frame_str)
+            
+            if real_time_flags:
+                print(f"🚨 REAL-TIME MISCONDUCT: {real_time_flags}")
+                
+                # Create event
+                event = {
+                    "answer_id": f"realtime_{int(time.time() * 1000)}", # Unique ID
+                    "cheating_flags": real_time_flags,
+                    "timestamp": time.time(),
+                    "event_type": "REAL_TIME_DETECTION"
+                }
+                
+                # Append to session immediately (Admin polls this)
+                session_data.setdefault("cheating_events", []).append(event)
+                
+                # Update score immediately
+                penalty = 0.0
+                if "MULTIPLE_PEOPLE_DETECTED" in real_time_flags: penalty += 1.0
+                if "MOBILE_DETECTED" in real_time_flags: penalty += 1.0
+                if "COMBINED_MISCONDUCT_PEOPLE_AND_MOBILE" in real_time_flags: penalty += 1.5
+                if "CANDIDATE_OUT_OF_FRAME" in real_time_flags: penalty += 0.3
+                if "SUSPICIOUS_OBJECT_DETECTED" in real_time_flags: penalty += 0.5
+                
+                current_score = session_data.get("cheating_score", 0.0)
+                session_data["cheating_score"] = min(20.0, current_score + penalty) # Cap at 20
+                
+                # Persist immediately so Admin sees it
+                db.save()
+
     return {"status": "success"}
 
 @app.post("/interview/{interview_id}/event")

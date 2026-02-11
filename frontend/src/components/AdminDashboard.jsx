@@ -500,9 +500,11 @@ function ResumeList({ allJds, filterJobId, setFilterJobId }) {
                                                 <strong>{new Date(evt.timestamp * 1000).toLocaleTimeString()}</strong>: {
                                                     evt.cheating_flags ? evt.cheating_flags.map(f => {
                                                         if (f === 'COMBINED_MISCONDUCT_PEOPLE_AND_MOBILE') return '🚨 CRITICAL: Multiple people detected with mobile usage';
-                                                        if (f === 'MULTIPLE_PEOPLE_DETECTED') return 'Multiple people in frame';
-                                                        if (f === 'MOBILE_DETECTED') return 'Mobile phone detected';
-                                                        if (f === 'NOT_IN_FRAME') return 'Candidate not in frame';
+                                                        if (f === 'MULTIPLE_PEOPLE_DETECTED') return '👥 Multiple people in frame';
+                                                        if (f === 'MOBILE_DETECTED') return '📱 Mobile phone detected';
+                                                        if (f === 'CANDIDATE_OUT_OF_FRAME') return '❌ Candidate not in frame';
+                                                        if (f === 'SUSPICIOUS_OBJECT_DETECTED') return '💻 Suspicious electronics detected';
+                                                        if (f === 'NOT_IN_FRAME') return '❌ Candidate not in frame';  // Legacy support
                                                         return f.replace(/_/g, ' ');
                                                     }).join(' | ') : (evt.event_type || 'Unknown').replace(/_/g, ' ')
                                                 }
