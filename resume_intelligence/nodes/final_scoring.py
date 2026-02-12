@@ -94,15 +94,8 @@ def final_scoring_and_shortlisting(state: dict) -> dict:
     final_score = round(max(normalized_score - penalty - exp_penalty, 0.0), 3)
     
     # Shortlist Decision with Flexibility Override
-    base_threshold = 0.60
-    if exp_flexibility_applied:
-        # Grant eligibility if skills are strong, even if score is slightly lower due to gap
-        shortlist_decision = final_score >= 0.55
-    else:
-        shortlist_decision = final_score >= base_threshold
-
     # -----------------------------
-    # Explainability
+    # Explainability & Hard Skill Check
     # -----------------------------
     from utils.semantic_match import semantic_overlap
     
@@ -116,14 +109,56 @@ def final_scoring_and_shortlisting(state: dict) -> dict:
     matched_core = semantic_overlap(
         core_skills,
         resume_responsibilities,
-        threshold=0.45
+        threshold=0.38
     )
+    
+    print(f"\n[DEBUG] Matched Core Skills ({len(matched_core)}):")
+    for m in matched_core:
+        print(f" - {m}")
+    
+    # -----------------------------
+    # Final Shortlist Decision (RELAXED MODE)
+    # -----------------------------
+    base_threshold = 0.50  # Was 0.60
+    
+    # Rule 1: High enough score
+    score_pass = final_score >= base_threshold
+    
+    # Rule 2: Experience Flexibility (Score >= 0.45 if strong skills)
+    flex_pass = exp_flexibility_applied and final_score >= 0.45 # Was 0.55
+    
+    # Rule 3: Core Skill Override (At least 3 verified matched skills)
+    skill_count_override = len(matched_core) >= 3 # Was 4
+    
+    # Rule 4: High Skill Score Override (Score >= 0.60)
+    skill_score_override = scores.get("core_skill_match", 0.0) >= 0.60 # Was 0.70
+    
+    print(f"[DEBUG] Shortlist Logic: Score={final_score}, Matched={len(matched_core)}")
+    print(f"[DEBUG] Rules: Score>0.50={score_pass}, Flex={flex_pass}, Count>=3={skill_count_override}, SkillScore>=0.60={skill_score_override}")
+    
+    if score_pass or flex_pass or skill_count_override or skill_score_override:
+        shortlist_decision = True
+    else:
+        shortlist_decision = False
+
+    # -----------------------------
+    # Finalize Report Data
+    # -----------------------------
 
     aligned_projects = resume_claims.get("projects", [])
 
     penalties_applied = {}
     if penalty > 0:
         penalties_applied = state.get("penalty_breakdown", {})
+
+    # Determine reason note
+    note = None
+    if skill_count_override:
+        note = f"Shortlisted via Strong Skill Count Override ({len(matched_core)} verified skills)"
+    elif skill_score_override:
+        note = f"Shortlisted via High Skill Match Score ({scores.get('core_skill_match', 0.0)})"
+    elif flex_pass:
+        note = "Shortlisted via skill-alignment flexibility"
 
     # -----------------------------
     # Output
@@ -139,8 +174,8 @@ def final_scoring_and_shortlisting(state: dict) -> dict:
             "experience_metadata": {
                 "jd_required_years": jd_exp,
                 "candidate_years": cand_exp,
-                "flexibility_applied": exp_flexibility_applied,
-                "note": "Shortlisted via skill-alignment flexibility" if exp_flexibility_applied else None
+                "flexibility_applied": flex_pass,
+                "note": note
             }
         }
     }

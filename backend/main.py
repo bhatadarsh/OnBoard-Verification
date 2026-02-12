@@ -17,6 +17,7 @@ import json
 import logging
 import time
 from pydub import AudioSegment
+import asyncio
 import io
 import base64
 
@@ -994,7 +995,9 @@ async def store_video_frame(interview_id: str, frame_data: dict, current_user: T
         # REAL-TIME ANALYSIS (Immediate Notification)
         # We run this on EVERY frame to catch fleeting misconduct
         if len(frames) % 1 == 0: # Check every frame
-            real_time_flags = analyze_single_frame(frame_str)
+            loop = asyncio.get_running_loop()
+            # Run YOLO in a thread pool so it doesn't block other requests (like Admin Dashboard)
+            real_time_flags = await loop.run_in_executor(None, analyze_single_frame, frame_str)
             
             if real_time_flags:
                 print(f"🚨 REAL-TIME MISCONDUCT: {real_time_flags}")
