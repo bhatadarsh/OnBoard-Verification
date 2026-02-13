@@ -149,6 +149,44 @@ def intersect_focus_areas(state: dict) -> dict:
                 "evidence": resume_skills
             })
 
+    # FALLBACK: Ensure AT LEAST 5 focus areas
+    if len(intersected) < 5:
+        print(f"[DEBUG] Only {len(intersected)} intersected areas found. Filling up to 5 with resume skills.")
+        existing_topics = {t["topic"].lower() for t in intersected}
+        
+        for skill in resume_skills:
+            if len(intersected) >= 5:
+                break
+            
+            s_lower = skill.strip()
+            if s_lower.lower() not in existing_topics:
+                intersected.append({
+                    "topic": s_lower,  # Properly capitalize if possible
+                    "priority": "Secondary", # Extracted from resume = Secondary priority
+                    "confidence": "Medium",
+                    "evidence": [skill]
+                })
+                existing_topics.add(s_lower.lower())
+                print(f"[DEBUG] Added fallback skill: {s_lower}")
+
+    # HARD FALLBACK: If resume is empty, use generic topics to reach 5
+    GENERIC_TOPICS = ["System Design", "Problem Solving", "Communication", "Data Structures", "Algorithms", "Past Experience"]
+    
+    if len(intersected) < 5:
+        print(f"[DEBUG] Still under 5 topics ({len(intersected)}). using GENERIC topics.")
+        for gt in GENERIC_TOPICS:
+            if len(intersected) >= 5:
+                break
+            if gt.lower() not in existing_topics:
+                intersected.append({
+                    "topic": gt,
+                    "priority": "Secondary",
+                    "confidence": "Low",    # Low confidence since it's generic
+                    "evidence": ["Standard Interview Topic"]
+                })
+                existing_topics.add(gt.lower())
+
+    print(f"[DEBUG] Final Intersected focus areas count: {len(intersected)}")
     print(f"[DEBUG] Intersected focus areas: {[t['topic'] for t in intersected]}")
     # persist into state in-place so downstream nodes see it
     state["intersected_focus_areas"] = intersected

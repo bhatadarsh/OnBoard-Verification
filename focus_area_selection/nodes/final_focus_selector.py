@@ -29,8 +29,22 @@ def select_final_focus_areas(state: dict) -> dict:
         )
     )
 
-    # Select top 4–5 (never exceed)
-    selected = sorted_topics[:5]
+    # Select top 5 (Force 5 focus areas)
+    selected = []
+    seen_topics = set()
+    
+    # First pass: standard sorted order
+    for t in sorted_topics:
+        if len(selected) >= 5:
+            break
+        if t["topic"] not in seen_topics:
+            selected.append(t)
+            seen_topics.add(t["topic"])
+
+    # Fallback: If still under 5, duplicate broadly (This shouldn't happen due to earlier fallback)
+    # But just in case, we return whatever we have.
+    if len(selected) < 5:
+        print(f"[WARN] Could only find {len(selected)} unique focus areas even after fallback.")
 
     final_focus_areas = []
 

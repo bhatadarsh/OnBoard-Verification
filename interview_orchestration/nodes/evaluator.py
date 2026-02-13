@@ -150,10 +150,9 @@ def evaluate_interview(state: dict) -> dict:
 
     # 5. Aggregate Results
     if trace:
-        # Use the MAX score across all turns as the overall score.
-        # This ensures that if a candidate shows brilliance in even 1 turn (e.g. 8.5+), 
-        # they are recommended, even if other turns were shallow.
-        overall_score = max(float(report.get("score", 0.0)) for report in evaluation_reports)
+        # Use the AVERAGE score across all turns.
+        total = sum(float(report.get("score", 0.0)) for report in evaluation_reports)
+        overall_score = total / len(evaluation_reports)
         overall_avg_score = round(overall_score, 2)
     else:
         overall_avg_score = 0.0

@@ -52,50 +52,7 @@ def final_scoring_and_shortlisting(state: dict) -> dict:
     evidence = state.get("evidence_map", {})
 
     # -----------------------------
-    # Experience Flexibility Rule
-    # -----------------------------
-    jd_exp = _parse_years(competency_profile.get("experience_range", ""))
-    cand_exp = _parse_years(resume_claims.get("experience_signals", []))
-    
-    exp_flexibility_applied = False
-    exp_gap_detected = False
-    
-    if jd_exp and cand_exp:
-        if cand_exp < jd_exp:
-            exp_gap_detected = True
-            # Flexibility: 30% lower bound (e.g. 2.1 for 3.0)
-            is_within_flex_range = cand_exp >= (jd_exp * 0.70)
-            # Strong skill alignment threshold
-            is_skill_match_strong = scores.get("core_skill_match", 0.0) >= 0.70
-            
-            if is_within_flex_range and is_skill_match_strong:
-                exp_flexibility_applied = True
-
-    # -----------------------------
-    # Weighted score
-    # -----------------------------
-    raw_score = (
-        scores.get("core_skill_match", 0.0) * 0.5 +
-        scores.get("project_alignment", 0.0) * 0.35 +
-        scores.get("conceptual_alignment", 0.0) * 0.15
-    )
-    
-    # Soft penalty for experience gap if flexibility wasn't enough to fully cover it
-    # This keeps the score realistic while the decision remains flexible.
-    exp_penalty = 0.0
-    if exp_gap_detected and not exp_flexibility_applied:
-        # Hard gap penalty
-        exp_penalty = 0.05
-    elif exp_gap_detected and exp_flexibility_applied:
-        # Soft penalty
-        exp_penalty = 0.02
-
-    normalized_score = min(raw_score * 1.35, 1.0)   
-    final_score = round(max(normalized_score - penalty - exp_penalty, 0.0), 3)
-    
-    # Shortlist Decision with Flexibility Override
-    # -----------------------------
-    # Explainability & Hard Skill Check
+    # Hard Skill Match & Coverage Calculation
     # -----------------------------
     from utils.semantic_match import semantic_overlap
     
@@ -112,28 +69,82 @@ def final_scoring_and_shortlisting(state: dict) -> dict:
         threshold=0.38
     )
     
-    print(f"\n[DEBUG] Matched Core Skills ({len(matched_core)}):")
+    # Calculate coverage ratio (e.g. 7 skills matched out of 10 = 0.7)
+    total_jd_skills = len(core_skills) if core_skills else 1
+    coverage_ratio = len(matched_core) / total_jd_skills
+    
+    # Blend semantic score with physical count (boosts score if many matches found)
+    semantic_core_score = scores.get("core_skill_match", 0.0)
+    blended_skill_score = (semantic_core_score * 0.3) + (coverage_ratio * 0.7)
+    
+    print(f"\n[DEBUG] Skill Coverage: {len(matched_core)}/{total_jd_skills} ({coverage_ratio:.2f})")
+    print(f"[DEBUG] Core Match: Semantic={semantic_core_score:.3f}, Blended={blended_skill_score:.3f}")
+    print(f"[DEBUG] Matched Skills List:")
     for m in matched_core:
         print(f" - {m}")
+
+    # -----------------------------
+    # Experience Flexibility Rule
+    # -----------------------------
+    jd_exp = _parse_years(competency_profile.get("experience_range", ""))
+    cand_exp = _parse_years(resume_claims.get("experience_signals", []))
+    
+    exp_flexibility_applied = False
+    exp_gap_detected = False
+    
+    if jd_exp and cand_exp:
+        if cand_exp < jd_exp:
+            exp_gap_detected = True
+            # Flexibility: 30% lower bound
+            is_within_flex_range = cand_exp >= (jd_exp * 0.70)
+            # Use blended score for flexibility check
+            is_skill_match_strong = blended_skill_score >= 0.65
+            
+            if is_within_flex_range and is_skill_match_strong:
+                exp_flexibility_applied = True
+
+    # -----------------------------
+    # Final Score Calculation
+    # -----------------------------
+    # Increase weight of blended skill match
+    raw_score = (
+        blended_skill_score * 0.60 +        # Boosted weight for skills
+        scores.get("project_alignment", 0.0) * 0.25 +
+        scores.get("conceptual_alignment", 0.0) * 0.15
+    )
+    
+    exp_penalty = 0.0
+    if exp_gap_detected and not exp_flexibility_applied:
+        exp_penalty = 0.05
+    elif exp_gap_detected and exp_flexibility_applied:
+        exp_penalty = 0.02
+
+    # Final Score per User Request: Show the Blended Skill Match without penalties
+    final_score = round(blended_skill_score, 3)
     
     # -----------------------------
     # Final Shortlist Decision (RELAXED MODE)
     # -----------------------------
-    base_threshold = 0.50  # Was 0.60
+    base_threshold = 0.60
     
     # Rule 1: High enough score
     score_pass = final_score >= base_threshold
     
-    # Rule 2: Experience Flexibility (Score >= 0.45 if strong skills)
-    flex_pass = exp_flexibility_applied and final_score >= 0.45 # Was 0.55
+    # Rule 2: Experience Flexibility
+    flex_pass = exp_flexibility_applied and final_score >= 0.55
     
-    # Rule 3: Core Skill Override (At least 3 verified matched skills)
-    skill_count_override = len(matched_core) >= 3 # Was 4
+    # Rule 3: Core Skill Override
+    skill_count_override = len(matched_core) >= 4
     
-    # Rule 4: High Skill Score Override (Score >= 0.60)
-    skill_score_override = scores.get("core_skill_match", 0.0) >= 0.60 # Was 0.70
+    # Force score upgrade if skill count is high
+    if skill_count_override and final_score < 0.61:
+        final_score = 0.61
+        score_pass = True
+        
+    # Rule 4: High Blended Skill Score Override
+    skill_score_override = blended_skill_score >= 0.60
     
-    print(f"[DEBUG] Shortlist Logic: Score={final_score}, Matched={len(matched_core)}")
+    print(f"[DEBUG] Shortlist Logic: FinalScore={final_score}, MatchedCount={len(matched_core)}")
     print(f"[DEBUG] Rules: Score>0.50={score_pass}, Flex={flex_pass}, Count>=3={skill_count_override}, SkillScore>=0.60={skill_score_override}")
     
     if score_pass or flex_pass or skill_count_override or skill_score_override:

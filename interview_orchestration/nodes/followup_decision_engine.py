@@ -71,7 +71,7 @@ def decide_followup_or_next(state: dict) -> dict:
     # TELEMETRY
     print(f"DEBUG: decide_router. status={state.get('interview_status')}, count={current_followups}, topic_idx={current_topic_index}, total_topics={len(focus_areas)}")
     
-    MAX_FOLLOWUPS_PER_TOPIC = 5
+    MAX_FOLLOWUPS_PER_TOPIC = 3
 
     # -------------------------
     # Case 1: Ask follow-up
