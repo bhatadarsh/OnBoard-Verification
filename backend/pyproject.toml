@@ -1,0 +1,23 @@
+[project]
+name = "onboarding-validator"
+version = "0.1.0"
+description = "Automated Candidate Onboarding Validation System"
+authors = [
+    {name = "Your Name", email = "you@example.com"},
+]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+]
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"

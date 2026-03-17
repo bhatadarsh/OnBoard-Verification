@@ -1,0 +1,30 @@
+# Production Dependencies
+fastapi==0.109.2
+uvicorn==0.27.1
+pydantic==2.6.1
+pydantic-settings==2.1.0
+python-multipart==0.0.9
+python-dotenv==1.0.1
+httpx==0.26.0
+aiofiles==23.2.1
+
+# Database
+sqlalchemy==2.0.25
+
+# Workflow Orchestration
+langgraph
+langchain-core
+
+# LLM Integration
+groq==0.4.2
+
+# Google SSO (Required for auth.py)
+google-auth==2.27.0
+requests==2.31.0
+
+# Document Processing
+pypdf==4.0.1
+python-docx==1.1.0
+
+# Dev/Testing
+pytest==8.0.0
