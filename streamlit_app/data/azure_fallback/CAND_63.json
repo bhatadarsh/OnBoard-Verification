@@ -1,0 +1,69 @@
+{
+  "candidate_id": "CAND_63",
+  "interview_trace": [
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you describe a time when you implemented a process improvement in a recruitment workflow, and what results you achieved?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770205384.802005
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you give me a concrete example of an end-to-end recruitment process you've implemented in a previous role that resulted in a successful hire?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770205566.269073
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "How would you handle data validation and error handling in a large-scale recruitment system that involves multiple stakeholders and integrations?",
+      "answer_text": "(no response)",
+      "followup_index": 2,
+      "question_type": "followup",
+      "timestamp": 1770205833.3984818
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you walk me through your thought process when deciding whether to implement a centralized database for storing candidate information versus a distributed, microservices-based approach?",
+      "answer_text": "(no response)",
+      "followup_index": 3,
+      "question_type": "followup",
+      "timestamp": 1770206062.504832
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "What's an example of a tradeoff you've had to make in an end-to-end recruitment process that resulted in a less-than-ideal outcome?",
+      "answer_text": "(no response)",
+      "followup_index": 4,
+      "question_type": "followup",
+      "timestamp": 1770206140.759988
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "Can you describe a time when you had to troubleshoot an issue with employee data accuracy in a database?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770206384.757767
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "Can you walk me through a specific scenario where you would need to update an employee's record in a database, and how you would ensure data consistency across all related tables?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770206467.821954
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "How would you handle data inconsistencies when merging two large employee databases?",
+      "answer_text": "(no response)",
+      "followup_index": 2,
+      "question_type": "followup",
+      "timestamp": 1770206542.967131
+    }
+  ]
+}
