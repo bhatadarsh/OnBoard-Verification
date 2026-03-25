@@ -1,0 +1,55 @@
+You are a senior engineering manager and technical recruiter.
+
+Analyze the job description, role context, and skill intelligence to infer the expected competency profile of a successful candidate.
+
+Extract and structure the following:
+
+1. Expected experience range (if implied)
+2. Ownership expectations (e.g., feature ownership, system ownership)
+3. Problem complexity handled (e.g., simple CRUD, distributed systems, large-scale data)
+4. Decision-making scope (individual, team-level, cross-team)
+5. Execution expectations (e.g., end-to-end delivery, design + implementation, maintenance)
+
+Rules:
+- Infer even if not explicitly stated
+- Focus only on technical and execution competencies
+- Avoid listing skills or tools
+
+Job Description:
+{jd}
+
+Role Context:
+{role_context}
+
+Skill Intelligence:
+{skill_intelligence}
+
+STRICT OUTPUT RULES:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No bullet points
+- The response MUST be a single JSON object
+ - Do NOT include comments or trailing commas in the JSON output.
+ - NORMALIZATION: return short, lowercased string values where applicable and trim whitespace. Use only the exact keys shown below; do not return extra fields.
+
+Expected JSON format:
+{{
+  "experience_range": "",
+  "ownership_expectations": "",
+  "problem_complexity": "",
+  "decision_making_scope": "",
+  "execution_expectations": ""
+}}
+
+Example Output:
+{{
+  "experience_range": "3-5 years",
+  "ownership_expectations": "feature ownership",
+  "problem_complexity": "distributed systems",
+  "decision_making_scope": "team-level",
+  "execution_expectations": "design and implement end-to-end features"
+}}
+
+Notes:
+- Values should be concise, lowercased, and directly answer the field. Return only the keys shown.

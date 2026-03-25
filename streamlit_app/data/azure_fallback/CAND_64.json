@@ -1,0 +1,117 @@
+{
+  "candidate_id": "CAND_64",
+  "interview_trace": [
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you describe a time when you implemented a process improvement in a recruitment workflow that resulted in significant efficiency gains?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770206930.937089
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you provide a specific example of an end-to-end recruitment process you've managed, and what challenges you faced in that scenario?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770206998.2738502
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "How would you design the data storage and retrieval mechanism for candidate information across multiple stages of the recruitment process?",
+      "answer_text": "(no response)",
+      "followup_index": 2,
+      "question_type": "followup",
+      "timestamp": 1770207024.8654442
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "Can you walk me through your thought process when deciding whether to implement a centralized database for storing candidate information versus a distributed system?",
+      "answer_text": "(no response)",
+      "followup_index": 3,
+      "question_type": "followup",
+      "timestamp": 1770207076.7142808
+    },
+    {
+      "topic": "end-to-end recruitment processes",
+      "question": "What are some common failure points or challenges you've encountered in end-to-end recruitment processes, and how do you mitigate them?",
+      "answer_text": "(no response)",
+      "followup_index": 4,
+      "question_type": "followup",
+      "timestamp": 1770207099.565473
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "Can you describe a situation where you had to troubleshoot an issue with employee data accuracy in a database?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770207165.934308
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "Can you walk me through a scenario where you'd need to update an employee's record in a database, and how you would ensure data consistency across multiple related tables?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770207239.033047
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "How would you handle data normalization when designing a database schema for employee records?",
+      "answer_text": "(no response)",
+      "followup_index": 2,
+      "question_type": "followup",
+      "timestamp": 1770207314.036614
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "What were the key design considerations that led you to choose a particular data structure for storing employee records in this system?",
+      "answer_text": "(no response)",
+      "followup_index": 3,
+      "question_type": "followup",
+      "timestamp": 1770207380.925715
+    },
+    {
+      "topic": "employee records and databases",
+      "question": "What are some potential failure modes or edge cases you've encountered when working with employee records and databases?",
+      "answer_text": "(no response)",
+      "followup_index": 4,
+      "question_type": "followup",
+      "timestamp": 1770207464.193156
+    },
+    {
+      "topic": "compliance with company policies and labor laws",
+      "question": "Can you describe a situation where you had to navigate a conflict between a company policy and a labor law, and how you resolved it?",
+      "answer_text": "(no response)",
+      "followup_index": 0,
+      "question_type": "initial",
+      "timestamp": 1770207682.9502962
+    },
+    {
+      "topic": "compliance with company policies and labor laws",
+      "question": "Can you describe a specific situation where you had to balance compliance with company policies and labor laws, and how you handled it?",
+      "answer_text": "(no response)",
+      "followup_index": 1,
+      "question_type": "followup",
+      "timestamp": 1770207771.8546271
+    },
+    {
+      "topic": "compliance with company policies and labor laws",
+      "question": "How would you track and document compliance with company policies and labor laws in a large-scale organization with multiple departments and locations?",
+      "answer_text": "(no response)",
+      "followup_index": 2,
+      "question_type": "followup",
+      "timestamp": 1770207882.684226
+    },
+    {
+      "topic": "compliance with company policies and labor laws",
+      "question": "Can you walk me through your thought process when deciding whether to implement a company policy or a labor law, and how you would balance any potential conflicts between the two?",
+      "answer_text": "(no response)",
+      "followup_index": 3,
+      "question_type": "followup",
+      "timestamp": 1770207955.727403
+    }
+  ]
+}
