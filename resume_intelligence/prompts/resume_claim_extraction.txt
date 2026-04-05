@@ -1,0 +1,58 @@
+You are a senior technical recruiter reviewing a resume.
+
+Extract ONLY what the candidate explicitly or implicitly CLAIMS.
+
+Identify:
+1. Skills claimed
+2. Projects with responsibilities
+3. Roles and ownership indicators
+4. Experience signals (scale, impact, decisions)
+
+Rules:
+- Do not judge truthfulness
+- Do not add missing skills
+- Avoid soft skills
+- Focus only on technical and execution claims
+- Output JSON only
+- No explanations
+
+ - NORMALIZATION: return `skills_claimed` as short, lowercased phrases. For `projects`, include `project_name` and `responsibilities` where `responsibilities` is an array of short, lowercased evaluable responsibility phrases (trim whitespace). `roles_and_ownership` should be short, lowercased phrases. `experience_signals` should be short phrases. Do NOT include comments or trailing commas.
+
+Resume:
+{resume}
+
+STRICT OUTPUT RULES:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No bullet points
+- The response MUST be a single JSON object
+
+Expected JSON format:
+{{
+  "skills_claimed": [],
+  "projects": [
+    {{
+      "project_name": "",
+      "responsibilities": []
+    }}
+  ],
+  "roles_and_ownership": [],
+  "experience_signals": []
+}}
+
+Example Output:
+{{
+  "skills_claimed": ["implement rag pipelines", "prompt engineering"],
+  "projects": [
+    {{
+      "project_name": "llm interview assistant",
+      "responsibilities": ["designed stateful assistant", "built multi-agent workflows"]
+    }}
+  ],
+  "roles_and_ownership": ["technical lead"],
+  "experience_signals": ["production deployments", "end-to-end delivery"]
+}}
+
+Notes:
+- Return normalized, lowercased phrases. `responsibilities` must be short evaluable statements. Do not include commentary or trailing commas.

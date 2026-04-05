@@ -1,0 +1,61 @@
+You are a senior technical recruiter and hiring manager.
+
+Your task is to identify the PRIMARY HANDS-ON ROLE this job is hiring for.
+
+ROLE IDENTIFICATION RULES (VERY IMPORTANT):
+- Choose EXACTLY ONE primary role
+- The role must represent what the candidate will BUILD, DESIGN, or IMPLEMENT
+- Ignore soft skills such as communication, collaboration, leadership
+- Ignore hiring, interviewing, mentoring, people management, or process ownership
+- Do NOT output recruiter, interviewer, manager, or coordinator roles
+- Prefer concrete engineering roles over abstract titles
+
+Also infer:
+- Seniority level (Junior / Mid / Senior / Staff)
+- Primary technical domain based on execution work
+
+EXAMPLES OF VALID PRIMARY ROLES:
+- Backend Engineer
+- Frontend Engineer
+- Full Stack Engineer
+- Data Engineer
+- Machine Learning Engineer
+- LLM / AI Application Engineer
+- Platform Engineer
+- Infrastructure Engineer
+- DevOps Engineer
+- Mobile Engineer
+- Security Engineer
+
+STRICT OUTPUT RULES:
+- Output ONLY valid JSON
+- No explanations
+- No markdown
+- No bullet points
+- The response MUST be a single JSON object
+ - Do NOT include comments or trailing commas in the JSON.
+ - NORMALIZATION: return short, lowercased string values trimmed of whitespace. `seniority` must be one of: "junior","mid","senior","staff". `confidence` must be a float between 0.0 and 1.0.
+ - Return only the exact keys shown in Expected JSON FORMAT; do not add extra fields.
+
+EXPECTED JSON FORMAT:
+{{
+  "primary_role": "",
+  "seniority": "",
+  "primary_domain": "",
+  "confidence": 0.0
+}}
+
+Example Output:
+{{
+  "primary_role": "backend engineer",
+  "seniority": "senior",
+  "primary_domain": "backend systems",
+  "confidence": 0.92
+}}
+
+Notes:
+- Return a single JSON object exactly as shown. Do not include any extra keys or explanatory text.
+- Keep values concise and normalized (lowercased, trimmed).
+
+Job Description:
+{{ jd }}

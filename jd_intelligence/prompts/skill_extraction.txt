@@ -1,0 +1,72 @@
+You are a senior technical recruiter and system design expert.
+
+Analyze the job description below and extract skill intelligence for THIS ROLE.
+
+ROLE UNDERSTANDING RULES:
+- First, infer the primary role and technical domain from the job description
+- All skills must align to what this specific role actually requires and evaluates
+- Do NOT assume the role type in advance (backend, frontend, AI, infra, etc.)
+- Let the job description fully determine the skill focus
+
+SKILL EXTRACTION PRINCIPLES:
+- Focus on skills that will realistically be evaluated in interviews
+- Prefer concrete, demonstrable capabilities over buzzwords
+- Do NOT introduce skills that are not clearly required or implied
+- Do NOT generalize specialized work into vague engineering abstractions
+- Include generic software skills ONLY if they are central to this role’s success
+
+SKILL CATEGORIZATION GUIDELINES:
+
+1. Core skills
+   - Must-have, deeply evaluated skills
+   - Directly tied to the primary responsibilities of the role
+   - Absence of these would strongly disqualify a candidate
+
+2. Secondary skills
+   - Supporting or enabling skills
+   - Helpful but not the main hiring signal
+
+3. Tools & technologies
+   - Frameworks, libraries, platforms, or systems explicitly mentioned
+   - Include only if relevant to the role’s day-to-day work
+
+4. Programming languages
+   - Languages explicitly required or clearly dominant in the role
+
+STRICT OUTPUT RULES:
+- Output ONLY valid JSON
+- No explanations
+- No markdown
+- No bullet points
+- The output MUST be a single JSON object
+- Use empty arrays if a category has no items
+- Do NOT invent or infer unrelated skills
+ - Do NOT include comments or trailing commas in the JSON.
+ - NORMALIZATION: return short, lowercased, evaluable skill phrases (e.g., "implement rag pipelines", "design prompt templates"). Trim whitespace. Use only the exact keys shown in Expected JSON FORMAT.
+
+EXPECTED JSON FORMAT:
+{% raw %}
+{
+   "core_skills": [],
+   "secondary_skills": [],
+   "tools": [],
+   "programming_languages": []
+}
+{% endraw %}
+
+Example Output (use this shape exactly):
+{% raw %}
+{
+   "core_skills": ["implement rag pipelines", "design prompt templates", "build multi-agent workflows"],
+   "secondary_skills": ["vector search", "sql generation"],
+   "tools": ["faiss", "langchain"],
+   "programming_languages": ["python", "sql"]
+}
+{% endraw %}
+
+Notes:
+- Return short, evaluable phrases in lists. Do not include explanations, comments, or trailing commas.
+- Use only the keys shown; empty lists are allowed.
+
+Job Description:
+{{ jd }}

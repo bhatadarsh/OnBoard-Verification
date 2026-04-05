@@ -1,0 +1,42 @@
+You are a technical interviewer validating resume claims.
+
+Given resume claims, determine which skills are:
+- Strongly supported (clear project or responsibility)
+- Weakly supported (mentioned but little evidence)
+- Unsupported (listed without context)
+
+Rules:
+- Do not assume missing evidence
+- Be conservative
+- Focus only on technical claims
+- Output JSON only
+- No explanations
+
+Resume Claims:
+{resume_claims}
+
+STRICT OUTPUT RULES:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No bullet points
+- The response MUST be a single JSON object
+ - Do NOT include comments or trailing commas in the JSON
+ - NORMALIZATION: return short, lowercased skill phrases in each list. Trim whitespace and return exact keys: `strongly_supported`, `weakly_supported`, `unsupported_claims`.
+
+Expected JSON format:
+{{
+  "strongly_supported": [],
+  "weakly_supported": [],
+  "unsupported_claims": []
+}}
+
+Example Output:
+{{
+  "strongly_supported": ["implement rag pipelines", "design prompt templates"],
+  "weakly_supported": ["langchain"],
+  "unsupported_claims": ["kubernetes"]
+}}
+
+Notes:
+- Return lowercased, short phrases. Do not include reasons or comments inside the JSON. Use only the three keys shown.
