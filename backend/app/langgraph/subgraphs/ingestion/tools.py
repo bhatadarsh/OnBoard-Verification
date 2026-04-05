@@ -1,15 +1,22 @@
 """
 Ingestion Tools - Document text extraction utilities used by the ingestion node.
-Handles OCR (via Groq Vision), PDF, DOCX, and plain text extraction.
+Handles massive concurrent OCR (via Groq Vision), PDF, DOCX, and plain text extraction.
 """
 import os
 import base64
+import tempfile
+import asyncio
 from typing import Optional
+from contextlib import contextmanager
+from cryptography.fernet import Fernet
 
 try:
-    from PyPDF2 import PdfReader
+    from pypdf import PdfReader
 except ImportError:
-    PdfReader = None
+    try:
+        from PyPDF2 import PdfReader
+    except ImportError:
+        PdfReader = None
 
 try:
     from docx import Document as DocxDocument
@@ -17,10 +24,40 @@ except ImportError:
     DocxDocument = None
 
 from app.core.config import config
+from app.services.llm_service import llm_service
 
 
-def extract_text_from_file(file_path: str) -> str:
-    """Extract text from any supported document format.
+@contextmanager
+def decrypted_tempfile(file_path: str):
+    """Decrypt a file into a temporary location and cleanly shred it after use."""
+    if not os.path.exists(file_path):
+        yield ""
+        return
+        
+    ext = os.path.splitext(file_path)[1].lower()
+    tmp_path = ""
+    try:
+        fernet = Fernet(config.FERNET_KEY.encode('utf-8'))
+        with open(file_path, 'rb') as f:
+            encrypted = f.read()
+            
+        try:
+            data = fernet.decrypt(encrypted)
+        except Exception:
+            data = encrypted
+            
+        with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
+            tmp.write(data)
+            tmp_path = tmp.name
+            
+        yield tmp_path
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
+
+async def extract_text_from_file(file_path: str) -> str:
+    """Extract text from any supported document format asynchronously.
     
     Supports: images (OCR via Groq Vision), PDF, DOCX, plain text.
     """
@@ -30,9 +67,9 @@ def extract_text_from_file(file_path: str) -> str:
     ext = os.path.splitext(file_path)[1].lower()
     
     if ext in ['.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif', '.webp']:
-        return _extract_from_image_vision(file_path)
+        return await llm_service.extract_from_image_vision_async(file_path)
     elif ext == '.pdf':
-        return _extract_from_pdf(file_path)
+        return await _extract_from_pdf(file_path)
     elif ext == '.docx':
         return _extract_from_docx(file_path)
     elif ext in ['.txt', '.text', '.md']:
@@ -58,8 +95,8 @@ def _extract_from_text(file_path: str) -> str:
         return f"Error reading text: {e}"
 
 
-def _extract_from_pdf(file_path: str) -> str:
-    """Extract text from PDF. Falls back to Vision OCR for scanned PDFs."""
+async def _extract_from_pdf(file_path: str) -> str:
+    """Extract text from PDF. Falls back to Multi-Page Vision OCR for scanned PDFs."""
     if PdfReader is None:
         return "[PDF extraction not available - install PyPDF2]"
     
@@ -74,28 +111,47 @@ def _extract_from_pdf(file_path: str) -> str:
         result = "\n".join(text_parts)
         
         if len(result.strip()) < 50:
-            return _extract_from_scanned_pdf(file_path)
+            return await _extract_from_scanned_pdf(file_path)
         
         return result
     except Exception as e:
         return f"Error reading PDF: {e}"
 
 
-def _extract_from_scanned_pdf(file_path: str) -> str:
-    """Extract text from scanned PDF using Vision API."""
+async def _extract_from_scanned_pdf(file_path: str) -> str:
+    """Extract text from scanned PDF using Concurrent Vision API mapped across multiple pages."""
     try:
         from pdf2image import convert_from_path
-        import tempfile
         
-        images = convert_from_path(file_path, first_page=1, last_page=1)
+        # Pull ALL pages instead of strictly first
+        images = convert_from_path(file_path)
         if not images:
             return "[Could not convert PDF to image]"
         
-        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
-            images[0].save(tmp.name, 'PNG')
-            text = _extract_from_image_vision(tmp.name)
-            os.unlink(tmp.name)
-            return text
+        tmp_files = []
+        for img in images:
+            tmp = tempfile.NamedTemporaryFile(suffix='.png', delete=False)
+            img.save(tmp.name, 'PNG')
+            tmp_files.append(tmp.name)
+            
+        print(f"  Scanned PDF detected. Triggering internal parallel Vision OCR on {len(tmp_files)} pages.")
+        
+        tasks = [llm_service.extract_from_image_vision_async(p) for p in tmp_files]
+        raw_results = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        results = []
+        for i, res in enumerate(raw_results):
+            if isinstance(res, Exception):
+                print(f"  [ERROR] Vision OCR failed on page {i}: {res}")
+                results.append(f"[Page {i} failed to OCR]")
+            else:
+                results.append(str(res))
+        
+        for tmp_path in tmp_files:
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+                
+        return "\n--- Page Break ---\n".join(results)
     except Exception as e:
         return f"Error OCR on scanned PDF: {e}"
 
@@ -119,57 +175,3 @@ def _extract_from_docx(file_path: str) -> str:
         return "\n".join(text_parts)
     except Exception as e:
         return f"Error reading DOCX: {e}"
-
-
-def _extract_from_image_vision(file_path: str) -> str:
-    """Extract text from image using Groq Vision API (no tesseract needed)."""
-    try:
-        from groq import Groq
-        
-        with open(file_path, 'rb') as f:
-            image_data = base64.b64encode(f.read()).decode('utf-8')
-        
-        ext = os.path.splitext(file_path)[1].lower()
-        mime_map = {
-            '.png': 'image/png', '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg', '.gif': 'image/gif',
-            '.webp': 'image/webp',
-        }
-        mime_type = mime_map.get(ext, 'image/png')
-        
-        client = Groq(api_key=config.GROQ_API_KEY)
-        response = client.chat.completions.create(
-            model=config.VISION_MODEL,
-            messages=[{
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": """Extract ALL text from this document image. This appears to be an Indian ID document (Aadhar/PAN card) or educational certificate.
-
-Extract and output ALL visible text including:
-- Names (in English and any other language)
-- Numbers (Aadhar number, PAN number, dates, phone numbers)
-- Addresses
-- Dates of birth
-- Any other text visible
-
-Output the extracted text line by line. Be thorough."""
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:{mime_type};base64,{image_data}"}
-                    }
-                ]
-            }],
-            temperature=0.1,
-            max_tokens=2000
-        )
-        
-        extracted = response.choices[0].message.content
-        print(f"  Vision OCR extracted {len(extracted)} characters from {file_path}")
-        return extracted
-        
-    except Exception as e:
-        print(f"Vision OCR error: {e}")
-        return f"[Vision OCR error: {str(e)}]"

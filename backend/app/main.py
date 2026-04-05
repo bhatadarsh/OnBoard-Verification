@@ -1,12 +1,13 @@
 """
 Main FastAPI Application - Production-grade Onboarding Validation System
 """
+import os
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
-import os
-
 from app.api.routes import validation, auth
 
 app = FastAPI(

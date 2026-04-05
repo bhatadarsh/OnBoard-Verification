@@ -2,9 +2,14 @@
 LLM Service - Groq integration for document extraction and audio transcription.
 Used as a tool by LangGraph extraction node.
 """
-import re
+import json
+import base64
+import os
+import asyncio
+import tempfile
 from typing import Dict, Any
-from groq import Groq
+from groq import AsyncGroq
+from tenacity import retry, wait_exponential, stop_after_attempt
 
 from app.core.config import config
 
@@ -15,115 +20,162 @@ class LLMService:
     def __init__(self):
         if not config.GROQ_API_KEY:
             raise ValueError("GROQ_API_KEY not set in .env")
-        self.client = Groq(api_key=config.GROQ_API_KEY)
+        self.client = AsyncGroq(api_key=config.GROQ_API_KEY)
         self.model = config.LLM_MODEL
         self.whisper_model = config.WHISPER_MODEL
     
-    def _call_llm(self, system_prompt: str, user_prompt: str) -> str:
-        """Call LLM and return text response."""
+    @retry(wait=wait_exponential(multiplier=1, min=2, max=10), stop=stop_after_attempt(5))
+    async def _call_llm(self, system_prompt: str, user_prompt: str) -> Dict[str, str]:
+        """Call LLM and return structured JSON response."""
         try:
-            response = self.client.chat.completions.create(
+            response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
                 temperature=0.1,
-                max_tokens=4096
+                max_tokens=4096,
+                response_format={"type": "json_object"}
+            )
+            content = response.choices[0].message.content or "{}"
+            result_dict = json.loads(content)
+            
+            # Normalize keys to lower snake_case
+            normalized = {}
+            for k, v in result_dict.items():
+                clean_key = k.strip().lower().replace(' ', '_').replace("'", "").replace("-", "_")
+                val_str = str(v).strip()
+                if clean_key and val_str and val_str.lower() not in ['not found', 'n/a', 'none', 'not', 'unknown', 'null']:
+                    normalized[clean_key] = val_str
+            return normalized
+        except Exception as e:
+            print(f"LLM Error: {e}")
+            return {}
+
+    @retry(wait=wait_exponential(multiplier=1, min=2, max=10), stop=stop_after_attempt(5))
+    async def extract_from_image_vision_async(self, file_path: str) -> str:
+        """Extract text from image using Groq Vision API concurrently."""
+        try:
+            with open(file_path, 'rb') as f:
+                image_data = base64.b64encode(f.read()).decode('utf-8')
+            
+            ext = os.path.splitext(file_path)[1].lower()
+            mime_map = {
+                '.png': 'image/png', '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg', '.gif': 'image/gif',
+                '.webp': 'image/webp',
+            }
+            mime_type = mime_map.get(ext, 'image/png')
+            
+            response = await self.client.chat.completions.create(
+                model=config.VISION_MODEL,
+                messages=[{
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Extract ALL text from this document image. This appears to be an Indian ID document (Aadhar/PAN card) or educational certificate. Extract and output ALL visible text line by line. Be thorough."
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": f"data:{mime_type};base64,{image_data}"}
+                        }
+                    ]
+                }],
+                temperature=0.1,
+                max_tokens=2000
             )
             return response.choices[0].message.content or ""
         except Exception as e:
-            print(f"LLM Error: {e}")
-            return f"Error: {str(e)}"
-    
-    def _parse_key_value(self, text: str) -> Dict[str, str]:
-        """Parse 'Key: Value' format from LLM response."""
-        result = {}
-        for line in text.strip().split('\n'):
-            if ':' in line and not line.strip().startswith('#'):
-                key, _, value = line.partition(':')
-                key = key.strip().lower().replace(' ', '_').replace("'", "").replace("-", "_")
-                key = re.sub(r'[^a-z0-9_]', '', key)
-                value = value.strip()
-                if key and value and value.lower() not in ['not found', 'n/a', 'none', 'not', 'unknown']:
-                    result[key] = value
-        return result
-    
-    def transcribe_audio(self, audio_path: str) -> str:
-        """Transcribe audio file using Whisper."""
+            print(f"Vision OCR error: {e}")
+            return ""
+
+    async def _transcribe_audio_chunk(self, chunk, ext, idx):
+        tmp_path = ""
         try:
-            with open(audio_path, "rb") as audio_file:
-                transcription = self.client.audio.transcriptions.create(
+            with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
+                chunk.export(tmp.name, format="mp3")
+                tmp_path = tmp.name
+                
+            with open(tmp_path, "rb") as f:
+                res = await self.client.audio.transcriptions.create(
                     model=self.whisper_model,
-                    file=audio_file,
+                    file=f,
                     response_format="text"
                 )
-            return transcription
+            os.unlink(tmp_path)
+            return res
         except Exception as e:
-            return f"Transcription error: {str(e)}"
+            if tmp_path and os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+            print(f"Chunk {idx} failed: {e}")
+            return ""
+
+    async def transcribe_audio(self, audio_path: str) -> str:
+        """Transcribe audio file using Whisper with large file chunking logic."""
+        try:
+            from pydub import AudioSegment
+            audio = AudioSegment.from_file(audio_path)
+            chunk_length_ms = 5 * 60 * 1000 # 5 minutes chunking
+            
+            if len(audio) <= chunk_length_ms:
+                # Direct transcribe
+                with open(audio_path, "rb") as audio_file:
+                    return await self.client.audio.transcriptions.create(
+                        model=self.whisper_model,
+                        file=audio_file,
+                        response_format="text"
+                    )
+            
+            chunks = []
+            for i in range(0, len(audio), chunk_length_ms):
+                chunks.append(audio[i:i+chunk_length_ms])
+                
+            tasks = [self._transcribe_audio_chunk(chunk, ".mp3", idx) for idx, chunk in enumerate(chunks)]
+            raw_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            valid_results = []
+            for i, r in enumerate(raw_results):
+                if isinstance(r, Exception):
+                    print(f"  [ERROR] Audio chunk {i} failed: {r}")
+                elif r:
+                    valid_results.append(str(r))
+                    
+            return " ".join(valid_results)
+            
+        except Exception as e:
+            print(f"Audio chunking bypassed (missing ffmpeg?): {e}")
+            try:
+                # Fallback to direct
+                with open(audio_path, "rb") as audio_file:
+                    return await self.client.audio.transcriptions.create(
+                        model=self.whisper_model,
+                        file=audio_file,
+                        response_format="text"
+                    )
+            except Exception as e2:
+                return f"Transcription error: {str(e2)}"
     
-    def extract_from_resume(self, text: str) -> Dict[str, str]:
-        """Extract data from resume."""
-        prompt = """Extract all personal, educational and professional information from this resume.
-Output each field on a new line as: Field Name: Value
-
-Extract these fields if available:
-Full Name, Email, Phone, Current Location, Current Company, Current Role, Current CTC,
-Total Experience, Graduation Degree, Graduation College, Graduation Year,
-12th School, 12th Year, 12th Percentage, 10th School, 10th Year, 10th Percentage, Skills
-
-Write "Not found" if field is not available."""
-        response = self._call_llm(prompt, f"Resume:\n{text}")
-        return self._parse_key_value(response)
+    async def extract_from_resume(self, text: str) -> Dict[str, str]:
+        prompt = """Extract personal, educational and professional information from this resume. Output MUST be a valid JSON object. Extract keys: "full_name", "email", "phone", "current_location", "current_company", "current_role", "current_ctc", "total_experience", "graduation_degree", "graduation_college", "graduation_year", "12th_school", "12th_year", "12th_percentage", "10th_school", "10th_year", "10th_percentage", "skills". Write "Not found" for values if field is not available."""
+        return await self._call_llm(prompt, f"Resume:\n{text}")
     
-    def extract_from_hr_transcript(self, text: str) -> Dict[str, str]:
-        """Extract data from HR interview transcript."""
-        prompt = """Extract key candidate information from this HR interview transcript.
-Output each field on a new line as: Field Name: Value
-
-Extract: Candidate Name, Full Name, Current Location, Current Address, Current CTC, 
-Expected CTC, Notice Period, Current Company, Current Role, Father Name, 
-Date of Birth, Reason for Change
-
-Write "Not found" if not mentioned."""
-        response = self._call_llm(prompt, f"HR Transcript:\n{text}")
-        return self._parse_key_value(response)
+    async def extract_from_hr_transcript(self, text: str) -> Dict[str, str]:
+        prompt = """Extract key candidate information from this HR interview transcript. Output MUST be a valid JSON object. Extract keys: "candidate_name", "full_name", "current_location", "current_address", "current_ctc", "expected_ctc", "notice_period", "current_company", "current_role", "father_name", "date_of_birth", "reason_for_change". Write "Not found" for values if not mentioned."""
+        return await self._call_llm(prompt, f"HR Transcript:\n{text}")
     
-    def extract_from_aadhar(self, text: str) -> Dict[str, str]:
-        """Extract data from Aadhar card (OCR text)."""
-        prompt = """Extract information from this Aadhar card text.
-Output each field on a new line as: Field Name: Value
-
-Extract: Full Name, Date of Birth, DOB, Gender, Permanent Address, Aadhar Number
-(Mask Aadhar as XXXX-XXXX-1234)
-
-Write "Not found" if not available."""
-        response = self._call_llm(prompt, f"Aadhar Card:\n{text}")
-        return self._parse_key_value(response)
+    async def extract_from_aadhar(self, text: str) -> Dict[str, str]:
+        prompt = """Extract information from this Aadhar card text. Output MUST be a valid JSON object. Extract keys: "full_name", "date_of_birth", "dob", "gender", "permanent_address", "aadhar_number". Note: Mask aadhar_number as XXXX-XXXX-1234. Write "Not found" for values if not available."""
+        return await self._call_llm(prompt, f"Aadhar Card:\n{text}")
     
-    def extract_from_marksheet(self, text: str, grade: str = "10th") -> Dict[str, str]:
-        """Extract data from education marksheet."""
-        prompt = f"""Extract information from this {grade} marksheet.
-Output each field on a new line as: Field Name: Value
-
-Extract: Student Name, Full Name, Father Name, Date of Birth, DOB, 
-School Name, Board, Year of Passing, Percentage, Total Marks
-
-Write "Not found" if not available."""
-        response = self._call_llm(prompt, f"{grade} Marksheet:\n{text}")
-        return self._parse_key_value(response)
+    async def extract_from_marksheet(self, text: str, grade: str = "10th") -> Dict[str, str]:
+        prompt = f"""Extract information from this {grade} marksheet. Output MUST be a valid JSON object. Extract keys: "student_name", "full_name", "father_name", "date_of_birth", "dob", "school_name", "board", "year_of_passing", "percentage", "total_marks". Write "Not found" for values if not available."""
+        return await self._call_llm(prompt, f"{grade} Marksheet:\n{text}")
     
-    def extract_from_pan(self, text: str) -> Dict[str, str]:
-        """Extract data from PAN card."""
-        prompt = """Extract information from this PAN card.
-Output each field on a new line as: Field Name: Value
-
-Extract: Full Name, Father Name, Date of Birth, DOB, PAN Number
-
-Write "Not found" if not available."""
-        response = self._call_llm(prompt, f"PAN Card:\n{text}")
-        return self._parse_key_value(response)
-
+    async def extract_from_pan(self, text: str) -> Dict[str, str]:
+        prompt = """Extract information from this PAN card. Output MUST be a valid JSON object. Extract keys: "full_name", "father_name", "date_of_birth", "dob", "pan_number". Write "Not found" for values if not available."""
+        return await self._call_llm(prompt, f"PAN Card:\n{text}")
 
 # Singleton
 llm_service = LLMService()

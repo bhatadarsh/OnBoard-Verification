@@ -1,4 +1,4 @@
-# Production Dependencies
+# Web Framework & Core
 fastapi==0.109.2
 uvicorn==0.27.1
 pydantic==2.6.1
@@ -8,23 +8,29 @@ python-dotenv==1.0.1
 httpx==0.26.0
 aiofiles==23.2.1
 
-# Database
+# Database Layer
 sqlalchemy==2.0.25
 
-# Workflow Orchestration
+# AI & Orchestration
 langgraph
 langchain-core
 
-# LLM Integration
-groq==0.4.2
-
-# Google SSO (Required for auth.py)
-google-auth==2.27.0
-requests==2.31.0
-
-# Document Processing
+# Document Processing & OCR
 pypdf==4.0.1
 python-docx==1.1.0
+pdf2image==1.17.0  # Note: requires 'poppler-utils' installed on system (sudo apt install poppler-utils)
+
+# Audio Processing 
+pydub==0.25.1      # Note: requires 'ffmpeg' installed on system (sudo apt install ffmpeg)
+
+# Security & Resiliency
+cryptography==42.0.5
+tenacity==9.1.4
+
+# External API Integrations
+groq==0.4.2
+google-auth==2.27.0
+requests==2.31.0
 
 # Dev/Testing
 pytest==8.0.0

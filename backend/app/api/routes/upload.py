@@ -1,7 +1,8 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from typing import List, Optional
 import os
-import shutil
+from cryptography.fernet import Fernet
+from app.core.config import config
 
 router = APIRouter()
 
@@ -50,9 +51,13 @@ async def upload_documents(
             ext = os.path.splitext(file.filename)[1]
             file_path = os.path.join(candidate_dir, f"{field_name}{ext}")
             
-            # Save file
+            # Encrypt and save file
+            content = await file.read()
+            fernet = Fernet(config.FERNET_KEY.encode('utf-8'))
+            encrypted_data = fernet.encrypt(content)
+            
             with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(file.file, buffer)
+                buffer.write(encrypted_data)
             
             uploaded_files[field_name] = {
                 "original_name": file.filename,

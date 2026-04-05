@@ -1,0 +1,18 @@
+Riya Patel
+Email: riya.patel@example.com | Phone: 8888888888 | Location: Mumbai
+
+PROFESSIONAL EXPERIENCE
+StartupHub - Software Developer
+July 2021 – Present
+- Developed scalable backend services and APIs
+- Current CTC: 800000 INR
+- Total Experience: 2 Years
+
+EDUCATION
+Mumbai University
+Bachelor of Science (B.Sc) in Computer Science
+Year of Passing: 2020
+CGPA: 8.5/10
+
+SKILLS
+Python, JavaScript, React, FastAPI, CI/CD

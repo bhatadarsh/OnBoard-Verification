@@ -27,6 +27,9 @@ class Config:
     
     # Upload directory
     UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
+    
+    # Encryption
+    FERNET_KEY = os.getenv("FERNET_KEY", "uE4rFfM9OItlP3A4HjG6P8c3fO7M0oXW2QfM8g1w_pE=")
 
 
 config = Config()
