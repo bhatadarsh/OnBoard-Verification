@@ -1,179 +1,233 @@
-# AI-Powered Smart Interview System
+# 🧪 Data Extraction Pipeline — Architecture & Explanation
 
-## 🚀 Project Overview
-The **AI-Powered Smart Interview System** is an advanced, automated capabilities-evaluation platform designed to streamline the technical hiring process. It leverages LLMs, and Voice Processing to conduct end-to-end assessments—from resume screening to real-time interactive technical interviews.
-
-Unlike traditional keyword-matching tools, this system uses **Semantic Intelligence** to understand a candidate's actual depth of expertise, detects cheating in real-time, and generates comprehensive hiring reports with actionable recommendations.
-
-## ✨ Key Features
-*   **🧠 Resume Intelligence**: Automatically parses resumes, maps skills to Job Descriptions (JDs) using semantic matching, and calculates a "fit score" based on depth and experience.
-*   **🎯 Smart Shortlisting**: Filters candidates based on core skill coverage, experience flexibility rules, and project alignment.
-*   **🗣️ Interactive Voice Interview**: Conducts a real-time, voice-based technical conversational interview. The AI asks dynamic follow-up questions based on the candidate's actual answers.
-*   **👁️ Visual & Behavioral Anti-Cheating**: Uses **YOLOv8** for real-time object detection (phones, multiple people) and text analysis to flag suspicious answer patterns.
-*   **📊 Comprehensive Reporting**: Generates deep performance insights, including strengths, weaknesses, and a final "Hire/No Hire" recommendation.
-*   **☁️ Enterprise-Grade Infrastructure**: Powered by **Azure Blob Storage** for secure document handling and **Azure Speech Services** for low-latency transcription.
-
-## 🛠️ Technology Stack
-*   **Backend**: Python, FastAPI
-*   **AI Orchestration**: LangGraph (Stateful Multi-Agent Workflow)
-*   **LLM Engine**: Groq (Llama-3-70B / Llama-3.1-8B for extreme speed)
-*   **Speech Processing**: Azure Speech Services (STT) + Pydub (Audio Conversion)
-*   **Computer Vision**: Ultralytics YOLOv8 (Real-time Object Detection)
-*   **Vector Search**: SentenceTransformers (Semantic Matching)
-*   **Storage**: Azure Blob Storage (Documents, Logs, Interview Traces)
-*   **Data Persistence**: Hybrid In-Memory + JSON Persistence (extensible to SQL)
-
-## 🏗️ System Architecture
-The system follows a multi-stage pipeline:
-
-1.  **Ingestion**: Resumes and JDs are uploaded to Azure Blob Storage; text is extracted and normalized.
-2.  **Intelligence Graphs**:
-    *   **JD Graph**: Extracts core skills, seniority.
-    *   **Resume Graph**: Maps candidate experience to the valid JD pillars.
-3.  **Focus Selection**: The system selects the top 5 pillars or topics unique to that candidate.
-4.  **Interview Orchestration (LangGraph)**:
-    *   **Node A**: Ask Question (Voice/Text).
-    *   **Node B**: Transcribe & Analyze Answer.
-    *   **Node C**: Detect Cheating (Visual/Text).
-    *   **Node D**: Decide Next Step (Dig deeper vs. Next topic).
-5.  **Evaluation**: Post-interview, the `Evaluator` agent grades every turn and compiles the Final Report.
-
-## 💻 Local Environment Setup
-
-### 1. Prerequisites
-Before running the system, ensure you have the following installed:
-*   **Python 3.10+**: Core programming language.
-*   **Git**: For version control.
-*   **FFmpeg**: Required for audio processing (converting WebM to WAV).
-    *   *Mac*: `brew install ffmpeg`
-    *   *Windows*: `winget install ffmpeg` (or add to PATH manually).
-    *   *Linux*: `sudo apt install ffmpeg`
-
-### 2. Installation
-Follow these steps to set up the project locally:
-
-```bash
-# 1. Clone the repository
-git clone <your-repo-url>
-cd Interview_System
-
-# 2. Create a virtual environment
-python -m venv venv
-
-# 3. Activate the virtual environment
-# Mac/Linux:
-source venv/bin/activate
-# Windows:
-# venv\Scripts\activate
-
-# 4. Install dependencies
-pip install -r backend/requirements.txt
-```
-
-### 3. API & Cloud Configuration (Critical)
-Create a `.env` file in the root directory and add the following keys:
-
-```bash
-# -----------------------------
-# 🤖 LLM Engine (Groq)
-# -----------------------------
-GROQ_API_KEY="gsk_..."  # Get from console.groq.com. Model used: llama-3.1-8b-instant
-
-# -----------------------------
-# ☁️ Azure Blob Storage
-# -----------------------------
-# Connection string from Azure Portal -> Storage Account -> Access Keys
-AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=...;AccountKey=...;EndpointSuffix=core.windows.net"
-
-# ⚠️ You MUST create these 3 containers in your Azure Storage Account:
-# 1. resumes
-# 2. job-descriptions
-# 3. interview-traces
-
-# -----------------------------
-# 🗣️ Azure Speech Services
-# -----------------------------
-# From Azure Portal -> Cognitive Services (Speech)
-AZURE_SPEECH_KEY="your_speech_key"
-AZURE_SPEECH_REGION="eastus"  # e.g., eastus, westeurope
-
-# -----------------------------
-# ⚙️ Application Settings
-# -----------------------------
-STT_PROVIDER="azure"  # Options: 'azure', 'whisper' (local)
-ACCESS_TOKEN_EXPIRE_MINUTES=300
-SECRET_KEY="your_secret_key_for_jwt"
-```
-
-### 4. Running the Application
-The easiest way to start the system is using the provided shell script:
-
-```bash
-# Make the script executable (first time only)
-chmod +x start_stage1.sh
-
-# Run the system
-./start_stage1.sh
-```
-
-**Alternative (Manual Start):**
-```bash
-uvicorn backend.main:app --reload --port 8000
-```
-
-Once running, access the services:
-*   **Swagger API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-*   **Admin Dashboard**: [http://localhost:3000/admin](http://localhost:3000/admin) (If Frontend is running)
-*   **User Dashboard**: [http://localhost:3000/dashboard](http://localhost:3000/dashboard)
-
-## 📋 End-to-End Workflow
-
-### Step 1: Admin Setup
-1.  Navigate to **Admin Dashboard**.
-2.  Upload a Job Description (PDF/DOCX).
-3.  The system analyzes the JD and extracts "Core Skills" & "Seniority Level".
-
-### Step 2: Candidate Application
-1.  Candidate logs in.
-2.  Uploads their Resume (PDF/DOCX).
-3.  The system runs **Resume Intelligence**:
-    *   Maps skills to the Active JD.
-    *   Calculates a Match Score (0-100%).
-    *   Checks for experience gaps.
-
-### Step 3: Admin Shortlisting
-1.  Admin reviews the candidate list.
-2.  Candidates with **Score > 60%** OR **4+ Matched Skills** are auto-shortlisted.
-3.  Admin can manually Shortlist/Reject.
-
-### Step 4: The AI Interview
-1.  Shortlisted candidate clicks **"Start Interview"**.
-2.  **Phase A**: System selects Top 5 Focus Areas (e.g., "Python", "System Design").
-3.  **Phase B**: AI asks a voice question.
-4.  **Phase C**: Candidate answers (Audio is recorded & transcribed).
-5.  **Phase D**: AI analyzes the answer and asks dynamic follow-up questions (3 questions per topic).
-6.  **Real-Time Cheating Detection**:
-    *   📸 Camera checks for multiple people / phones.
-    *   📝 Text analysis checks for "ChatGPT-style" responses.
-
-### Step 5: Final Evaluation
-1.  Once the interview ends, the **Evaluator Agent** grades every answer (1-10).
-2.  Admin views the **Comprehensive Report**:
-    *   Overall Score (Average of all answers).
-    *   Cheating Severity (Low/Medium/High).
-    *   Hiring Recommendation (Hire / No Hire).
+> A complete, modular pipeline for extracting structured and unstructured data from heterogeneous documents, classifying it, and storing it across relational, vector, and NoSQL databases.
 
 ---
 
-## ❗ Troubleshooting
-**Q: The interview audio isn't transcribing.**
-A: Ensure **FFmpeg** is installed and accessible in your system PATH. The backend uses `pydub`, which relies on FFmpeg to convert WebM to WAV.
+## 1. System Overview
 
-**Q: I get "403 Forbidden" on Azure.**
-A: Check your `AZURE_STORAGE_CONNECTION_STRING` in `.env`. Ensure your IP isn't blocked by the Storage Account firewall.
+This system takes in **heterogeneous data sources** (PDF, DOCX, XLSX, CSV, Images) and performs:
 
+1. **Content Detection** — What's inside the file? (Tables? Charts? Text? Images?)
+2. **Parallel Extraction** — Extract each content type concurrently.
+3. **LLM Validation** — Gemini classifies tables as SQL-compatible or Non-SQL.
+4. **Transformation** — Charts → tables, schema inference for SQL tables.
+5. **Embedding** — OpenAI generates vector embeddings for all content.
+6. **Resilience** — Automatic Retry mechanism (exponential backoff) for API limits.
+7. **Fallback Handling** — If SQL classification fails/timeouts, data is automatically saved as Unstructured (Non-SQL) to prevent data loss.
+8. **Multi-Store Persistence** — Data lands in the right database (Postgres for SQL, Chroma/Mongo for Unstructured).
 
+---
 
+## 2. Architecture Diagram
 
+```mermaid
+flowchart TD
+    Input["📁 Input<br/>(PDF / DOCX / XLSX / CSV / Image)"]
 
+    subgraph "Phase 1: Ingestion"
+        FL["file_loader.py<br/>Load & validate files"]
+        FTD["file_type_detector.py<br/>Detect content types"]
+    end
 
+    Input --> FL --> FTD
+
+    FTD -->|"Tables ✓"| TE
+    FTD -->|"Charts ✓"| CE
+    FTD -->|"Text ✓"| TXE
+    FTD -->|"Images ✓"| IE
+
+    subgraph "Phase 2: Extraction (Parallel)"
+        TE["table_extractor.py<br/>camelot / pymupdf / pandas"]
+        CE["chart_extractor.py<br/>Image-based detection"]
+        TXE["text_extractor.py<br/>pymupdf / python-docx"]
+        IE["image_extractor.py<br/>+ Gemini Vision summary"]
+    end
+
+    subgraph "Phase 3: Validation (Gemini LLM)"
+        GTV["gemini_table_validator.py<br/>SQL vs Non-SQL classification<br/>(w/ Rate Limiter)"]
+        NSV["non_sql_validator.py<br/>Fallback Text representation"]
+    end
+
+    TE --> GTV
+    GTV -->|"SQL ✅"| SE
+    GTV -->|"Non-SQL ⚠"| NSV
+
+    subgraph "Phase 4: Transformation"
+        C2T["chart2table.py<br/>Gemini Vision → DataFrame"]
+        SE["schema_extractor.py<br/>Infer SQL types & DDL"]
+    end
+
+    CE --> C2T --> NSV
+
+    subgraph "Phase 5: Embedding (HuggingFace / OpenAI)"
+        EG["embedding_generator.py<br/>google/embeddinggemma-300m"]
+    end
+
+    SE --> EG
+    NSV --> EG
+    TXE --> EG
+    IE --> EG
+
+    subgraph "Phase 6: Storage"
+        PG[("PostgreSQL<br/>SQL Tables")]
+        CH[("ChromaDB<br/>Vector Embeddings")]
+        MG[("MongoDB<br/>Metadata & Relationships")]
+    end
+
+    SE -->|"CREATE TABLE + INSERT"| PG
+    EG -->|"Vectors"| CH
+
+    subgraph "Phase 7: Metadata"
+        STR["structure_extractor.py<br/>Page-level layout"]
+        RM["relationship_mapper.py<br/>Cross-element links"]
+    end
+
+    FTD --> STR --> RM --> MG
+```
+
+---
+
+## 3. Detailed Phase Breakdown
+
+### Phase 1: Ingestion
+
+| Module | What It Does |
+|---|---|
+| `file_loader.py` | Loads single files or recursively loads all supported files from a directory. Returns `LoadedFile` objects with raw bytes and metadata. |
+| `file_type_detector.py` | Analyzes each file using **lightweight heuristics** (not full extraction) to build a `ContentProfile`. For PDFs: page-by-page text length, image count, and tabular patterns. |
+
+**Output**: `ContentProfile` with boolean flags: `has_tables`, `has_charts`, `has_text`, `has_images`.
+
+---
+
+### Phase 2: Extraction (Parallel)
+
+All 4 extractors run **concurrently** using `utils/parallel.py` (ThreadPoolExecutor).
+
+| Module | Input | Output | Libraries |
+|---|---|---|---|
+| `text_extractor.py` | PDF/DOCX/CSV bytes | Page-level text + concatenated full text | `pymupdf`, `python-docx`, `pandas` |
+| `table_extractor.py` | PDF/DOCX/XLSX bytes | `ExtractedTable` objects (DataFrame + metadata) | `camelot`, `pymupdf`, `pandas` |
+| `image_extractor.py` | PDF/DOCX/Image bytes | `ExtractedImage` objects + **Gemini Vision summaries** (Rate Limited) | `pymupdf`, `python-docx`, Gemini API |
+| `chart_extractor.py` | PDF/XLSX bytes | `ExtractedChart` objects (chart images) | `pymupdf`, `openpyxl` |
+
+---
+
+### Phase 3: Validation (Gemini LLM)
+
+| Module | Decision | Action |
+|---|---|---|
+| `gemini_table_validator.py` | **SQL** (confidence > threshold) | → Schema extraction → PostgreSQL |
+| `gemini_table_validator.py` | **Non-SQL** | → Text representation → Embeddings |
+| `non_sql_validator.py` | Detects key-value / irregular / multi-header type | Converts to flat text for embedding |
+
+**Resilience**: Uses `utils.gemini_helper.py` to handle Rate Limits (429 errors) with exponential backoff retries.
+**Fallback**: If the API call fails after retries (e.g., rate limit exhaustion), the table is automatically treated as **Non-SQL (Unstructured)** to ensure data is saved.
+
+**Gemini Prompt**: Receives table headers, sample rows, and column count. Returns JSON verdict with confidence score, reasoning, and suggested SQL types.
+
+---
+
+### Phase 4: Transformation
+
+| Module | Input | Output |
+|---|---|---|
+| `chart2table.py` | Chart image bytes | `pandas.DataFrame` (via Gemini Vision analysis, Rate Limited) |
+| `schema_extractor.py` | `ExtractedTable` + `TableClassification` | SQL schema (`CREATE TABLE` DDL) + column type map |
+
+---
+
+### Phase 5: Embedding (OpenAI)
+
+| Feature | Detail |
+|---|---|
+| Provider | `huggingface` (default, local) or `openai` (API) |
+| Default Model | `google/embeddinggemma-300m` |
+| Dimensions | 768 (configurable) |
+| Pooling | Mean pooling over token embeddings |
+| Chunking | Auto-splits texts > 6000 chars on paragraph boundaries |
+| Aggregation | Multi-chunk texts get averaged embeddings |
+| Device | CPU / CUDA / MPS (configurable via `HF_DEVICE`) |
+
+**What gets embedded:**
+- SQL table schemas
+- Non-SQL table text representations
+- Charts converted to tabular text
+- Raw document text
+- Image summaries from Gemini Vision
+
+---
+
+### Phase 6: Storage
+
+| Database | What Goes In | Why |
+|---|---|---|
+| **PostgreSQL** | SQL-compatible table data (rows + schema) | Relational querying, joins, aggregations |
+| **ChromaDB** | All embeddings + source documents | Semantic search, RAG retrieval, similarity matching |
+| **MongoDB** | Document metadata, page structures, relationships | Flexible schema for nested structural metadata |
+
+---
+
+### Phase 7: Metadata
+
+| Module | What It Captures |
+|---|---|
+| `structure_extractor.py` | Per-page layout: what elements (tables, images, charts, text) exist on each page with counts and previews |
+| `relationship_mapper.py` | Cross-element links: same-page co-occurrence, chart↔table proximity, text referencing tables |
+
+---
+
+## 4. Configuration
+
+All settings live in `.env` — **nothing is hardcoded**.
+
+```
+GEMINI_API_KEY=                # LLM for validation & vision
+GEMINI_MODEL=gemini-2.0-flash
+
+EMBEDDING_PROVIDER=huggingface  # or 'openai'
+OPENAI_API_KEY=                # Only if provider=openai
+EMBEDDING_MODEL=google/embeddinggemma-300m
+EMBEDDING_DIMENSIONS=768
+HF_DEVICE=cpu                  # cpu / cuda / mps
+
+POSTGRES_URI=postgresql://...  # SQL tables
+MONGO_URI=mongodb://...        # Metadata
+CHROMA_PERSIST_DIR=./chroma_db # Vectors
+
+MAX_WORKERS=4                  # Parallel extraction threads
+LOG_LEVEL=INFO
+```
+
+---
+
+## 5. Running the Pipeline
+
+```bash
+# Single file
+python main.py --input ./sample_data/report.pdf
+
+# Entire directory
+python main.py --input ./sample_data/
+
+# JSON output
+python main.py --input ./sample_data/ --json
+```
+
+---
+
+## 6. Technology Stack
+
+| Component | Technology | Role |
+|---|---|---|
+| LLM | **Gemini 2.0 Flash** | Table validation, image summaries, chart-to-table |
+| Embeddings | **HuggingFace** (`google/embeddinggemma-300m`) | Local vector generation (free, no API key) |
+| PDF Engine | **PyMuPDF** (fitz) | Text, image, table extraction |
+| Table Detection | **Camelot** | Lattice + stream table detection |
+| Vector DB | **ChromaDB** | Persistent local vector storage |
+| SQL DB | **PostgreSQL** + SQLAlchemy | Dynamic schema creation + data storage |
+| NoSQL DB | **MongoDB** + PyMongo | Metadata and relationship storage |
+| Concurrency | **asyncio** + ThreadPoolExecutor | Parallel extraction |
+| Rate Limiter | **Wait & Retry** (Exponential Backoff) | Handles Gemini 429 errors gracefully |
+| Logging | **Rich** | Beautiful console output |
