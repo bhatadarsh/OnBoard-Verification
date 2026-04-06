@@ -7,9 +7,9 @@ from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from backend.database import db
-from jd_intelligence.graph import jd_graph
-from resume_intelligence.graph import resume_graph
-from infra.text_extraction import extract_text
+from backend.jd_intelligence.graph import jd_graph
+from backend.resume_intelligence.graph import resume_graph
+from backend.infra.text_extraction import extract_text
 from azure.storage.blob import BlobServiceClient
 from backend.config import settings
 

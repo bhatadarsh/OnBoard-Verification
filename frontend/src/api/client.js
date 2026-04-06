@@ -84,6 +84,11 @@ export const adminAPI = {
     }
 };
 
+/**
+ * blobAPI — backed by local filesystem via the /blob/url compatibility shim.
+ * Returns { url: "http://localhost:8000/files/{container}/{path}" }
+ * which FastAPI serves directly (no Azure dependency).
+ */
 export const blobAPI = {
     getUrl: async (container, blobPath) => {
         const response = await api.get('/blob/url', {

@@ -11,6 +11,7 @@ venv/
 # OS
 .DS_Store
 
+.interview-agent-env
 # Logs
 *.log
 

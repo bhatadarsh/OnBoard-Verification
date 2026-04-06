@@ -207,6 +207,10 @@ export default function UserDashboard() {
 }
 
 function JDPreview({ jd }) {
+    /**
+     * blobAPI.getUrl now returns a local http://localhost:8000/files/… URL.
+     * The browser opens it in a new tab; FastAPI serves the file directly.
+     */
     const handleDownload = async () => {
         try {
             const { url } = await blobAPI.getUrl('job-descriptions', jd.jd_blob_path);

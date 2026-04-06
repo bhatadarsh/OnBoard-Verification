@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list = ["*"]
     
     # Azure Settings
-    AZURE_STORAGE_CONNECTION_STRING: str = ""
+    AZURE_STORAGE_CONNECTION_STRING: str = "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqK/Wa+ODklA1h0hnbZg==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;"
     
     # Azure OpenAI Settings
     AZURE_OPENAI_API_KEY: str = ""

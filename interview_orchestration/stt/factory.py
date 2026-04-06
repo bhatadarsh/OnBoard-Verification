@@ -1,12 +1,12 @@
 import os
-from interview_orchestration.stt.azure_stt import AzureSpeechToText
-
+from interview_orchestration.stt.whisper_stt import WhisperSpeechToText
+_engine = None 
 
 def get_stt_engine():
     # default to azure as per requirements
-    provider = os.getenv("STT_PROVIDER", "azure")
+    # provider = os.getenv("STT_PROVIDER", "whisper")
+    global _engine 
+    if _engine is None: 
+        _engine = WhisperSpeechToText()
 
-    if provider == "azure":
-        return AzureSpeechToText()
-
-    raise ValueError(f"Unknown STT provider: {provider}")
+    return _engine 
