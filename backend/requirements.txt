@@ -19,6 +19,7 @@ langchain-core
 pypdf==4.0.1
 python-docx==1.1.0
 pdf2image==1.17.0  # Note: requires 'poppler-utils' installed on system (sudo apt install poppler-utils)
+PyMuPDF==1.23.21  # Added for secure redaction (fitz)
 
 # Audio Processing 
 pydub==0.25.1      # Note: requires 'ffmpeg' installed on system (sudo apt install ffmpeg)
@@ -34,3 +35,6 @@ requests==2.31.0
 
 # Dev/Testing
 pytest==8.0.0
+thefuzz==0.22.1
+python-Levenshtein==0.27.3
+

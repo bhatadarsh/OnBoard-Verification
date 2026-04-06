@@ -17,6 +17,7 @@ IMPORTANT DESIGN PRINCIPLES:
 import re
 from typing import Dict, Any, Tuple, Optional
 from datetime import datetime
+import difflib
 
 
 # ============ FIELD CLASSIFICATION ============
@@ -507,18 +508,14 @@ def values_match(form_value: str, doc_value: str, field_type: str = "text") -> T
              except:
                  pass
 
-    # 9. General substring match (FALLBACK)
-    # WARNING: Do not apply to short strings or names to avoid "Male" matching "Female"
-    if len(fv_norm) > 4:
-        if fv_norm in dv_norm or dv_norm in fv_norm:
-            return True, "Substring match"
-
-    # 10. Word overlap fallback
-    fv_words = set(fv_norm.split())
-    dv_words = set(dv_norm.split())
-    if len(fv_words) > 1 and len(dv_words) > 1:
-        common = fv_words & dv_words
-        if len(common) / len(fv_words | dv_words) >= 0.5:
-             return True, "High word overlap"
+    # 9. Semantic Fuzzy Confidence Matching (FALLBACK)
+    # Uses native difflib.SequenceMatcher for string similarity
+    if len(fv_norm) > 3 and len(dv_norm) > 3:
+        confidence = difflib.SequenceMatcher(None, fv_norm, dv_norm).ratio() * 100
+        
+        if confidence >= 80:
+            return True, f"Semantic Match (Confidence: {round(confidence, 1)}%)"
+        elif confidence >= 60:
+            return False, f"Suspicious mismatch (Confidence: {round(confidence, 1)}% < 80% threshold)"
 
     return False, f"Mismatch: Form '{fv}' ≠ Doc '{dv}'"

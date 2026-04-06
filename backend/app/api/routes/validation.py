@@ -10,12 +10,18 @@ import re
 import csv
 import io
 import json
+import aiofiles
+import pypdf
+import fitz
 from datetime import datetime
+from cryptography.fernet import Fernet
+from fastapi.responses import StreamingResponse
 
 from sqlalchemy.orm import Session
 from app.core.database import get_db, Candidate
 from app.core.config import config
 from app.langgraph.orchestration import run_extraction_workflow, run_validation_workflow
+import pypdf
 
 router = APIRouter()
 
@@ -187,8 +193,32 @@ async def upload_documents(
             ext = os.path.splitext(file.filename)[1] or '.txt'
             path = os.path.join(candidate_dir, f"{name}{ext}")
             content = await file.read()
-            with open(path, "wb") as f:
-                f.write(content)
+            
+            # Phase 2: Document Forensics (Check for metadata tampering in PDFs before encryption)
+            if ext.lower() == '.pdf':
+                try:
+                    pdf_reader = pypdf.PdfReader(io.BytesIO(content))
+                    meta = pdf_reader.metadata
+                    reader = pypdf.PdfReader(io.BytesIO(content))
+                    meta = reader.metadata or {}
+                    creator = str(meta.get("/Creator", "")).lower()
+                    producer = str(meta.get("/Producer", "")).lower()
+                    
+                    if "photoshop" in creator or "illustrator" in creator or "photoshop" in producer:
+                        docs["forensic_alerts"] = docs.get("forensic_alerts", []) + [f"TAMPER RISK [High]: {name.upper()} was modified using graphic design software ({producer or creator})."]
+                    elif "gimp" in creator or "gimp" in producer or "canva" in producer:
+                        docs["forensic_alerts"] = docs.get("forensic_alerts", []) + [f"TAMPER RISK [Medium]: {name.upper()} was exported from consumer design software ({producer or creator})."]
+                except Exception:
+                    pass
+            # ---------------------------------------
+            
+            # Encrypt the file content before saving
+            fernet = Fernet(config.FERNET_KEY.encode('utf-8'))
+            encrypted_data = fernet.encrypt(content)
+            
+            async with aiofiles.open(path, "wb") as f:
+                await f.write(encrypted_data)
+            
             docs[name] = path
             uploaded.append(name)
     
@@ -198,7 +228,8 @@ async def upload_documents(
     return {
         "status": "success",
         "candidate_id": candidate_id,
-        "uploaded": uploaded
+        "uploaded": uploaded,
+        "tamper_warning": candidate.tamper_warning if hasattr(candidate, 'tamper_warning') else False
     }
 
 
@@ -209,7 +240,7 @@ async def extract_knowledge_base(
     candidate_id: str,
     db: Session = Depends(get_db)
 ):
-    """Extract knowledge base from uploaded documents using LangGraph."""
+    """Extract knowledge base from uploaded documents using LangGraph with SSE Streaming."""
     candidate = db.query(Candidate).filter(Candidate.id == candidate_id).first()
     if not candidate:
         raise HTTPException(status_code=404, detail="Candidate not found")
@@ -217,20 +248,148 @@ async def extract_knowledge_base(
     docs = candidate.get_documents()
     if not docs:
         raise HTTPException(status_code=400, detail="No documents uploaded")
+        
+    async def event_generator():
+        yield "data: {\"type\": \"log\", \"message\": \"> Initializing extraction workflow...\"}\n\n"
+        
+        from app.langgraph.orchestration import extraction_graph
+        import asyncio
+
+        yield "data: {\"type\": \"log\", \"message\": \"> Loading encrypted documents...\"}\n\n"
+        
+        try:
+            input_state = {
+                "documents": docs,
+                "document_texts": {},
+                "knowledge_base": {}
+            }
+
+            yield "data: {\"type\": \"log\", \"message\": \"> Connecting to LLM Models...\"}\n\n"
+
+            knowledge_base = {}
+            
+            async for event in extraction_graph.astream_events(input_state, version="v1"):
+                kind = event["event"]
+                name = event.get("name", "")
+                
+                if kind == "on_chat_model_stream":
+                    chunk = event["data"]["chunk"].content
+                    if chunk:
+                        clean_chunk = chunk.replace('\n', ' ').replace('"', "'")
+                        yield f"data: {{\"type\": \"stream\", \"message\": \"{clean_chunk}\"}}\n\n"
+                elif kind == "on_tool_start":
+                    yield f"data: {{\"type\": \"log\", \"message\": \"> Running tool: {name}\"}}\n\n"
+                elif kind == "on_chain_end":
+                    # Langgraph v1 top level completion contains the output state
+                    output_state = event["data"].get("output", {})
+                    if isinstance(output_state, dict):
+                        # Find knowledge base in root or nested (if wrapped by node name)
+                        if "knowledge_base" in output_state and output_state["knowledge_base"]:
+                            knowledge_base = output_state["knowledge_base"]
+                        else:
+                            for k, v in output_state.items():
+                                if isinstance(v, dict) and "knowledge_base" in v and v["knowledge_base"]:
+                                    knowledge_base = v["knowledge_base"]
+                else:
+                    if kind in ["on_chain_start", "on_chat_model_start"]:
+                        if name and 'graph' not in name.lower() and name != "LangGraph":
+                            yield f"data: {{\"type\": \"log\", \"message\": \"> Starting {name}...\"}}\n\n"
+            
+            yield "data: {\"type\": \"log\", \"message\": \"> Finalizing parsed data schemas...\"}\n\n"
+            
+            # Save the extracted data robustly using a fresh session to avoid generator detachment scope bugs
+            from app.core.database import SessionLocal
+            db_session = SessionLocal()
+            try:
+                fresh_cand = db_session.query(Candidate).filter(Candidate.id == candidate_id).first()
+                if fresh_cand:
+                    fresh_cand.set_knowledge_base(knowledge_base)
+                    db_session.commit()
+            except Exception as dbe:
+                yield f"data: {{\"type\": \"log\", \"message\": \"> DB Error: {str(dbe)}\"}}\n\n"
+            finally:
+                db_session.close()
+            
+            sources = list(knowledge_base.keys())
+            yield "data: {\"type\": \"log\", \"message\": \"> Extraction successful.\"}\n\n"
+            
+            final_resp = {
+                "type": "result",
+                "sources_extracted": sources,
+                "knowledge_base": knowledge_base
+            }
+            yield f"data: {json.dumps(final_resp)}\n\n"
+            
+        except Exception as e:
+            yield f"data: {{\"type\": \"log\", \"message\": \"> Error: {str(e)}\"}}\n\n"
+            yield "data: {\"type\": \"error\", \"message\": \"Extraction failed\"}\n\n"
     
-    # Run extraction through LangGraph
-    knowledge_base = await run_extraction_workflow(docs)
-    sources = list(knowledge_base.keys())
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+
+# ============ PII REDACTION ============
+
+@router.get("/documents/{candidate_id}/{doc_name}/redacted")
+async def get_redacted_document(
+    candidate_id: str,
+    doc_name: str,
+    db: Session = Depends(get_db)
+):
+    """Zero-Trust PII Auto-Redaction: serve redacted PDFs on the fly."""
+    candidate = db.query(Candidate).filter(Candidate.id == candidate_id).first()
+    if not candidate:
+        raise HTTPException(status_code=404, detail="Candidate not found")
     
-    candidate.set_knowledge_base(knowledge_base)
-    db.commit()
+    docs = candidate.get_documents()
+    if doc_name not in docs:
+        raise HTTPException(status_code=404, detail="Document not found")
+        
+    path = docs[doc_name]
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="File missing on disk")
+        
+    async with aiofiles.open(path, "rb") as f:
+        encrypted_data = await f.read()
+        
+    fernet = Fernet(config.FERNET_KEY.encode('utf-8'))
+    try:
+        decrypted_data = fernet.decrypt(encrypted_data)
+    except Exception:
+        raise HTTPException(status_code=500, detail="Failed to decrypt document")
+        
+    # Only process PDF files
+    if not path.lower().endswith('.pdf'):
+        from fastapi.responses import Response
+        return Response(content=decrypted_data, media_type="application/octet-stream")
+        
+    # Phase 3: Redact using fitz (PyMuPDF)
+    doc = fitz.open(stream=decrypted_data, filetype="pdf")
     
-    return {
-        "status": "success",
-        "candidate_id": candidate_id,
-        "sources_extracted": sources,
-        "knowledge_base": knowledge_base
-    }
+    # Regex for 12-digit Aadhar and 10-char PAN
+    aadhar_pattern = re.compile(r'\b\d{4}\s?\d{4}\s?\d{4}\b')
+    pan_pattern = re.compile(r'\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b')
+    
+    for page in doc:
+        text = page.get_text("text")
+        
+        matches = []
+        for match in aadhar_pattern.finditer(text):
+            matches.append(match.group(0))
+        for match in pan_pattern.finditer(text):
+            matches.append(match.group(0))
+            
+        for match_str in matches:
+            # Find bounds for each matched string
+            areas = page.search_for(match_str)
+            for area in areas:
+                page.add_redact_annot(area, fill=(0, 0, 0))
+        
+        page.apply_redactions()
+        
+    redacted_pdf_bytes = doc.write()
+    from fastapi.responses import Response
+    return Response(content=redacted_pdf_bytes, media_type="application/pdf")
 
 
 # ============ VALIDATION (via LangGraph) ============

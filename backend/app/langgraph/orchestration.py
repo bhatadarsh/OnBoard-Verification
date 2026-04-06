@@ -87,6 +87,15 @@ workflow.add_conditional_edges(
 # Compile
 app = workflow.compile()
 
+# Build extraction-only graph for streaming
+# This graph only runs ingestion and extraction
+extraction_workflow = StateGraph(GraphState)
+extraction_workflow.add_node("ingestion", ingestion_node)
+extraction_workflow.add_node("extraction", extraction_node)
+extraction_workflow.set_entry_point("ingestion")
+extraction_workflow.add_edge("ingestion", "extraction")
+extraction_graph = extraction_workflow.compile()
+
 
 # ============ WORKFLOW RUNNERS ============
 

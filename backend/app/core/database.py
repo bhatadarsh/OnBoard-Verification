@@ -36,6 +36,7 @@ class Candidate(Base):
     validation_result = Column(Text, default="{}")
     validation_score = Column(Float, default=0.0)
     is_validated = Column(Boolean, default=False)
+    tamper_warning = Column(Boolean, default=False)
     
     def set_documents(self, data):
         self.documents = json.dumps(data)
@@ -74,7 +75,8 @@ class Candidate(Base):
             "has_knowledge_base": bool(self.knowledge_base and self.knowledge_base != "{}"),
             "has_form": bool(self.onboarding_form and self.onboarding_form != "{}"),
             "is_validated": self.is_validated,
-            "validation_score": self.validation_score
+            "validation_score": self.validation_score,
+            "tamper_warning": self.tamper_warning
         }
 
 

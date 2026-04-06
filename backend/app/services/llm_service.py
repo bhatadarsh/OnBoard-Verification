@@ -24,7 +24,7 @@ class LLMService:
         self.model = config.LLM_MODEL
         self.whisper_model = config.WHISPER_MODEL
     
-    @retry(wait=wait_exponential(multiplier=1, min=2, max=10), stop=stop_after_attempt(5))
+    @retry(wait=wait_exponential(multiplier=1, min=2, max=30), stop=stop_after_attempt(5))
     async def _call_llm(self, system_prompt: str, user_prompt: str) -> Dict[str, str]:
         """Call LLM and return structured JSON response."""
         try:
@@ -53,7 +53,7 @@ class LLMService:
             print(f"LLM Error: {e}")
             return {}
 
-    @retry(wait=wait_exponential(multiplier=1, min=2, max=10), stop=stop_after_attempt(5))
+    @retry(wait=wait_exponential(multiplier=1, min=2, max=30), stop=stop_after_attempt(5))
     async def extract_from_image_vision_async(self, file_path: str) -> str:
         """Extract text from image using Groq Vision API concurrently."""
         try:

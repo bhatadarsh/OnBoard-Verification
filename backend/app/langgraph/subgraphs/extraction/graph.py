@@ -47,10 +47,16 @@ async def extraction_node(state: GraphState) -> Dict[str, Any]:
             tasks["marksheet_12th_data"] = llm_service.extract_from_marksheet(text, "12th")
             
     if tasks:
-        # Run all extractions in parallel safely
+        # Run extractions through an asyncio Semaphore to strictly limit concurrency to 2
+        sem = asyncio.Semaphore(2)
+        
+        async def run_with_sem(coro):
+            async with sem:
+                return await coro
+
         keys = list(tasks.keys())
-        coroutines = list(tasks.values())
-        gathered_results = await asyncio.gather(*coroutines, return_exceptions=True)
+        safe_coroutines = [run_with_sem(coro) for coro in tasks.values()]
+        gathered_results = await asyncio.gather(*safe_coroutines, return_exceptions=True)
         
         for key, res in zip(keys, gathered_results):
             if isinstance(res, Exception):
