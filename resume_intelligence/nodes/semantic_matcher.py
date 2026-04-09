@@ -1,229 +1,85 @@
-# import numpy as np
-# from sentence_transformers import SentenceTransformer
-# from sklearn.metrics.pairwise import cosine_similarity
-
-
-# model = SentenceTransformer("all-MiniLM-L6-v2")
-
-
-# def _embed(texts):
-#     return model.encode(texts, normalize_embeddings=True)
-
-
-# def _best_similarity(source_texts, target_texts):
-#     """
-#     For each source item, find the best semantic match in target items.
-#     Return average of best matches.
-#     """
-#     if not source_texts or not target_texts:
-#         return 0.0
-
-#     src_emb = _embed(source_texts)
-#     tgt_emb = _embed(target_texts)
-
-#     sims = cosine_similarity(src_emb, tgt_emb)
-#     best_scores = sims.max(axis=1)
-
-#     return float(np.mean(best_scores))
-
-
-# def semantic_match(state: dict, jd_context: dict) -> dict:
-#     """
-#     jd_context is Stage 1 output passed explicitly
-#     """
-
-#     resume_claims = state["resume_claims"]
-#     interview_requirements = jd_context["interview_requirements"]
-#     skill_intelligence = jd_context["skill_intelligence"]
-
-#     # -------- Core Skill Match --------
-#     core_skills = skill_intelligence["core_skills"]
-#     resume_responsibilities = resume_claims["roles_and_responsibilities"]
-
-#     core_skill_match = _best_similarity(
-#         core_skills,
-#         resume_responsibilities
-#     )
-
-#     # -------- Project Alignment --------
-#     focus_areas = interview_requirements["primary_focus_areas"]
-#     resume_projects = resume_claims["projects"]
-
-#     project_alignment = _best_similarity(
-#         focus_areas,
-#         resume_projects
-#     )
-
-#     # -------- Conceptual Alignment --------
-#     eval_dims = interview_requirements["evaluation_dimensions"]
-#     experience_signals = resume_claims["experience_signals"]
-
-#     conceptual_alignment = _best_similarity(
-#         eval_dims,
-#         experience_signals
-#     )
-
-#     return {
-#         **state,
-#         "match_scores": {
-#             "core_skill_match": round(core_skill_match, 3),
-#             "project_alignment": round(project_alignment, 3),
-#             "conceptual_alignment": round(conceptual_alignment, 3)
-#         }
-#     }
-
+"""
+Node 4 — semantic_match
+Computes three semantic similarity scores between JD context and resume claims
+using sentence-transformers (MiniLM).
+"""
+import re
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from utils.skill_expander import expand_core_skills
-import re
 
-# Load once (important for performance)
-model = SentenceTransformer("all-MiniLM-L6-v2")
+# Load model once at import time — never inside the function
+_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-def _embed(texts):
-    """
-    Embed a list of strings safely.
-    """
+def _normalize(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r"[\r\n]+", " ", text)
+    text = re.sub(r"[^a-z0-9\s]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _embed(texts: list[str]) -> np.ndarray:
     if not texts:
         return np.array([])
-    # Normalize texts to improve embedding alignment
-    def normalize(t: str) -> str:
-        t = t.lower()
-        t = re.sub(r"[\r\n]+", " ", t)
-        t = re.sub(r"[^a-z0-9\s]+", " ", t)
-        t = re.sub(r"\s+", " ", t).strip()
-        return t
-
-    norm_texts = [normalize(t) for t in texts]
-    return model.encode(norm_texts, normalize_embeddings=True)
+    return _model.encode([_normalize(t) for t in texts], normalize_embeddings=True)
 
 
-def _best_similarity(source_texts, target_texts):
+def _best_mean_similarity(sources: list[str], targets: list[str]) -> float:
     """
-    For each source item, find the best semantic match in target items.
-    Returns the mean of best matches.
+    For each source item, find its best-matching target.
+    Return the mean of those best scores.
     """
-    if not source_texts or not target_texts:
+    if not sources or not targets:
         return 0.0
-
-    src_emb = _embed(source_texts)
-    tgt_emb = _embed(target_texts)
-
+    src_emb = _embed(sources)
+    tgt_emb = _embed(targets)
     if src_emb.size == 0 or tgt_emb.size == 0:
         return 0.0
-
     sims = cosine_similarity(src_emb, tgt_emb)
-    best_scores = sims.max(axis=1)
-
-    return float(np.mean(best_scores))
+    return float(np.mean(sims.max(axis=1)))
 
 
-def semantic_match(state: dict) -> dict:
-    """
-    LangGraph-compatible semantic matching node.
-
-    Computes 3 independent semantic signals:
-    - Core skill match
-    - Project alignment
-    - Conceptual alignment
-    """
-
-    resume_claims = state.get("resume_claims", {})
-    interview_requirements = state.get("interview_requirements", {})
-    skill_intelligence = state.get("skill_intelligence", {})
-
-    # --------------------------------------------------
-    # DEBUG: Raw core skills from JD
-    # --------------------------------------------------
-    raw_core_skills = skill_intelligence.get("core_skills", [])
-    print("\n[DEBUG] Raw core skills from JD:")
-    for s in raw_core_skills:
-        print(" -", s)
-
-    # --------------------------------------------------
-    # Core Skill Match (expanded)
-    # --------------------------------------------------
-    expanded_core_skills = expand_core_skills(raw_core_skills)
-
-    print("\n[DEBUG] Expanded core skills:")
-    for s in expanded_core_skills:
-        print(" -", s)
-
-    resume_responsibilities = [
+def _resume_responsibilities(resume_claims: dict) -> list[str]:
+    return [
         resp
         for project in resume_claims.get("projects", [])
         for resp in project.get("responsibilities", [])
     ]
 
-    print("\n[DEBUG] Resume responsibilities:")
-    for r in resume_responsibilities:
-        print(" -", r)
 
-    core_skill_match = _best_similarity(
-        expanded_core_skills,
-        resume_responsibilities
-    )
+def semantic_match(state: dict) -> dict:
+    resume_claims = state.get("resume_claims", {})
+    interview_requirements = state.get("interview_requirements", {})
+    skill_intelligence = state.get("skill_intelligence", {})
 
-    # --------------------------------------------------
-    # Project Alignment
-    # --------------------------------------------------
+    # --- Core skill match ---
+    raw_core_skills = skill_intelligence.get("core_skills", [])
+    expanded_skills = expand_core_skills(raw_core_skills)
+    responsibilities = _resume_responsibilities(resume_claims)
+
+    core_skill_match = _best_mean_similarity(expanded_skills, responsibilities)
+
+    # --- Project alignment ---
     focus_areas = interview_requirements.get("primary_focus_areas", [])
-
-    # Expand focus areas to include evaluable phrases matching resume wording
-    expanded_focus_areas = expand_core_skills(focus_areas)
-
-    print("\n[DEBUG] Interview focus areas:")
-    for f in focus_areas:
-        print(" -", f)
-
-    print("\n[DEBUG] Expanded focus areas:")
-    for f in expanded_focus_areas:
-        print(" -", f)
-
-    resume_project_texts = [
-        f"{project.get('project_name', '')}: {' '.join(project.get('responsibilities', []))}"
-        for project in resume_claims.get("projects", [])
+    expanded_focus = expand_core_skills(focus_areas)
+    project_texts = [
+        f"{p.get('project_name', '')}: {' '.join(p.get('responsibilities', []))}"
+        for p in resume_claims.get("projects", [])
     ]
+    project_alignment = _best_mean_similarity(expanded_focus, project_texts)
 
-    project_alignment = _best_similarity(
-        expanded_focus_areas,
-        resume_project_texts
-    )
-
-    # --------------------------------------------------
-    # Conceptual Alignment
-    # --------------------------------------------------
+    # --- Conceptual alignment ---
     eval_dims = interview_requirements.get("evaluation_dimensions", [])
+    experience_signals = resume_claims.get("experience_signals", []) or responsibilities
+    conceptual_alignment = _best_mean_similarity(eval_dims, experience_signals)
 
-    print("\n[DEBUG] Evaluation dimensions:")
-    for e in eval_dims:
-        print(" -", e)
-
-    experience_signals = resume_claims.get("experience_signals", [])
-
-    if not experience_signals:
-        experience_signals = resume_responsibilities
-
-    conceptual_alignment = _best_similarity(
-        eval_dims,
-        experience_signals
-    )
-
-    # --------------------------------------------------
-    # FINAL DEBUG SUMMARY
-    # --------------------------------------------------
-    print("\n[DEBUG] Semantic scores:")
-    print(" core_skill_match     =", round(core_skill_match, 3))
-    print(" project_alignment    =", round(project_alignment, 3))
-    print(" conceptual_alignment =", round(conceptual_alignment, 3))
-
-    return {
-        **state,
-        "match_scores": {
-            "core_skill_match": round(core_skill_match, 3),
-            "project_alignment": round(project_alignment, 3),
-            "conceptual_alignment": round(conceptual_alignment, 3),
-        }
+    scores = {
+        "core_skill_match": round(core_skill_match, 3),
+        "project_alignment": round(project_alignment, 3),
+        "conceptual_alignment": round(conceptual_alignment, 3),
     }
+
+    print(f"[semantic_match] {scores}")
+    return {**state, "match_scores": scores}

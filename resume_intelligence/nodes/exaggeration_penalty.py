@@ -1,88 +1,36 @@
-# def compute_exaggeration_penalty(state: dict, jd_context: dict) -> dict:
-#     evidence = state["evidence_map"]
+"""
+Node 5 — compute_exaggeration_penalty
+Pure rule-based penalty: no LLM required.
 
-#     core_skills = jd_context["skill_intelligence"]["core_skills"]
-#     focus_areas = jd_context["interview_requirements"]["primary_focus_areas"]
+Penalty weights:
+  - Unsupported claim that IS a core JD skill    → 0.15 each (max impact)
+  - Weakly supported claim in primary focus area → 0.08 each
+  - Unsupported claim with no JD relevance       → 0.03 each (buzzword noise)
 
-#     unsupported = evidence.get("unsupported_claims", [])
-#     weak = evidence.get("weakly_supported", [])
+Cap: 0.25 total (a single candidate can't tank to zero just from exaggeration).
+"""
 
-#     # ---- Categorize penalties ----
-#     unsupported_core = [
-#         skill for skill in unsupported
-#         if skill in core_skills
-#     ]
-
-#     weak_focus = [
-#         area for area in weak
-#         if area in focus_areas
-#     ]
-
-#     buzzword_only = [
-#         item for item in unsupported
-#         if item not in core_skills and item not in focus_areas
-#     ]
-
-#     # ---- Penalty calculation ----
-#     penalty = (
-#         len(unsupported_core) * 0.15 +
-#         len(weak_focus) * 0.08 +
-#         len(buzzword_only) * 0.03
-#     )
-
-#     penalty = round(min(penalty, 0.25), 3)
-
-#     return {
-#         **state,
-#         "exaggeration_penalty": penalty,
-#         "penalty_breakdown": {
-#             "unsupported_core_skills": unsupported_core,
-#             "weak_focus_areas": weak_focus,
-#             "buzzword_only_claims": buzzword_only
-#         }
-#     }
 
 def compute_exaggeration_penalty(state: dict) -> dict:
-    """
-    Penalizes exaggerated resume claims based on evidence
-    relative to JD expectations.
-    """
+    evidence = state.get("evidence_map", {})
+    skill_intelligence = state.get("skill_intelligence", {})
+    interview_requirements = state.get("interview_requirements", {})
 
-    # --- Pull everything from state (LangGraph rule) ---
-    evidence = state["evidence_map"]
+    core_skills = {s.lower() for s in skill_intelligence.get("core_skills", [])}
+    focus_areas = {f.lower() for f in interview_requirements.get("primary_focus_areas", [])}
 
-    skill_intelligence = state["skill_intelligence"]
-    interview_requirements = state["interview_requirements"]
+    unsupported = [c.lower() for c in evidence.get("unsupported_claims", [])]
+    weak = [c.lower() for c in evidence.get("weakly_supported", [])]
 
-    core_skills = skill_intelligence["core_skills"]
-    focus_areas = interview_requirements["primary_focus_areas"]
+    unsupported_core = [c for c in unsupported if c in core_skills]
+    weak_focus = [c for c in weak if c in focus_areas]
+    buzzword_only = [c for c in unsupported if c not in core_skills and c not in focus_areas]
 
-    unsupported = evidence.get("unsupported_claims", [])
-    weak = evidence.get("weakly_supported", [])
-
-    # ---- Categorize penalties ----
-    unsupported_core = [
-        skill for skill in unsupported
-        if skill in core_skills
-    ]
-
-    weak_focus = [
-        area for area in weak
-        if area in focus_areas
-    ]
-
-    buzzword_only = [
-        item for item in unsupported
-        if item not in core_skills and item not in focus_areas
-    ]
-
-    # ---- Penalty calculation ----
     penalty = (
-        len(unsupported_core) * 0.15 +
-        len(weak_focus) * 0.08 +
-        len(buzzword_only) * 0.03
+        len(unsupported_core) * 0.15
+        + len(weak_focus) * 0.08
+        + len(buzzword_only) * 0.03
     )
-
     penalty = round(min(penalty, 0.25), 3)
 
     return {
@@ -91,6 +39,6 @@ def compute_exaggeration_penalty(state: dict) -> dict:
         "penalty_breakdown": {
             "unsupported_core_skills": unsupported_core,
             "weak_focus_areas": weak_focus,
-            "buzzword_only_claims": buzzword_only
-        }
+            "buzzword_only_claims": buzzword_only,
+        },
     }

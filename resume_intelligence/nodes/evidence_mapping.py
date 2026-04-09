@@ -1,127 +1,51 @@
-# # import json
-# # from langchain_groq import ChatGroq
-# # from langchain.prompts import PromptTemplate
-# # from utils.json_parser import extract_json
+"""
+Node 3 — map_evidence
+Validates resume claims: strongly supported / weakly supported / unsupported.
 
-
-# # def map_evidence(state: dict) -> dict:
-# #     llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
-
-# #     prompt = PromptTemplate(
-# #         input_variables=["resume_claims"],
-# #         template=open(
-# #             "resume_intelligence/prompts/evidence_mapping.txt"
-# #         ).read()
-# #     )
-
-# #     response = llm.invoke(
-# #         prompt.format(resume_claims=state["resume_claims"])
-# #     )
-
-# #     return {
-# #         **state,
-# #         "evidence_map": extract_json(response.content)
-# #     }
-
-
-# import json
-# from langchain_groq import ChatGroq
-# from langchain.prompts import PromptTemplate
-# from utils.json_parser import extract_json
-
-
-# def map_evidence(state: dict) -> dict:
-#     """
-#     Maps resume claims to evidence strength buckets.
-#     """
-
-#     llm = ChatGroq(
-#         model="llama-3.1-8b-instant",
-#         temperature=0
-#     )
-
-#     prompt = PromptTemplate(
-#         input_variables=["resume_claims"],
-#         template=open(
-#             "resume_intelligence/prompts/evidence_mapping.txt"
-#         ).read()
-#     )
-
-#     # 🔑 Always pass JSON, never raw dicts
-#     resume_claims_json = json.dumps(state["resume_claims"], indent=2)
-
-#     response = llm.invoke(
-#         prompt.format(resume_claims=resume_claims_json)
-#     )
-
-#     # Attempt to parse JSON; on failure, print the raw LLM output for diagnosis
-#     try:
-#         evidence_map = extract_json(response.content)
-#     except Exception as e:
-#         print("[ERROR] Failed to parse evidence_mapping LLM response as JSON.")
-#         print("--- LLM raw response start ---")
-#         print(response.content)
-#         print("--- LLM raw response end ---")
-#         raise
-
-#     return {
-#         **state,
-#         "evidence_map": evidence_map
-#     }
-
-
-import os
+Fix applied: prompt variables must be JSON-serialized strings, not raw dicts.
+The original code passed state["resume_claims"] (a dict) directly to
+prompt.format(), which produced [object Object]-style garbage in the prompt.
+"""
 import json
-from langchain_groq import ChatGroq
 from langchain.prompts import PromptTemplate
+from utils.llm import get_llm, load_prompt
 from utils.json_parser import extract_json
 
 
 def map_evidence(state: dict) -> dict:
-    # -------------------------
-    # Resolve prompt path SAFELY
-    # -------------------------
-    BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # resume_intelligence/
-    PROMPT_PATH = os.path.join(
-        BASE_DIR,
-        "prompts",
-        "evidence_mapping.txt"
-    )
+    resume_claims = state.get("resume_claims")
+    skill_intelligence = state.get("skill_intelligence")
+    interview_requirements = state.get("interview_requirements")
 
-    if not os.path.exists(PROMPT_PATH):
-        raise FileNotFoundError(f"Prompt file not found: {PROMPT_PATH}")
+    if not resume_claims:
+        raise ValueError("State missing 'resume_claims'. Run extract_resume_claims first.")
+    if not skill_intelligence:
+        raise ValueError("State missing 'skill_intelligence'. Provide JD context before running.")
+    if not interview_requirements:
+        raise ValueError("State missing 'interview_requirements'. Provide JD context before running.")
 
-    with open(PROMPT_PATH, "r", encoding="utf-8") as f:
-        prompt_template = f.read()
-
-    # -------------------------
-    # LLM
-    # -------------------------
-    llm = ChatGroq(
-        model="llama-3.1-8b-instant",
-        temperature=0
-    )
+    prompt_template = load_prompt("evidence_mapping.txt")
+    llm = get_llm()
 
     prompt = PromptTemplate(
-        input_variables=[
-            "resume_claims",
-            "skill_intelligence",
-            "interview_requirements"
-        ],
-        template=prompt_template
+        input_variables=["resume_claims", "skill_intelligence", "interview_requirements"],
+        template=prompt_template,
     )
 
+    # BUG FIX: serialize dicts to JSON strings so they render properly in the prompt
     response = llm.invoke(
         prompt.format(
-            resume_claims=state["resume_claims"],
-            skill_intelligence=state["skill_intelligence"],
-            interview_requirements=state["interview_requirements"]
+            resume_claims=json.dumps(resume_claims),
+            skill_intelligence=json.dumps(skill_intelligence),
+            interview_requirements=json.dumps(interview_requirements),
         )
     )
 
-    evidence_map = extract_json(response.content)
+    evidence = extract_json(response.content)
 
-    return {
-        **state,
-        "evidence_map": evidence_map
-    }
+    # Defensive defaults
+    evidence.setdefault("strongly_supported", [])
+    evidence.setdefault("weakly_supported", [])
+    evidence.setdefault("unsupported_claims", [])
+
+    return {**state, "evidence_map": evidence}
