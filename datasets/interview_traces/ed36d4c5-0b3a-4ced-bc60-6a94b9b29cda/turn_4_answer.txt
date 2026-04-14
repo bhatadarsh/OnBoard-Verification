@@ -1,0 +1,1 @@
+Yeah, so I was working on Databricks. I created one Databricks dashboard I used Databricks Delta tables and fetch them to populate the data Configured multiple filters to select the columns and added multiple independent buttons for stakeholders to select multiple SKUs independently To help them

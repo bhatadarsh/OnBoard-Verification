@@ -293,6 +293,7 @@ function JDManager({ jds, onRefresh }) {
 }
 
 function ResumeList({ allJds, filterJobId, setFilterJobId }) {
+    const navigate = useNavigate(); // ✅ Added for navigation
     const [resumes, setResumes] = useState([]);
     const [sortBy, setSortBy] = useState('newest');
     const [lastRefresh, setLastRefresh] = useState(new Date());
@@ -336,6 +337,17 @@ function ResumeList({ allJds, filterJobId, setFilterJobId }) {
     const handleDownloadReport = (candidateId) => {
         const token = localStorage.getItem('token');
         window.open(`http://localhost:8000/admin/candidates/${candidateId}/report?token=${token}`, '_blank');
+    };
+
+    // ✅ CORRECTED: start interview with navigation
+    const handleStartInterview = async (candidateId, resumeId) => {
+        try {
+            const session = await adminAPI.startInterview(candidateId, resumeId);
+            // Navigate to the public interview route (no role restriction)
+            navigate(`/interview/${session.interview_id}`);
+        } catch (err) {
+            alert('Initialization failed: ' + (err.response?.data?.detail || err.message));
+        }
     };
 
     const filteredCandidates = resumes.filter(r => filterJobId === "ALL" || r.jd_id === filterJobId);
@@ -561,13 +573,3 @@ function ResumeList({ allJds, filterJobId, setFilterJobId }) {
         </div>
     );
 }
-
-const handleStartInterview = async (candidateId, resumeId) => {
-    try {
-        await adminAPI.startInterview(candidateId, resumeId);
-        alert('Interview Session Initialized!');
-        window.location.reload();
-    } catch (err) {
-        alert('Initialization failed: ' + (err.response?.data?.detail || err.message));
-    }
-};

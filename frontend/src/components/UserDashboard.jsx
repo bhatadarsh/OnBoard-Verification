@@ -207,10 +207,6 @@ export default function UserDashboard() {
 }
 
 function JDPreview({ jd }) {
-    /**
-     * blobAPI.getUrl now returns a local http://localhost:8000/files/… URL.
-     * The browser opens it in a new tab; FastAPI serves the file directly.
-     */
     const handleDownload = async () => {
         try {
             const { url } = await blobAPI.getUrl('job-descriptions', jd.jd_blob_path);
@@ -310,6 +306,7 @@ function ResumeUploader({ selectedJobId }) {
     const [interviewSession, setInterviewSession] = useState(null);
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [startingInterview, setStartingInterview] = useState(false);
 
     useEffect(() => {
         const checkStatus = async () => {
@@ -339,6 +336,20 @@ function ResumeUploader({ selectedJobId }) {
             alert('Upload failed: ' + (err.response?.data?.detail || err.message));
         } finally {
             setUploading(false);
+        }
+    };
+
+    // NEW: Start interview on demand
+    const handleStartAssessment = async () => {
+        setStartingInterview(true);
+        try {
+            const session = await userAPI.startInterview();
+            // ✅ FIX: Add '/user' prefix
+            navigate(`/user/interview/${session.interview_id}`);
+        } catch (err) {
+            alert('Failed to start interview: ' + (err.response?.data?.detail || err.message));
+        } finally {
+            setStartingInterview(false);
         }
     };
 
@@ -426,12 +437,35 @@ function ResumeUploader({ selectedJobId }) {
                                                 fontSize: '16px',
                                                 boxShadow: '0 10px 15px -3px rgba(99, 102, 241, 0.3)'
                                             }}>
-                                            Start Interview 🚀
+                                            Resume Interview 🚀
                                         </button>
                                     </div>
                                 )
                             ) : (
-                                <p style={{ textAlign: 'center', color: '#6366f1', fontSize: '14px' }}>Preparing your interview link... Please wait.</p>
+                                // Replace the waiting message with a Start Assessment button
+                                <div style={{ padding: '24px', background: '#f5f3ff', borderRadius: '16px', border: '1px solid #ddd6fe', textAlign: 'center' }}>
+                                    <button
+                                        onClick={handleStartAssessment}
+                                        disabled={startingInterview}
+                                        style={{
+                                            width: '100%',
+                                            padding: '16px',
+                                            background: '#6366f1',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            cursor: startingInterview ? 'not-allowed' : 'pointer',
+                                            fontWeight: '800',
+                                            fontSize: '16px',
+                                            opacity: startingInterview ? 0.6 : 1,
+                                            boxShadow: '0 10px 15px -3px rgba(99, 102, 241, 0.3)'
+                                        }}>
+                                        {startingInterview ? 'Starting Assessment...' : 'Start Assessment 🚀'}
+                                    </button>
+                                    <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '12px' }}>
+                                        This will begin your AI-powered technical interview. Ensure you have a stable internet connection and a quiet environment.
+                                    </p>
+                                </div>
                             )}
                         </div>
                     ) : !isSelected && !isRejected ? (

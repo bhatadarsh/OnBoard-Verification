@@ -40,6 +40,10 @@ export const userAPI = {
         const response = await api.get('/user/dashboard');
         return response.data;
     },
+    startInterview: async () => {
+        const response = await api.post('/user/interview/start');
+        return response.data;
+    },
 };
 
 export const adminAPI = {

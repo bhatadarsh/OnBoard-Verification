@@ -71,6 +71,78 @@ async def log_request_size(request, call_next):
 # Local file-serving endpoint  (replaces Azure SAS / blob URLs)
 # GET /files/{container}/{blob_path:path}
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Add this helper function near the top (after imports)
+def create_interview_session_for_candidate(candidate_id: int, resume_id: Optional[str] = None) -> InterviewSession:
+    """Shared logic to create an interview session for a candidate."""
+    db.load()
+    
+    # Find resume
+    if resume_id:
+        resume = next((r for r in db.resumes if r["resume_id"] == resume_id), None)
+    else:
+        cand_resumes = [r for r in db.resumes if r["candidate_id"] == candidate_id]
+        resume = cand_resumes[-1] if cand_resumes else None
+    
+    if not resume:
+        raise HTTPException(status_code=404, detail="Candidate resume not found")
+    
+    if resume["status"] != "SHORTLISTED":
+        raise HTTPException(status_code=400, detail="Candidate must be SHORTLISTED to start interview")
+    
+    job_id = resume.get("job_id")
+    jd = db.jds.get(job_id) if job_id else None
+    if not jd or jd.get("is_deleted") or not jd.get("intelligence"):
+        raise HTTPException(status_code=400, detail="Associated Job description is deleted or intelligence missing")
+    
+    jd_intel = jd["intelligence"]
+    res_intel = resume.get("intelligence", {})
+    
+    s3_input = {
+        "interview_requirements": jd_intel.get("interview_requirements", {}),
+        "skill_intelligence": jd_intel.get("skill_intelligence", {}),
+        "resume_claims": res_intel.get("resume_claims", {}),
+        "evidence_map": res_intel.get("evidence_map", {}),
+        "match_scores": res_intel.get("match_scores", {}),
+        "final_score": res_intel.get("final_score", 0.0)
+    }
+    
+    try:
+        from focus_area_selection.graph import stage3_graph
+        s3_res = stage3_graph.invoke(s3_input)
+        final_focus_areas = s3_res.get("final_focus_areas", [])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Focus area selection failed: {str(e)}")
+    
+    if not final_focus_areas:
+        raise HTTPException(status_code=400, detail="No focus areas could be determined for this candidate")
+    
+    try:
+        from interview_orchestration.graph import stage4_graph
+        from interview_orchestration.nodes.initialize_interview import initialize_interview
+        s4_state = initialize_interview({"candidate_id": str(candidate_id), "final_focus_areas": final_focus_areas})
+        s4_res = stage4_graph.invoke(s4_state)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Interview initiation failed: {str(e)}")
+    
+    session = InterviewSession(
+        interview_id=str(uuid.uuid4()), candidate_id=candidate_id,
+        current_question=s4_res.get("current_question"),
+        status="IN_PROGRESS" if s4_res.get("current_question") else "NOT_STARTED",
+        created_at=datetime.now(), focus_areas=final_focus_areas,
+        current_topic=s4_res.get("current_topic"),
+        current_topic_index=s4_res.get("current_topic_index", 0),
+        current_followup_count=s4_res.get("current_followup_count", 0),
+        interview_trace=[]
+    )
+    
+    # Remove any existing session for this candidate (idempotent)
+    db.interviews = [i for i in db.interviews if i["candidate_id"] != candidate_id]
+    db.interviews.append(session.dict())
+    db.save()
+    
+    return session
+
 @app.get("/files/{container}/{blob_path:path}")
 async def serve_local_file(
     container: str,
@@ -630,58 +702,14 @@ async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(
 # ─────────────────────────────────────────────────────────────────────────────
 
 @app.post("/admin/interview/start/{candidate_id}", response_model=InterviewSession)
-async def start_interview(candidate_id: int, resume_id: Optional[str] = Query(None), current_user: TokenData = Depends(require_admin)):
-    db.load()
-    if resume_id:
-        resume = next((r for r in db.resumes if r["resume_id"] == resume_id), None)
-    else:
-        cand_resumes = [r for r in db.resumes if r["candidate_id"] == candidate_id]
-        resume = cand_resumes[-1] if cand_resumes else None
-    if not resume:
-        raise HTTPException(status_code=404, detail="Candidate resume not found")
-    if resume["status"] != "SHORTLISTED":
-        raise HTTPException(status_code=400, detail="Candidate must be SHORTLISTED to start interview")
-    job_id = resume.get("job_id")
-    jd = db.jds.get(job_id) if job_id else None
-    if not jd or jd.get("is_deleted") or not jd.get("intelligence"):
-        raise HTTPException(status_code=400, detail="Associated Job description is deleted or intelligence missing")
-    jd_intel = jd["intelligence"]
-    res_intel = resume.get("intelligence", {})
-    s3_input = {
-        "interview_requirements": jd_intel.get("interview_requirements", {}),
-        "skill_intelligence": jd_intel.get("skill_intelligence", {}),
-        "resume_claims": res_intel.get("resume_claims", {}),
-        "evidence_map": res_intel.get("evidence_map", {}),
-        "match_scores": res_intel.get("match_scores", {}),
-        "final_score": res_intel.get("final_score", 0.0)
-    }
-    try:
-        s3_res = stage3_graph.invoke(s3_input)
-        final_focus_areas = s3_res.get("final_focus_areas", [])
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Focus area selection failed: {str(e)}")
-    if not final_focus_areas:
-        raise HTTPException(status_code=400, detail="No focus areas could be determined for this candidate")
-    try:
-        s4_state = initialize_interview({"candidate_id": str(candidate_id), "final_focus_areas": final_focus_areas})
-        s4_res = stage4_graph.invoke(s4_state)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Interview initiation failed: {str(e)}")
-    session = InterviewSession(
-        interview_id=str(uuid.uuid4()), candidate_id=candidate_id,
-        current_question=s4_res.get("current_question"),
-        status="IN_PROGRESS" if s4_res.get("current_question") else "NOT_STARTED",
-        created_at=datetime.now(), focus_areas=final_focus_areas,
-        current_topic=s4_res.get("current_topic"),
-        current_topic_index=s4_res.get("current_topic_index", 0),
-        current_followup_count=s4_res.get("current_followup_count", 0),
-        interview_trace=[]
-    )
-    db.interviews = [i for i in db.interviews if i["candidate_id"] != candidate_id]
-    db.interviews.append(session.dict())
-    db.save()
-    return session
+async def start_interview_admin(candidate_id: int, resume_id: Optional[str] = Query(None), current_user: TokenData = Depends(require_admin)):
+    return create_interview_session_for_candidate(candidate_id, resume_id)
 
+@app.post("/user/interview/start", response_model=InterviewSession)
+async def start_interview_user(current_user: TokenData = Depends(require_user)):
+    """Allow a shortlisted user to start their own interview."""
+    return create_interview_session_for_candidate(current_user.user_id, None)
+    
 @app.get("/user/interview/status", response_model=Optional[InterviewSession])
 async def get_interview_status(current_user: TokenData = Depends(require_user)):
     session_data = next((i for i in db.interviews if i["candidate_id"] == current_user.user_id), None)
