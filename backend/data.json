@@ -128,37 +128,37 @@
       "status": "active",
       "hashed_password": "$2b$12$w5bkfyLbSGJ.fv1sccTbeuYB0nY1LWk6fD5QX3xsSIL0KVNoCem/W"
     },
-    "alexx@gmail.com": {
-      "id": 105,
-      "name": "alexx",
-      "email": "alexx@gmail.com",
+    "alex5@gmail.com": {
+      "id": 109,
+      "name": "alex5",
+      "email": "alex5@gmail.com",
       "role": "user",
       "status": "active",
-      "hashed_password": "$2b$12$FlkNTCYtt/fjT5lcYCnAiOSbf/1bv0bQzI/zSkmnelDW5FH4C75Yy"
+      "hashed_password": "$2b$12$9PANxvPP4QEhJW4pRFhbtOoh6BxQLCxQSUS8dKLdz.mSc.fh4oeUW"
     },
-    "alex2@gmail.com": {
-      "id": 106,
-      "name": "alex2",
-      "email": "alex2@gmail.com",
+    "amy@gmail.com": {
+      "id": 115,
+      "name": "amy",
+      "email": "amy@gmail.com",
       "role": "user",
       "status": "active",
-      "hashed_password": "$2b$12$gUHiIWEZUfgcJY2S1eUtOOF8DHQ5Lef6VMtj/UOwLNDxAAH1BEhiG"
+      "hashed_password": "$2b$12$8CciJBWePdqoJI9kKiOnuuJ2O3rJTZkwVZojQjvkcp.qwuMFimLau"
     },
-    "alex3@gmail.com": {
-      "id": 107,
-      "name": "alex3",
-      "email": "alex3@gmail.com",
+    "any1@gmail.com": {
+      "id": 116,
+      "name": "any1",
+      "email": "any1@gmail.com",
       "role": "user",
       "status": "active",
-      "hashed_password": "$2b$12$FZOBWbhim10Hx7dOlr8K2OXQnzbz3Gi6P1cic4HB5hSmJJ2gKKkhy"
+      "hashed_password": "$2b$12$Ys0e3jeRl5rlCAZ6TJs2WuPkhIZgU9VM/zIBDDbcIZQ.63rkG0xva"
     },
-    "alex4@gmail.com": {
-      "id": 108,
-      "name": "alex4",
-      "email": "alex4@gmail.com",
+    "any2@gmail.com": {
+      "id": 117,
+      "name": "any2",
+      "email": "any2@gmail.com",
       "role": "user",
       "status": "active",
-      "hashed_password": "$2b$12$ZoSOJgszGxFkyHQ.naJe2e8SRchnZPe.cdNO.oXiFdFjg7u2eyzIm"
+      "hashed_password": "$2b$12$FvIdTJXC.VVPImuWFwHwnerTvp6lat0xTFyziMihComGeX0hLPVHG"
     }
   },
   "jds": {
@@ -3223,15 +3223,15 @@
       }
     },
     {
-      "candidate_id": 105,
+      "candidate_id": 109,
       "job_id": "JOB_6",
-      "resume_id": "2d094759-5f03-4790-8614-18a242c44fa4",
-      "resume_blob_path": "resumes/CAND_105/20260409_155125_AlexResume_HP.pdf",
-      "status": "UNDER_REVIEW",
-      "interview_unlocked": false,
-      "uploaded_at": "2026-04-09 15:51:31.564984",
+      "resume_id": "dc4a171b-d9e1-4b48-900b-22c3c64ec79b",
+      "resume_blob_path": "resumes/CAND_109/20260409_162443_AlexResume_HP.pdf",
+      "status": "SHORTLISTED",
+      "interview_unlocked": true,
+      "uploaded_at": "2026-04-09 16:24:51.437116",
       "intelligence": {
-        "candidate_id": "105",
+        "candidate_id": "109",
         "raw_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n\u2022 Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 \u2013 Present\nSenior Data Scientist San Francisco, CA\n\u2013Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n\u2013Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n\u2013Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n\u2013Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n\u2013Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n\u2013Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n\u2013Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 \u2013 Dec 2019\nData Scientist San Diego, CA\n\u2013Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n\u2013Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n\u2013Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n\u2013Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n\u2013Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n\u2013Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n\u2013Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n\u2013Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n\u2013Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n\u2013Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n\u2013Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 \u2013 May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 \u2013 May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
         "normalized_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n- Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 - Present\nSenior Data Scientist San Francisco, CA\n-Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n-Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n-Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n-Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n-Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n-Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n-Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 - Dec 2019\nData Scientist San Diego, CA\n-Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n-Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n-Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n-Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n-Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n-Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n-Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n-Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n-Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n-Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n-Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 - May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 - May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
         "resume_claims": {
@@ -3474,21 +3474,21 @@
           "weak_focus_areas": [],
           "buzzword_only_claims": []
         },
-        "final_score": 0.492,
-        "shortlist_decision": true,
+        "final_score": 5.4,
+        "shortlist_decision": false,
         "shortlist_reason": {
-          "final_score": 0.492,
-          "threshold": 0.45,
+          "final_score": 5.4,
+          "threshold": 5.5,
           "section_scores": {
-            "required_skills": 0.5,
-            "preferred_skills": 0.482,
-            "responsibilities": 0.408,
-            "experience": 0.543
+            "required_skills": 5.2,
+            "preferred_skills": 4.9,
+            "responsibilities": 3.7,
+            "experience": 5.9
           },
-          "weighted_raw": 0.492,
-          "exp_adjustment": 0.0,
+          "weighted_raw_10": 4.9,
+          "exp_adjustment": 0.05,
           "penalty_applied": 0.0,
-          "experience_note": null,
+          "experience_note": "Candidate ~7 yrs vs 4 yrs required (over-qualified; small bonus applied)",
           "matched_core_skills": [
             "collect and analyze large datasets",
             "write complex sql queries",
@@ -3519,7 +3519,7 @@
             "jd_required_years": 4.0,
             "candidate_years": 7.0,
             "flexibility_applied": false,
-            "note": null
+            "note": "Candidate ~7 yrs vs 4 yrs required (over-qualified; small bonus applied)"
           },
           "penalties_applied": {
             "unsupported_core_skills": [],
@@ -3534,174 +3534,442 @@
       }
     },
     {
-      "candidate_id": 106,
+      "candidate_id": 115,
       "job_id": "JOB_6",
-      "resume_id": "ff54fa24-b5e0-4db1-ae0a-835be1077968",
-      "resume_blob_path": "resumes/CAND_106/20260409_155547_AlexResume.pdf",
+      "resume_id": "58c5caf2-6e82-4780-a570-61d3faecbe15",
+      "resume_blob_path": "resumes/CAND_115/20260414_121101_AlexResume_HP.pdf",
       "status": "UNDER_REVIEW",
       "interview_unlocked": false,
-      "uploaded_at": "2026-04-09 15:55:51.405166",
+      "uploaded_at": "2026-04-14 12:11:08.056610",
       "intelligence": {
-        "candidate_id": "106",
-        "raw_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nData Scientist with end-to-end project lifecycle experience \u2014 from problem scoping to machine learning systems deploy-\nment and maintenance. Strong analytical ability to solve complex problems with data using statistical methods and\nmachine learning fundamentals. Skilled in data extraction, cleaning, exploration, analysis, and presentation on high-\nvolume, high-dimensional datasets. Proven ability to collaborate with business and product teams, design A/B tests, and\ndeliver data-driven insights to wide-ranging audiences.\nTechnical Skills\nProgramming & Analytics:Python (pandas, NumPy, scikit-\nlearn), R, SQL, ETL/ELT, Data Cleaning, Data Exploration,\nStatistical Modeling\nML & Deep Learning:Regression, Classification, Cluster-\ning, Time Series, A/B Testing, Hypothesis Testing, Ten-\nsorFlow, PyTorch\nBig Data & Cloud:Spark, Hadoop, Hive, Databricks, AWS,\nAzure, GCP, Distributed Computing\nProduction & Collaboration:Git, CI/CD, Docker, Kuber-\nnetes, Stakeholder Management, Storytelling with Data\nExperience\nDataScience Solutions Inc. Jan 2023 \u2013 Present\nData Scientist San Francisco, CA\nCredit Scoring & Risk Modeling\n\u2013Collaborated with business and product teams to scope a credit scoring solution. Performed data extraction, cleaning,\nand exploration on loan applications, credit reports, and repayment histories (high-volume, high-dimensional datasets).\n\u2013Formulated a data science solution using XGBoost and logistic regression to generate credit scores and estimate loan risk\nacross customer segments.\n\u2013Designed, performed, and analyzed A/B tests on feature sets and model architectures to validate performance improve-\nments before deployment.\n\u2013Delivered data-driven insights to stakeholders using visualizations and statistical summaries, enabling informed lending\ndecisions.\nRecommendation System (Check-out Relevance)\n\u2013Formulated a recommendation solution to provide the most relevant suggestions during user check-out on an e-commerce\nplatform.\n\u2013Designed and implemented algorithms using collaborative filtering and a Mixture-of-Experts (MoE) deep learning model\nto optimize relevance on high-volume interaction data.\n\u2013Deployed and maintained models in production on AWS using Docker and Kubernetes, collaborating with ML engineers.\n\u2013Analyzed A/B test results (recall@k, conversion lift) and presented findings to product teams, driving feature adoption.\nFraud Detection (Sparse, High-Dimensional Data)\n\u2013Scoped a problem to detect fraudulent users using sparse, high-dimensional transaction data. Performed ETL operations\nfrom multiple data sources to build a unified modeling dataset.\n\u2013Applied statistical methods (isolation forests, autoencoders) and machine learning fundamentals to identify anomalous\npatterns with high precision.\n\u2013Collaborated with data engineers to productionize the detection pipeline on Spark and Databricks, including model\nmonitoring and periodic retraining.\n\u2013Communicated detection logic and business impact to non-technical stakeholders via clear dashboards and reports.\nNLP for Sentiment Analysis & Query Correction\n\u2013Designed NLP solutions for sentiment analysis on customer feedback and auto-correction of search queries using PyTorch\nand Hugging Face transformers.\n\u2013Performed data cleaning, tokenization, and embedding extraction on large text corpora using distributed computing\n(Spark, Hive).\n\u2013Deployed models as microservices on Azure with CI/CD pipelines (Git, Jenkins) and Kubernetes for low-latency inference.\n\u2013Told compelling stories with data by visualizing sentiment trends and correction accuracy to product managers and\nleadership.\nProjects\nParcel Arrival Time Prediction 2024\n\u2013Predicted parcel delivery times using traffic conditions, weather, and historical route data (similar to JD example: \"Predict\narrival time based on traffic\").\n\u2013Performed time series analysis, feature engineering, and built regression models (XGBoost + LSTM) on high-dimensional\nspatiotemporal data.\n\u2013Deployed via FastAPI on GCP with CI/CD; validated using MAE and MAPE metrics.\n\u2013Tech:Python, pandas, scikit-learn, TensorFlow, Spark, GCP\nAircraft Maintenance Decision Support System 2025\n\u2013Built a data-driven system combining unstructured manuals with structured logs to assist in complex troubleshooting\ndecisions.\n\u2013Performed ETL and hybrid retrieval (vector + SQL) to link symptoms with historically successful fixes.\n\u2013Applied NLP and statistical reasoning to support decisions under limited connectivity.\n\u2013Tech:Python, LangChain, FastAPI, Ollama, ChromaDB, DuckDB, SQL, Docker\nWhat Will Make You Stand Out\n\u2022Production software engineering routines:Git versioning, Continuous Integration/Continuous Deployment (CI/CD), Docker,\nKubernetes.\n\u2022Experience working on large datasets and distributed computing:Spark, Hadoop, Hive, Presto, Databricks.\n\u2022Working knowledge of Cloud-based solutions:AWS, Azure, GCP.\n\u2022Excellent written and verbal communication skillswith ability to tell stories with data and deliver insights to wide-ranging\naudiences.\n\u2022Strong stakeholder management skillsand ability to collaborate with business and product teams.\nEducation\nUniversity of California, Berkeley Sep 2021 \u2013 May 2023\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2017 \u2013 May 2021\nBachelor of Science in Computer Science GPA: 3.7/4.0",
-        "normalized_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nData Scientist with end-to-end project lifecycle experience \u2014 from problem scoping to machine learning systems deploy-\nment and maintenance. Strong analytical ability to solve complex problems with data using statistical methods and\nmachine learning fundamentals. Skilled in data extraction, cleaning, exploration, analysis, and presentation on high-\nvolume, high-dimensional datasets. Proven ability to collaborate with business and product teams, design A/B tests, and\ndeliver data-driven insights to wide-ranging audiences.\nTechnical Skills\nProgramming & Analytics:Python (pandas, NumPy, scikit-\nlearn), R, SQL, ETL/ELT, Data Cleaning, Data Exploration,\nStatistical Modeling\nML & Deep Learning:Regression, Classification, Cluster-\ning, Time Series, A/B Testing, Hypothesis Testing, Ten-\nsorFlow, PyTorch\nBig Data & Cloud:Spark, Hadoop, Hive, Databricks, AWS,\nAzure, GCP, Distributed Computing\nProduction & Collaboration:Git, CI/CD, Docker, Kuber-\nnetes, Stakeholder Management, Storytelling with Data\nExperience\nDataScience Solutions Inc. Jan 2023 - Present\nData Scientist San Francisco, CA\nCredit Scoring & Risk Modeling\n-Collaborated with business and product teams to scope a credit scoring solution. Performed data extraction, cleaning,\nand exploration on loan applications, credit reports, and repayment histories (high-volume, high-dimensional datasets).\n-Formulated a data science solution using XGBoost and logistic regression to generate credit scores and estimate loan risk\nacross customer segments.\n-Designed, performed, and analyzed A/B tests on feature sets and model architectures to validate performance improve-\nments before deployment.\n-Delivered data-driven insights to stakeholders using visualizations and statistical summaries, enabling informed lending\ndecisions.\nRecommendation System (Check-out Relevance)\n-Formulated a recommendation solution to provide the most relevant suggestions during user check-out on an e-commerce\nplatform.\n-Designed and implemented algorithms using collaborative filtering and a Mixture-of-Experts (MoE) deep learning model\nto optimize relevance on high-volume interaction data.\n-Deployed and maintained models in production on AWS using Docker and Kubernetes, collaborating with ML engineers.\n-Analyzed A/B test results (recall@k, conversion lift) and presented findings to product teams, driving feature adoption.\nFraud Detection (Sparse, High-Dimensional Data)\n-Scoped a problem to detect fraudulent users using sparse, high-dimensional transaction data. Performed ETL operations\nfrom multiple data sources to build a unified modeling dataset.\n-Applied statistical methods (isolation forests, autoencoders) and machine learning fundamentals to identify anomalous\npatterns with high precision.\n-Collaborated with data engineers to productionize the detection pipeline on Spark and Databricks, including model\nmonitoring and periodic retraining.\n-Communicated detection logic and business impact to non-technical stakeholders via clear dashboards and reports.\nNLP for Sentiment Analysis & Query Correction\n-Designed NLP solutions for sentiment analysis on customer feedback and auto-correction of search queries using PyTorch\nand Hugging Face transformers.\n-Performed data cleaning, tokenization, and embedding extraction on large text corpora using distributed computing\n(Spark, Hive).\n-Deployed models as microservices on Azure with CI/CD pipelines (Git, Jenkins) and Kubernetes for low-latency inference.\n-Told compelling stories with data by visualizing sentiment trends and correction accuracy to product managers and\nleadership.\nProjects\nParcel Arrival Time Prediction 2024\n-Predicted parcel delivery times using traffic conditions, weather, and historical route data (similar to JD example: \"Predict\narrival time based on traffic\").\n-Performed time series analysis, feature engineering, and built regression models (XGBoost + LSTM) on high-dimensional\nspatiotemporal data.\n-Deployed via FastAPI on GCP with CI/CD; validated using MAE and MAPE metrics.\n-Tech:Python, pandas, scikit-learn, TensorFlow, Spark, GCP\nAircraft Maintenance Decision Support System 2025\n-Built a data-driven system combining unstructured manuals with structured logs to assist in complex troubleshooting\ndecisions.\n-Performed ETL and hybrid retrieval (vector + SQL) to link symptoms with historically successful fixes.\n-Applied NLP and statistical reasoning to support decisions under limited connectivity.\n-Tech:Python, LangChain, FastAPI, Ollama, ChromaDB, DuckDB, SQL, Docker\nWhat Will Make You Stand Out\n-Production software engineering routines:Git versioning, Continuous Integration/Continuous Deployment (CI/CD), Docker,\nKubernetes.\n-Experience working on large datasets and distributed computing:Spark, Hadoop, Hive, Presto, Databricks.\n-Working knowledge of Cloud-based solutions:AWS, Azure, GCP.\n-Excellent written and verbal communication skillswith ability to tell stories with data and deliver insights to wide-ranging\naudiences.\n-Strong stakeholder management skillsand ability to collaborate with business and product teams.\nEducation\nUniversity of California, Berkeley Sep 2021 - May 2023\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2017 - May 2021\nBachelor of Science in Computer Science GPA: 3.7/4.0",
+        "candidate_id": "115",
+        "raw_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n\u2022 Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 \u2013 Present\nSenior Data Scientist San Francisco, CA\n\u2013Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n\u2013Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n\u2013Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n\u2013Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n\u2013Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n\u2013Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n\u2013Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 \u2013 Dec 2019\nData Scientist San Diego, CA\n\u2013Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n\u2013Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n\u2013Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n\u2013Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n\u2013Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n\u2013Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n\u2013Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n\u2013Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n\u2013Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n\u2013Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n\u2013Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 \u2013 May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 \u2013 May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
+        "normalized_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n- Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 - Present\nSenior Data Scientist San Francisco, CA\n-Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n-Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n-Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n-Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n-Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n-Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n-Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 - Dec 2019\nData Scientist San Diego, CA\n-Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n-Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n-Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n-Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n-Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n-Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n-Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n-Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n-Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n-Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n-Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 - May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 - May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
         "resume_claims": {
           "skills_claimed": [
             "python",
-            "pandas",
-            "numpy",
-            "scikit-learn",
             "r",
             "sql",
-            "etl/elt",
-            "data cleaning",
-            "data exploration",
-            "statistical modeling",
-            "regression",
-            "classification",
-            "clustering",
-            "time series",
-            "a/b testing",
+            "java",
+            "sas",
+            "spss",
+            "unix shell",
+            "ann",
+            "svm",
+            "decision trees",
+            "naive bayes",
+            "pca",
+            "pls",
+            "k-means",
+            "hierarchical clustering",
             "hypothesis testing",
-            "tensor flow",
-            "pytorch",
-            "spark",
+            "probability",
+            "distributions",
+            "regression",
+            "multivariate statistics",
+            "time series",
+            "signal processing",
+            "text mining",
+            "sequence analysis",
             "hadoop",
+            "spark",
             "hive",
             "databricks",
             "aws",
             "azure",
-            "gcp",
-            "distributed computing",
-            "git",
+            "informatica",
+            "talend",
+            "ab initio",
             "ci/cd",
             "docker",
             "kubernetes",
-            "xgboost",
-            "logistic regression",
-            "collaborative filtering",
-            "mixture-of-experts",
-            "moe",
-            "isolation forests",
-            "autoencoders",
-            "pytorch",
-            "hugging face transformers",
-            "fastapi",
-            "jenkins"
+            "tableau",
+            "qlikview",
+            "spotfire",
+            "d3",
+            "sas visual analytics",
+            "git",
+            "mlflow",
+            "jupyter",
+            "rest apis",
+            "json",
+            "excel"
           ],
           "projects": [
             {
-              "project_name": "recommendation system",
+              "project_name": "predictive maintenance using signal processing",
               "responsibilities": [
-                "formulated a recommendation solution",
-                "designed and implemented algorithms",
-                "deployed and maintained models in production",
-                "analyzed a/b test results"
+                "developed a predictive maintenance engine",
+                "applied fft, filtering, and pca",
+                "built ann and svm-based models",
+                "deployed the solution into an internal manufacturing platform"
               ]
             },
             {
-              "project_name": "fraud detection",
+              "project_name": "customer segmentation & behavioral modeling",
               "responsibilities": [
-                "scoped a problem to detect fraudulent users",
-                "performed etl operations",
-                "applied statistical methods",
-                "collaborated with data engineers"
-              ]
-            },
-            {
-              "project_name": "nlp for sentiment analysis & query correction",
-              "responsibilities": [
-                "designed nlp solutions",
-                "performed data cleaning",
-                "deployed models as microservices"
-              ]
-            },
-            {
-              "project_name": "parcel arrival time prediction",
-              "responsibilities": [
-                "predicted parcel delivery times",
-                "performed time series analysis",
-                "built regression models"
-              ]
-            },
-            {
-              "project_name": "aircraft maintenance decision support system",
-              "responsibilities": [
-                "built a data-driven system",
-                "performed etl and hybrid retrieval",
-                "applied nlp and statistical reasoning"
+                "designed a segmentation framework",
+                "created descriptive dashboards in tableau",
+                "automated the entire data pipeline"
               ]
             }
           ],
           "roles_and_ownership": [
-            "data scientist",
-            "data scientist san francisco, ca"
+            "senior data scientist",
+            "led the formulation and development of advanced analytics solutions",
+            "partnered with application developers",
+            "created repeatable best practices for analytics"
           ],
           "experience_signals": [
-            "end-to-end project lifecycle experience",
-            "complex problem solving",
-            "data extraction",
-            "data cleaning",
-            "data exploration",
-            "data presentation",
-            "collaboration with business and product teams",
-            "design a/b tests",
-            "deliver data-driven insights",
-            "production deployments",
-            "end-to-end delivery"
+            "7+ years of experience",
+            "designing and deploying advanced analytics solutions",
+            "embedding analytic models into enterprise-scale systems",
+            "delivering insights that influence strategic decision-making",
+            "reducing downtime by 22%",
+            "increasing engagement by 17%",
+            "improving processing efficiency"
           ]
         },
         "match_scores": {
-          "core_skill_match": 0.409,
-          "project_alignment": 0.262,
-          "conceptual_alignment": 0.449
+          "core_skill_match": 0.365,
+          "project_alignment": 0.23,
+          "conceptual_alignment": 0.259
         },
         "evidence_map": {
           "strongly_supported": [
-            "python",
-            "pandas",
-            "numpy",
-            "scikit-learn",
-            "r",
-            "sql",
-            "etl/elt",
-            "data cleaning",
-            "data exploration",
-            "statistical modeling",
-            "regression",
-            "classification",
-            "clustering",
-            "time series",
-            "a/b testing",
-            "hypothesis testing",
-            "spark",
+            "predictive maintenance using signal processing",
+            "fft",
+            "filtering",
+            "pca",
+            "ann",
+            "svm",
+            "signal processing",
             "hadoop",
+            "spark",
             "hive",
             "databricks",
             "aws",
             "azure",
-            "gcp",
-            "distributed computing",
-            "git",
+            "informatica",
+            "talend",
+            "ab initio",
             "ci/cd",
             "docker",
-            "xgboost",
-            "logistic regression",
-            "collaborative filtering",
-            "mixture-of-experts",
-            "moe",
-            "isolation forests",
-            "autoencoders",
-            "hugging face transformers",
-            "fastapi",
-            "jenkins"
+            "kubernetes",
+            "tableau",
+            "qlikview",
+            "spotfire",
+            "d3",
+            "sas visual analytics",
+            "mlflow",
+            "jupyter",
+            "rest apis",
+            "json",
+            "excel"
           ],
           "weakly_supported": [
-            "tensor flow",
-            "pytorch"
+            "python",
+            "r",
+            "sql",
+            "java",
+            "sas",
+            "spss",
+            "unix shell",
+            "decision trees",
+            "naive bayes",
+            "hierarchical clustering",
+            "hypothesis testing",
+            "probability",
+            "distributions",
+            "regression",
+            "multivariate statistics",
+            "time series",
+            "text mining",
+            "sequence analysis",
+            "git"
+          ],
+          "unsupported_claims": []
+        },
+        "role_context": {
+          "primary_role": "Data Analyst",
+          "seniority": "Mid",
+          "primary_domain": "Data",
+          "confidence": 1.0
+        },
+        "skill_intelligence": {
+          "core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams"
+          ],
+          "secondary_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "tools": [
+            "power bi",
+            "tableau"
+          ],
+          "programming_languages": [
+            "python",
+            "sql"
+          ]
+        },
+        "competency_profile": {
+          "experience_range": "2-4 years",
+          "ownership_expectations": "feature ownership",
+          "problem_complexity": "large-scale data",
+          "decision_making_scope": "team-level",
+          "execution_expectations": "design and implement end-to-end features"
+        },
+        "interview_requirements": {
+          "primary_focus_areas": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity"
+          ],
+          "secondary_focus_areas": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "evaluation_dimensions": [
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ]
+        },
+        "jd_sections": {
+          "required_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams",
+            "power bi",
+            "tableau"
+          ],
+          "preferred_skills": [
+            "data cleaning",
+            "data modeling",
+            "data visualization",
+            "problem-solving",
+            "communication"
+          ],
+          "responsibilities": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "ensure data accuracy consistency and integrity",
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
+          ],
+          "experience": [
+            "2-4 years"
+          ],
+          "weights": {
+            "required_skills": 1.0,
+            "preferred_skills": 0.6,
+            "responsibilities": 0.5,
+            "experience": 0.8
+          }
+        },
+        "exaggeration_penalty": 0.0,
+        "penalty_breakdown": {
+          "unsupported_core_skills": [],
+          "weak_focus_areas": [],
+          "buzzword_only_claims": []
+        },
+        "final_score": 8.4,
+        "shortlist_decision": true,
+        "shortlist_reason": {
+          "final_score": 8.4,
+          "threshold": 5.5,
+          "section_scores_10": {
+            "required_skills": 9.4,
+            "experience": 6.8,
+            "responsibilities": 7.1,
+            "preferred_skills": 6.6
+          },
+          "weighted_raw_10": 7.8,
+          "exp_adjustment": 0.06,
+          "penalty_applied": 0.0,
+          "experience_note": "Candidate ~7 yrs vs 4 yrs required (over-qualified; +0.06 bonus)",
+          "matched_core_skills": [
+            "collect and analyze large datasets",
+            "write complex sql queries",
+            "perform data analysis using python",
+            "create interactive dashboards and reports",
+            "identify trends patterns and anomalies",
+            "ensure data accuracy consistency and integrity",
+            "present insights and findings to non-technical teams",
+            "power bi",
+            "tableau"
+          ],
+          "aligned_projects": [
+            {
+              "project_name": "predictive maintenance using signal processing",
+              "responsibilities": [
+                "developed a predictive maintenance engine",
+                "applied fft, filtering, and pca",
+                "built ann and svm-based models",
+                "deployed the solution into an internal manufacturing platform"
+              ]
+            },
+            {
+              "project_name": "customer segmentation & behavioral modeling",
+              "responsibilities": [
+                "designed a segmentation framework",
+                "created descriptive dashboards in tableau",
+                "automated the entire data pipeline"
+              ]
+            }
+          ],
+          "experience_metadata": {
+            "jd_required_years": 4.0,
+            "candidate_years": 7.0,
+            "flexibility_applied": false,
+            "note": "Candidate ~7 yrs vs 4 yrs required (over-qualified; +0.06 bonus)"
+          },
+          "penalties_applied": {
+            "unsupported_core_skills": [],
+            "weak_focus_areas": [],
+            "buzzword_only_claims": []
+          }
+        },
+        "admin_insights": {
+          "matched_skills_summary": "The candidate's resume demonstrates a strong alignment with the core skills required for the Data Analyst role. Specifically, the candidate has experience in collecting and analyzing large datasets, writing complex SQL queries, performing data analysis using Python, creating interactive dashboards and reports, identifying trends, patterns, and anomalies, ensuring data accuracy, consistency, and integrity, and presenting insights and findings to non-technical teams. These skills are directly applicable to the role and will enable the candidate to make a significant contribution to the team.",
+          "candidate_strengths": "The candidate's resume highlights several strengths that are directly relevant to the Data Analyst role. With over 7 years of experience in designing and deploying advanced analytics solutions, the candidate has a proven track record of delivering insights that influence strategic decision-making. Additionally, the candidate has experience with tools such as Tableau, Python, and SQL, which are essential for creating interactive dashboards and reports. The candidate's ability to partner with application developers and create repeatable best practices for analytics also demonstrates a strong understanding of the role's requirements."
+        }
+      }
+    },
+    {
+      "candidate_id": 116,
+      "job_id": "JOB_6",
+      "resume_id": "2b2d95f3-e33f-4c01-aa70-ae7da76e74e8",
+      "resume_blob_path": "resumes/CAND_116/20260414_123336_AlexResume_HP_50%.pdf",
+      "status": "UNDER_REVIEW",
+      "interview_unlocked": false,
+      "uploaded_at": "2026-04-14 12:33:42.204093",
+      "intelligence": {}
+    },
+    {
+      "candidate_id": 117,
+      "job_id": "JOB_6",
+      "resume_id": "3c1dc82d-c95b-458f-b30b-b98ddd1581c1",
+      "resume_blob_path": "resumes/CAND_117/20260414_123537_AlexResume_Irrelevant.pdf",
+      "status": "UNDER_REVIEW",
+      "interview_unlocked": false,
+      "uploaded_at": "2026-04-14 12:35:46.437464",
+      "intelligence": {
+        "candidate_id": "117",
+        "raw_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n\u2022 Operations and program management professional with 7+ years of experience driving cross-functional initiatives, im-\nproving business processes, and managing large-scale operational workflows. Skilled in stakeholder coordination, process\noptimization, and delivering projects within timelines and budgets.\nTechnical Skills\nProject Management:Agile, Scrum, Kanban, WaterfallTools:MS Excel, PowerPoint, Jira, Confluence\nOperations:Process Improvement, SOP Design, Vendor Man-\nagement\nBusiness Skills:Stakeholder Communication, Reporting,\nPlanning\nSystems:ERP Systems, CRM PlatformsOther:Documentation, Training, Resource Allocation\nExperience\nHorizon Analytics Ltd. Jan 2020 \u2013 Present\nProgram Manager San Francisco, CA\n\u2013Led multiple cross-functional programs focused on improving operational efficiency and process standardization across\ndepartments.\n\u2013Coordinated with internal stakeholders to define project requirements, timelines, and deliverables.\n\u2013Managed vendor relationships and ensured timely delivery of services aligned with business objectives.\n\u2013Designed and implemented standard operating procedures (SOPs) to streamline workflows.\n\u2013Monitored project progress and prepared regular status reports for leadership teams.\n\u2013Facilitated communication between business units to ensure alignment on priorities and goals.\nTechVista Research Jun 2017 \u2013 Dec 2019\nOperations Specialist San Diego, CA\n\u2013Supported daily operations by coordinating tasks across teams and ensuring smooth execution of business processes.\n\u2013Assisted in process documentation and workflow improvements to enhance productivity.\n\u2013Managed reporting and tracking of key operational metrics.\n\u2013Collaborated with teams to resolve operational challenges and improve service delivery.\n\u2013Conducted training sessions for new team members on internal tools and processes.\nKey Projects\nProcess Optimization Initiative\n2024\n\u2013Led an initiative to streamline internal workflows, reducing manual effort and improving turnaround time.\n\u2013Implemented standardized procedures across teams to improve consistency.\n\u2013Coordinated cross-team execution and ensured adherence to timelines.\nVendor Management Program\n2023\n\u2013Managed onboarding and performance tracking of external vendors.\n\u2013Established communication protocols to improve collaboration.\n\u2013Improved vendor delivery timelines through structured monitoring.\nEducation\nUniversity of California, Berkeley Sep 2015 \u2013 May 2017\nMaster of Business AdministrationUniversity of Texas at Austin Aug 2011 \u2013 May 2015\nBachelor of Business Administration",
+        "normalized_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n- Operations and program management professional with 7+ years of experience driving cross-functional initiatives, im-\nproving business processes, and managing large-scale operational workflows. Skilled in stakeholder coordination, process\noptimization, and delivering projects within timelines and budgets.\nTechnical Skills\nProject Management:Agile, Scrum, Kanban, WaterfallTools:MS Excel, PowerPoint, Jira, Confluence\nOperations:Process Improvement, SOP Design, Vendor Man-\nagement\nBusiness Skills:Stakeholder Communication, Reporting,\nPlanning\nSystems:ERP Systems, CRM PlatformsOther:Documentation, Training, Resource Allocation\nExperience\nHorizon Analytics Ltd. Jan 2020 - Present\nProgram Manager San Francisco, CA\n-Led multiple cross-functional programs focused on improving operational efficiency and process standardization across\ndepartments.\n-Coordinated with internal stakeholders to define project requirements, timelines, and deliverables.\n-Managed vendor relationships and ensured timely delivery of services aligned with business objectives.\n-Designed and implemented standard operating procedures (SOPs) to streamline workflows.\n-Monitored project progress and prepared regular status reports for leadership teams.\n-Facilitated communication between business units to ensure alignment on priorities and goals.\nTechVista Research Jun 2017 - Dec 2019\nOperations Specialist San Diego, CA\n-Supported daily operations by coordinating tasks across teams and ensuring smooth execution of business processes.\n-Assisted in process documentation and workflow improvements to enhance productivity.\n-Managed reporting and tracking of key operational metrics.\n-Collaborated with teams to resolve operational challenges and improve service delivery.\n-Conducted training sessions for new team members on internal tools and processes.\nKey Projects\nProcess Optimization Initiative\n2024\n-Led an initiative to streamline internal workflows, reducing manual effort and improving turnaround time.\n-Implemented standardized procedures across teams to improve consistency.\n-Coordinated cross-team execution and ensured adherence to timelines.\nVendor Management Program\n2023\n-Managed onboarding and performance tracking of external vendors.\n-Established communication protocols to improve collaboration.\n-Improved vendor delivery timelines through structured monitoring.\nEducation\nUniversity of California, Berkeley Sep 2015 - May 2017\nMaster of Business AdministrationUniversity of Texas at Austin Aug 2011 - May 2015\nBachelor of Business Administration",
+        "resume_claims": {
+          "skills_claimed": [
+            "project management",
+            "agile",
+            "scrum",
+            "kanban",
+            "waterfall",
+            "ms excel",
+            "powerpoint",
+            "jira",
+            "confluence",
+            "process improvement",
+            "sop design",
+            "vendor management",
+            "stakeholder communication",
+            "reporting",
+            "planning",
+            "erp systems",
+            "crm platforms",
+            "documentation",
+            "training",
+            "resource allocation"
+          ],
+          "projects": [
+            {
+              "project_name": "process optimization initiative",
+              "responsibilities": [
+                "led an initiative to streamline internal workflows",
+                "implemented standardized procedures across teams",
+                "coordinated cross-team execution and ensured adherence to timelines"
+              ]
+            },
+            {
+              "project_name": "vendor management program",
+              "responsibilities": [
+                "managed onboarding and performance tracking of external vendors",
+                "established communication protocols to improve collaboration",
+                "improved vendor delivery timelines through structured monitoring"
+              ]
+            }
+          ],
+          "roles_and_ownership": [
+            "program manager",
+            "operations specialist"
+          ],
+          "experience_signals": [
+            "driving cross-functional initiatives",
+            "improving business processes",
+            "managing large-scale operational workflows",
+            "delivering projects within timelines and budgets",
+            "coordinated with internal stakeholders to define project requirements",
+            "monitored project progress and prepared regular status reports for leadership teams",
+            "facilitated communication between business units to ensure alignment on priorities and goals"
+          ]
+        },
+        "match_scores": {
+          "core_skill_match": 0.293,
+          "project_alignment": 0.164,
+          "conceptual_alignment": 0.232
+        },
+        "evidence_map": {
+          "strongly_supported": [
+            "process improvement",
+            "sop design",
+            "vendor management",
+            "stakeholder communication",
+            "reporting",
+            "erp systems",
+            "crm platforms"
+          ],
+          "weakly_supported": [
+            "project management",
+            "agile",
+            "scrum",
+            "kanban",
+            "waterfall",
+            "ms excel",
+            "powerpoint",
+            "jira",
+            "confluence",
+            "documentation",
+            "training",
+            "resource allocation"
           ],
           "unsupported_claims": [
-            "kubernetes"
+            "planning"
           ]
         },
         "role_context": {
@@ -3774,7 +4042,9 @@
             "create interactive dashboards and reports",
             "identify trends patterns and anomalies",
             "ensure data accuracy consistency and integrity",
-            "present insights and findings to non-technical teams"
+            "present insights and findings to non-technical teams",
+            "power bi",
+            "tableau"
           ],
           "preferred_skills": [
             "data cleaning",
@@ -3788,7 +4058,12 @@
             "write complex sql queries",
             "perform data analysis using python",
             "create interactive dashboards and reports",
-            "ensure data accuracy consistency and integrity"
+            "ensure data accuracy consistency and integrity",
+            "technical depth and reasoning",
+            "end-to-end ownership",
+            "problem-solving skills",
+            "communication skills",
+            "data analysis skills"
           ],
           "experience": [
             "2-4 years"
@@ -3800,78 +4075,48 @@
             "experience": 0.8
           }
         },
-        "exaggeration_penalty": 0.03,
+        "exaggeration_penalty": 0.01,
         "penalty_breakdown": {
           "unsupported_core_skills": [],
           "weak_focus_areas": [],
           "buzzword_only_claims": [
-            "kubernetes"
+            "planning"
           ]
         },
-        "final_score": 0.424,
+        "final_score": 2.2,
         "shortlist_decision": false,
         "shortlist_reason": {
-          "final_score": 0.424,
-          "threshold": 0.45,
-          "section_scores": {
-            "required_skills": 0.521,
-            "preferred_skills": 0.729,
-            "responsibilities": 0.421,
-            "experience": 0.184
+          "final_score": 2.2,
+          "threshold": 5.5,
+          "section_scores_10": {
+            "required_skills": 2.6,
+            "experience": 0.0,
+            "responsibilities": 2.6,
+            "preferred_skills": 5.7
           },
-          "weighted_raw": 0.454,
+          "weighted_raw_10": 2.3,
           "exp_adjustment": 0.0,
-          "penalty_applied": 0.03,
+          "penalty_applied": 0.01,
           "experience_note": null,
           "matched_core_skills": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "ensure data accuracy consistency and integrity",
-            "present insights and findings to non-technical teams"
+            "present insights and findings to non-technical teams",
+            "tableau"
           ],
           "aligned_projects": [
             {
-              "project_name": "recommendation system",
+              "project_name": "process optimization initiative",
               "responsibilities": [
-                "formulated a recommendation solution",
-                "designed and implemented algorithms",
-                "deployed and maintained models in production",
-                "analyzed a/b test results"
+                "led an initiative to streamline internal workflows",
+                "implemented standardized procedures across teams",
+                "coordinated cross-team execution and ensured adherence to timelines"
               ]
             },
             {
-              "project_name": "fraud detection",
+              "project_name": "vendor management program",
               "responsibilities": [
-                "scoped a problem to detect fraudulent users",
-                "performed etl operations",
-                "applied statistical methods",
-                "collaborated with data engineers"
-              ]
-            },
-            {
-              "project_name": "nlp for sentiment analysis & query correction",
-              "responsibilities": [
-                "designed nlp solutions",
-                "performed data cleaning",
-                "deployed models as microservices"
-              ]
-            },
-            {
-              "project_name": "parcel arrival time prediction",
-              "responsibilities": [
-                "predicted parcel delivery times",
-                "performed time series analysis",
-                "built regression models"
-              ]
-            },
-            {
-              "project_name": "aircraft maintenance decision support system",
-              "responsibilities": [
-                "built a data-driven system",
-                "performed etl and hybrid retrieval",
-                "applied nlp and statistical reasoning"
+                "managed onboarding and performance tracking of external vendors",
+                "established communication protocols to improve collaboration",
+                "improved vendor delivery timelines through structured monitoring"
               ]
             }
           ],
@@ -3885,635 +4130,13 @@
             "unsupported_core_skills": [],
             "weak_focus_areas": [],
             "buzzword_only_claims": [
-              "kubernetes"
+              "planning"
             ]
           }
         },
         "admin_insights": {
-          "matched_skills_summary": "The candidate's resume demonstrates a strong alignment with the core skills required for the Data Analyst role. Specifically, the candidate has experience in collecting and analyzing large datasets, writing complex SQL queries, performing data analysis using Python, creating interactive dashboards and reports, ensuring data accuracy, consistency, and integrity, and presenting insights and findings to non-technical teams. These skills are directly applicable to the role and demonstrate a high level of proficiency.",
-          "candidate_strengths": "The candidate's experience in developing a recommendation system, fraud detection, and NLP for sentiment analysis and query correction showcases their ability to design and implement algorithms, deploy and maintain models in production, and collaborate with data engineers. Additionally, their experience in performing time series analysis, building regression models, and working with various tools such as Python, SQL, and AWS indicates a strong foundation in data analysis and technical skills. These strengths are highly relevant to the Data Analyst role and demonstrate a high level of practical experience."
-        }
-      }
-    },
-    {
-      "candidate_id": 107,
-      "job_id": "JOB_6",
-      "resume_id": "a3effe36-0ec1-400a-bd8f-c8038d9e53d3",
-      "resume_blob_path": "resumes/CAND_107/20260409_161437_AlexResume_HP.pdf",
-      "status": "UNDER_REVIEW",
-      "interview_unlocked": false,
-      "uploaded_at": "2026-04-09 16:14:43.906761",
-      "intelligence": {
-        "candidate_id": "107",
-        "raw_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n\u2022 Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 \u2013 Present\nSenior Data Scientist San Francisco, CA\n\u2013Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n\u2013Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n\u2013Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n\u2013Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n\u2013Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n\u2013Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n\u2013Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 \u2013 Dec 2019\nData Scientist San Diego, CA\n\u2013Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n\u2013Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n\u2013Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n\u2013Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n\u2013Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n\u2013Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n\u2013Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n\u2013Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n\u2013Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n\u2013Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n\u2013Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 \u2013 May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 \u2013 May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
-        "normalized_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n- Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 - Present\nSenior Data Scientist San Francisco, CA\n-Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n-Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n-Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n-Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n-Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n-Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n-Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 - Dec 2019\nData Scientist San Diego, CA\n-Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n-Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n-Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n-Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n-Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n-Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n-Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n-Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n-Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n-Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n-Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 - May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 - May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
-        "resume_claims": {
-          "skills_claimed": [
-            "python",
-            "r",
-            "sql",
-            "java",
-            "sas",
-            "spss",
-            "unix shell",
-            "ann",
-            "svm",
-            "decision trees",
-            "naive bayes",
-            "pca",
-            "pls",
-            "k-means",
-            "hierarchical clustering",
-            "hypothesis testing",
-            "probability",
-            "distributions",
-            "regression",
-            "multivariate statistics",
-            "time series",
-            "signal processing",
-            "text mining",
-            "sequence analysis",
-            "hadoop",
-            "spark",
-            "hive",
-            "databricks",
-            "aws",
-            "azure",
-            "informatica",
-            "talend",
-            "ab initio",
-            "ci/cd",
-            "docker",
-            "kubernetes",
-            "tableau",
-            "qlikview",
-            "spotfire",
-            "d3",
-            "sas visual analytics",
-            "git",
-            "mlflow",
-            "jupyter",
-            "rest apis",
-            "json",
-            "excel"
-          ],
-          "projects": [
-            {
-              "project_name": "predictive maintenance using signal processing",
-              "responsibilities": [
-                "developed a predictive maintenance engine",
-                "applied fft, filtering, and pca",
-                "built ann and svm-based models",
-                "deployed the solution into an internal manufacturing platform"
-              ]
-            },
-            {
-              "project_name": "customer segmentation & behavioral modeling",
-              "responsibilities": [
-                "designed a segmentation framework",
-                "created descriptive dashboards in tableau",
-                "automated the entire data pipeline"
-              ]
-            }
-          ],
-          "roles_and_ownership": [
-            "senior data scientist",
-            "led the formulation and development of advanced analytics solutions",
-            "partnered with application developers",
-            "created repeatable best practices for analytics"
-          ],
-          "experience_signals": [
-            "7+ years of experience",
-            "designing and deploying advanced analytics solutions",
-            "embedding analytic models into enterprise-scale systems",
-            "delivering insights that influence strategic decision-making",
-            "reducing downtime by 22%",
-            "increasing engagement by 17%",
-            "improving processing efficiency"
-          ]
-        },
-        "match_scores": {
-          "core_skill_match": 0.365,
-          "project_alignment": 0.23,
-          "conceptual_alignment": 0.259
-        },
-        "evidence_map": {
-          "strongly_supported": [
-            "python",
-            "r",
-            "sql",
-            "signal processing",
-            "ann",
-            "svm",
-            "decision trees",
-            "naive bayes",
-            "pca",
-            "pls",
-            "hypothesis testing",
-            "probability",
-            "distributions",
-            "regression",
-            "multivariate statistics",
-            "time series",
-            "text mining",
-            "sequence analysis",
-            "hadoop",
-            "spark",
-            "hive",
-            "databricks",
-            "aws",
-            "azure",
-            "informatica",
-            "talend",
-            "ab initio",
-            "ci/cd",
-            "docker",
-            "tableau",
-            "qlikview",
-            "spotfire",
-            "d3",
-            "sas visual analytics",
-            "git",
-            "mlflow",
-            "jupyter",
-            "rest apis",
-            "json",
-            "excel"
-          ],
-          "weakly_supported": [
-            "unix shell"
-          ],
-          "unsupported_claims": []
-        },
-        "role_context": {
-          "primary_role": "Data Analyst",
-          "seniority": "Mid",
-          "primary_domain": "Data",
-          "confidence": 1.0
-        },
-        "skill_intelligence": {
-          "core_skills": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "identify trends patterns and anomalies",
-            "ensure data accuracy consistency and integrity",
-            "present insights and findings to non-technical teams"
-          ],
-          "secondary_skills": [
-            "data cleaning",
-            "data modeling",
-            "data visualization",
-            "problem-solving",
-            "communication"
-          ],
-          "tools": [
-            "power bi",
-            "tableau"
-          ],
-          "programming_languages": [
-            "python",
-            "sql"
-          ]
-        },
-        "competency_profile": {
-          "experience_range": "2-4 years",
-          "ownership_expectations": "feature ownership",
-          "problem_complexity": "large-scale data",
-          "decision_making_scope": "team-level",
-          "execution_expectations": "design and implement end-to-end features"
-        },
-        "interview_requirements": {
-          "primary_focus_areas": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "ensure data accuracy consistency and integrity"
-          ],
-          "secondary_focus_areas": [
-            "data cleaning",
-            "data modeling",
-            "data visualization",
-            "problem-solving",
-            "communication"
-          ],
-          "evaluation_dimensions": [
-            "technical depth and reasoning",
-            "end-to-end ownership",
-            "problem-solving skills",
-            "communication skills",
-            "data analysis skills"
-          ]
-        },
-        "jd_sections": {
-          "required_skills": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "identify trends patterns and anomalies",
-            "ensure data accuracy consistency and integrity",
-            "present insights and findings to non-technical teams"
-          ],
-          "preferred_skills": [
-            "data cleaning",
-            "data modeling",
-            "data visualization",
-            "problem-solving",
-            "communication"
-          ],
-          "responsibilities": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "ensure data accuracy consistency and integrity"
-          ],
-          "experience": [
-            "2-4 years"
-          ],
-          "weights": {
-            "required_skills": 1.0,
-            "preferred_skills": 0.6,
-            "responsibilities": 0.5,
-            "experience": 0.8
-          }
-        },
-        "exaggeration_penalty": 0.0,
-        "penalty_breakdown": {
-          "unsupported_core_skills": [],
-          "weak_focus_areas": [],
-          "buzzword_only_claims": []
-        },
-        "final_score": 0.492,
-        "shortlist_decision": true,
-        "shortlist_reason": {
-          "final_score": 0.492,
-          "threshold": 0.45,
-          "section_scores": {
-            "required_skills": 0.5,
-            "preferred_skills": 0.482,
-            "responsibilities": 0.408,
-            "experience": 0.543
-          },
-          "weighted_raw": 0.492,
-          "exp_adjustment": 0.0,
-          "penalty_applied": 0.0,
-          "experience_note": null,
-          "matched_core_skills": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "present insights and findings to non-technical teams"
-          ],
-          "aligned_projects": [
-            {
-              "project_name": "predictive maintenance using signal processing",
-              "responsibilities": [
-                "developed a predictive maintenance engine",
-                "applied fft, filtering, and pca",
-                "built ann and svm-based models",
-                "deployed the solution into an internal manufacturing platform"
-              ]
-            },
-            {
-              "project_name": "customer segmentation & behavioral modeling",
-              "responsibilities": [
-                "designed a segmentation framework",
-                "created descriptive dashboards in tableau",
-                "automated the entire data pipeline"
-              ]
-            }
-          ],
-          "experience_metadata": {
-            "jd_required_years": 4.0,
-            "candidate_years": 7.0,
-            "flexibility_applied": false,
-            "note": null
-          },
-          "penalties_applied": {
-            "unsupported_core_skills": [],
-            "weak_focus_areas": [],
-            "buzzword_only_claims": []
-          }
-        },
-        "admin_insights": {
-          "matched_skills_summary": "The candidate's resume demonstrates a strong alignment with the core skills required for the Data Analyst role. Specifically, the candidate has experience in collecting and analyzing large datasets, writing complex SQL queries, performing data analysis using Python, creating interactive dashboards and reports, and presenting insights and findings to non-technical teams. These skills are directly relevant to the role requirements and demonstrate a high level of proficiency in data analysis and visualization.",
-          "candidate_strengths": "The candidate's experience and skills suggest several key strengths relevant to the Data Analyst role. Notably, the candidate has practical experience in designing and deploying advanced analytics solutions, embedding analytic models into enterprise-scale systems, and delivering insights that influence strategic decision-making. Additionally, the candidate's experience in signal processing, machine learning, and data visualization tools such as Tableau and D3 is also highly relevant to the role. Overall, the candidate's strengths suggest a strong ability to collect, analyze, and present complex data insights to non-technical stakeholders."
-        }
-      }
-    },
-    {
-      "candidate_id": 108,
-      "job_id": "JOB_6",
-      "resume_id": "3f5fa57e-0b97-42d3-b1d0-93ff476a1505",
-      "resume_blob_path": "resumes/CAND_108/20260409_161812_AlexResume_HP.pdf",
-      "status": "UNDER_REVIEW",
-      "interview_unlocked": false,
-      "uploaded_at": "2026-04-09 16:18:29.386142",
-      "intelligence": {
-        "candidate_id": "108",
-        "raw_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n\u2022 Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 \u2013 Present\nSenior Data Scientist San Francisco, CA\n\u2013Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n\u2013Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n\u2013Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n\u2013Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n\u2013Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n\u2013Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n\u2013Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 \u2013 Dec 2019\nData Scientist San Diego, CA\n\u2013Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n\u2013Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n\u2013Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n\u2013Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n\u2013Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n\u2013Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n\u2013Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n\u2013Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n\u2013Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n\u2013Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n\u2013Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 \u2013 May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 \u2013 May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
-        "normalized_resume": "ALEX J. MORGAN\n/gtbgithub.com/alexmorgan |linkedin.com/in/alexmorgan |alex.morgan@email.com |/ne+1-555-123-4567\nProfessional Summary\n- Data Science Expert with 7+ years of experience designing and deploying advanced analytics solutions, including statis-\ntical modeling, machine learning, multivariate analysis, and time-series forecasting. Skilled in transforming structured\nand unstructured data into actionable insights through scientific methods, visualization, and strong business acumen.\nExperienced in embedding analytic models into enterprise-scale systems, collaborating with cross-functional teams, and\ndelivering insights that influence strategic decision-making.\nTechnical Skills\nProgramming:Python, R, SQL, Java, SAS, SPSS, Unix ShellML Techniques:ANN, SVM, Decision Trees, Na\u00efve Bayes,\nPCA, PLS, k-means, Hierarchical Clustering\nStatistical Methods:Hypothesis Testing, Probability, Distribu-\ntions, Regression, Multivariate Statistics\nAdvanced Analytics:Time Series, Signal Processing, Text\nMining, Sequence Analysis\nBig Data & Cloud:Hadoop, Spark, Hive, Databricks, AWS,\nAzure\nETL & Deployment:Informatica, Talend, Ab Initio,\nCI/CD, Docker, Kubernetes\nVisualization:Tableau, QlikView, Spotfire, D3, SAS Visual An-\nalytics\nTools:Git, MLflow, Jupyter, REST APIs, JSON, Excel\nExperience\nHorizon Analytics Ltd. Jan 2020 - Present\nSenior Data Scientist San Francisco, CA\n-Ledtheformulation anddevelopment ofadvanced analyticssolutionsacrossmanufacturing, telecom, andfinancialdomains\nby defining objectives, translating business needs into modeling requirements, and selecting appropriate statistical and\nML techniques.\n-Built and enhanced multivariate statistical models using PCA, PLS, regression, and supervised learning methods (ANN,\nSVM, CART) to drive predictive insights for anomaly detection and customer analytics.\n-Embedded machine learning models into enterprise applications by partnering with application developers, ensuring\nscalability, robustness, and seamless integration with operational systems.\n-Designed and deployed clustering solutions (k-means, hierarchical) and unsupervised anomaly detection systems used for\nsegmentation and pattern discovery in high-dimensional datasets.\n-Developed time-series forecasting models and applied digital signal processing techniques to identify trends in sensor data\nfor predictive maintenance.\n-Applied advanced visualization techniques (D3, Tableau, Spotfire) to translate complex analytical results into clear visual\nnarratives for business stakeholders.\n-Created repeatable best practices for analytics, including feature engineering frameworks, modeling guidelines, and model\nvalidation standards.\nTechVista Research Jun 2017 - Dec 2019\nData Scientist San Diego, CA\n-Designed and implemented predictive and descriptive models using classical regression, CHAID, clustering, and neural\nnetworks to support marketing, customer engagement, and demand planning use cases.\n-Processed large-scale structured and unstructured datasets using Hadoop, Spark, and Hive to prepare modeling-ready\ndata pipelines.\n-Built text mining models (topic modeling, sentiment analysis) and embedded NLP analytics into recommendation and\nsupport workflows.\n-Developed ETL workflows on Informatica and Talend to automate ingestion, transformation, and integration of enterprise\ndata.\n-Presented insights and recommended actions to senior leadership, resulting in measurable improvements in process effi-\nciency and decision-making accuracy.\nKey Projects\nPredictive Maintenance Using Signal Processing\n2024\n-Developed a predictive maintenance engine using multivariate sensor data, applying FFT, filtering, and PCA to identify\ndegradation signatures.\n-Built ANN and SVM-based models to predict failure probability, reducing downtime by 22%.\n-Deployed the solution into an internal manufacturing platform using Docker, REST APIs, and Azure services.\nCustomer Segmentation & Behavioral Modeling\n2023\n-Designed a segmentation framework using k-means and hierarchical clustering on 45M customer records.\n-Created descriptive dashboards in Tableau to support targeted campaigns, increasing engagement by 17%.\n-Automated the entire data pipeline through Spark and Hive, improving processing efficiency.\nEducation\nUniversity of California, Berkeley Sep 2015 - May 2017\nMaster of Science in Data Science GPA: 3.9/4.0University of Texas at Austin Aug 2011 - May 2015\nBachelor of Science in Computer Science GPA: 3.7/4.0",
-        "resume_claims": {
-          "skills_claimed": [
-            "python",
-            "r",
-            "sql",
-            "java",
-            "sas",
-            "spss",
-            "unix shell",
-            "ann",
-            "svm",
-            "decision trees",
-            "naive bayes",
-            "pca",
-            "pls",
-            "k-means",
-            "hierarchical clustering",
-            "hypothesis testing",
-            "probability",
-            "distributions",
-            "regression",
-            "multivariate statistics",
-            "time series",
-            "signal processing",
-            "text mining",
-            "sequence analysis",
-            "hadoop",
-            "spark",
-            "hive",
-            "databricks",
-            "aws",
-            "azure",
-            "informatica",
-            "talend",
-            "ab initio",
-            "ci/cd",
-            "docker",
-            "kubernetes",
-            "tableau",
-            "qlikview",
-            "spotfire",
-            "d3",
-            "sas visual analytics",
-            "git",
-            "mlflow",
-            "jupyter",
-            "rest apis",
-            "json",
-            "excel"
-          ],
-          "projects": [
-            {
-              "project_name": "predictive maintenance using signal processing",
-              "responsibilities": [
-                "developed a predictive maintenance engine",
-                "applied fft, filtering, and pca",
-                "built ann and svm-based models",
-                "deployed the solution into an internal manufacturing platform"
-              ]
-            },
-            {
-              "project_name": "customer segmentation & behavioral modeling",
-              "responsibilities": [
-                "designed a segmentation framework",
-                "created descriptive dashboards in tableau",
-                "automated the entire data pipeline"
-              ]
-            }
-          ],
-          "roles_and_ownership": [
-            "senior data scientist",
-            "led the formulation and development of advanced analytics solutions",
-            "partnered with application developers",
-            "created repeatable best practices for analytics"
-          ],
-          "experience_signals": [
-            "7+ years of experience",
-            "designing and deploying advanced analytics solutions",
-            "embedding analytic models into enterprise-scale systems",
-            "delivering insights that influence strategic decision-making",
-            "reducing downtime by 22%",
-            "increasing engagement by 17%",
-            "improving processing efficiency"
-          ]
-        },
-        "match_scores": {
-          "core_skill_match": 0.365,
-          "project_alignment": 0.23,
-          "conceptual_alignment": 0.259
-        },
-        "evidence_map": {
-          "strongly_supported": [
-            "python",
-            "r",
-            "sql",
-            "signal processing",
-            "ann",
-            "svm",
-            "decision trees",
-            "naive bayes",
-            "pca",
-            "pls",
-            "hypothesis testing",
-            "probability",
-            "distributions",
-            "regression",
-            "multivariate statistics",
-            "time series",
-            "text mining",
-            "sequence analysis",
-            "hadoop",
-            "spark",
-            "hive",
-            "databricks",
-            "aws",
-            "azure",
-            "informatica",
-            "talend",
-            "ab initio",
-            "ci/cd",
-            "docker",
-            "tableau",
-            "qlikview",
-            "spotfire",
-            "d3",
-            "sas visual analytics",
-            "git",
-            "mlflow",
-            "jupyter",
-            "rest apis",
-            "json",
-            "excel"
-          ],
-          "weakly_supported": [
-            "unix shell"
-          ],
-          "unsupported_claims": []
-        },
-        "role_context": {
-          "primary_role": "Data Analyst",
-          "seniority": "Mid",
-          "primary_domain": "Data",
-          "confidence": 1.0
-        },
-        "skill_intelligence": {
-          "core_skills": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "identify trends patterns and anomalies",
-            "ensure data accuracy consistency and integrity",
-            "present insights and findings to non-technical teams"
-          ],
-          "secondary_skills": [
-            "data cleaning",
-            "data modeling",
-            "data visualization",
-            "problem-solving",
-            "communication"
-          ],
-          "tools": [
-            "power bi",
-            "tableau"
-          ],
-          "programming_languages": [
-            "python",
-            "sql"
-          ]
-        },
-        "competency_profile": {
-          "experience_range": "2-4 years",
-          "ownership_expectations": "feature ownership",
-          "problem_complexity": "large-scale data",
-          "decision_making_scope": "team-level",
-          "execution_expectations": "design and implement end-to-end features"
-        },
-        "interview_requirements": {
-          "primary_focus_areas": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "ensure data accuracy consistency and integrity"
-          ],
-          "secondary_focus_areas": [
-            "data cleaning",
-            "data modeling",
-            "data visualization",
-            "problem-solving",
-            "communication"
-          ],
-          "evaluation_dimensions": [
-            "technical depth and reasoning",
-            "end-to-end ownership",
-            "problem-solving skills",
-            "communication skills",
-            "data analysis skills"
-          ]
-        },
-        "jd_sections": {
-          "required_skills": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "identify trends patterns and anomalies",
-            "ensure data accuracy consistency and integrity",
-            "present insights and findings to non-technical teams"
-          ],
-          "preferred_skills": [
-            "data cleaning",
-            "data modeling",
-            "data visualization",
-            "problem-solving",
-            "communication"
-          ],
-          "responsibilities": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "ensure data accuracy consistency and integrity"
-          ],
-          "experience": [
-            "2-4 years"
-          ],
-          "weights": {
-            "required_skills": 1.0,
-            "preferred_skills": 0.6,
-            "responsibilities": 0.5,
-            "experience": 0.8
-          }
-        },
-        "exaggeration_penalty": 0.0,
-        "penalty_breakdown": {
-          "unsupported_core_skills": [],
-          "weak_focus_areas": [],
-          "buzzword_only_claims": []
-        },
-        "final_score": 0.492,
-        "shortlist_decision": true,
-        "shortlist_reason": {
-          "final_score": 0.492,
-          "threshold": 0.45,
-          "section_scores": {
-            "required_skills": 0.5,
-            "preferred_skills": 0.482,
-            "responsibilities": 0.408,
-            "experience": 0.543
-          },
-          "weighted_raw": 0.492,
-          "exp_adjustment": 0.0,
-          "penalty_applied": 0.0,
-          "experience_note": null,
-          "matched_core_skills": [
-            "collect and analyze large datasets",
-            "write complex sql queries",
-            "perform data analysis using python",
-            "create interactive dashboards and reports",
-            "present insights and findings to non-technical teams"
-          ],
-          "aligned_projects": [
-            {
-              "project_name": "predictive maintenance using signal processing",
-              "responsibilities": [
-                "developed a predictive maintenance engine",
-                "applied fft, filtering, and pca",
-                "built ann and svm-based models",
-                "deployed the solution into an internal manufacturing platform"
-              ]
-            },
-            {
-              "project_name": "customer segmentation & behavioral modeling",
-              "responsibilities": [
-                "designed a segmentation framework",
-                "created descriptive dashboards in tableau",
-                "automated the entire data pipeline"
-              ]
-            }
-          ],
-          "experience_metadata": {
-            "jd_required_years": 4.0,
-            "candidate_years": 7.0,
-            "flexibility_applied": false,
-            "note": null
-          },
-          "penalties_applied": {
-            "unsupported_core_skills": [],
-            "weak_focus_areas": [],
-            "buzzword_only_claims": []
-          }
-        },
-        "admin_insights": {
-          "matched_skills_summary": "The candidate's resume demonstrates a strong alignment with the core skills required for the Data Analyst role. Specifically, the candidate has experience in collecting and analyzing large datasets, writing complex SQL queries, performing data analysis using Python, creating interactive dashboards and reports, and presenting insights and findings to non-technical teams. These skills are directly relevant to the role requirements and demonstrate a high level of proficiency in data analysis and visualization.",
-          "candidate_strengths": "The candidate's experience and skills suggest several key strengths relevant to the Data Analyst role. Notably, the candidate has practical experience in designing and deploying advanced analytics solutions, embedding analytic models into enterprise-scale systems, and delivering insights that influence strategic decision-making. Additionally, the candidate's experience in signal processing, machine learning, and data visualization tools such as Tableau and D3 is also highly relevant to the role. Overall, the candidate's strengths suggest a strong ability to collect, analyze, and present complex data insights to non-technical stakeholders."
+          "matched_skills_summary": "The candidate's resume indicates a match for the core skill of presenting insights and findings to non-technical teams. This skill is directly aligned with the role requirements, as it demonstrates the ability to effectively communicate complex data analysis to stakeholders. Although the JD requires proficiency in creating interactive dashboards and reports, the candidate's resume does not explicitly mention this skill. However, the matched skill of presenting insights and findings suggests that the candidate may possess the necessary skills to create engaging reports.",
+          "candidate_strengths": "The candidate's resume highlights practical experience in driving cross-functional initiatives, improving business processes, and managing large-scale operational workflows. These strengths are directly relevant to the JD, as they demonstrate the candidate's ability to analyze complex data, identify trends and patterns, and present insights to non-technical teams. Additionally, the candidate's experience in managing external vendors and establishing communication protocols suggests a strong understanding of data accuracy, consistency, and integrity."
         }
       }
     }
@@ -5573,5 +5196,5 @@
       }
     }
   ],
-  "user_id_counter": 109
+  "user_id_counter": 118
 }

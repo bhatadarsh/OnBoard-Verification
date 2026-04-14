@@ -1,18 +1,23 @@
 """
-jd_parser.py
+jd_parser.py  —  UPDATED
 
-Parses a raw JD string into structured sections with precedence weights.
-This runs BEFORE final_scoring so the scorer receives clean, weighted signals.
+Key fix: when raw_jd is missing (JD uploaded before raw_jd_text was stored),
+the fast-path now builds a RICHER jd_sections by combining ALL available
+intelligence fields instead of only skill_intelligence.core_skills.
 
-Sections extracted:
-  - required_skills     (weight 1.0)  — "required", "must have", "you must"
-  - preferred_skills    (weight 0.6)  — "preferred", "nice to have", "bonus", "plus"
-  - responsibilities    (weight 0.5)  — "responsibilities", "you will", "duties"
-  - experience_required (weight 0.8)  — year mentions, "experience in X"
+This means old JD records (JOB_1 … JOB_N uploaded before the raw_jd_text
+change) still produce a complete jd_sections without needing a re-upload.
 
-The parser is intentionally lenient: it tries multiple heuristics before
-falling back to keyword scanning so a loosely-formatted JD still yields
-usable output.
+Fast-path now pulls from:
+  required_skills  ← skill_intelligence.core_skills
+                     + skill_intelligence.required_skills  (if present)
+  preferred_skills ← skill_intelligence.secondary_skills
+                     + interview_requirements.secondary_skills
+  responsibilities ← interview_requirements.primary_focus_areas
+                     + interview_requirements.evaluation_dimensions
+                     + role_context.responsibilities
+  experience       ← competency_profile.experience_range
+                     + competency_profile.seniority_level
 """
 
 import os
@@ -23,9 +28,6 @@ from langchain.prompts import PromptTemplate
 from utils.json_parser import extract_json
 
 
-# ---------------------------------------------------------------------------
-# Section-weight registry — single source of truth used by final_scoring too
-# ---------------------------------------------------------------------------
 SECTION_WEIGHTS: dict[str, float] = {
     "required_skills":  1.0,
     "preferred_skills": 0.6,
@@ -33,27 +35,24 @@ SECTION_WEIGHTS: dict[str, float] = {
     "experience":       0.8,
 }
 
-# ---------------------------------------------------------------------------
-# Prompt (inline so this node is self-contained; move to prompts/ if needed)
-# ---------------------------------------------------------------------------
 _JD_PARSE_PROMPT = """
 You are a technical recruiter parsing a job description.
 
 Extract the following four sections. If a section is absent, return an empty list.
 
-1. required_skills  — skills explicitly marked required / must-have / mandatory
+1. required_skills  — ALL skills explicitly or implicitly required. Be comprehensive:
+   include every technical tool, language, framework, method, and domain mentioned
+   as required or expected. Do NOT limit to only bullet-pointed items.
 2. preferred_skills — skills marked preferred / nice-to-have / bonus / plus / desirable
-3. responsibilities — concrete things the candidate will do (action phrases)
+3. responsibilities — concrete action phrases describing what the candidate will do
 4. experience       — experience requirements as short phrases (e.g. "3+ years Python",
-                      "kubernetes production experience")
+                      "machine learning production experience")
 
 NORMALIZATION RULES:
-- Return short, lowercased phrases (no sentences).
+- Return short, lowercased phrases (no full sentences).
 - Trim whitespace. No trailing commas inside JSON.
-- For skills, prefer the canonical name the industry uses
-  (e.g. "kubernetes" NOT "k8s", "postgresql" NOT "postgres").
-  ALSO include common aliases as separate entries so fuzzy matching works
-  (e.g. add both "kubernetes" and "k8s").
+- For skills include both canonical name AND common alias where applicable
+  (e.g. include both "principal component analysis" and "pca").
 
 STRICT OUTPUT: Return ONLY a single JSON object, no markdown, no explanation.
 
@@ -70,81 +69,75 @@ JOB DESCRIPTION:
 
 
 def parse_jd(state: dict) -> dict:
-    """
-    LangGraph node.
-
-    Reads state["raw_jd"] (or falls back to skill_intelligence / role_context
-    if the caller pre-parsed the JD elsewhere) and writes state["jd_sections"].
-
-    jd_sections schema:
-    {
-      "required_skills":  ["python", "docker", ...],
-      "preferred_skills": ["go", "terraform", ...],
-      "responsibilities": ["design microservices", ...],
-      "experience":       ["3+ years backend", ...],
-      "weights": {
-          "required_skills":  1.0,
-          "preferred_skills": 0.6,
-          "responsibilities": 0.5,
-          "experience":       0.8
-      }
-    }
-    """
-
     raw_jd: str = state.get("raw_jd", "")
 
-    # ------------------------------------------------------------------
-    # Fast-path: if the caller already populated skill_intelligence with
-    # core_skills, build a minimal jd_sections from it so we don't break
-    # existing pipelines that never pass raw_jd.
-    # ------------------------------------------------------------------
     if not raw_jd.strip():
-        skill_intel = state.get("skill_intelligence", {})
-        role_ctx    = state.get("role_context", {})
-        competency  = state.get("competency_profile", {})
-        interview_r = state.get("interview_requirements", {})
+        # ── Enhanced fast-path: pull from ALL available intelligence fields ──
+        skill_intel  = state.get("skill_intelligence", {})
+        role_ctx     = state.get("role_context", {})
+        competency   = state.get("competency_profile", {})
+        interview_r  = state.get("interview_requirements", {})
 
-        required_skills  = skill_intel.get("core_skills", [])
-        preferred_skills = skill_intel.get("secondary_skills", []) or \
-                           interview_r.get("secondary_skills", [])
-        responsibilities = interview_r.get("primary_focus_areas", []) or \
-                           role_ctx.get("responsibilities", [])
-        experience       = _coerce_list(competency.get("experience_range", ""))
-
-        jd_sections = _build_sections(
-            required_skills, preferred_skills, responsibilities, experience
+        # required_skills: combine every possible source
+        required_skills = _dedup(
+            _to_list(skill_intel.get("core_skills", []))
+            + _to_list(skill_intel.get("required_skills", []))
+            + _to_list(skill_intel.get("technical_skills", []))
+            + _to_list(skill_intel.get("tools", []))
         )
+
+        # preferred_skills
+        preferred_skills = _dedup(
+            _to_list(skill_intel.get("secondary_skills", []))
+            + _to_list(interview_r.get("secondary_skills", []))
+            + _to_list(skill_intel.get("preferred_skills", []))
+        )
+
+        # responsibilities: focus areas + evaluation dimensions + role responsibilities
+        responsibilities = _dedup(
+            _to_list(interview_r.get("primary_focus_areas", []))
+            + _to_list(interview_r.get("evaluation_dimensions", []))
+            + _to_list(role_ctx.get("responsibilities", []))
+            + _to_list(role_ctx.get("key_responsibilities", []))
+        )
+
+        # experience
+        experience = _dedup(
+            _coerce_list(competency.get("experience_range", ""))
+            + _coerce_list(competency.get("seniority_level", ""))
+            + _to_list(competency.get("experience_requirements", []))
+        )
+
+        # Remove preferred skills that are already in required (required wins)
+        preferred_skills = [s for s in preferred_skills if s not in set(required_skills)]
+
+        jd_sections = _build_sections(required_skills, preferred_skills, responsibilities, experience)
+        print(f"[jd_parser] fast-path: "
+              f"required={len(required_skills)}, preferred={len(preferred_skills)}, "
+              f"responsibilities={len(responsibilities)}, experience={len(experience)}")
         return {**state, "jd_sections": jd_sections}
 
-    # ------------------------------------------------------------------
-    # Full LLM parse of raw_jd
-    # ------------------------------------------------------------------
+    # ── Full LLM parse ────────────────────────────────────────────────────────
     llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
-    prompt = PromptTemplate(
-        input_variables=["jd_text"],
-        template=_JD_PARSE_PROMPT,
-    )
-
+    prompt = PromptTemplate(input_variables=["jd_text"], template=_JD_PARSE_PROMPT)
     response = llm.invoke(prompt.format(jd_text=raw_jd))
-    parsed   = extract_json(response.content)
+    parsed = extract_json(response.content)
 
     required_skills  = _normalise_list(parsed.get("required_skills",  []))
     preferred_skills = _normalise_list(parsed.get("preferred_skills", []))
     responsibilities = _normalise_list(parsed.get("responsibilities", []))
     experience       = _normalise_list(parsed.get("experience",       []))
 
-    # Deduplicate across required/preferred (required wins)
-    preferred_skills = [s for s in preferred_skills if s not in required_skills]
+    preferred_skills = [s for s in preferred_skills if s not in set(required_skills)]
 
-    jd_sections = _build_sections(
-        required_skills, preferred_skills, responsibilities, experience
-    )
+    jd_sections = _build_sections(required_skills, preferred_skills, responsibilities, experience)
+    print(f"[jd_parser] llm-parse: "
+          f"required={len(required_skills)}, preferred={len(preferred_skills)}, "
+          f"responsibilities={len(responsibilities)}, experience={len(experience)}")
     return {**state, "jd_sections": jd_sections}
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+# ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _build_sections(required, preferred, responsibilities, experience) -> dict:
     return {
@@ -156,16 +149,36 @@ def _build_sections(required, preferred, responsibilities, experience) -> dict:
     }
 
 
-def _normalise_list(items) -> list[str]:
+def _normalise_list(items) -> list:
     if not items:
         return []
     return [str(i).strip().lower() for i in items if str(i).strip()]
 
 
-def _coerce_list(value) -> list[str]:
-    """Turn a string or list into a list of strings."""
+def _to_list(value) -> list:
+    """Safely coerce any value to a normalised list of strings."""
     if not value:
         return []
     if isinstance(value, list):
         return _normalise_list(value)
-    return [str(value).strip().lower()]
+    if isinstance(value, str):
+        return [value.strip().lower()] if value.strip() else []
+    return []
+
+
+def _coerce_list(value) -> list:
+    if not value:
+        return []
+    if isinstance(value, list):
+        return _normalise_list(value)
+    return [str(value).strip().lower()] if str(value).strip() else []
+
+
+def _dedup(items: list) -> list:
+    seen = set()
+    result = []
+    for item in items:
+        if item and item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result
