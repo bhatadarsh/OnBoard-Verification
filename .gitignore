@@ -12,6 +12,9 @@ venv/
 .DS_Store
 
 interview-agent-venv/
+agent-sigmoid-venv/
+node_modules/
+datasets/
+
 # Logs
 *.log
-
