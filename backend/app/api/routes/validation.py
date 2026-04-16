@@ -165,6 +165,7 @@ async def upload_documents(
     pan: Optional[UploadFile] = File(None),
     marksheet_10th: Optional[UploadFile] = File(None),
     marksheet_12th: Optional[UploadFile] = File(None),
+    i9_form: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
     """Upload documents for a candidate."""
@@ -185,7 +186,8 @@ async def upload_documents(
         ("aadhar", aadhar),
         ("pan", pan),
         ("marksheet_10th", marksheet_10th),
-        ("marksheet_12th", marksheet_12th)
+        ("marksheet_12th", marksheet_12th),
+        ("i9_form", i9_form)
     ]
     
     for name, file in files:
@@ -205,9 +207,13 @@ async def upload_documents(
                     producer = str(meta.get("/Producer", "")).lower()
                     
                     if "photoshop" in creator or "illustrator" in creator or "photoshop" in producer:
-                        docs["forensic_alerts"] = docs.get("forensic_alerts", []) + [f"TAMPER RISK [High]: {name.upper()} was modified using graphic design software ({producer or creator})."]
+                        alert = f"TAMPER RISK [High]: {name.upper()} was modified using graphic design software ({producer or creator})."
+                        if alert not in docs.get("forensic_alerts", []):
+                            docs["forensic_alerts"] = docs.get("forensic_alerts", []) + [alert]
                     elif "gimp" in creator or "gimp" in producer or "canva" in producer:
-                        docs["forensic_alerts"] = docs.get("forensic_alerts", []) + [f"TAMPER RISK [Medium]: {name.upper()} was exported from consumer design software ({producer or creator})."]
+                        alert = f"TAMPER RISK [Medium]: {name.upper()} was exported from consumer design software ({producer or creator})."
+                        if alert not in docs.get("forensic_alerts", []):
+                            docs["forensic_alerts"] = docs.get("forensic_alerts", []) + [alert]
                 except Exception:
                     pass
             # ---------------------------------------
@@ -261,12 +267,12 @@ async def extract_knowledge_base(
             input_state = {
                 "documents": docs,
                 "document_texts": {},
-                "knowledge_base": {}
+                "knowledge_base": candidate.get_knowledge_base()
             }
 
             yield "data: {\"type\": \"log\", \"message\": \"> Connecting to LLM Models...\"}\n\n"
 
-            knowledge_base = {}
+            knowledge_base = dict(candidate.get_knowledge_base())
             
             async for event in extraction_graph.astream_events(input_state, version="v1"):
                 kind = event["event"]
@@ -360,8 +366,19 @@ async def get_redacted_document(
         
     # Only process PDF files
     if not path.lower().endswith('.pdf'):
+        import mimetypes
         from fastapi.responses import Response
-        return Response(content=decrypted_data, media_type="application/octet-stream")
+        
+        # Deduce true MIME type (e.g. text/plain for .txt, image/png for .png)
+        mime_type, _ = mimetypes.guess_type(path)
+        if not mime_type:
+            mime_type = "application/octet-stream"
+            
+        return Response(
+            content=decrypted_data, 
+            media_type=mime_type,
+            headers={"Content-Disposition": f'inline; filename="{doc_name}"'}
+        )
         
     # Phase 3: Redact using fitz (PyMuPDF)
     doc = fitz.open(stream=decrypted_data, filetype="pdf")
@@ -383,13 +400,17 @@ async def get_redacted_document(
             # Find bounds for each matched string
             areas = page.search_for(match_str)
             for area in areas:
-                page.add_redact_annot(area, fill=(0, 0, 0))
+                page.add_redact_annot(area, fill=(1, 1, 1))
         
         page.apply_redactions()
         
     redacted_pdf_bytes = doc.write()
     from fastapi.responses import Response
-    return Response(content=redacted_pdf_bytes, media_type="application/pdf")
+    return Response(
+        content=redacted_pdf_bytes, 
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="redacted_{doc_name}.pdf"'}
+    )
 
 
 # ============ VALIDATION (via LangGraph) ============

@@ -18,6 +18,7 @@ async def upload_documents(
     aadhar_scan: Optional[UploadFile] = File(None),
     marksheet_10th: Optional[UploadFile] = File(None),
     marksheet_12th: Optional[UploadFile] = File(None),
+    i9_form: Optional[UploadFile] = File(None),
     degree_cert: Optional[UploadFile] = File(None),
     payslip: Optional[UploadFile] = File(None),
     relieving_letter: Optional[UploadFile] = File(None)
@@ -40,6 +41,7 @@ async def upload_documents(
         ("aadhar_scan", aadhar_scan),
         ("marksheet_10th", marksheet_10th),
         ("marksheet_12th", marksheet_12th),
+        ("i9_form", i9_form),
         ("degree_cert", degree_cert),
         ("payslip", payslip),
         ("relieving_letter", relieving_letter)

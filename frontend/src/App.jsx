@@ -23,6 +23,7 @@ export default function App() {
   // Ephemeral State
   const [formFile, setFormFile] = useState(null);
   const [docFiles, setDocFiles] = useState({});
+  const [previewFile, setPreviewFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [candidateToDelete, setCandidateToDelete] = useState(null);
@@ -200,7 +201,7 @@ export default function App() {
     candidates, selected, setSelected, load, refresh, show, loading, setLoading,
     triggerDelete, uploadForm, uploadDocs, extract, validate,
     formFile, setFormFile, docFiles, setDocFiles,
-    extractLogs
+    extractLogs, previewFile, setPreviewFile
   };
 
   return (

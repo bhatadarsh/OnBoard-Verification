@@ -91,6 +91,45 @@ class LLMService:
             print(f"Vision OCR error: {e}")
             return ""
 
+    @retry(wait=wait_exponential(multiplier=1, min=2, max=30), stop=stop_after_attempt(3))
+    async def verify_signature_vision_async(self, file_path: str) -> str:
+        """Verify if a document contains a handwritten or digital signature using Vision API."""
+        try:
+            with open(file_path, 'rb') as f:
+                image_data = base64.b64encode(f.read()).decode('utf-8')
+            
+            ext = os.path.splitext(file_path)[1].lower()
+            mime_map = {
+                '.png': 'image/png', '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg', '.gif': 'image/gif',
+                '.webp': 'image/webp',
+            }
+            mime_type = mime_map.get(ext, 'image/png')
+            
+            response = await self.client.chat.completions.create(
+                model=config.VISION_MODEL,
+                messages=[{
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Analyze this document image. Focus heavily on the bottom left and bottom right corners, or any designated signature blocks. Your goal is to determine if ANY valid signature is present. Look for: 1) Handwritten physical signatures (ink marks, cursive scribbles), 2) Digital signatures (stamps like 'Digitally Signed by', DocuSign banners), 3) Typed e-signatures (like /s/ John Doe). Output ONLY a JSON object exactly like: {\"signature_detected\": \"Yes\" or \"No\", \"signature_details\": \"Explanation of what was found or missing\"}."
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": f"data:{mime_type};base64,{image_data}"}
+                        }
+                    ]
+                }],
+                temperature=0.1,
+                max_tokens=500,
+                response_format={"type": "json_object"}
+            )
+            return response.choices[0].message.content or "{\"signature_detected\": \"No\", \"signature_details\": \"Failed to analyze\"}"
+        except Exception as e:
+            print(f"Signature Verification Vision error: {e}")
+            return "{\"signature_detected\": \"No\", \"signature_details\": \"Error occurred during analysis\"}"
+
     async def _transcribe_audio_chunk(self, chunk, ext, idx):
         tmp_path = ""
         try:
@@ -176,6 +215,10 @@ class LLMService:
     async def extract_from_pan(self, text: str) -> Dict[str, str]:
         prompt = """Extract information from this PAN card. Output MUST be a valid JSON object. Extract keys: "full_name", "father_name", "date_of_birth", "dob", "pan_number". Write "Not found" for values if not available."""
         return await self._call_llm(prompt, f"PAN Card:\n{text}")
+
+    async def extract_from_i9(self, text: str) -> Dict[str, str]:
+        prompt = """Extract verification details from this I-9 form text. The text will contain OCR data AND a signature verification result block. Output MUST be a valid JSON object. Extract keys: "signature_detected", "signature_details". Use the "[SIGNATURE VERIFICATION RESULT]" block to populate these fields. If no signature block is found, write "No" for signature_detected."""
+        return await self._call_llm(prompt, f"I-9 Form:\n{text}")
 
 # Singleton
 llm_service = LLMService()

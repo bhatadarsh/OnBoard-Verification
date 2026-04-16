@@ -175,3 +175,46 @@ def _extract_from_docx(file_path: str) -> str:
         return "\n".join(text_parts)
     except Exception as e:
         return f"Error reading DOCX: {e}"
+
+async def verify_document_signature(file_path: str) -> str:
+    """Verify signature for an image or PDF file using Vision AI."""
+    import json
+    if not os.path.exists(file_path):
+        return '{"signature_detected": "No", "signature_details": "File not found"}'
+        
+    ext = os.path.splitext(file_path)[1].lower()
+    if ext in ['.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif', '.webp']:
+        return await llm_service.verify_signature_vision_async(file_path)
+    elif ext == '.pdf':
+        try:
+            from pdf2image import convert_from_path
+            images = convert_from_path(file_path)
+            if not images:
+                return '{"signature_detected": "No", "signature_details": "Failed to extract pdf pages"}'
+            
+            # Check first and last page (usually where signatures are)
+            pages_to_check = [images[0]]
+            if len(images) > 1:
+                pages_to_check.append(images[-1])
+                    
+            last_res = "{}"
+            for i, img in enumerate(pages_to_check):
+                with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
+                    img.save(tmp.name, 'PNG')
+                    tmp_path = tmp.name
+                    
+                res = await llm_service.verify_signature_vision_async(tmp_path)
+                os.unlink(tmp_path)
+                last_res = res
+                
+                try:
+                    res_dict = json.loads(res)
+                    if res_dict.get("signature_detected", "").lower() in ["yes", "true"]:
+                        return res
+                except:
+                    pass
+            # if none found, return the last result
+            return last_res
+        except Exception as e:
+            return f'{{"signature_detected": "No", "signature_details": "PDF vision error: {e}"}}'
+    return '{"signature_detected": "No", "signature_details": "Unsupported format for signature check"}'

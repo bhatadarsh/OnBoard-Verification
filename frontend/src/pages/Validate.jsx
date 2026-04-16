@@ -5,8 +5,15 @@ import SelectedBanner from '../components/SelectedBanner';
 
 const API = '/api/v1';
 
+const maskPII = (val) => {
+  if (typeof val !== 'string') return val;
+  return val
+    .replace(/\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b/g, '••••••••••')
+    .replace(/\b\d{4}\s?\d{4}\s?\d{4}\b/g, '•••• •••• ••••');
+};
+
 const Validate = () => {
-  const { candidates, selected, load, loading, validate, show } = useOutletContext();
+  const { candidates, selected, load, loading, validate, show, setPreviewFile } = useOutletContext();
 
   return (
     <div className="animate-in slide-in-from-bottom-4 duration-500">
@@ -62,11 +69,15 @@ const Validate = () => {
               
               {/* Zero-Trust Action */}
               <div className="flex justify-end mb-6 gap-2 flex-wrap">
-                {Object.keys(selected.documents || {}).filter(k => k !== 'forensic_alerts').map(docName => (
-                  <button key={docName} onClick={() => window.open(`${API}/documents/${selected.id}/${docName}/redacted`, '_blank')} className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-slate-300 hover:text-white rounded hover:bg-slate-700 border border-slate-700 transition-colors text-xs font-bold uppercase tracking-wider shadow-sm">
-                    <span className="text-indigo-400">❖</span> View Enterprise Redacted {docName.replace(/_/g, ' ')}
-                  </button>
-                ))}
+                {Object.keys(selected.documents || {}).filter(k => k !== 'forensic_alerts').map(docName => {
+                  const url = `${API}/documents/${selected.id}/${docName}/redacted`;
+                  const title = `Redacted ${docName.replace(/_/g, ' ')}`;
+                  return (
+                    <button key={docName} onClick={() => setPreviewFile ? setPreviewFile({ url, title }) : console.error("setPreviewFile missing in context")} className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-slate-300 hover:text-white rounded hover:bg-slate-700 border border-slate-700 transition-colors text-xs font-bold uppercase tracking-wider shadow-sm">
+                      <span className="text-indigo-400">❖</span> View Enterprise Redacted {docName.replace(/_/g, ' ')}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Field Validation List */}
@@ -92,12 +103,12 @@ const Validate = () => {
                         <div className="bg-slate-950/50 border border-slate-800/50 rounded p-3 relative overflow-hidden">
                           <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-700"></div>
                           <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-1">CSV (Master)</div>
-                          <div className="text-slate-300 text-[11px] font-mono">{v.form_value || <span className="opacity-40 italic">Null</span>}</div>
+                          <div className="text-slate-300 text-[11px] font-mono">{maskPII(v.form_value) || <span className="opacity-40 italic">Null</span>}</div>
                         </div>
                         <div className="bg-slate-950/50 border border-slate-800/50 rounded p-3 relative overflow-hidden">
                           <div className="absolute left-0 top-0 bottom-0 w-1 bg-cyan-800/50"></div>
                           <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-1">Extracted Source</div>
-                          <div className="text-slate-300 text-[11px] font-mono">{v.doc_value || <span className="opacity-40 italic">Null</span>}</div>
+                          <div className="text-slate-300 text-[11px] font-mono">{maskPII(v.doc_value) || <span className="opacity-40 italic">Null</span>}</div>
                         </div>
                       </div>
                       

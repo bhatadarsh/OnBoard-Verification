@@ -3,6 +3,13 @@ import { useOutletContext } from 'react-router-dom';
 import SearchInput from '../components/SearchInput';
 import SelectedBanner from '../components/SelectedBanner';
 
+const maskPII = (val) => {
+  if (typeof val !== 'string') return val;
+  return val
+    .replace(/\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b/g, '••••••••••')
+    .replace(/\b\d{4}\s?\d{4}\s?\d{4}\b/g, '•••• •••• ••••');
+};
+
 const StreamingTerminal = ({ logs, loading }) => {
   const terminalEndRef = useRef(null);
 
@@ -90,7 +97,7 @@ const Extract = () => {
                       {Object.entries(data || {}).map(([k, v]) => (
                         <div key={k} className="flex gap-4 mb-2 pb-2 last:mb-0 last:pb-0 border-b border-slate-800/30 last:border-0 hover:bg-slate-900/30 px-2 py-1 rounded transition-colors">
                           <span className="text-cyan-600/60 font-medium min-w-[130px]">{k}:</span>
-                          <span className="text-slate-300 break-words font-medium">{v}</span>
+                          <span className="text-slate-300 break-words font-medium">{maskPII(v)}</span>
                         </div>
                       ))}
                     </div>

@@ -491,8 +491,8 @@ def values_match(form_value: str, doc_value: str, field_type: str = "text") -> T
         if len(common) >= 2 and len(common) / min(len(fv_words), len(dv_words)) >= 0.5:
             return True, "Education match (word overlap)"
 
-    # 8. Numeric comparison (Salary/Marks)
-    if any(x in field_type.lower() for x in ['ctc', 'salary', 'percentage', 'marks', 'score']):
+    # 8. Numeric comparison (Salary/Marks/Experience)
+    if any(x in field_type.lower() for x in ['ctc', 'salary', 'percentage', 'marks', 'score', 'experience', 'year', 'exp']):
          fv_num = re.sub(r'[^\d.]', '', fv)
          dv_num = re.sub(r'[^\d.]', '', dv)
          if fv_num and dv_num:

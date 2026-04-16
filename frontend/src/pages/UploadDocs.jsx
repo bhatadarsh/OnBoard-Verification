@@ -11,7 +11,9 @@ const UploadDocs = () => {
     { key: 'hr_transcript', label: 'HR Interview File', icon: '🎤', accept: '.txt,.mp3,.wav,.m4a', hint: 'Audio or Transcript' },
     { key: 'aadhar', label: 'Aadhar Card', icon: '🪪', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Image or PDF' },
     { key: 'pan', label: 'PAN Card', icon: '💳', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Image or PDF' },
-    { key: 'marksheet_10th', label: 'Educational Certificates', icon: '🎓', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: '10th / 12th / Degree' },
+    { key: 'marksheet_10th', label: '10th Marksheet', icon: '🎓', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'High School Result' },
+    { key: 'marksheet_12th', label: '12th Marksheet', icon: '🎓', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Intermediate Result' },
+    { key: 'i9_form', label: 'I-9 Form', icon: '📝', accept: '.png,.jpg,.jpeg,.pdf', hint: 'Signed Onboarding Form' },
   ];
 
   return (

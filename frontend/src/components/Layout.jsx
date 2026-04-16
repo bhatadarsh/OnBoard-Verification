@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import Toast from '../components/Toast';
 import ConfirmationModal from '../components/ConfirmationModal';
+import DocumentViewerModal from '../components/DocumentViewerModal';
 
 const Layout = ({ user, logout, toast, setToast, candidateToDelete, setCandidateToDelete, confirmDelete, contextProps }) => {
   const [sidebar, setSidebar] = useState(true);
@@ -43,6 +44,11 @@ const Layout = ({ user, logout, toast, setToast, candidateToDelete, setCandidate
         message={`Are you absolutely certain you wish to purge the data profiling for ${candidateToDelete?.full_name}? This will permanently delete all extracted metrics, scoring, and source files. Action is irreversible.`}
         onConfirm={confirmDelete}
         onCancel={() => setCandidateToDelete(null)}
+      />
+
+      <DocumentViewerModal 
+        file={contextProps.previewFile} 
+        onClose={() => contextProps.setPreviewFile(null)} 
       />
 
       {/* Sidebar */}

@@ -13,22 +13,19 @@ async def extraction_node(state: GraphState) -> Dict[str, Any]:
     
     documents = state.get("documents", {})
     document_texts = state.get("document_texts", {})
+    existing_kb = state.get("knowledge_base", {}) or {}
     
-    results = {
-        "resume_data": {},
-        "hr_transcript_data": {},
-        "aadhar_data": {},
-        "pan_data": {},
-        "marksheet_10th_data": {},
-        "marksheet_12th_data": {},
-        "knowledge_base": {}
-    }
-    
+    results = {}
     tasks = {}
     
     # Process each document type concurrently
     for doc_type, text in document_texts.items():
         if not text:
+            continue
+            
+        # Delta Optimization: Skip if we already extracted this document previously
+        if doc_type in existing_kb and existing_kb[doc_type]:
+            print(f"  Skipping extraction for {doc_type}: Already in Knowledge Base")
             continue
             
         print(f"  Scheduling extraction from: {doc_type}")
@@ -45,6 +42,8 @@ async def extraction_node(state: GraphState) -> Dict[str, Any]:
             tasks["marksheet_10th_data"] = llm_service.extract_from_marksheet(text, "10th")
         elif doc_type == "marksheet_12th":
             tasks["marksheet_12th_data"] = llm_service.extract_from_marksheet(text, "12th")
+        elif doc_type == "i9_form":
+            tasks["i9_form_data"] = llm_service.extract_from_i9(text)
             
     if tasks:
         # Run extractions through an asyncio Semaphore to strictly limit concurrency to 2
@@ -67,11 +66,11 @@ async def extraction_node(state: GraphState) -> Dict[str, Any]:
                 print(f"  Completed extraction for: {key}")
     
     # Build merged knowledge base
-    kb = {}
-    for source in ["resume", "hr_transcript", "aadhar", "pan", "marksheet_10th", "marksheet_12th"]:
-        data = results.get(f"{source}_data", {})
-        if data:
-            kb[source] = data
+    kb = dict(existing_kb) # Copy existing to not mutate original directly
+    for doc_type in ["resume", "hr_transcript", "aadhar", "pan", "marksheet_10th", "marksheet_12th", "i9_form"]:
+        res_key = f"{doc_type}_data"
+        if res_key in results and results[res_key]:
+            kb[doc_type] = results[res_key]
     
     results["knowledge_base"] = kb
     
