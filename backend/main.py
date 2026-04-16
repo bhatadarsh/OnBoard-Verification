@@ -17,6 +17,14 @@ import json
 import logging
 import time
 from pydub import AudioSegment
+from pydub.utils import mediainfo_json
+# ── Point pydub at the snap-installed ffmpeg/ffprobe binaries ────────────────
+_FFMPEG_BIN  = "/snap/bin/ffmpeg"
+_FFPROBE_BIN = "/snap/bin/ffmpeg.ffprobe"
+AudioSegment.converter  = _FFMPEG_BIN
+AudioSegment.ffmpeg     = _FFMPEG_BIN
+AudioSegment.ffprobe    = _FFPROBE_BIN
+# ─────────────────────────────────────────────────────────────────────────────
 import asyncio
 import io
 import base64
@@ -814,15 +822,37 @@ async def submit_answer(
         try:
             audio_content = await audio_file.read()
             print(f"DEBUG: Received audio '{audio_file.filename}' size: {len(audio_content)} bytes")
-            if audio_content:
+            # Guard: reject suspiciously small blobs (likely a truncated/empty recording)
+            MIN_AUDIO_BYTES = 1000
+            if audio_content and len(audio_content) >= MIN_AUDIO_BYTES:
                 with open(original_path, "wb") as buffer:
                     buffer.write(audio_content)
                 try:
                     fmt = ext if ext != 'wav' else None
-                    audio = AudioSegment.from_file(original_path, format=fmt)
-                    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
-                    audio.export(wav_path, format="wav")
-                    print(f"DEBUG: Audio converted. Duration: {len(audio)/1000.0}s, Volume: {audio.dBFS} dBFS")
+                    # Use ffmpeg directly for WebM/Opus — more tolerant of truncated packets
+                    if ext in ('webm', 'ogg', 'opus'):
+                        import subprocess
+                        result = subprocess.run(
+                            [
+                                _FFMPEG_BIN, "-y",
+                                "-err_detect", "ignore_err",   # ignore Opus packet errors
+                                "-i", original_path,
+                                "-ar", "16000",                 # 16kHz
+                                "-ac", "1",                     # mono
+                                "-sample_fmt", "s16",           # 16-bit PCM
+                                wav_path
+                            ],
+                            capture_output=True, text=True, timeout=60
+                        )
+                        if result.returncode != 0:
+                            print(f"DEBUG: ffmpeg stderr: {result.stderr[-500:]}")
+                            raise RuntimeError(f"ffmpeg conversion failed: {result.stderr[-200:]}")
+                        print(f"DEBUG: ffmpeg direct conversion OK → {wav_path}")
+                    else:
+                        audio = AudioSegment.from_file(original_path, format=fmt)
+                        audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
+                        audio.export(wav_path, format="wav")
+                        print(f"DEBUG: pydub conversion OK. Duration: {len(audio)/1000.0}s")
                     try:
                         stt = get_stt_engine()
                         transcript = stt.transcribe(wav_path)
@@ -831,11 +861,16 @@ async def submit_answer(
                     except Exception as stt_err:
                         error_info = f"STT_FAILED: {str(stt_err)}"
                 except Exception as conv_err:
+                    print(f"DEBUG: Conversion error: {conv_err}")
                     error_info = f"CONVERSION_FAILED: {str(conv_err)}"
+                    # Last-resort: try Whisper on the raw file
                     try:
                         stt = get_stt_engine()
                         transcript = stt.transcribe(original_path)
                     except: pass
+            elif audio_content:
+                print(f"DEBUG: Audio blob too small ({len(audio_content)} bytes) — treating as silence")
+                error_info = "AUDIO_TOO_SHORT"
             else:
                 error_info = "EMPTY_AUDIO_CONTENT"
         except Exception as audio_err:

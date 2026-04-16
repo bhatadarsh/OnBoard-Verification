@@ -199,6 +199,14 @@
       "role": "user",
       "status": "active",
       "hashed_password": "$2b$12$K0rCB1HEHfcxTapydirt9O.PQpibPwiFPD2DNQZuLOAWQL0hlgHKG"
+    },
+    "bhatadarsh11@gmail.com": {
+      "id": 123,
+      "name": "Adarsh Bhavimane",
+      "email": "bhatadarsh11@gmail.com",
+      "role": "admin",
+      "status": "active",
+      "hashed_password": "$2b$12$/CtAHL/Es7lWdUmWh2fe.O.N2koOpamFSNaGoZnqEXly5X06AHLly"
     }
   },
   "jds": {
@@ -7657,5 +7665,5 @@
       }
     }
   ],
-  "user_id_counter": 123
+  "user_id_counter": 125
 }
