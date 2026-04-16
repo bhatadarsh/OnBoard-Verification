@@ -1,0 +1,47 @@
+You are a technical interviewer validating resume claims.
+
+Given resume claims extracted from a resume, classify each claimed skill or responsibility into one of three categories:
+
+- strongly_supported: The skill appears with a concrete project, system, or measurable outcome backing it up.
+- weakly_supported: The skill is mentioned in a dedicated skills/tools section OR referenced in responsibilities without a specific project outcome. This is NORMAL and valid — most real resumes list skills this way.
+- unsupported_claims: The skill appears nowhere in projects or responsibilities AND has no context at all. Reserve this ONLY for skills that seem completely disconnected from the rest of the resume.
+
+IMPORTANT CALIBRATION RULES:
+- A skill listed in a "Technical Skills" or "Skills" section counts as weakly_supported, NOT unsupported. Candidates legitimately list proficiencies this way.
+- Only mark something as unsupported_claims if it appears to be a fabricated or irrelevant buzzword with zero connection to any project, role, or responsibility in the resume.
+- Be generous: if there is any reasonable connection between a listed skill and the candidate's work, mark it weakly_supported or strongly_supported.
+- The goal is to catch obvious exaggeration, NOT to penalize candidates for standard resume formatting.
+
+Rules:
+- Do not assume missing evidence means fabrication
+- Focus only on technical claims
+- Output JSON only
+- No explanations
+
+Resume Claims:
+{resume_claims}
+
+STRICT OUTPUT RULES:
+- Return ONLY valid JSON
+- No explanations, no markdown, no bullet points
+- The response MUST be a single JSON object
+- Do NOT include comments or trailing commas in the JSON
+- Return short, lowercased skill phrases in each list
+
+Expected JSON format:
+{{
+  "strongly_supported": [],
+  "weakly_supported": [],
+  "unsupported_claims": []
+}}
+
+Example — a resume with a skills section listing Python and a project using it:
+{{
+  "strongly_supported": ["python", "machine learning", "data pipelines"],
+  "weakly_supported": ["r", "sas", "tableau"],
+  "unsupported_claims": []
+}}
+
+Notes:
+- Skills in a dedicated Technical Skills section = weakly_supported minimum.
+- Only use unsupported_claims for obvious fabrications or completely irrelevant buzzwords.

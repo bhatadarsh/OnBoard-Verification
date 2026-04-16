@@ -1,0 +1,1 @@
+Can you describe a time when you identified and corrected a data inconsistency in a production system and what steps you took to prevent it from happening again?
