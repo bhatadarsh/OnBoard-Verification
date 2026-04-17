@@ -30,6 +30,8 @@ class ContentProfile:
     has_charts: bool = False
     has_text: bool = True
     has_images: bool = False
+    has_audio: bool = False
+
 
     page_count: int = 0
     table_page_indices: List[int] = field(default_factory=list)
@@ -55,6 +57,10 @@ def detect_content(loaded_file) -> ContentProfile:
         _detect_spreadsheet_content(profile, loaded_file)
     elif loaded_file.is_image:
         _detect_image_content(profile, loaded_file)
+    elif loaded_file.is_audio:
+        profile.has_audio = True
+        profile.has_text = False
+        log.info(f"  Audio detected: [bold]{loaded_file.filename}[/]")
 
     log.info(
         f"[bold]{loaded_file.filename}[/] → "
@@ -97,7 +103,10 @@ def _classify_image_with_gemini(image_bytes: bytes, mime_type: str = "image/png"
                         "- chart (any graph, plot, bar chart, line chart, pie chart, histogram, scatter plot)\n"
                         "- table (structured data in rows and columns)\n"
                         "- infographic (educational poster, diagram with text)\n"
-                        "- photo (photograph, screenshot, illustration)\n\n"
+                        "- photo (photograph, screenshot, illustration)\n"
+                        "- adhar_card (Indian Aadhar identity card)\n"
+                        "- pan_card (Indian PAN identity card)\n"
+                        "- marksheet (educational mark statement, 10th/12th/degree certificate)\n\n"
                         "Reply with ONE word only."
                     )},
                     {"inline_data": {"mime_type": mime_type, "data": b64_data}},
@@ -208,6 +217,7 @@ def _detect_pdf_content(profile: ContentProfile, loaded_file) -> None:
                                     )
                     except Exception:
                         pass
+
 
         doc.close()
     except Exception as e:

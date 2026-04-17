@@ -41,7 +41,7 @@ def _wait_for_rate_limit():
         _call_timestamps.append(time.time())
 
 
-def call_gemini(client, model: str, contents: list, max_retries: int = 3):
+def call_gemini(client, model: str, contents: list, max_retries: int = 3, **kwargs):
     """Make a Gemini API call with rate limiting and retry on 429.
 
     Args:
@@ -59,6 +59,7 @@ def call_gemini(client, model: str, contents: list, max_retries: int = 3):
             response = client.models.generate_content(
                 model=model,
                 contents=contents,
+                **kwargs
             )
             return response
         except Exception as e:

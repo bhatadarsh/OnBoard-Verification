@@ -15,6 +15,7 @@ log = get_logger(__name__)
 SUPPORTED_EXTENSIONS = {
     ".pdf", ".docx", ".xlsx", ".xls", ".csv",
     ".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".gif", ".webp",
+    ".mp3", ".wav", ".m4a", ".flac", ".aac",
 }
 
 
@@ -40,8 +41,8 @@ class LoadedFile:
         return self.extension in {".xlsx", ".xls", ".csv"}
 
     @property
-    def is_image(self) -> bool:
-        return self.extension in {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".gif", ".webp"}
+    def is_audio(self) -> bool:
+        return self.extension in {".mp3", ".wav", ".m4a", ".flac", ".aac"}
 
 
 def load_file(file_path: str) -> LoadedFile:

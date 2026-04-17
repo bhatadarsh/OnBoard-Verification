@@ -70,6 +70,7 @@ Examples:
             print(f"   Tables: {r.tables_extracted} (SQL: {r.tables_sql}, Non-SQL: {r.tables_non_sql})")
             print(f"   Charts: {r.charts_extracted}")
             print(f"   Images: {r.images_extracted}")
+            print(f"   Audio: {r.audio_extracted}")
             print(f"   Text: {r.text_chars:,} chars")
             print(f"   Embeddings stored: {r.embeddings_stored}")
             print(f"   PostgreSQL rows: {r.postgres_rows}")
