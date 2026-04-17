@@ -177,5 +177,67 @@ class LLMService:
         prompt = """Extract information from this PAN card. Output MUST be a valid JSON object. Extract keys: "full_name", "father_name", "date_of_birth", "dob", "pan_number". Write "Not found" for values if not available."""
         return await self._call_llm(prompt, f"PAN Card:\n{text}")
 
+    async def extract_from_degree_cert(self, text: str) -> Dict[str, str]:
+        prompt = """Extract information from this degree certificate or graduation certificate. Output MUST be a valid JSON object. Extract keys: "student_name", "full_name", "degree_name", "specialization", "university_name", "institution_name", "year_of_passing", "percentage", "cgpa". Write "Not found" for values if not available."""
+        return await self._call_llm(prompt, f"Degree Certificate:\n{text}")
+
+    @retry(wait=wait_exponential(multiplier=1, min=2, max=30), stop=stop_after_attempt(3))
+    async def verify_signature(self, image_path: str) -> Dict[str, Any]:
+        """Use Groq Vision to verify whether an image contains a genuine handwritten signature."""
+        try:
+            with open(image_path, 'rb') as f:
+                image_data = base64.b64encode(f.read()).decode('utf-8')
+
+            ext = os.path.splitext(image_path)[1].lower()
+            mime_map = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+                        '.gif': 'image/gif', '.webp': 'image/webp'}
+            mime_type = mime_map.get(ext, 'image/png')
+
+            response = await self.client.chat.completions.create(
+                model=config.VISION_MODEL,
+                messages=[{
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": (
+                                "Analyze this image and determine whether it contains a genuine handwritten signature. "
+                                "Return a JSON object with EXACTLY these keys:\n"
+                                "- \"has_signature\": true or false — is there a handwritten signature present?\n"
+                                "- \"is_genuine\": true or false — does it look like a real human signature (flowing ink strokes, not printed/typed text)?\n"
+                                "- \"confidence\": \"high\", \"medium\", or \"low\"\n"
+                                "- \"ink_strokes\": true or false — are there visible pen/ink stroke marks?\n"
+                                "- \"description\": a brief 1-sentence description of what you see.\n"
+                                "- \"verdict\": \"VERIFIED\", \"SUSPICIOUS\", or \"NOT_FOUND\"\n\n"
+                                "Rules: Printed names are NOT signatures. "
+                                "Only flowing handwritten cursive or stylised marks count as genuine signatures. "
+                                "If the image appears to be a plain white canvas with no marks, verdict = NOT_FOUND."
+                            )
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": f"data:{mime_type};base64,{image_data}"}
+                        }
+                    ]
+                }],
+                temperature=0.1,
+                max_tokens=600,
+                response_format={"type": "json_object"}
+            )
+            content = response.choices[0].message.content or "{}"
+            result = json.loads(content)
+            # Normalise keys to lowercase
+            return {k.lower(): v for k, v in result.items()}
+        except Exception as e:
+            print(f"Signature verification error: {e}")
+            return {
+                "has_signature": False,
+                "is_genuine": False,
+                "confidence": "low",
+                "ink_strokes": False,
+                "description": f"Verification error: {str(e)}",
+                "verdict": "NOT_FOUND"
+            }
+
 # Singleton
 llm_service = LLMService()

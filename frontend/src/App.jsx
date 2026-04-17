@@ -9,6 +9,7 @@ import UploadForm from './pages/UploadForm';
 import UploadDocs from './pages/UploadDocs';
 import Extract from './pages/Extract';
 import Validate from './pages/Validate';
+import OnboardingForm from './pages/OnboardingForm';
 
 // Components
 import Layout from './components/Layout';
@@ -217,6 +218,7 @@ export default function App() {
         />}>
         <Route index element={<Dashboard />} />
         <Route path="candidates" element={<Candidates />} />
+        <Route path="onboarding" element={<OnboardingForm show={show} />} />
         <Route path="form" element={<UploadForm />} />
         <Route path="docs" element={<UploadDocs />} />
         <Route path="extract" element={<Extract />} />

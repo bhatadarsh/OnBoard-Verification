@@ -7,11 +7,21 @@ const UploadDocs = () => {
   const { candidates, selected, load, docFiles, setDocFiles, loading, uploadDocs } = useOutletContext();
 
   const docTypes = [
-    { key: 'resume', label: 'Resume', icon: '📄', accept: '.pdf,.docx,.txt', hint: 'PDF, DOCX, TXT' },
-    { key: 'hr_transcript', label: 'HR Interview File', icon: '🎤', accept: '.txt,.mp3,.wav,.m4a', hint: 'Audio or Transcript' },
-    { key: 'aadhar', label: 'Aadhar Card', icon: '🪪', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Image or PDF' },
-    { key: 'pan', label: 'PAN Card', icon: '💳', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Image or PDF' },
-    { key: 'marksheet_10th', label: 'Educational Certificates', icon: '🎓', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: '10th / 12th / Degree' },
+    { key: 'resume',         label: 'Resume',              icon: '📄', accept: '.pdf,.docx,.txt',           hint: 'PDF, DOCX, TXT' },
+    { key: 'hr_transcript',  label: 'HR Interview File',   icon: '🎤', accept: '.txt,.mp3,.wav,.m4a',        hint: 'Audio or Transcript' },
+    { key: 'aadhar',         label: 'Aadhar Card',         icon: '🪪', accept: '.png,.jpg,.jpeg,.pdf,.txt',  hint: 'Image or PDF' },
+    { key: 'pan',            label: 'PAN Card',            icon: '💳', accept: '.png,.jpg,.jpeg,.pdf,.txt',  hint: 'Image or PDF' },
+    { key: 'marksheet_10th', label: '10th Marksheet',      icon: '📗', accept: '.png,.jpg,.jpeg,.pdf,.txt',  hint: 'SSC / Matric Certificate' },
+    { key: 'marksheet_12th', label: '12th Marksheet',      icon: '📘', accept: '.png,.jpg,.jpeg,.pdf,.txt',  hint: 'HSC / Intermediate Certificate' },
+    { key: 'degree_cert',    label: 'Degree Certificate',  icon: '🎓', accept: '.png,.jpg,.jpeg,.pdf,.txt',  hint: 'Graduation / PG Certificate' },
+    {
+      key: 'signature',
+      label: 'Signature (Physical Scan)',
+      icon: '✍️',
+      accept: '.png,.jpg,.jpeg,.webp',
+      hint: 'JPG / PNG Scan — Groq Vision Verified',
+      highlight: true,
+    },
   ];
 
   return (
@@ -48,14 +58,21 @@ const UploadDocs = () => {
             <span>Privacy Secured. All uploaded documents are symmetrically encrypted locally before writing to disk.</span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {docTypes.map(d => (
-              <div key={d.key} className="bg-slate-900/80 backdrop-blur-sm rounded-xl p-5 border border-slate-800 hover:border-cyan-500/50 transition-all group shadow-sm flex flex-col justify-between">
+              <div
+                key={d.key}
+                className={`rounded-xl p-5 border transition-all group shadow-sm flex flex-col justify-between backdrop-blur-sm ${
+                  d.highlight
+                    ? 'bg-indigo-950/40 border-indigo-600/40 hover:border-indigo-400/60'
+                    : 'bg-slate-900/80 border-slate-800 hover:border-cyan-500/50'
+                }`}
+              >
                 <div className="flex items-center gap-3 mb-4">
-                  <span className={`text-2xl ${docFiles[d.key] ? 'text-cyan-400' : 'text-slate-500'}`}>{d.icon}</span>
+                  <span className={`text-2xl ${docFiles[d.key] ? (d.highlight ? 'text-indigo-400' : 'text-cyan-400') : 'text-slate-500'}`}>{d.icon}</span>
                   <div>
                     <div className="font-semibold text-slate-200 text-sm">{d.label}</div>
-                    <div className="text-[10px] text-slate-500 uppercase tracking-wider">{d.hint}</div>
+                    <div className={`text-[10px] uppercase tracking-wider ${d.highlight ? 'text-indigo-400' : 'text-slate-500'}`}>{d.hint}</div>
                   </div>
                 </div>
                 
@@ -63,13 +80,39 @@ const UploadDocs = () => {
                 <label 
                   htmlFor={d.key} 
                   className={`block p-3 border border-dashed rounded text-center cursor-pointer font-medium text-xs transition-all ${
-                    docFiles[d.key] ? 'border-cyan-500 bg-cyan-500/10 text-cyan-300' : 'border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800 text-slate-400'
+                    docFiles[d.key]
+                      ? d.highlight
+                        ? 'border-indigo-500 bg-indigo-500/10 text-indigo-300'
+                        : 'border-cyan-500 bg-cyan-500/10 text-cyan-300'
+                      : d.highlight
+                        ? 'border-indigo-700/50 hover:border-indigo-500/60 hover:bg-indigo-900/20 text-slate-400'
+                        : 'border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800 text-slate-400'
                   }`}
                 >
-                  {docFiles[d.key] ? <span className="flex items-center justify-center gap-2">✓ Attached: {docFiles[d.key].name.substring(0, 15)}...</span> : '+ Select File'}
+                  {docFiles[d.key] ? <span className="flex items-center justify-center gap-2">✓ {docFiles[d.key].name.substring(0, 18)}...</span> : '+ Select File'}
                 </label>
+
+                {d.key === 'signature' && docFiles[d.key] && (
+                  <div className="mt-2 text-[10px] text-indigo-400 text-center">
+                    🤖 Will be verified by Groq Vision
+                  </div>
+                )}
               </div>
             ))}
+          </div>
+
+          {/* Signature hint banner */}
+          <div className="bg-indigo-950/30 border border-indigo-600/30 rounded-xl p-4 mb-6 flex items-start gap-3">
+            <span className="text-indigo-400 text-xl mt-0.5">✍️</span>
+            <div>
+              <p className="text-indigo-300 text-sm font-semibold mb-1">Signature Verification via Groq Vision</p>
+              <p className="text-slate-400 text-xs leading-relaxed">
+                Upload a physical signature scan (PNG/JPG). The AI will check for genuine ink strokes and return
+                a <span className="text-emerald-400">VERIFIED</span>, <span className="text-amber-400">SUSPICIOUS</span>,
+                or <span className="text-rose-400">NOT_FOUND</span> verdict. Alternatively, use the
+                <strong className="text-indigo-300"> Onboarding Form</strong> to draw your digital signature live.
+              </p>
+            </div>
           </div>
           
           <div className="flex gap-4">

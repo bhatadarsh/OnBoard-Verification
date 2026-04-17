@@ -153,6 +153,99 @@ async def upload_onboarding_form(
     }
 
 
+# ============ DIRECT CANDIDATE FORM SUBMISSION ============
+
+class OnboardingFormEntry(BaseModel):
+    # Section 1 — Personal Details
+    full_name: str
+    email: str
+    phone: str
+    dob: Optional[str] = None
+    gender: Optional[str] = None
+
+    # Section 2 — Current Address
+    current_address: Optional[str] = None
+
+    # Section 3 — Permanent Address
+    permanent_address: Optional[str] = None
+
+    # Section 4 — 10th Education
+    school_10th: Optional[str] = None
+    percentage_10th: Optional[str] = None
+    year_10th: Optional[str] = None
+    board_10th: Optional[str] = None
+
+    # Section 5 — 12th Education
+    school_12th: Optional[str] = None
+    percentage_12th: Optional[str] = None
+    year_12th: Optional[str] = None
+    board_12th: Optional[str] = None
+
+    # Section 6 — Graduation
+    graduation_degree: Optional[str] = None
+    graduation_college: Optional[str] = None
+    graduation_year: Optional[str] = None
+
+    # Section 7 — Work Experience
+    current_company: Optional[str] = None
+    current_role: Optional[str] = None
+    experience: Optional[str] = None
+    current_ctc: Optional[str] = None
+    notice_period: Optional[str] = None
+
+    # Section 8 — Government IDs
+    aadhar_number: Optional[str] = None
+    pan_number: Optional[str] = None
+
+    # Section 9 — Bank Details
+    bank_account_number: Optional[str] = None
+    ifsc_code: Optional[str] = None
+    bank_name: Optional[str] = None
+
+
+@router.post("/onboarding/form-entry")
+async def submit_onboarding_form_entry(
+    entry: OnboardingFormEntry,
+    db: Session = Depends(get_db)
+):
+    """
+    Accept a direct JSON onboarding form submission from a candidate.
+    Creates or updates the candidate record — no CSV required.
+    """
+    form_data = {k: v for k, v in entry.dict().items() if v is not None and v != ""}
+
+    candidate_id = generate_candidate_id(entry.full_name, entry.email)
+
+    existing = db.query(Candidate).filter(
+        (Candidate.id == candidate_id) | (Candidate.email == entry.email)
+    ).first() if entry.email else db.query(Candidate).filter(Candidate.id == candidate_id).first()
+
+    if existing:
+        old_form = existing.get_form() or {}
+        old_form.update(form_data)
+        existing.set_form(old_form)
+        # Update top-level fields too
+        existing.full_name = entry.full_name
+        if entry.email:
+            existing.email = entry.email
+        if entry.phone:
+            existing.phone = entry.phone
+        db.commit()
+        return {"status": "updated", "candidate_id": existing.id, "candidate": existing.to_dict()}
+    else:
+        candidate = Candidate(
+            id=candidate_id,
+            full_name=entry.full_name,
+            email=entry.email or "",
+            phone=entry.phone or ""
+        )
+        candidate.set_form(form_data)
+        db.add(candidate)
+        db.commit()
+        db.refresh(candidate)
+        return {"status": "created", "candidate_id": candidate_id, "candidate": candidate.to_dict()}
+
+
 # ============ DOCUMENT UPLOAD ============
 
 @router.post("/documents/{candidate_id}")
@@ -165,6 +258,8 @@ async def upload_documents(
     pan: Optional[UploadFile] = File(None),
     marksheet_10th: Optional[UploadFile] = File(None),
     marksheet_12th: Optional[UploadFile] = File(None),
+    degree_cert: Optional[UploadFile] = File(None),
+    signature: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
     """Upload documents for a candidate."""
@@ -185,7 +280,9 @@ async def upload_documents(
         ("aadhar", aadhar),
         ("pan", pan),
         ("marksheet_10th", marksheet_10th),
-        ("marksheet_12th", marksheet_12th)
+        ("marksheet_12th", marksheet_12th),
+        ("degree_cert", degree_cert),
+        ("signature", signature),
     ]
     
     for name, file in files:

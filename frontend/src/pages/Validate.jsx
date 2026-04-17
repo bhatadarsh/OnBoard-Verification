@@ -69,6 +69,42 @@ const Validate = () => {
                 ))}
               </div>
 
+              {/* Signature Verification Panel */}
+              {selected?.knowledge_base?.signature && (() => {
+                const sig = selected.knowledge_base.signature;
+                const verdictColor = sig.verdict === 'VERIFIED'
+                  ? 'border-emerald-500/40 bg-emerald-900/10 text-emerald-300'
+                  : sig.verdict === 'SUSPICIOUS'
+                  ? 'border-amber-500/40 bg-amber-900/10 text-amber-300'
+                  : 'border-rose-500/40 bg-rose-900/10 text-rose-300';
+                const verdictIcon = sig.verdict === 'VERIFIED' ? '✅' : sig.verdict === 'SUSPICIOUS' ? '⚠️' : '❌';
+                return (
+                  <div className={`border rounded-xl p-5 mb-6 flex items-start gap-4 ${verdictColor}`}>
+                    <span className="text-2xl mt-0.5">{verdictIcon}</span>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-sm uppercase tracking-widest mb-1">
+                        Signature Verification — <span>{sig.verdict || 'UNKNOWN'}</span>
+                      </h4>
+                      <p className="text-xs opacity-80 mb-2">{sig.description || 'No description available.'}</p>
+                      <div className="flex flex-wrap gap-3 text-[10px] font-mono">
+                        <span className={`px-2 py-1 rounded border ${sig.has_signature ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' : 'border-slate-700 text-slate-500'}`}>
+                          Signature Present: {sig.has_signature ? 'Yes' : 'No'}
+                        </span>
+                        <span className={`px-2 py-1 rounded border ${sig.is_genuine ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' : 'border-rose-500/30 bg-rose-500/10 text-rose-400'}`}>
+                          Genuine: {sig.is_genuine ? 'Yes' : 'No'}
+                        </span>
+                        <span className="px-2 py-1 rounded border border-slate-700 text-slate-400">
+                          Confidence: {sig.confidence || 'N/A'}
+                        </span>
+                        <span className={`px-2 py-1 rounded border ${sig.ink_strokes ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-400' : 'border-slate-700 text-slate-500'}`}>
+                          Ink Strokes: {sig.ink_strokes ? 'Detected' : 'Not detected'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Field Validation List */}
               <div className="bg-slate-900/80 rounded-xl shadow-lg border border-slate-800 overflow-hidden">
                 <div className="bg-slate-950/80 border-b border-slate-800 px-6 py-4 flex items-center justify-between">

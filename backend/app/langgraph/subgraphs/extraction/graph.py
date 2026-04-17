@@ -2,6 +2,7 @@
 Extraction Node - Uses LLM Service to extract data from documents.
 """
 import asyncio
+import os
 from typing import Any, Dict
 from app.langgraph.state import GraphState
 from app.services.llm_service import llm_service
@@ -21,6 +22,8 @@ async def extraction_node(state: GraphState) -> Dict[str, Any]:
         "pan_data": {},
         "marksheet_10th_data": {},
         "marksheet_12th_data": {},
+        "degree_cert_data": {},
+        "signature_data": {},
         "knowledge_base": {}
     }
     
@@ -45,6 +48,21 @@ async def extraction_node(state: GraphState) -> Dict[str, Any]:
             tasks["marksheet_10th_data"] = llm_service.extract_from_marksheet(text, "10th")
         elif doc_type == "marksheet_12th":
             tasks["marksheet_12th_data"] = llm_service.extract_from_marksheet(text, "12th")
+        elif doc_type == "degree_cert":
+            tasks["degree_cert_data"] = llm_service.extract_from_degree_cert(text)
+
+    # Signature verification — needs the raw image file path (not extracted text)
+    # We look for the original encrypted file path stored in documents dict
+    signature_path = documents.get("signature", "")
+    if signature_path and os.path.exists(signature_path):
+        from app.langgraph.subgraphs.ingestion.tools import decrypted_tempfile
+        # Run signature verification with decrypted temp file
+        async def _verify_sig():
+            with decrypted_tempfile(signature_path) as tmp:
+                if tmp:
+                    return await llm_service.verify_signature(tmp)
+            return {}
+        tasks["signature_data"] = _verify_sig()
             
     if tasks:
         # Run extractions through an asyncio Semaphore to strictly limit concurrency to 2
@@ -68,10 +86,14 @@ async def extraction_node(state: GraphState) -> Dict[str, Any]:
     
     # Build merged knowledge base
     kb = {}
-    for source in ["resume", "hr_transcript", "aadhar", "pan", "marksheet_10th", "marksheet_12th"]:
+    for source in ["resume", "hr_transcript", "aadhar", "pan", "marksheet_10th", "marksheet_12th", "degree_cert"]:
         data = results.get(f"{source}_data", {})
         if data:
             kb[source] = data
+
+    # Attach signature verification result as a special KB section
+    if results.get("signature_data"):
+        kb["signature"] = results["signature_data"]
     
     results["knowledge_base"] = kb
     

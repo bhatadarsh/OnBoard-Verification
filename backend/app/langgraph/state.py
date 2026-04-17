@@ -42,6 +42,8 @@ class GraphState(TypedDict, total=False):
     pan_data: Dict[str, str]
     marksheet_10th_data: Dict[str, str]
     marksheet_12th_data: Dict[str, str]
+    degree_cert_data: Dict[str, str]
+    signature_data: Dict[str, Any]   # Result of Groq Vision signature verification
     # Merged knowledge base from all sources
     knowledge_base: Dict[str, Any]
     

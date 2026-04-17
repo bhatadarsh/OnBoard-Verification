@@ -10,10 +10,11 @@ const Layout = ({ user, logout, toast, setToast, candidateToDelete, setCandidate
   const navItems = [
     { id: '', icon: '📊', label: 'Dashboard' },
     { id: 'candidates', icon: '👥', label: 'Candidates List' },
-    { id: 'form', icon: '📄', label: '1. Upload CSV Base' },
-    { id: 'docs', icon: '📎', label: '2. Upload Documents' },
-    { id: 'extract', icon: '🧠', label: '3. Extract Data' },
-    { id: 'validate', icon: '✅', label: '4. Run Validation' },
+    { id: 'onboarding', icon: '📝', label: '1. Candidate Form' },
+    { id: 'form', icon: '📄', label: '2. Upload CSV Base' },
+    { id: 'docs', icon: '📎', label: '3. Upload Documents' },
+    { id: 'extract', icon: '🧠', label: '4. Extract Data' },
+    { id: 'validate', icon: '✅', label: '5. Run Validation' },
   ];
 
   return (
