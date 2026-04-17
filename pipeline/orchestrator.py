@@ -29,6 +29,7 @@ from extraction.text_extractor import extract_text
 from extraction.table_extractor import extract_tables
 from extraction.image_extractor import extract_images
 from extraction.chart_extractor import extract_charts
+from extraction.audio_extractor import extract_audio_transcription, AudioResult
 
 # Validation
 from validation.gemini_table_validator import classify_table
@@ -45,6 +46,7 @@ from embeddings.embedding_generator import generate_embeddings
 from storage.postgres_handler import postgres_handler
 from storage.chroma_handler import chroma_handler
 from storage.mongo_handler import mongo_handler
+from storage.audio_storage_handler import audio_storage_handler
 
 # Metadata
 from metadata.structure_extractor import extract_page_structures
@@ -112,6 +114,18 @@ def _show_image_summaries(images: list) -> None:
                 print(f"    ... ({len(img.summary) - 300} more chars)")
         else:
             print(f"  Summary: {img.summary}")
+    print("─" * 60)
+
+
+def _show_audio_results(result: AudioResult) -> None:
+    """Display audio transcription result."""
+    if not result:
+        return
+    print("\n" + "─" * 60)
+    print(f"🎙️  AUDIO TRANSCRIPTION: {result.filename}")
+    print("─" * 60)
+    print(f"  Summary:\n    {result.summary[:300]}...")
+    print(f"  Transcript Preview:\n    {result.transcript[:300]}...")
     print("─" * 60)
 
 
@@ -184,6 +198,7 @@ class PipelineResult:
     tables_non_sql: int = 0
     charts_extracted: int = 0
     images_extracted: int = 0
+    audio_extracted: int = 0
     text_chars: int = 0
 
     embeddings_stored: int = 0
@@ -213,7 +228,7 @@ class PipelineResult:
         }
 
 
-async def run_pipeline(input_path: str) -> List[PipelineResult]:
+async def run_pipeline(input_path: str, candidate_id: Optional[str] = None) -> List[PipelineResult]:
     """Run the full extraction pipeline on an input file or directory."""
     log.info(f"[bold cyan]═══ Starting Data Extraction Pipeline ═══[/]")
     log.info(f"Input: {input_path}")
@@ -223,7 +238,7 @@ async def run_pipeline(input_path: str) -> List[PipelineResult]:
 
     results = []
     for loaded_file in files:
-        result = await _process_file(loaded_file)
+        result = await _process_file(loaded_file, candidate_id)
         results.append(result)
 
     # Final summary
@@ -234,7 +249,8 @@ async def run_pipeline(input_path: str) -> List[PipelineResult]:
         status_icon = "✅" if r.status == "success" else "❌"
         print(f"  {status_icon} {r.file_path}")
         print(f"     tables={r.tables_extracted} charts={r.charts_extracted} "
-              f"images={r.images_extracted} text={r.text_chars} chars")
+              f"images={r.images_extracted} audio={r.audio_extracted} "
+              f"text={r.text_chars} chars")
         print(f"     embeddings={r.embeddings_stored} | PG rows={r.postgres_rows} | {r.duration_seconds:.1f}s")
         if r.errors:
             for err in r.errors:
@@ -244,7 +260,7 @@ async def run_pipeline(input_path: str) -> List[PipelineResult]:
     return results
 
 
-async def _process_file(loaded_file: LoadedFile) -> PipelineResult:
+async def _process_file(loaded_file: LoadedFile, candidate_id: Optional[str] = None) -> PipelineResult:
     """Process a single file through the full pipeline."""
     start = time.time()
     result = PipelineResult(file_path=str(loaded_file.path), file_type=loaded_file.extension)
@@ -267,6 +283,8 @@ async def _process_file(loaded_file: LoadedFile) -> PipelineResult:
             extraction_tasks["images"] = lambda: extract_images(profile)
         if profile.has_charts:
             extraction_tasks["charts"] = lambda: extract_charts(profile)
+        if profile.has_audio:
+            extraction_tasks["audio"] = lambda: extract_audio_transcription(profile)
 
         extraction_results = await run_parallel(extraction_tasks)
 
@@ -289,11 +307,17 @@ async def _process_file(loaded_file: LoadedFile) -> PipelineResult:
         if isinstance(charts, Exception):
             result.errors.append(f"Chart extraction: {charts}")
             charts = []
+        
+        audio_result = extraction_results.get("audio", None)
+        if isinstance(audio_result, Exception):
+            result.errors.append(f"Audio transcription: {audio_result}")
+            audio_result = None
 
         result.text_chars = len(text_result.get("full_text", ""))
         result.tables_extracted = len(tables)
         result.images_extracted = len(images)
         result.charts_extracted = len(charts)
+        result.audio_extracted = 1 if audio_result else 0
 
         # ── Step 3: SHOW extracted content ──
         if text_result:
@@ -302,6 +326,8 @@ async def _process_file(loaded_file: LoadedFile) -> PipelineResult:
             _show_tables(tables)
         if images:
             _show_image_summaries(images)
+        if audio_result:
+            _show_audio_results(audio_result)
 
         # Collect items for embedding
         embed_ids = []
@@ -453,6 +479,23 @@ async def _process_file(loaded_file: LoadedFile) -> PipelineResult:
                     "image_id": img.image_id,
                     "source_file": str(loaded_file.path),
                 })
+
+        # ── Step 7.5: Audio → PostgreSQL + Embed ──
+        if audio_result:
+            print("\n" + "─" * 60)
+            print("🎙️ STORING AUDIO TRANSCRIPTION")
+            print("─" * 60)
+            audio_storage_handler.store_transcript(audio_result, candidate_id or "system")
+            
+            # Embed audio transcript for vector search
+            audio_text = f"Audio Transcript ({audio_result.filename}):\n{audio_result.summary}\n{audio_result.transcript}"
+            embed_ids.append(f"audio_{audio_result.filename}")
+            embed_texts.append(audio_text)
+            embed_metadatas.append({
+                "type": "audio_transcription",
+                "filename": audio_result.filename,
+                "source_file": str(loaded_file.path),
+            })
 
         # ── Step 8: Generate embeddings → ChromaDB ──
         _show_embedding_summary(embed_ids)

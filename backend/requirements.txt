@@ -38,3 +38,9 @@ pytest==8.0.0
 thefuzz==0.22.1
 python-Levenshtein==0.27.3
 
+# Added from feat/stt_to_whisper merge
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+email-validator>=2.0.0
+bcrypt==3.2.0
+azure-storage-blob==12.24.0

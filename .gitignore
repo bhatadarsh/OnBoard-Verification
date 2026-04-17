@@ -6,15 +6,43 @@ __pycache__/
 
 # Environment
 .env
+.venv/
+venv/
+env/
+PYTHON_ENV/
 
 backend/package-lock.json
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.mypy_cache/
+
 # Node
 node_modules/
+dist/
+build/
+.npm
+yarn-error.log
 
 # DB / Local storage
 local_data/
 *.db
+*.sqlite3
+chroma_db/
+uploads/
 
 # Logs
 *.log
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store

@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     gemini_api_key: str = Field(default="", description="Google Gemini API key")
     gemini_model: str = Field(default="gemini-2.0-flash", description="Gemini model name")
 
+    groq_api_key: str = Field(default="", description="Groq API key")
+    llm_model: str = Field(default="llama-3.3-70b-versatile", description="Groq LLM model")
+
+
     # --- Embeddings ---
     embedding_provider: str = Field(default="huggingface", description="Embedding provider: 'huggingface' or 'openai'")
     openai_api_key: str = Field(default="", description="OpenAI API key (only needed if provider=openai)")
@@ -50,6 +54,9 @@ class Settings(BaseSettings):
 
     # --- Input ---
     default_input_path: str = Field(default="../sample docs", description="Default input directory")
+    
+    upload_dir: str = Field(default="./uploads", description="Resume upload directory")
+
 
     class Config:
         env_file = str(ENV_FILE)
