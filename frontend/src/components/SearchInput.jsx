@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const SearchInput = ({ candidates, onSelect, placeholder = "Search...", className = "w-64" }) => {
+const SearchInput = ({ candidates, onSelect, placeholder = "Search..." }) => {
   const [query, setQuery] = useState('');
   const [show, setShow] = useState(false);
   const ref = useRef(null);
@@ -11,34 +11,44 @@ const SearchInput = ({ candidates, onSelect, placeholder = "Search...", classNam
   ).slice(0, 5) : [];
 
   useEffect(() => {
-    const handleClickOutside = (e) => { 
-      if (ref.current && !ref.current.contains(e.target)) setShow(false); 
+    const handleClickOutside = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setShow(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
-    <div ref={ref} className={`relative ${className} z-50`}>
+    <div ref={ref} style={{ position: 'relative', width: 280, zIndex: 50 }}>
       <input
         type="text"
         value={query}
         onChange={e => { setQuery(e.target.value); setShow(true); }}
         onFocus={() => setShow(true)}
         placeholder={placeholder}
-        className="w-full pl-10 pr-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
+        style={{
+          width: '100%', padding: '10px 16px 10px 38px',
+          background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
+          fontSize: 13, color: '#e8f0fe', fontFamily: "'Outfit',sans-serif",
+          outline: 'none', transition: 'all 0.2s',
+        }}
+        onFocusCapture={e => { e.currentTarget.style.borderColor = 'rgba(0,229,255,0.3)'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(0,229,255,0.08)'; }}
+        onBlurCapture={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
       />
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+      <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#475569', fontSize: 14 }}>🔍</span>
       {show && filtered.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 backdrop-blur-xl border border-slate-700 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-          {filtered.map(c => (
-            <div 
-              key={c.id} 
-              onClick={() => { onSelect(c); setQuery(''); setShow(false); }} 
-              className="px-4 py-3 cursor-pointer hover:bg-slate-700/80 border-b border-slate-700 transition-colors last:border-0"
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 8, background: 'rgba(10,22,40,0.95)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, boxShadow: '0 16px 48px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
+          {filtered.map((c, i) => (
+            <div
+              key={c.id}
+              onClick={() => { onSelect(c); setQuery(''); setShow(false); }}
+              style={{ padding: '10px 16px', cursor: 'pointer', borderBottom: i < filtered.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none', transition: 'background 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
-              <div className="font-semibold text-slate-200 text-sm">{c.full_name}</div>
-              <div className="text-xs text-slate-400">{c.email}</div>
+              <div style={{ fontWeight: 600, color: '#e8f0fe', fontSize: 13 }}>{c.full_name}</div>
+              <div style={{ fontSize: 11, color: '#475569', marginTop: 2 }}>{c.email}</div>
             </div>
           ))}
         </div>

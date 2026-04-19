@@ -39,11 +39,17 @@ class AudioStorageHandler:
     def _run_migrations(self):
         """Add candidate_id column to existing audio table if it doesn't exist."""
         try:
-            with postgres_handler.engine.begin() as conn:
-                conn.execute(__import__('sqlalchemy').text(
-                    "ALTER TABLE audio_transcriptions ADD COLUMN IF NOT EXISTS candidate_id VARCHAR(50)"
-                ))
-            log.info("Audio table migration applied (candidate_id column ensured)")
+            with postgres_handler.engine.connect() as conn:
+                # SQLite doesn't support ADD COLUMN IF NOT EXISTS
+                res = conn.execute(__import__('sqlalchemy').text("PRAGMA table_info(audio_transcriptions)"))
+                columns = [row[1] for row in res.fetchall()]
+                
+                if "candidate_id" not in columns:
+                    conn.execute(__import__('sqlalchemy').text(
+                        "ALTER TABLE audio_transcriptions ADD COLUMN candidate_id VARCHAR(50)"
+                    ))
+                    conn.commit()
+            log.info("Audio table migration checked/applied")
         except Exception as e:
             log.error(f"Audio migration error: {e}")
 

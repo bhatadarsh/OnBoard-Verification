@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000';
+// Single backend entry point — all modules route through port 8000
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const OG_API      = import.meta.env.VITE_OG_API_PREFIX || '/api/v1';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -100,6 +102,56 @@ export const blobAPI = {
         });
         return response.data;
     }
+};
+
+/**
+ * onboardAPI — covers all /api/v1/* routes:
+ *   - OnboardGuard validation endpoints
+ *   - Hetero extraction (candidate_routes)
+ *   - Auth for onboarding module
+ */
+export const onboardAPI = {
+    // Candidates
+    getCandidates: async () => {
+        const r = await api.get(`${OG_API}/candidates`);
+        return r.data;
+    },
+    getCandidate: async (id) => {
+        const r = await api.get(`${OG_API}/candidate/${id}`);
+        return r.data;
+    },
+    deleteCandidate: async (id) => {
+        const r = await api.delete(`${OG_API}/candidate/${id}`);
+        return r.data;
+    },
+    // Upload onboarding form CSV
+    uploadForm: async (file) => {
+        const fd = new FormData();
+        fd.append('form_file', file);
+        const r = await api.post(`${OG_API}/onboarding/upload`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        return r.data;
+    },
+    // Upload documents for a candidate
+    uploadDocuments: async (candidateId, docFiles) => {
+        const fd = new FormData();
+        Object.entries(docFiles).forEach(([k, f]) => f && fd.append(k, f));
+        const r = await api.post(`${OG_API}/documents/${candidateId}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        return r.data;
+    },
+    // Streaming extraction via SSE
+    extractUrl: (candidateId) => `${API_BASE_URL}${OG_API}/extract/${candidateId}`,
+    // Validate
+    validate: async (candidateId) => {
+        const r = await api.post(`${OG_API}/validate/${candidateId}`);
+        return r.data;
+    },
+    // Resolve ambiguous field
+    resolve: async (candidateId, field, resolution) => {
+        const r = await api.post(`${OG_API}/resolve/${candidateId}`, { field, resolution });
+        return r.data;
+    },
+    // Redacted document URL
+    redactedDocUrl: (candidateId, docName) => `${API_BASE_URL}${OG_API}/documents/${candidateId}/${docName}/redacted`,
 };
 
 userAPI.uploadResume = async (file, jobId) => {

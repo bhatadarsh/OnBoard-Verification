@@ -207,6 +207,22 @@
       "role": "admin",
       "status": "active",
       "hashed_password": "$2b$12$/CtAHL/Es7lWdUmWh2fe.O.N2koOpamFSNaGoZnqEXly5X06AHLly"
+    },
+    "test@test.com": {
+      "id": 126,
+      "name": "TestAdmin",
+      "email": "test@test.com",
+      "role": "admin",
+      "status": "active",
+      "hashed_password": "$2b$12$d2uuIR91m6iR/Wm/w8pV9O6Xk8K/M3Dxd0WQjFQG04XOv3sBFLtxi"
+    },
+    "my@demo.com": {
+      "id": 127,
+      "name": "demo",
+      "email": "my@demo.com",
+      "role": "user",
+      "status": "active",
+      "hashed_password": "$2b$12$1ijCSSOH0PdqQiKe/v2nte.XVQUvzYYow5VnztaYFWwSOAcuO830S"
     }
   },
   "jds": {
@@ -2336,315 +2352,6 @@
       "uploaded_at": "2026-04-06 15:02:23.682922",
       "intelligence": {
         "candidate_id": "95",
-        "raw_resume": "First LastData Scientist\nData Scientist with three years of experience in analyzing large data sets and coming upwith data-driven insights for early-stage technology companies. Worked in teams of 8-12team members.\nWORK EXPERIENCE\n______________________________________________________________________Junior Data Scientist November 2015 \u2013 PresentResume Worded, New York, NY\n\u25cf Launched Miami o\ufb03ce with lead Director and recruited a new team of10 employees; grew o\ufb03ce revenue by 200% in \ufb01rst nine months(representing 20% of company revenue). Led redesign of mobile appand website.\u25cf Led the \ufb01rst major effort to A/B test the company's e-commerce salespage and optimize it for customer acquisition; resulted in a 7.5%increase in conversions\u25cf Built Tableau dashboard using data from Amplitude and Segment tovisualize core business KPIs (e.g. Monthly Recurring Revenue), saving10 hours per week of manual reporting work\u25cf Reduced signup drop-offs from 65% to 15% and increased userengagement by 40%, through a combination of hypothesis testing,segmentation analysis and machine learning algorithms\nBusiness Analyst June 2013 \u2013 October 2015Growthsi, San Francisco, CA\n\u25cf Developed product strategies for lead Director and trained the teamas it grew to 25 employees. Led redesign of mobile app and website.\u25cf Spearheaded a major pricing restructure by redirecting focus onconsumer willingness to pay instead of product cost; implemented athree-tiered pricing model which increased average sale 35% andmargin 12%\u25cf Designed training and peer-mentoring programs for the incomingclass of 25 analysts in 2017; reduced onboarding time for new hiresby 50%\u25cf Bullet points in format [Action Verb] [Accomplishment] [Metric]\nBusiness Development Consultant August 2010 \u2013 January2013Resume Worded\u2019s Exciting Company, New York, NY\n\u25cf Liaised with C-level executives of My Exciting Company, a RWVentures-backed ecommerce marketplace website with 100kmembers which helps designers sell their artwork and designs tobusinesses.\u25cf Strengthened relationships with 6 strategic partners (includingExpedia, Skyscanner and Airbnb) through follow-up meetings withC-suite executives\u25cf Developed and executed customer referral program, leading to 50%increase in referral business and $2MM of incremental revenue\u25cf Bullet points in format [Action Verb] [Accomplishment] [Metric]\nCONTACT\n______________________________\n\u2022\nDenver, OH (Open to Remote)\u2022\n+1-234-456-789\u2022\nemail@resumeworded.com\u2022\nlinkedin.com/in/username\u2022\ngithub.com/resumeworded\nSKILLS\n______________________________\nData Visualization/Engineering:\u2022\nTableau (Advanced)\u2022\nLooker (Experienced)\u2022\nSegment\u2022\nAmplitude\u2022\nRecruiter note: enter skills fromjob description here\nTechniques:\u2022\nHypothesis Testing\u2022\nRecommendation Engines\u2022\nCustomer Segmentation Analysis\nTools and Frameworks:\u2022\nElasticSearch\u2022\nPython (Keras, Scikit-learn)\u2022\nHadoop\u2022\nPython\u2022\nDatabases (MySQL)\n\u2022\nDon\u2019t forget to useResumeWordedto scan your resumebefore you send it off (it\u2019s free andproven to get you more jobs)\nEDUCATION\n______________________________Resume Worded UniversityBachelor of EngineeringMajor in Computer ScienceMinors in Mathematics and StatisticsBoston, MA \u2014 May 2018Awards: Resume Worded TeachingFellow (only 5 awarded to class), Dean\u2019sList 2012 (Top 10%)\nOTHER\n_____________________________\u2022\nVolunteered in a 3-month datascience Project, run by ACBCorporation Inc. )\u2022\nABC Certi\ufb01cation (2022)\u2022\nCompleted 10+ competitions onKaggle in 2021.",
-        "normalized_resume": "First LastData Scientist\nData Scientist with three years of experience in analyzing large data sets and coming upwith data-driven insights for early-stage technology companies. Worked in teams of 8-12team members.\nWORK EXPERIENCE\n______________________________________________________________________Junior Data Scientist November 2015 \u2013 PresentResume Worded, New York, NY\n- Launched Miami o\ufb03ce with lead Director and recruited a new team of10 employees; grew o\ufb03ce revenue by 200% in \ufb01rst nine months(representing 20% of company revenue). Led redesign of mobile appand website.- Led the \ufb01rst major effort to A/B test the company's e-commerce salespage and optimize it for customer acquisition; resulted in a 7.5%increase in conversions- Built Tableau dashboard using data from Amplitude and Segment tovisualize core business KPIs (e.g. Monthly Recurring Revenue), saving10 hours per week of manual reporting work- Reduced signup drop-offs from 65% to 15% and increased userengagement by 40%, through a combination of hypothesis testing,segmentation analysis and machine learning algorithms\nBusiness Analyst June 2013 \u2013 October 2015Growthsi, San Francisco, CA\n- Developed product strategies for lead Director and trained the teamas it grew to 25 employees. Led redesign of mobile app and website.- Spearheaded a major pricing restructure by redirecting focus onconsumer willingness to pay instead of product cost; implemented athree-tiered pricing model which increased average sale 35% andmargin 12%- Designed training and peer-mentoring programs for the incomingclass of 25 analysts in 2017; reduced onboarding time for new hiresby 50%- Bullet points in format [Action Verb] [Accomplishment] [Metric]\nBusiness Development Consultant August 2010 \u2013 January2013Resume Worded\u2019s Exciting Company, New York, NY\n- Liaised with C-level executives of My Exciting Company, a RWVentures-backed ecommerce marketplace website with 100kmembers which helps designers sell their artwork and designs tobusinesses.- Strengthened relationships with 6 strategic partners (includingExpedia, Skyscanner and Airbnb) through follow-up meetings withC-suite executives- Developed and executed customer referral program, leading to 50%increase in referral business and $2MM of incremental revenue- Bullet points in format [Action Verb] [Accomplishment] [Metric]\nCONTACT\n______________________________\n-\nDenver, OH (Open to Remote)-\n+1-234-456-789-\nemail@resumeworded.com-\nlinkedin.com/in/username-\ngithub.com/resumeworded\nSKILLS\n______________________________\nData Visualization/Engineering:-\nTableau (Advanced)-\nLooker (Experienced)-\nSegment-\nAmplitude-\nRecruiter note: enter skills fromjob description here\nTechniques:-\nHypothesis Testing-\nRecommendation Engines-\nCustomer Segmentation Analysis\nTools and Frameworks:-\nElasticSearch-\nPython (Keras, Scikit-learn)-\nHadoop-\nPython-\nDatabases (MySQL)\n-\nDon\u2019t forget to useResumeWordedto scan your resumebefore you send it off (it\u2019s free andproven to get you more jobs)\nEDUCATION\n______________________________Resume Worded UniversityBachelor of EngineeringMajor in Computer ScienceMinors in Mathematics and StatisticsBoston, MA \u2014 May 2018Awards: Resume Worded TeachingFellow (only 5 awarded to class), Dean\u2019sList 2012 (Top 10%)\nOTHER\n_____________________________-\nVolunteered in a 3-month datascience Project, run by ACBCorporation Inc. )-\nABC Certi\ufb01cation (2022)-\nCompleted 10+ competitions onKaggle in 2021.",
-        "resume_claims": {
-          "skills_claimed": [
-            "data visualization",
-            "tableau",
-            "looker",
-            "segment",
-            "amplitude",
-            "hypothesis testing",
-            "recommendation engines",
-            "customer segmentation analysis",
-            "elasticsearch",
-            "python",
-            "keras",
-            "scikit-learn",
-            "hadoop",
-            "databases",
-            "mysql"
-          ],
-          "projects": [
-            {
-              "project_name": "launched miami office",
-              "responsibilities": [
-                "recruited a new team of 10 employees",
-                "grew office revenue by 200%",
-                "led redesign of mobile app and website"
-              ]
-            },
-            {
-              "project_name": "a/b test e-commerce sales page",
-              "responsibilities": [
-                "led the first major effort to a/b test the company's e-commerce sales page",
-                "optimized it for customer acquisition"
-              ]
-            },
-            {
-              "project_name": "built tableau dashboard",
-              "responsibilities": [
-                "built tableau dashboard using data from amplitude and segment",
-                "visualized core business kpis"
-              ]
-            },
-            {
-              "project_name": "reduced signup drop-offs",
-              "responsibilities": [
-                "reduced signup drop-offs from 65% to 15%",
-                "increased user engagement by 40%"
-              ]
-            },
-            {
-              "project_name": "developed product strategies",
-              "responsibilities": [
-                "developed product strategies for lead director",
-                "trained the team as it grew to 25 employees"
-              ]
-            },
-            {
-              "project_name": "led redesign of mobile app and website",
-              "responsibilities": [
-                "led redesign of mobile app and website"
-              ]
-            },
-            {
-              "project_name": "spearheaded pricing restructure",
-              "responsibilities": [
-                "spearheaded a major pricing restructure",
-                "implemented a three-tiered pricing model"
-              ]
-            },
-            {
-              "project_name": "designed training and peer-mentoring programs",
-              "responsibilities": [
-                "designed training and peer-mentoring programs for the incoming class of 25 analysts"
-              ]
-            },
-            {
-              "project_name": "liaised with c-level executives",
-              "responsibilities": [
-                "liaised with c-level executives of my exciting company"
-              ]
-            },
-            {
-              "project_name": "strengthened relationships with strategic partners",
-              "responsibilities": [
-                "strengthened relationships with 6 strategic partners"
-              ]
-            },
-            {
-              "project_name": "developed and executed customer referral program",
-              "responsibilities": [
-                "developed and executed customer referral program"
-              ]
-            }
-          ],
-          "roles_and_ownership": [
-            "lead director",
-            "director",
-            "business analyst",
-            "business development consultant"
-          ],
-          "experience_signals": [
-            "grew office revenue by 200%",
-            "increased average sale 35%",
-            "increased margin 12%",
-            "reduced onboarding time for new hires by 50%",
-            "increased referral business by 50%",
-            "generated $2MM of incremental revenue"
-          ]
-        },
-        "match_scores": {
-          "core_skill_match": 0.334,
-          "project_alignment": 0.273,
-          "conceptual_alignment": 0.159
-        },
-        "evidence_map": {
-          "strongly_supported": [
-            "data visualization",
-            "tableau",
-            "looker",
-            "segment",
-            "amplitude",
-            "hypothesis testing",
-            "customer segmentation analysis",
-            "elasticsearch",
-            "python",
-            "keras",
-            "scikit-learn",
-            "hadoop",
-            "mysql"
-          ],
-          "weakly_supported": [
-            "recommendation engines",
-            "databases"
-          ],
-          "unsupported_claims": [
-            "databases"
-          ]
-        },
-        "role_context": {
-          "primary_role": "HR Database Administrator",
-          "seniority": "Mid",
-          "primary_domain": "Data",
-          "confidence": 0.8
-        },
-        "skill_intelligence": {
-          "core_skills": [
-            "manage end-to-end recruitment processes",
-            "maintain employee records and databases",
-            "support performance appraisal and development initiatives",
-            "ensure compliance with company policies and labor laws"
-          ],
-          "secondary_skills": [
-            "address employee queries and grievances",
-            "promote a healthy work culture",
-            "coordinate attendance, leave, and payroll"
-          ],
-          "tools": [
-            "ms office",
-            "hrms tools"
-          ],
-          "programming_languages": []
-        },
-        "competency_profile": {
-          "experience_range": "1-3 years",
-          "ownership_expectations": "process ownership",
-          "problem_complexity": "simple to moderate",
-          "decision_making_scope": "individual",
-          "execution_expectations": "coordinate and maintain existing processes"
-        },
-        "interview_requirements": {
-          "primary_focus_areas": [
-            "end-to-end recruitment processes",
-            "employee records and databases",
-            "performance appraisal and development initiatives",
-            "compliance with company policies and labor laws"
-          ],
-          "secondary_focus_areas": [
-            "employee queries and grievances",
-            "healthy work culture",
-            "attendance, leave, and payroll"
-          ],
-          "evaluation_dimensions": [
-            "problem-solving",
-            "technical depth and reasoning",
-            "process ownership",
-            "end-to-end ownership",
-            "coordination and maintenance"
-          ]
-        },
-        "exaggeration_penalty": 0.03,
-        "penalty_breakdown": {
-          "unsupported_core_skills": [],
-          "weak_focus_areas": [],
-          "buzzword_only_claims": [
-            "databases"
-          ]
-        },
-        "final_score": 0.275,
-        "shortlist_decision": false,
-        "shortlist_reason": {
-          "matched_core_skills": [
-            "manage end-to-end recruitment processes"
-          ],
-          "aligned_projects": [
-            {
-              "project_name": "launched miami office",
-              "responsibilities": [
-                "recruited a new team of 10 employees",
-                "grew office revenue by 200%",
-                "led redesign of mobile app and website"
-              ]
-            },
-            {
-              "project_name": "a/b test e-commerce sales page",
-              "responsibilities": [
-                "led the first major effort to a/b test the company's e-commerce sales page",
-                "optimized it for customer acquisition"
-              ]
-            },
-            {
-              "project_name": "built tableau dashboard",
-              "responsibilities": [
-                "built tableau dashboard using data from amplitude and segment",
-                "visualized core business kpis"
-              ]
-            },
-            {
-              "project_name": "reduced signup drop-offs",
-              "responsibilities": [
-                "reduced signup drop-offs from 65% to 15%",
-                "increased user engagement by 40%"
-              ]
-            },
-            {
-              "project_name": "developed product strategies",
-              "responsibilities": [
-                "developed product strategies for lead director",
-                "trained the team as it grew to 25 employees"
-              ]
-            },
-            {
-              "project_name": "led redesign of mobile app and website",
-              "responsibilities": [
-                "led redesign of mobile app and website"
-              ]
-            },
-            {
-              "project_name": "spearheaded pricing restructure",
-              "responsibilities": [
-                "spearheaded a major pricing restructure",
-                "implemented a three-tiered pricing model"
-              ]
-            },
-            {
-              "project_name": "designed training and peer-mentoring programs",
-              "responsibilities": [
-                "designed training and peer-mentoring programs for the incoming class of 25 analysts"
-              ]
-            },
-            {
-              "project_name": "liaised with c-level executives",
-              "responsibilities": [
-                "liaised with c-level executives of my exciting company"
-              ]
-            },
-            {
-              "project_name": "strengthened relationships with strategic partners",
-              "responsibilities": [
-                "strengthened relationships with 6 strategic partners"
-              ]
-            },
-            {
-              "project_name": "developed and executed customer referral program",
-              "responsibilities": [
-                "developed and executed customer referral program"
-              ]
-            }
-          ],
-          "penalties_applied": {
-            "unsupported_core_skills": [],
-            "weak_focus_areas": [],
-            "buzzword_only_claims": [
-              "databases"
-            ]
-          },
-          "experience_metadata": {
-            "jd_required_years": 3.0,
-            "candidate_years": null,
-            "flexibility_applied": false,
-            "note": null
-          }
-        },
-        "admin_insights": {
-          "matched_skills_summary": "The candidate's resume indicates that they have experience in managing end-to-end recruitment processes, which aligns with the core skill requirement of the HR Database Administrator role. This skill is essential for the role, as it involves overseeing the entire recruitment process from start to finish. The candidate's ability to manage recruitment processes effectively will be beneficial in ensuring the smooth operation of the HR department.",
-          "candidate_strengths": "The candidate's resume showcases their practical experience in data analysis and visualization, as evident from their projects involving data visualization using Tableau and Amplitude. Additionally, their experience in leading redesign efforts and spearheading pricing restructuring demonstrates their ability to drive business growth and improvement. These strengths are particularly relevant to the HR Database Administrator role, where data analysis and business acumen are crucial for making informed decisions and driving business outcomes."
-        }
-      }
-    },
-    {
-      "candidate_id": 96,
-      "job_id": "JOB_13",
-      "resume_id": "28e70287-8c0c-4d33-95f0-baadd7f0fb42",
-      "resume_blob_path": "resumes/CAND_96/20260406_190316_DS-resume-dataset.pdf",
-      "status": "UNDER_REVIEW",
-      "interview_unlocked": false,
-      "uploaded_at": "2026-04-06 19:03:24.874373",
-      "intelligence": {
-        "candidate_id": "96",
         "raw_resume": "First LastData Scientist\nData Scientist with three years of experience in analyzing large data sets and coming upwith data-driven insights for early-stage technology companies. Worked in teams of 8-12team members.\nWORK EXPERIENCE\n______________________________________________________________________Junior Data Scientist November 2015 \u2013 PresentResume Worded, New York, NY\n\u25cf Launched Miami o\ufb03ce with lead Director and recruited a new team of10 employees; grew o\ufb03ce revenue by 200% in \ufb01rst nine months(representing 20% of company revenue). Led redesign of mobile appand website.\u25cf Led the \ufb01rst major effort to A/B test the company's e-commerce salespage and optimize it for customer acquisition; resulted in a 7.5%increase in conversions\u25cf Built Tableau dashboard using data from Amplitude and Segment tovisualize core business KPIs (e.g. Monthly Recurring Revenue), saving10 hours per week of manual reporting work\u25cf Reduced signup drop-offs from 65% to 15% and increased userengagement by 40%, through a combination of hypothesis testing,segmentation analysis and machine learning algorithms\nBusiness Analyst June 2013 \u2013 October 2015Growthsi, San Francisco, CA\n\u25cf Developed product strategies for lead Director and trained the teamas it grew to 25 employees. Led redesign of mobile app and website.\u25cf Spearheaded a major pricing restructure by redirecting focus onconsumer willingness to pay instead of product cost; implemented athree-tiered pricing model which increased average sale 35% andmargin 12%\u25cf Designed training and peer-mentoring programs for the incomingclass of 25 analysts in 2017; reduced onboarding time for new hiresby 50%\u25cf Bullet points in format [Action Verb] [Accomplishment] [Metric]\nBusiness Development Consultant August 2010 \u2013 January2013Resume Worded\u2019s Exciting Company, New York, NY\n\u25cf Liaised with C-level executives of My Exciting Company, a RWVentures-backed ecommerce marketplace website with 100kmembers which helps designers sell their artwork and designs tobusinesses.\u25cf Strengthened relationships with 6 strategic partners (includingExpedia, Skyscanner and Airbnb) through follow-up meetings withC-suite executives\u25cf Developed and executed customer referral program, leading to 50%increase in referral business and $2MM of incremental revenue\u25cf Bullet points in format [Action Verb] [Accomplishment] [Metric]\nCONTACT\n______________________________\n\u2022\nDenver, OH (Open to Remote)\u2022\n+1-234-456-789\u2022\nemail@resumeworded.com\u2022\nlinkedin.com/in/username\u2022\ngithub.com/resumeworded\nSKILLS\n______________________________\nData Visualization/Engineering:\u2022\nTableau (Advanced)\u2022\nLooker (Experienced)\u2022\nSegment\u2022\nAmplitude\u2022\nRecruiter note: enter skills fromjob description here\nTechniques:\u2022\nHypothesis Testing\u2022\nRecommendation Engines\u2022\nCustomer Segmentation Analysis\nTools and Frameworks:\u2022\nElasticSearch\u2022\nPython (Keras, Scikit-learn)\u2022\nHadoop\u2022\nPython\u2022\nDatabases (MySQL)\n\u2022\nDon\u2019t forget to useResumeWordedto scan your resumebefore you send it off (it\u2019s free andproven to get you more jobs)\nEDUCATION\n______________________________Resume Worded UniversityBachelor of EngineeringMajor in Computer ScienceMinors in Mathematics and StatisticsBoston, MA \u2014 May 2018Awards: Resume Worded TeachingFellow (only 5 awarded to class), Dean\u2019sList 2012 (Top 10%)\nOTHER\n_____________________________\u2022\nVolunteered in a 3-month datascience Project, run by ACBCorporation Inc. )\u2022\nABC Certi\ufb01cation (2022)\u2022\nCompleted 10+ competitions onKaggle in 2021.",
         "normalized_resume": "First LastData Scientist\nData Scientist with three years of experience in analyzing large data sets and coming upwith data-driven insights for early-stage technology companies. Worked in teams of 8-12team members.\nWORK EXPERIENCE\n______________________________________________________________________Junior Data Scientist November 2015 \u2013 PresentResume Worded, New York, NY\n- Launched Miami o\ufb03ce with lead Director and recruited a new team of10 employees; grew o\ufb03ce revenue by 200% in \ufb01rst nine months(representing 20% of company revenue). Led redesign of mobile appand website.- Led the \ufb01rst major effort to A/B test the company's e-commerce salespage and optimize it for customer acquisition; resulted in a 7.5%increase in conversions- Built Tableau dashboard using data from Amplitude and Segment tovisualize core business KPIs (e.g. Monthly Recurring Revenue), saving10 hours per week of manual reporting work- Reduced signup drop-offs from 65% to 15% and increased userengagement by 40%, through a combination of hypothesis testing,segmentation analysis and machine learning algorithms\nBusiness Analyst June 2013 \u2013 October 2015Growthsi, San Francisco, CA\n- Developed product strategies for lead Director and trained the teamas it grew to 25 employees. Led redesign of mobile app and website.- Spearheaded a major pricing restructure by redirecting focus onconsumer willingness to pay instead of product cost; implemented athree-tiered pricing model which increased average sale 35% andmargin 12%- Designed training and peer-mentoring programs for the incomingclass of 25 analysts in 2017; reduced onboarding time for new hiresby 50%- Bullet points in format [Action Verb] [Accomplishment] [Metric]\nBusiness Development Consultant August 2010 \u2013 January2013Resume Worded\u2019s Exciting Company, New York, NY\n- Liaised with C-level executives of My Exciting Company, a RWVentures-backed ecommerce marketplace website with 100kmembers which helps designers sell their artwork and designs tobusinesses.- Strengthened relationships with 6 strategic partners (includingExpedia, Skyscanner and Airbnb) through follow-up meetings withC-suite executives- Developed and executed customer referral program, leading to 50%increase in referral business and $2MM of incremental revenue- Bullet points in format [Action Verb] [Accomplishment] [Metric]\nCONTACT\n______________________________\n-\nDenver, OH (Open to Remote)-\n+1-234-456-789-\nemail@resumeworded.com-\nlinkedin.com/in/username-\ngithub.com/resumeworded\nSKILLS\n______________________________\nData Visualization/Engineering:-\nTableau (Advanced)-\nLooker (Experienced)-\nSegment-\nAmplitude-\nRecruiter note: enter skills fromjob description here\nTechniques:-\nHypothesis Testing-\nRecommendation Engines-\nCustomer Segmentation Analysis\nTools and Frameworks:-\nElasticSearch-\nPython (Keras, Scikit-learn)-\nHadoop-\nPython-\nDatabases (MySQL)\n-\nDon\u2019t forget to useResumeWordedto scan your resumebefore you send it off (it\u2019s free andproven to get you more jobs)\nEDUCATION\n______________________________Resume Worded UniversityBachelor of EngineeringMajor in Computer ScienceMinors in Mathematics and StatisticsBoston, MA \u2014 May 2018Awards: Resume Worded TeachingFellow (only 5 awarded to class), Dean\u2019sList 2012 (Top 10%)\nOTHER\n_____________________________-\nVolunteered in a 3-month datascience Project, run by ACBCorporation Inc. )-\nABC Certi\ufb01cation (2022)-\nCompleted 10+ competitions onKaggle in 2021.",
         "resume_claims": {
@@ -7665,5 +7372,5 @@
       }
     }
   ],
-  "user_id_counter": 125
+  "user_id_counter": 129
 }

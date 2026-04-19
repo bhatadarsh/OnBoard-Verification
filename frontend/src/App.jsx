@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 
-// Pages
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+// AI HirePro Global Pages
+import LandingPage from './components/LandingPage';
+import Login from './components/Login';
+import Register from './components/Register';
+import AdminPortal from './pages/AdminPortal';
+
+// Interview Agent Components
+import UserDashboard from './components/UserDashboard';
+import AdminDashboard from './components/AdminDashboard';
+import InterviewSession from './components/InterviewSession';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// OnboardGuard / Extraction Components
+import OGDashboard from './pages/Dashboard';
 import Candidates from './pages/Candidates';
 import UploadForm from './pages/UploadForm';
 import UploadDocs from './pages/UploadDocs';
 import Extract from './pages/Extract';
 import Validate from './pages/Validate';
-
-// Components
 import Layout from './components/Layout';
+import { onboardAPI } from './api/client';
 
-const API = '/api/v1';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API = `${API_BASE}/api/v1`;
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -27,47 +38,59 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [candidateToDelete, setCandidateToDelete] = useState(null);
-  
-  // Streaming state
   const [extractLogs, setExtractLogs] = useState([]);
 
   const navigate = useNavigate();
 
+  // OnboardGuard legacy auth compat + Initial Fetch
   useEffect(() => { 
-    const s = localStorage.getItem('og_user'); 
-    if (s) {
-      setUser(JSON.parse(s)); 
+    const s = localStorage.getItem('token'); 
+    if (s && !user) {
+      setUser({ name: localStorage.getItem('userName') || 'User', token: s }); 
     }
+    refresh(); // Load candidates on mount
   }, []);
 
-  useEffect(() => { 
-    if (user) { 
-      localStorage.setItem('og_user', JSON.stringify(user)); 
-      refresh(); 
-    } 
-  }, [user]);
-
   const logout = () => {
-    localStorage.removeItem('og_user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('role');
     setUser(null);
+    navigate('/');
   };
 
   const show = (msg, type = 'success') => setToast({ msg, type });
-  const refresh = () => fetch(`${API}/candidates`).then(r => r.json()).then(d => setCandidates(d.candidates || []));
-  const load = async (id) => { const r = await fetch(`${API}/candidate/${id}`); if (r.ok) setSelected(await r.json()); };
-
-  const triggerDelete = (candidate) => {
-    setCandidateToDelete(candidate);
+  const refresh = async () => {
+    try {
+      const d = await onboardAPI.getCandidates();
+      setCandidates(d.candidates || []);
+    } catch (e) {
+      console.error('refresh failed:', e);
+    }
   };
+
+  const load = async (id) => {
+    try {
+      const d = await onboardAPI.getCandidate(id);
+      setSelected(d);
+    } catch (e) {
+      console.error('load failed:', e);
+    }
+  };
+
+  const triggerDelete = (candidate) => setCandidateToDelete(candidate);
 
   const confirmDelete = async () => {
     if (!candidateToDelete) return;
     setLoading(true);
-    const r = await fetch(`${API}/candidate/${candidateToDelete.id}`, { method: 'DELETE' });
-    if (r.ok) { 
+    try {
+      await onboardAPI.deleteCandidate(candidateToDelete.id);
       show('Candidate deleted successfully'); 
       if(selected?.id === candidateToDelete.id) setSelected(null); 
-      refresh(); 
+      await refresh(); 
+    } catch (e) {
+      show('Delete failed: ' + (e.response?.data?.detail || e.message), 'error');
     }
     setCandidateToDelete(null);
     setLoading(false);
@@ -76,16 +99,15 @@ export default function App() {
   const uploadForm = async () => {
     if (!formFile) return show('Please select a file first', 'error');
     setLoading(true);
-    const fd = new FormData(); fd.append('form_file', formFile);
-    const r = await fetch(`${API}/onboarding/upload`, { method: 'POST', body: fd });
-    const d = await r.json();
-    if (r.ok) { 
-      show(`Uploaded successfully: ${d.candidates?.filter(c => c.status === 'created').length || 0} candidates added.`); 
+    try {
+      const d = await onboardAPI.uploadForm(formFile);
+      const added = d.candidates?.filter(c => c.status === 'created').length ?? d.candidates_count ?? 0;
+      show(`✓ ${added} candidate${added !== 1 ? 's' : ''} imported successfully`); 
       setFormFile(null); 
-      refresh(); 
-      navigate('/candidates');
-    } else {
-      show(d.detail || 'Upload Failed', 'error');
+      await refresh(); 
+      navigate('/onboarding/candidates');
+    } catch (e) {
+      show('Upload failed: ' + (e.response?.data?.detail || e.message), 'error');
     }
     setLoading(false);
   };
@@ -94,88 +116,69 @@ export default function App() {
     if (!selected) return show('Please select a candidate first', 'error');
     if (!Object.values(docFiles).some(f => f)) return show('No documents provided', 'error');
     setLoading(true);
-    const fd = new FormData();
-    Object.entries(docFiles).forEach(([k, f]) => f && fd.append(k, f));
-    const r = await fetch(`${API}/documents/${selected.id}`, { method: 'POST', body: fd });
-    if (r.ok) { 
-      show('Documents securely uploaded'); 
-      setDocFiles({}); 
-      refresh(); 
-      load(selected.id); 
-      navigate('/extract');
-    } else {
-      show('Upload Failed', 'error');
+    try {
+      await onboardAPI.uploadDocuments(selected.id, docFiles);
+      show('Documents uploaded — building Knowledge Base...', 'info');
+      setDocFiles({});
+      refresh();
+      await load(selected.id);
+      // ── Auto-trigger extraction in background ──────────────────────────
+      await extractForCandidate(selected.id);
+    } catch (e) {
+      show('Document upload failed: ' + (e.response?.data?.detail || e.message), 'error');
     }
     setLoading(false);
   };
 
+  // Standalone extract triggered from UploadDocs automatically
+  const extractForCandidate = async (candidateId) => {
+    if (!candidateId) return;
+    setExtractLogs([]);
+    navigate('/onboarding/docs'); // stay on docs page, showing progress
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API}/extract/${candidateId}`, { 
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let done = false;
+      let finalData = null;
+      while (!done) {
+        const { value, done: streamDone } = await reader.read();
+        if (streamDone) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split('\n')) {
+          if (!line.startsWith('data: ')) continue;
+          const raw = line.replace('data: ', '').trim();
+          if (!raw) continue;
+          try {
+            const evt = JSON.parse(raw);
+            if (evt.type === 'log') setExtractLogs(prev => [...prev, evt.message]);
+            else if (evt.type === 'result') { finalData = evt; done = true; }
+            else if (evt.type === 'error') { show(evt.message || 'Extraction failed', 'error'); done = true; }
+          } catch { setExtractLogs(prev => [...prev, raw]); }
+        }
+      }
+      if (finalData) {
+        show(`✓ Knowledge Base built — ${finalData.sources_extracted?.length || 0} documents indexed`, 'success');
+        refresh();
+        await load(candidateId);
+        navigate('/onboarding/validate');
+      }
+    } catch (e) {
+      show(e.message || 'Extraction failed', 'error');
+    }
+  };
+
+  // Manual extract (kept for direct URL access to /onboarding/extract)
   const extract = async () => {
     if (!selected) return show('Please select a candidate', 'error');
     setLoading(true);
-    setExtractLogs([]);
-    show('Starting data extraction...', 'info');
-    
-    try {
-      const response = await fetch(`${API}/extract/${selected.id}`, { method: 'POST' });
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-      
-      let extractionDone = false;
-      let finalData = null;
-
-      while (!extractionDone) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
-        
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const dataStr = line.replace('data: ', '').trim();
-            if (!dataStr) continue;
-            
-            try {
-              const data = JSON.parse(dataStr);
-              if (data.type === 'log') {
-                setExtractLogs(prev => [...prev, data.message]);
-              } else if (data.type === 'stream') {
-                // Stream chunks are ignored in logs to prevent spam, or we could aggregate them. Let's append to last log
-                setExtractLogs(prev => {
-                  const arr = [...prev];
-                  if (arr.length > 0 && !arr[arr.length - 1].startsWith('>')) {
-                    arr[arr.length - 1] += data.message;
-                  } else {
-                    arr.push(data.message);
-                  }
-                  return arr;
-                });
-              } else if (data.type === 'result') {
-                finalData = data;
-                extractionDone = true;
-              } else if (data.type === 'error') {
-                show(data.message || 'Extraction Failed', 'error');
-                extractionDone = true;
-              }
-            } catch (e) {
-               console.log("Error parsing SSE:", dataStr);
-               // Simple text stream
-               setExtractLogs(prev => [...prev, dataStr]);
-            }
-          }
-        }
-      }
-      
-      if (finalData) {
-        show(`Extraction complete for ${finalData.sources_extracted?.length || 0} documents`); 
-        refresh(); 
-        await load(selected.id); 
-        navigate('/validate');
-      }
-    } catch (e) {
-       show(e.message || 'Extraction Failed', 'error');
-    }
-    
+    await extractForCandidate(selected.id);
     setLoading(false);
   };
 
@@ -183,19 +186,16 @@ export default function App() {
     if (!selected) return show('Please select a candidate', 'error');
     setLoading(true);
     show('Running validation...', 'info');
-    const r = await fetch(`${API}/validate/${selected.id}`, { method: 'POST' });
-    const d = await r.json();
-    if (r.ok) { 
+    try {
+      const d = await onboardAPI.validate(selected.id);
       show(`Validation Complete. Match Score: ${d.summary?.overall_score || 0}%`); 
       refresh(); 
       load(selected.id); 
-    } else {
-      show(d.detail || 'Validation Failed', 'error');
+    } catch (e) {
+      show('Validation Failed: ' + (e.response?.data?.detail || e.message), 'error');
     }
     setLoading(false);
   };
-
-  if (!user) return <Login onLogin={setUser} />;
 
   const contextProps = {
     candidates, selected, setSelected, load, refresh, show, loading, setLoading,
@@ -206,7 +206,14 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout 
+      {/* Global Landing & Auth */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login onLogin={(u) => setUser(u)} />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* OnboardGuard / Extraction Module */}
+      <Route path="/onboarding" element={
+        <Layout 
           user={user} 
           logout={logout} 
           toast={toast} 
@@ -215,14 +222,25 @@ export default function App() {
           setCandidateToDelete={setCandidateToDelete}
           confirmDelete={confirmDelete}
           contextProps={contextProps}
-        />}>
-        <Route index element={<Dashboard />} />
+        />
+      }>
+        <Route index element={<OGDashboard />} />
         <Route path="candidates" element={<Candidates />} />
         <Route path="form" element={<UploadForm />} />
         <Route path="docs" element={<UploadDocs />} />
         <Route path="extract" element={<Extract />} />
         <Route path="validate" element={<Validate />} />
       </Route>
+
+      {/* Interview Agent Module */}
+      <Route path="/user/dashboard" element={<ProtectedRoute allowedRoles={['USER']}><UserDashboard /></ProtectedRoute>} />
+      <Route path="/admin-portal" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminPortal /></ProtectedRoute>} />
+      <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboard /></ProtectedRoute>} />
+      
+      {/* Note: The session is public or protected by its own ID internally */}
+      <Route path="/interview/:interviewId" element={<InterviewSession />} />
+      
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

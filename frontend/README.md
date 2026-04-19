@@ -1,16 +1,45 @@
-# React + Vite
+# AI HirePro Enterprise — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 18 + Vite frontend with a custom dark-theme design system.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 18** with React Router v7
+- **Vite** — dev server + production bundler
+- **Tailwind CSS v4** — utility-first styling
+- **Fonts** — Outfit (headings), Inter (body), JetBrains Mono (code)
+- **Design** — CSS variables, stagger animations, glassmorphism panels
 
-## React Compiler
+## Pages
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/` | LandingPage | Public landing page |
+| `/login` | Login | JWT authentication |
+| `/register` | Register | User registration |
+| `/dashboard` | Dashboard | Role-based redirect (Admin / User) |
+| `/admin` | AdminPortal | Admin hub — JD upload, candidate management |
+| `/candidates` | Candidates | OnboardGuard candidate list |
+| `/upload-docs/:id` | UploadDocs | Document upload for a candidate |
+| `/extract/:id` | Extract | Run extraction + build knowledge base |
+| `/validate/:id` | Validate | Cross-reference validation |
+| `/upload-form` | UploadForm | CSV onboarding import |
+| `/interview/:id` | InterviewSession | AI voice interview (premium split-panel UI) |
 
-## Expanding the ESLint configuration
+## Key Components
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **InterviewSession** — Split-panel layout with circular SVG timer, question board dots, audio waveform, phase badges, ambient grid background
+- **AdminDashboard** — Quick stats bar + candidate management + JD upload
+- **UserDashboard** — Step indicator (resume → interview → results), resume upload, interview launcher
+
+## Development
+
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # Production build → dist/
+```
+
+## Build
+
+Last verified: **452 KB** gzipped (111 modules), zero errors.

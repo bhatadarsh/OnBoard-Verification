@@ -3,10 +3,22 @@
 import os
 import time
 import logging
+from pathlib import Path
 from faster_whisper import WhisperModel, BatchedInferencePipeline
 from interview_orchestration.stt.base import SpeechToTextEngine
 
+# Load backend .env so WHISPER_MODEL resolves correctly regardless of CWD
+# parents[0]=stt, parents[1]=interview_orchestration, parents[2]=Recro (project root)
+try:
+    from dotenv import load_dotenv
+    _env_path = Path(__file__).resolve().parents[2] / "backend" / ".env"
+    if _env_path.exists():
+        load_dotenv(dotenv_path=_env_path, override=True)  # override=True clears stale env vars
+except Exception:
+    pass
+
 logger = logging.getLogger(__name__)
+
 
 
 class WhisperSpeechToText(SpeechToTextEngine):

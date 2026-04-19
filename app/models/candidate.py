@@ -9,10 +9,8 @@ This single table serves all 3 applications:
 import json
 from datetime import datetime
 
-from sqlalchemy import Column, String, Integer, Float, Text, DateTime, create_engine
-from sqlalchemy.orm import declarative_base, Session
-
-Base = declarative_base()
+from sqlalchemy import Column, String, Integer, Float, Text, DateTime, Boolean
+from app.db.base_class import Base
 
 
 class Candidate(Base):
@@ -20,8 +18,9 @@ class Candidate(Base):
 
     # ── Identity (filled at registration) ───────────────────────
     id               = Column(String, primary_key=True)   # cand_<md5>
-    first_name       = Column(String, nullable=False)
-    last_name        = Column(String, nullable=False)
+    first_name       = Column(String)
+    last_name        = Column(String)
+    full_name        = Column(String) # for compatibility with legacy validation scripts
     email            = Column(String, unique=True, nullable=False)
     phone            = Column(String)                     # with country code
     location         = Column(String)
@@ -47,16 +46,53 @@ class Candidate(Base):
     interview_score  = Column(Float)
     interview_status = Column(String)                     # scheduled/completed/cancelled
 
-       # ── OnboardGuard (filled after selection) ───────────────────
+    # ── OnboardGuard (filled after selection) ───────────────────
     aadhar_number    = Column(String)
     pan_number       = Column(String)
     dob              = Column(String)                     # YYYY-MM-DD
     validation_score = Column(Float)
     validation_status = Column(String)   
-    raw_certifications = Column(Text)                 
+    raw_certifications = Column(Text)
+
+    # ── OnboardGuard Pipeline Data (Merged from legacy validation core) ──
+    documents = Column(Text, default="{}")        # JSON: raw document paths/metadata
+    knowledge_base = Column(Text, default="{}")   # JSON: extracted data from documents
+    onboarding_form = Column(Text, default="{}")  # JSON: original CSV/Form data
+    validation_result = Column(Text, default="{}") # JSON: detailed validation breakdown
+    is_validated = Column(Boolean, default=False)
+    tamper_warning = Column(Boolean, default=False)
+
     # ── Meta ────────────────────────────────────────────────────
     created_at       = Column(DateTime, default=datetime.utcnow)
     updated_at       = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # ── Legacy Helpers for OnboardGuard ─────────────────────────
+    def set_documents(self, data):
+        self.documents = json.dumps(data)
+    
+    def get_documents(self):
+        return json.loads(self.documents) if self.documents else {}
+    
+    def set_knowledge_base(self, data):
+        self.knowledge_base = json.dumps(data)
+    
+    def get_knowledge_base(self):
+        return json.loads(self.knowledge_base) if self.knowledge_base else {}
+    
+    def set_form(self, data):
+        self.onboarding_form = json.dumps(data)
+    
+    def get_form(self):
+        return json.loads(self.onboarding_form) if self.onboarding_form else {}
+    
+    def set_validation(self, data):
+        self.validation_result = json.dumps(data)
+        self.validation_score = data.get("overall_score", 0)
+        self.validation_status = "validated"
+        self.is_validated = True
+    
+    def get_validation(self):
+        return json.loads(self.validation_result) if self.validation_result else {}
 
     # ── Helpers for JSON fields ──────────────────────────────────
     def set_skills(self, skills: list):
@@ -84,11 +120,16 @@ class Candidate(Base):
         return json.loads(self.raw_certifications) if self.raw_certifications else []
 
     def to_dict(self) -> dict:
+        # Use stored full_name as fallback if first/last are missing
+        display_name = self.full_name
+        if not display_name and self.first_name:
+            display_name = f"{self.first_name} {self.last_name or ''}".strip()
+
         return {
             "id":               self.id,
             "first_name":       self.first_name,
             "last_name":        self.last_name,
-            "full_name":        f"{self.first_name} {self.last_name}",
+            "full_name":        display_name,
             "email":            self.email,
             "phone":            self.phone,
             "location":         self.location,
@@ -104,7 +145,13 @@ class Candidate(Base):
             "match_score":      self.match_score,
             "interview_score":  self.interview_score,
             "interview_status": self.interview_status,
+            "is_validated":     self.is_validated,
+            "has_knowledge_base": bool(self.knowledge_base and self.knowledge_base != "{}"),
+            "has_form":          bool(self.onboarding_form and self.onboarding_form != "{}"),
+            "uploaded_documents": [k for k, v in self.get_documents().items() if k != "forensic_alerts" and isinstance(v, str)] if self.documents else [],
+            "forensic_alerts":   self.get_documents().get("forensic_alerts", []) if self.documents else [],
             "validation_score": self.validation_score,
             "validation_status":self.validation_status,
             "created_at":       str(self.created_at),
+            "updated_at":       str(self.updated_at)
         }

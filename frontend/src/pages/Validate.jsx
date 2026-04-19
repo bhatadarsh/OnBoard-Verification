@@ -1,9 +1,8 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
-import SearchInput from '../components/SearchInput';
-import SelectedBanner from '../components/SelectedBanner';
 
-const API = '/api/v1';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API = `${API_BASE}/api/v1`;
 
 const maskPII = (val) => {
   if (typeof val !== 'string') return val;
@@ -12,136 +11,214 @@ const maskPII = (val) => {
     .replace(/\b\d{4}\s?\d{4}\s?\d{4}\b/g, '•••• •••• ••••');
 };
 
-const Validate = () => {
+function ScoreRing({ score }) {
+  const r = 52, circ = 2 * Math.PI * r;
+  const col = score >= 80 ? '#10b981' : score >= 50 ? '#f59e0b' : '#f43f5e';
+  return (
+    <div style={{ position: 'relative', width: 128, height: 128 }}>
+      <svg width="128" height="128" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="64" cy="64" r={r} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="8" />
+        <circle cx="64" cy="64" r={r} fill="none" stroke={col} strokeWidth="8" strokeLinecap="round"
+          strokeDasharray={circ} strokeDashoffset={circ - (circ * (score / 100))}
+          style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)', filter: `drop-shadow(0 0 8px ${col})` }}
+        />
+      </svg>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ fontSize: 28, fontWeight: 900, color: col, lineHeight: 1, textShadow: `0 0 12px ${col}30` }}>{score}%</div>
+        <div style={{ fontSize: 9, color: '#475569', fontFamily: "'JetBrains Mono',monospace", marginTop: 4, letterSpacing: '0.1em' }}>MATCH</div>
+      </div>
+    </div>
+  );
+}
+
+export default function Validate() {
   const { candidates, selected, load, loading, validate, show, setPreviewFile } = useOutletContext();
 
-  return (
-    <div className="animate-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white tracking-wide">Validation Results</h1>
-        <p className="text-slate-400 mt-1 text-sm">Compare document data against the uploaded CSV to ensure consistency.</p>
-      </div>
-      
-      <SelectedBanner />
+  const validationResult = selected?.validation_result;
+  const validations = validationResult?.validations || [];
 
+  const canValidate = selected?.has_knowledge_base && selected?.has_form;
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono',monospace", color: '#10b981', letterSpacing: '0.2em', marginBottom: 8 }}>// STEP 3 OF 3</div>
+        <h1 style={{ fontSize: 30, fontWeight: 900, color: '#ffffff', letterSpacing: '-1px', lineHeight: 1 }}>Compliance Validation</h1>
+        <p style={{ color: '#475569', fontSize: 13, marginTop: 5 }}>Cross-reference extracted document data against the onboarding CSV using LangGraph agents.</p>
+      </div>
+
+      {/* Candidate Selector if not selected */}
       {!selected && (
-        <div className="bg-slate-900/60 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-slate-800">
-          <div className="flex flex-col gap-4">
-            <span className="font-semibold text-slate-300">Select a candidate whose data has been extracted</span>
-            <SearchInput candidates={candidates.filter(c => c.has_knowledge_base && c.has_form)} onSelect={(c) => load(c.id)} placeholder="Search ready candidates..." />
+        <div style={{ background: 'rgba(10,22,40,0.8)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 18, padding: '28px', backdropFilter: 'blur(16px)' }}>
+          <p style={{ color: '#64748b', fontSize: 13, marginBottom: 16 }}>Select a candidate with an extracted Knowledge Base:</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {candidates.filter(c => c.has_knowledge_base && c.has_form).map(c => (
+              <button key={c.id} onClick={() => load(c.id)}
+                style={{ padding: '8px 16px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 9, color: '#10b981', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(16,185,129,0.15)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(16,185,129,0.07)'; }}
+              >{c.full_name}</button>
+            ))}
           </div>
-          {candidates.filter(c => c.has_knowledge_base && c.has_form).length === 0 && <p className="mt-4 text-amber-400/80 text-sm bg-amber-500/10 p-3 rounded text-center border border-amber-500/20">Please extract document data first.</p>}
+          {candidates.filter(c => c.has_knowledge_base).length === 0 && (
+            <div style={{ padding: '16px', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 10, marginTop: 16 }}>
+              <p style={{ fontSize: 12, color: '#f59e0b', margin: 0 }}>⚠ No candidates with extracted Knowledge Base found. Upload and process documents first.</p>
+            </div>
+          )}
         </div>
       )}
 
       {selected && (
         <>
-          <button onClick={validate} disabled={loading} className={`w-full mb-8 py-4 rounded font-bold text-xs uppercase tracking-widest transition-all shadow-md flex justify-center items-center gap-2 border ${loading ? 'bg-slate-800 border-slate-700 text-slate-500 cursor-wait' : 'bg-cyan-600/20 hover:bg-cyan-500/40 border-cyan-500/50 text-cyan-300 hover:text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] active:scale-[0.99] cursor-pointer'}`}>
-            {loading ? 'Running Automated Verification...' : '✓ Start Validation Process'}
-          </button>
+          {/* Selected Candidate */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 13, marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, color: '#10b981' }}>
+                {selected.full_name?.[0]?.toUpperCase()}
+              </div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#e8f0fe' }}>{selected.full_name}</div>
+                <div style={{ fontSize: 10, color: '#10b981', fontFamily: "'JetBrains Mono',monospace" }}>
+                  {selected.is_validated ? 'VALIDATED' : selected.has_knowledge_base ? 'KB READY' : 'AWAITING EXTRACTION'}
+                </div>
+              </div>
+            </div>
+            {/* Run Validation Button */}
+            <button
+              onClick={validate}
+              disabled={loading || !canValidate}
+              style={{
+                padding: '10px 24px', borderRadius: 11, border: 'none',
+                background: (loading || !canValidate) ? 'rgba(255,255,255,0.04)' : 'linear-gradient(135deg,#10b981,#059669)',
+                color: (loading || !canValidate) ? '#334155' : '#fff',
+                fontSize: 13, fontWeight: 800, cursor: (loading || !canValidate) ? 'not-allowed' : 'pointer',
+                boxShadow: (loading || !canValidate) ? 'none' : '0 8px 24px rgba(16,185,129,0.3)',
+                fontFamily: "'Outfit',sans-serif", transition: 'all 0.25s',
+              }}
+            >
+              {loading ? '⏳ Validating...' : selected.is_validated ? '↻ Re-Validate' : '▶ Run Validation'}
+            </button>
+          </div>
 
-          {selected?.validation_result && (
-            <div className="animate-in fade-in zoom-in-95 duration-500">
-                {selected.documents?.forensic_alerts?.length > 0 && (
-                  <div className="bg-rose-500/10 border-l-4 border-rose-500 p-4 rounded-r-xl mb-6 flex items-start gap-4">
-                    <span className="text-rose-500 text-2xl">⚠️</span>
-                    <div>
-                      <h4 className="text-sm font-bold text-rose-400 uppercase tracking-widest mb-1">Document Forensics Alert</h4>
-                      <div className="flex flex-col gap-1">
-                        {selected.documents.forensic_alerts.map((alert, idx) => (
-                          <div key={idx} className="text-xs text-rose-300/80 font-mono tracking-tight">{alert}</div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-              {/* Summary Metrics */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                {[{ n: selected.validation_result.overall_score+'%', l: 'Average Score', c: selected.validation_result.overall_score >= 80 ? 'text-emerald-400 border-emerald-500/30' : selected.validation_result.overall_score >= 50 ? 'text-amber-400 border-amber-500/30' : 'text-rose-400 border-rose-500/30' }, { n: selected.validation_result.correct_count, l: 'Verified Data', c: 'text-cyan-100 border-slate-700' }, { n: selected.validation_result.ambiguous_count, l: 'Flagged Mismatch', c: 'text-amber-400 border-slate-700' }, { n: selected.validation_result.incorrect_count, l: 'Anomalies', c: 'text-rose-400 border-slate-700' }].map((s, i) => (
-                   <div key={i} className={`bg-slate-900/80 rounded-xl p-5 border ${s.c} text-center shadow-sm relative overflow-hidden group`}>
-                     <div className="absolute inset-0 bg-gradient-to-t from-transparent to-current opacity-5 pointer-events-none"></div>
-                     <div className={`text-3xl font-bold mb-1 ${s.c.split(' ')[0]}`}>{s.n}</div>
-                     <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{s.l}</div>
-                   </div>
+          {/* Forensic Alerts */}
+          {selected?.documents?.forensic_alerts?.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 20px', background: 'rgba(244,63,94,0.07)', border: '1px solid rgba(244,63,94,0.25)', borderRadius: 13, marginBottom: 20 }}>
+              <span style={{ fontSize: 22 }}>⚠️</span>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 800, color: '#f43f5e', letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: "'JetBrains Mono',monospace", marginBottom: 8 }}>Document Forensics Alert</div>
+                {selected.documents.forensic_alerts.map((a, i) => (
+                  <div key={i} style={{ fontSize: 11, color: '#f87171', fontFamily: "'JetBrains Mono',monospace", marginBottom: 4, lineHeight: 1.5 }}>{a}</div>
                 ))}
               </div>
-              
-              {/* Zero-Trust Action */}
-              <div className="flex justify-end mb-6 gap-2 flex-wrap">
-                {Object.keys(selected.documents || {}).filter(k => k !== 'forensic_alerts').map(docName => {
-                  const url = `${API}/documents/${selected.id}/${docName}/redacted`;
-                  const title = `Redacted ${docName.replace(/_/g, ' ')}`;
-                  return (
-                    <button key={docName} onClick={() => setPreviewFile ? setPreviewFile({ url, title }) : console.error("setPreviewFile missing in context")} className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-slate-300 hover:text-white rounded hover:bg-slate-700 border border-slate-700 transition-colors text-xs font-bold uppercase tracking-wider shadow-sm">
-                      <span className="text-indigo-400">❖</span> View Enterprise Redacted {docName.replace(/_/g, ' ')}
-                    </button>
-                  );
-                })}
+            </div>
+          )}
+
+          {/* Validation Results */}
+          {validationResult && (
+            <div>
+              {/* Score + Metrics */}
+              <div className="enter-stagger" style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 20, marginBottom: 24, background: 'rgba(10,22,40,0.8)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 18, padding: '28px 32px', backdropFilter: 'blur(16px)' }}>
+                <ScoreRing score={validationResult.overall_score || 0} />
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: '#e8f0fe' }}>Validation Complete</div>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    {[
+                      { n: validationResult.correct_count,   l: 'Verified',  col: '#10b981' },
+                      { n: validationResult.ambiguous_count, l: 'Ambiguous', col: '#f59e0b' },
+                      { n: validationResult.incorrect_count, l: 'Failed',    col: '#f43f5e' },
+                    ].map((m) => (
+                      <div key={m.l} style={{ padding: '10px 18px', background: `${m.col}0A`, border: `1px solid ${m.col}20`, borderRadius: 11, textAlign: 'center' }}>
+                        <div style={{ fontSize: 22, fontWeight: 900, color: m.col }}>{m.n}</div>
+                        <div style={{ fontSize: 9, color: '#475569', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '0.1em', textTransform: 'uppercase' }}>{m.l}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Redacted Doc Links */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {Object.keys(selected.documents || {}).filter(k => k !== 'forensic_alerts').map(docName => (
+                      <button key={docName}
+                        onClick={() => setPreviewFile({ url: `${API}/documents/${selected.id}/${docName}/redacted`, title: `Redacted — ${docName.replace(/_/g, ' ')}` })}
+                        style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 8, color: '#818cf8', fontSize: 10, fontWeight: 700, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", transition: 'all 0.2s' }}
+                      >
+                        🔏 {docName.replace(/_/g, ' ')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Field Validation List */}
-              <div className="bg-slate-900/80 rounded-xl shadow-lg border border-slate-800 overflow-hidden">
-                <div className="bg-slate-950/80 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-                  <h3 className="font-semibold text-slate-300 text-xs tracking-wider uppercase">Detailed Field Report</h3>
+              {/* Field Breakdown */}
+              <div style={{ background: 'rgba(10,22,40,0.8)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 18, overflow: 'hidden', backdropFilter: 'blur(16px)' }}>
+                <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(5,14,26,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono',monospace", color: '#334155', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Detailed Field Report — {validations.length} fields checked</div>
                 </div>
 
-                <div className="divide-y divide-slate-800/50">
-                  {(selected.validation_result.validations || []).map((v, i) => (
-                    <div key={i} className={`p-6 transition-colors ${v.status === 'INCORRECT' ? 'bg-rose-500/5' : v.status === 'AMBIGUOUS' ? 'bg-amber-500/5' : 'bg-transparent hover:bg-slate-800/20'}`}>
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] border ${v.status === 'CORRECT' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : v.status === 'INCORRECT' ? 'bg-rose-500/10 text-rose-400 border-rose-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
-                          {v.status === 'CORRECT' ? '✓' : v.status === 'INCORRECT' ? '✕' : '?'}
-                        </span>
-                        <h4 className="font-bold text-slate-100 capitalize text-sm flex-1">{v.field?.replace(/_/g, ' ')}</h4>
-                        <span className={`px-3 py-1 rounded text-[9px] font-bold uppercase tracking-widest border ${v.status === 'CORRECT' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : v.status === 'INCORRECT' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
-                          {v.status}
-                        </span>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-9">
-                        <div className="bg-slate-950/50 border border-slate-800/50 rounded p-3 relative overflow-hidden">
-                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-700"></div>
-                          <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-1">CSV (Master)</div>
-                          <div className="text-slate-300 text-[11px] font-mono">{maskPII(v.form_value) || <span className="opacity-40 italic">Null</span>}</div>
+                {validations.map((v, i) => {
+                  const isCorrect   = v.status === 'CORRECT';
+                  const isIncorrect = v.status === 'INCORRECT';
+                  const isAmbiguous = v.status === 'AMBIGUOUS';
+                  const col = isCorrect ? '#10b981' : isIncorrect ? '#f43f5e' : '#f59e0b';
+                  const sym = isCorrect ? '✓' : isIncorrect ? '✕' : '?';
+
+                  return (
+                    <div key={i} style={{
+                      padding: '20px 24px',
+                      borderBottom: i < validations.length - 1 ? '1px solid rgba(255,255,255,0.03)' : 'none',
+                      background: isIncorrect ? 'rgba(244,63,94,0.03)' : isAmbiguous ? 'rgba(245,158,11,0.03)' : 'transparent',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                        <div style={{ width: 26, height: 26, borderRadius: '50%', background: `${col}12`, border: `1px solid ${col}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: col, flexShrink: 0 }}>
+                          {sym}
                         </div>
-                        <div className="bg-slate-950/50 border border-slate-800/50 rounded p-3 relative overflow-hidden">
-                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-cyan-800/50"></div>
-                          <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-1">Extracted Source</div>
-                          <div className="text-slate-300 text-[11px] font-mono">{maskPII(v.doc_value) || <span className="opacity-40 italic">Null</span>}</div>
-                        </div>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: '#e8f0fe', flex: 1, textTransform: 'capitalize' }}>{v.field?.replace(/_/g, ' ')}</span>
+                        <span style={{ padding: '3px 10px', borderRadius: 6, background: `${col}10`, border: `1px solid ${col}20`, color: col, fontSize: 9, fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", letterSpacing: '0.1em' }}>{v.status}</span>
                       </div>
-                      
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginLeft: 38 }}>
+                        {[
+                          { label: 'CSV (Master)', value: maskPII(v.form_value), accent: '#334155' },
+                          { label: 'Extracted Source', value: maskPII(v.doc_value), accent: '#00e5ff' },
+                        ].map((side) => (
+                          <div key={side.label} style={{ background: 'rgba(0,0,0,0.4)', border: `1px solid rgba(255,255,255,0.04)`, borderRadius: 9, padding: '10px 14px', borderLeft: `3px solid ${side.accent}` }}>
+                            <div style={{ fontSize: 8, fontFamily: "'JetBrains Mono',monospace", color: '#334155', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 5 }}>{side.label}</div>
+                            <div style={{ fontSize: 12, color: '#94a3b8', fontFamily: "'JetBrains Mono',monospace" }}>{side.value || <span style={{ opacity: 0.3, fontStyle: 'italic' }}>null</span>}</div>
+                          </div>
+                        ))}
+                      </div>
+
                       {v.reason && (
-                        <div className="ml-9 mt-3 text-[10px] flex items-center justify-between font-mono px-3 py-2 rounded leading-relaxed border border-slate-800/50 bg-slate-900/50">
-                          <span className="text-slate-500">{'> '} {v.reason}</span>
+                        <div style={{ marginLeft: 38, marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: 8 }}>
+                          <span style={{ fontSize: 10, color: '#475569', fontFamily: "'JetBrains Mono',monospace" }}>{'>'} {v.reason}</span>
                           {v.reason.toLowerCase().includes('semantic') && (
-                            <span className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 px-2 py-0.5 rounded shadow-[0_0_8px_rgba(99,102,241,0.3)] animate-pulse uppercase tracking-[0.2em] text-[8px] font-black">
-                              AI Semantic Match
-                            </span>
+                            <span style={{ padding: '3px 8px', borderRadius: 5, background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', fontSize: 8, fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", letterSpacing: '0.1em' }}>AI SEMANTIC</span>
                           )}
                         </div>
                       )}
 
-                      {v.status === 'AMBIGUOUS' && (
-                        <div className="ml-9 mt-4 flex gap-3">
-                          <button onClick={async () => {
-                            const r = await fetch(`${API}/resolve/${selected.id}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ field: v.field, resolution: 'CORRECT' }) });
-                            if (r.ok) { show('Marked as Correct'); load(selected.id); }
-                          }} className="px-4 py-2 bg-emerald-500/5 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded text-[10px] font-bold tracking-widest uppercase transition-colors cursor-pointer">
-                            Accept Value
-                          </button>
-                          <button onClick={async () => {
-                            const r = await fetch(`${API}/resolve/${selected.id}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ field: v.field, resolution: 'INCORRECT' }) });
-                            if (r.ok) { show('Marked as Incorrect', 'error'); load(selected.id); }
-                          }} className="px-4 py-2 bg-rose-500/5 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 rounded text-[10px] font-bold tracking-widest uppercase transition-colors cursor-pointer">
-                            Reject Value
-                          </button>
+                      {isAmbiguous && (
+                        <div style={{ marginLeft: 38, marginTop: 12, display: 'flex', gap: 10 }}>
+                          {[
+                            { label: '✓ Accept', resolution: 'CORRECT', color: '#10b981' },
+                            { label: '✕ Reject', resolution: 'INCORRECT', color: '#f43f5e' },
+                          ].map(({ label, resolution, color }) => (
+                            <button key={resolution}
+                              onClick={async () => {
+                                const token = localStorage.getItem('token');
+                                const r = await fetch(`${API}/resolve/${selected.id}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token ? { 'Authorization': `Bearer ${token}` } : {}) }, body: JSON.stringify({ field: v.field, resolution }) });
+                                if (r.ok) { show(`Marked as ${resolution}`); load(selected.id); }
+                              }}
+                              style={{ padding: '7px 16px', background: `${color}08`, border: `1px solid ${color}25`, borderRadius: 8, color, fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", transition: 'all 0.2s' }}
+                              onMouseEnter={e => e.currentTarget.style.background = `${color}18`}
+                              onMouseLeave={e => e.currentTarget.style.background = `${color}08`}
+                            >{label}</button>
+                          ))}
                         </div>
                       )}
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -149,6 +226,4 @@ const Validate = () => {
       )}
     </div>
   );
-};
-
-export default Validate;
+}

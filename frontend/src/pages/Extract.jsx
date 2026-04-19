@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import SearchInput from '../components/SearchInput';
-import SelectedBanner from '../components/SelectedBanner';
 
 const maskPII = (val) => {
   if (typeof val !== 'string') return val;
@@ -22,25 +20,25 @@ const StreamingTerminal = ({ logs, loading }) => {
   if (!loading && logs.length === 0) return null;
 
   return (
-    <div className="bg-[#0a0a0a] rounded-lg p-5 mt-4 border border-slate-800/80 shadow-[0_0_15px_rgba(0,0,0,0.5)] font-mono text-sm max-h-80 overflow-y-auto">
-      <div className="flex items-center gap-2 mb-4 border-b border-slate-800/50 pb-3 sticky top-0 bg-[#0a0a0a]">
-        <div className="w-3 h-3 rounded-full bg-slate-700"></div>
-        <div className="w-3 h-3 rounded-full bg-slate-600"></div>
-        <div className="w-3 h-3 rounded-full bg-slate-500"></div>
-        <span className="text-slate-400 text-xs ml-2 uppercase tracking-widest flex items-center gap-2">
-          <span className="text-cyan-500 animate-pulse">●</span> Data Subsystem Online
+    <div style={{ background: 'rgba(0,0,0,0.6)', borderRadius: 14, padding: 20, marginTop: 16, border: '1px solid rgba(0,229,255,0.15)', fontFamily: "'JetBrains Mono',monospace", fontSize: 13, maxHeight: 320, overflowY: 'auto', boxShadow: '0 0 15px rgba(0,0,0,0.5)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: 12, position: 'sticky', top: 0, background: 'rgba(0,0,0,0.6)' }}>
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#334155' }} />
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#475569' }} />
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#64748b' }} />
+        <span style={{ color: '#475569', fontSize: 10, marginLeft: 8, textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ color: '#00e5ff', animation: 'pulse-glow 1s infinite' }}>●</span> Extraction Engine — Live
         </span>
       </div>
-      <div className="space-y-2 text-[13px] leading-relaxed break-all">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, lineHeight: 1.6, wordBreak: 'break-all' }}>
         {logs.map((log, idx) => (
-          <div key={idx} className={`font-medium whitespace-pre-wrap ${log.startsWith('>') ? 'text-cyan-400' : 'text-slate-300'}`}>
-             {log}
+          <div key={idx} style={{ fontWeight: 500, whiteSpace: 'pre-wrap', color: log.startsWith('>') ? '#00e5ff' : idx === logs.length - 1 ? '#e8f0fe' : '#64748b' }}>
+            {log}
           </div>
         ))}
         {loading && (
-          <div className="text-cyan-500 flex items-center gap-2 mt-2">
-            <span className="animate-pulse">_</span>
-            <span className="text-xs text-slate-500 animate-pulse">Awaiting stream...</span>
+          <div style={{ color: '#00e5ff', display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+            <span style={{ animation: 'pulse-glow 1s infinite' }}>_</span>
+            <span style={{ fontSize: 10, color: '#475569' }}>Awaiting stream...</span>
           </div>
         )}
         <div ref={terminalEndRef} />
@@ -53,51 +51,102 @@ const Extract = () => {
   const { candidates, selected, load, loading, extract, extractLogs } = useOutletContext();
 
   return (
-    <div className="animate-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white tracking-wide">Data Extraction</h1>
-        <p className="text-slate-400 mt-1 text-sm">Automatically extract field data from the uploaded candidate documents.</p>
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono',monospace", color: '#10b981', letterSpacing: '0.2em', marginBottom: 8 }}>// KNOWLEDGE BASE BUILDER</div>
+        <h1 style={{ fontSize: 30, fontWeight: 900, color: '#ffffff', letterSpacing: '-1px', lineHeight: 1 }}>Data Extraction</h1>
+        <p style={{ color: '#475569', fontSize: 13, marginTop: 5 }}>Extract structured field data from uploaded candidate documents and build the Knowledge Base.</p>
       </div>
-      
-      <SelectedBanner />
 
       {!selected && (
-        <div className="bg-slate-900/60 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-slate-800">
-          <p className="text-slate-400 text-sm mb-4">Please select a candidate to extract data from their uploaded documents.</p>
-          <SearchInput candidates={candidates} onSelect={(c) => load(c.id)} placeholder="Search candidate..." />
+        <div style={{ background: 'rgba(10,22,40,0.8)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 18, padding: 28, backdropFilter: 'blur(16px)' }}>
+          <p style={{ color: '#64748b', fontSize: 13, marginBottom: 16 }}>Select a candidate to extract data from their uploaded documents:</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {candidates.filter(c => c.has_form).map(c => (
+              <button key={c.id} onClick={() => load(c.id)}
+                style={{ padding: '8px 16px', background: 'rgba(0,229,255,0.07)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 9, color: '#00e5ff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", transition: 'all 0.2s' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,229,255,0.15)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,229,255,0.07)'}
+              >{c.full_name}</button>
+            ))}
+          </div>
+          {candidates.filter(c => c.has_form).length === 0 && (
+            <div style={{ padding: 16, background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 10, marginTop: 16 }}>
+              <p style={{ fontSize: 12, color: '#f59e0b', margin: 0 }}>No candidates with uploaded documents found. Upload documents first.</p>
+            </div>
+          )}
         </div>
       )}
 
       {selected && (
-        <div className="space-y-6">
-          <button onClick={extract} disabled={loading} className={`w-full py-4 rounded font-bold text-xs uppercase tracking-widest transition-all shadow-md flex justify-center items-center gap-2 border ${loading ? 'bg-slate-800 border-slate-700 text-slate-500 cursor-wait' : 'bg-cyan-600/20 hover:bg-cyan-500/40 border-cyan-500/50 text-cyan-300 hover:text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] active:scale-[0.99] cursor-pointer'}`}>
+        <div>
+          {/* Selected Candidate Banner */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: 'rgba(0,229,255,0.06)', border: '1px solid rgba(0,229,255,0.2)', borderRadius: 13, marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(0,229,255,0.15)', border: '1px solid rgba(0,229,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, color: '#00e5ff' }}>
+                {selected.full_name?.[0]?.toUpperCase()}
+              </div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#e8f0fe' }}>{selected.full_name}</div>
+                <div style={{ fontSize: 10, color: '#00e5ff', fontFamily: "'JetBrains Mono',monospace" }}>
+                  {selected.has_knowledge_base ? 'KB INDEXED' : 'AWAITING EXTRACTION'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Extract Button */}
+          <button
+            onClick={extract}
+            disabled={loading}
+            style={{
+              width: '100%', padding: 16, borderRadius: 13, border: loading ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,229,255,0.3)',
+              background: loading ? 'rgba(255,255,255,0.04)' : 'rgba(0,229,255,0.08)',
+              color: loading ? '#475569' : '#00e5ff',
+              fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.15em',
+              cursor: loading ? 'wait' : 'pointer',
+              fontFamily: "'Outfit',sans-serif", transition: 'all 0.3s',
+              boxShadow: loading ? 'none' : '0 0 20px rgba(0,229,255,0.1)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+            }}
+            onMouseEnter={e => { if (!loading) { e.currentTarget.style.background = 'rgba(0,229,255,0.15)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(0,229,255,0.2)'; }}}
+            onMouseLeave={e => { if (!loading) { e.currentTarget.style.background = 'rgba(0,229,255,0.08)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(0,229,255,0.1)'; }}}
+          >
             {loading ? (
-              <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-slate-600/20 border-t-cyan-400 rounded-full animate-spin"></div> Interfacing with LLM...</span>
+              <>
+                <div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.1)', borderTopColor: '#00e5ff', borderRadius: '50%', animation: 'spin-slow 0.8s linear infinite' }} />
+                Interfacing with LLM...
+              </>
             ) : (
-              <>Start Extraction Processing</>
+              '⚡ Start Extraction Processing'
             )}
           </button>
-          
+
           <StreamingTerminal logs={extractLogs || []} loading={loading} />
 
+          {/* Knowledge Base Display */}
           {selected?.knowledge_base && Object.keys(selected.knowledge_base).length > 0 && !loading && (
-            <div className="bg-slate-900/80 rounded-xl p-6 shadow-lg border border-slate-800 animate-in fade-in">
-              <h3 className="text-sm font-semibold text-slate-300 mb-6 border-b border-slate-800 pb-3 flex items-center gap-2 tracking-wide uppercase">
-                <span className="text-cyan-500 text-lg">⌬</span> Extracted Raw Profiles
+            <div style={{ background: 'rgba(10,22,40,0.8)', borderRadius: 18, padding: 28, marginTop: 24, border: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(16px)' }}>
+              <h3 style={{ fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 24, borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: 12, display: 'flex', alignItems: 'center', gap: 8, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: "'JetBrains Mono',monospace" }}>
+                <span style={{ color: '#00e5ff', fontSize: 16 }}>⌬</span> Extracted Knowledge Base Profiles
               </h3>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                {Object.entries(selected.knowledge_base).map(([source, data], idx) => (
-                  <div key={source} className="bg-slate-950/50 border border-slate-800 rounded-lg overflow-hidden animate-in zoom-in-95 shadow-inner" style={{ animationDelay: `${idx * 100}ms` }}>
-                    <div className="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center gap-2">
-                       <div className="w-2 h-2 rounded-full bg-emerald-500/50 animate-pulse"></div>
-                      <span className="font-semibold text-cyan-100 capitalize text-xs tracking-wider uppercase">{source.replace(/_/g, ' ')} Schema</span>
+
+              <div className="enter-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 16 }}>
+                {Object.entries(selected.knowledge_base).map(([source, data]) => (
+                  <div key={source} style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, overflow: 'hidden' }}>
+                    <div style={{ background: 'rgba(5,14,26,0.8)', padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981', opacity: 0.6 }} />
+                      <span style={{ fontWeight: 700, color: '#e8f0fe', textTransform: 'capitalize', fontSize: 11, letterSpacing: '0.08em', fontFamily: "'JetBrains Mono',monospace" }}>{source.replace(/_/g, ' ')} Schema</span>
                     </div>
-                    <div className="p-4 text-xs font-mono">
+                    <div style={{ padding: 16, fontFamily: "'JetBrains Mono',monospace", fontSize: 12 }}>
                       {Object.entries(data || {}).map(([k, v]) => (
-                        <div key={k} className="flex gap-4 mb-2 pb-2 last:mb-0 last:pb-0 border-b border-slate-800/30 last:border-0 hover:bg-slate-900/30 px-2 py-1 rounded transition-colors">
-                          <span className="text-cyan-600/60 font-medium min-w-[130px]">{k}:</span>
-                          <span className="text-slate-300 break-words font-medium">{maskPII(v)}</span>
+                        <div key={k} style={{ display: 'flex', gap: 16, marginBottom: 8, paddingBottom: 8, borderBottom: '1px solid rgba(255,255,255,0.03)', padding: '4px 8px', borderRadius: 4, transition: 'background 0.15s' }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                        >
+                          <span style={{ color: '#00e5ff', opacity: 0.5, fontWeight: 500, minWidth: 130, flexShrink: 0 }}>{k}:</span>
+                          <span style={{ color: '#cbd5e1', wordBreak: 'break-words', fontWeight: 500 }}>{maskPII(v)}</span>
                         </div>
                       ))}
                     </div>
@@ -108,6 +157,11 @@ const Extract = () => {
           )}
         </div>
       )}
+
+      <style>{`
+        @keyframes pulse-glow { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        @keyframes spin-slow { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 };

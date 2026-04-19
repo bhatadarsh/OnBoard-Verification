@@ -1,13 +1,99 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { interviewAPI } from '../api/client';
+
+/* ─── Circular Timer Component ─── */
+const CircularTimer = ({ timeLeft, maxTime, phase }) => {
+    const radius = 58;
+    const stroke = 5;
+    const circumference = 2 * Math.PI * radius;
+    const progress = maxTime > 0 ? timeLeft / maxTime : 0;
+    const offset = circumference * (1 - progress);
+    const isUrgent = phase === 'answering' && timeLeft <= 10;
+    const color = phase === 'reading' ? '#00e5ff' : isUrgent ? '#f43f5e' : '#818cf8';
+
+    return (
+        <div style={{ position: 'relative', width: 140, height: 140 }}>
+            <svg width="140" height="140" style={{ transform: 'rotate(-90deg)' }}>
+                <circle cx="70" cy="70" r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={stroke} />
+                <circle cx="70" cy="70" r={radius} fill="none" stroke={color} strokeWidth={stroke}
+                    strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
+                    style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.4s ease', filter: `drop-shadow(0 0 8px ${color}40)` }} />
+            </svg>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: 36, fontWeight: 900, fontFamily: "'JetBrains Mono',monospace", color, letterSpacing: '-2px',
+                    animation: isUrgent ? 'timerPulse 0.6s ease-in-out infinite' : 'none' }}>
+                    {timeLeft}
+                </span>
+                <span style={{ fontSize: 9, fontWeight: 700, color: '#475569', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: 2 }}>
+                    SECONDS
+                </span>
+            </div>
+        </div>
+    );
+};
+
+/* ─── Progress Dots (Question Board) ─── */
+const QuestionBoard = ({ current, total }) => {
+    const dots = useMemo(() => Array.from({ length: total }, (_, i) => i + 1), [total]);
+    return (
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+            {dots.map(n => {
+                const done = n < current;
+                const active = n === current;
+                return (
+                    <div key={n} style={{
+                        width: active ? 32 : 10, height: 10, borderRadius: 5,
+                        background: done ? '#10b981' : active ? '#00e5ff' : 'rgba(255,255,255,0.08)',
+                        border: active ? '1px solid rgba(0,229,255,0.4)' : '1px solid transparent',
+                        boxShadow: active ? '0 0 12px rgba(0,229,255,0.3)' : done ? '0 0 6px rgba(16,185,129,0.2)' : 'none',
+                        transition: 'all 0.4s cubic-bezier(0.4,0,0.2,1)',
+                    }} />
+                );
+            })}
+        </div>
+    );
+};
+
+/* ─── Audio Waveform Animation ─── */
+const AudioWaveform = () => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 20 }}>
+        {[1,2,3,4,5,6,7].map(i => (
+            <div key={i} style={{
+                width: 3, borderRadius: 2, background: 'linear-gradient(180deg, #818cf8, #6366f1)',
+                animation: `waveBar 0.8s ease-in-out ${i * 0.08}s infinite alternate`,
+            }} />
+        ))}
+    </div>
+);
+
+/* ─── Phase Badge ─── */
+const PhaseBadge = ({ phase }) => {
+    const config = {
+        reading: { label: 'READING', color: '#00e5ff', bg: 'rgba(0,229,255,0.08)', border: 'rgba(0,229,255,0.2)', icon: '📖' },
+        answering: { label: 'RECORDING', color: '#818cf8', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.25)', icon: '🎤' },
+        submitting: { label: 'PROCESSING', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)', icon: '⏳' },
+    };
+    const c = config[phase] || config.reading;
+    return (
+        <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px',
+            background: c.bg, border: `1px solid ${c.border}`, borderRadius: 100,
+            fontSize: 11, fontWeight: 800, color: c.color, letterSpacing: '0.12em',
+            fontFamily: "'JetBrains Mono',monospace", animation: 'enterScale 0.35s ease forwards',
+        }}>
+            <span>{c.icon}</span>{c.label}
+            {phase === 'answering' && <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f43f5e', animation: 'pulse 1.2s infinite' }} />}
+        </div>
+    );
+};
 
 const InterviewSession = () => {
     const { interviewId } = useParams();
     const navigate = useNavigate();
 
     const [question, setQuestion] = useState(null);
-    const [status, setStatus] = useState('loading'); // loading, reading, answering, submitting, completed
+    const [status, setStatus] = useState('loading');
     const [timeLeft, setTimeLeft] = useState(0);
     const [transcript, setTranscript] = useState('');
     const [error, setError] = useState(null);
@@ -440,13 +526,19 @@ const InterviewSession = () => {
         }
     };
 
+    /* ─── Completed Screen ─── */
     if (status === 'completed') {
         return (
-            <div style={containerStyle}>
-                <div style={cardStyle}>
-                    <h1 style={{ color: '#2f855a' }}>Interview Completed! 🎊</h1>
-                    <p>Thank you for your time. Your responses have been recorded for review.</p>
-                    <button onClick={() => navigate('/user/dashboard')} style={buttonStyle}>
+            <div style={S.page}>
+                <div style={S.ambientGrid} />
+                <div style={{ ...S.blobCyan, top: -150, right: -80 }} />
+                <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', textAlign: 'center', padding: 24 }}>
+                    <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(16,185,129,0.1)', border: '2px solid rgba(16,185,129,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, marginBottom: 24, animation: 'enterScale 0.5s ease forwards', boxShadow: '0 0 40px rgba(16,185,129,0.15)' }}>
+                        🎊
+                    </div>
+                    <h1 style={{ fontSize: 32, fontWeight: 900, color: '#10b981', margin: 0, letterSpacing: '-1px' }}>Assessment Complete</h1>
+                    <p style={{ color: '#64748b', fontSize: 15, marginTop: 12, maxWidth: 400, lineHeight: 1.6 }}>Your responses have been securely recorded and are now under review. You'll hear back from us shortly.</p>
+                    <button onClick={() => navigate('/user/dashboard')} style={{ ...S.btnPrimary, marginTop: 32 }}>
                         Return to Dashboard
                     </button>
                 </div>
@@ -454,174 +546,197 @@ const InterviewSession = () => {
         );
     }
 
+    /* ─── Error Screen ─── */
     if (status === 'error') {
         return (
-            <div style={containerStyle}>
-                <div style={cardStyle}>
-                    <h2 style={{ color: '#c53030' }}>Oops! Something went wrong</h2>
-                    <p>{error}</p>
-                    <button onClick={() => window.location.reload()} style={buttonStyle}>
-                        Retry
+            <div style={S.page}>
+                <div style={S.ambientGrid} />
+                <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', textAlign: 'center', padding: 24 }}>
+                    <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(244,63,94,0.08)', border: '2px solid rgba(244,63,94,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40, marginBottom: 24 }}>
+                        ⚠️
+                    </div>
+                    <h2 style={{ fontSize: 24, fontWeight: 800, color: '#fb7185', margin: 0 }}>Something went wrong</h2>
+                    <p style={{ color: '#64748b', fontSize: 14, marginTop: 12, maxWidth: 420, lineHeight: 1.6 }}>{error}</p>
+                    <button onClick={() => window.location.reload()} style={{ ...S.btnPrimary, marginTop: 28, background: 'linear-gradient(135deg, #f43f5e, #e11d48)' }}>
+                        Retry Connection
                     </button>
                 </div>
             </div>
         );
     }
 
+    /* ─── Loading Screen ─── */
     if (!question || status === 'loading') {
-        return <div style={containerStyle}><div className="loader">Loading your interview...</div></div>;
+        return (
+            <div style={S.page}>
+                <div style={S.ambientGrid} />
+                <div style={{ ...S.blobCyan, top: -200, right: -100 }} />
+                <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', gap: 20 }}>
+                    <div style={{ width: 52, height: 52, border: '3px solid rgba(0,229,255,0.08)', borderTopColor: '#00e5ff', borderRadius: '50%', animation: 'spin-slow 0.8s linear infinite' }} />
+                    <span style={{ color: '#475569', fontFamily: "'JetBrains Mono',monospace", fontSize: 12, letterSpacing: '0.1em' }}>INITIALIZING ASSESSMENT...</span>
+                </div>
+            </div>
+        );
     }
 
-    const progress = status === 'reading'
-        ? (timeLeft / READING_TIME) * 100
-        : (timeLeft / ANSWER_TIME) * 100;
+    const maxTime = status === 'reading' ? READING_TIME : ANSWER_TIME;
 
     return (
-        <div style={containerStyle}>
-            {/* Header with progress */}
-            <div style={headerStyle}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <span style={{ fontWeight: 'bold', color: '#4a5568' }}>
-                        {question.question_index}
-                    </span>
-                    <span style={{
-                        color: status === 'reading' ? '#3182ce' : '#e53e3e',
-                        fontWeight: 'bold'
-                    }}>
-                        {status === 'reading' ? '📖 Reading Phase' : '🎤 Answering Phase'}
-                    </span>
-                </div>
-                <div style={progressContainerStyle}>
-                    <div style={{
-                        ...progressBarStyle,
-                        width: `${progress}%`,
-                        backgroundColor: status === 'reading' ? '#3182ce' : '#e53e3e'
-                    }} />
-                </div>
-                <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '24px', fontWeight: 'bold' }}>
-                    {timeLeft}s
-                </div>
-            </div>
+        <div style={S.page}>
+            {/* Ambient Background */}
+            <div style={S.ambientGrid} />
+            <div style={{ ...S.blobCyan, top: -200, right: -100 }} />
+            <div style={{ ...S.blobIndigo, bottom: -200, left: -100 }} />
 
-            {/* Question Card */}
-            <div style={{ ...cardStyle, animation: 'fadeIn 0.5s' }}>
-                <p style={{
-                    fontSize: '14px',
-                    color: '#718096',
-                    textTransform: 'uppercase',
-                    letterSpacing: '1px',
-                    marginBottom: '10px'
-                }}>
-                    Technical Interview
-                </p>
-                <h2 style={{ fontSize: '22px', lineHeight: '1.5', margin: '0 0 30px 0', color: '#2d3748' }}>
-                    {question.question_text}
-                </h2>
+            {/* ─── Top Navigation Bar ─── */}
+            <header style={S.topBar}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <span style={{ fontSize: 18, fontWeight: 900, background: 'linear-gradient(90deg,#00e5ff,#818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>⚡ AI HirePro</span>
+                    <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.08)' }} />
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#475569', letterSpacing: '0.15em' }}>LIVE ASSESSMENT</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <QuestionBoard current={question.question_index} total={question.total_questions} />
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: '#64748b', background: 'rgba(255,255,255,0.04)', padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.06)' }}>
+                        Q{question.question_index}/{question.total_questions}
+                    </div>
+                </div>
+            </header>
 
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-                    {status === 'answering' && (
-                        <button
-                            onClick={() => handleSubmit('MANUAL')}
-                            style={{ ...buttonStyle, background: '#38a169' }}>
-                            Finish & Submit
-                        </button>
-                    )}
-                    {status === 'reading' && (
-                        <p style={{ color: '#718096', fontStyle: 'italic' }}>
-                            You will be able to answer in a few seconds...
-                        </p>
-                    )}
-                    {status === 'submitting' && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <div className="spinner-small"></div>
-                            <span>Processing your request...</span>
+            {/* ─── Main Content Area ─── */}
+            <main style={S.main}>
+                {/* ─── Left: Timer + Video Panel ─── */}
+                <aside style={S.sidebar}>
+                    {/* Timer Card */}
+                    <div style={S.card}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+                            <PhaseBadge phase={status} />
+                            <CircularTimer timeLeft={timeLeft} maxTime={maxTime} phase={status} />
+                            {status === 'reading' && (
+                                <p style={{ fontSize: 12, color: '#475569', textAlign: 'center', lineHeight: 1.5 }}>
+                                    Read the question carefully.<br />Recording starts automatically.
+                                </p>
+                            )}
+                            {status === 'answering' && <AudioWaveform />}
+                        </div>
+                    </div>
+
+                    {/* Video Feed Card */}
+                    <div style={{ ...S.card, padding: 0, overflow: 'hidden', position: 'relative' }}>
+                        <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }} />
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
+                        <div style={{ position: 'absolute', top: 10, left: 10, display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', padding: '4px 10px', borderRadius: 6 }}>
+                            <div style={{ width: 7, height: 7, background: '#f43f5e', borderRadius: '50%', animation: 'pulse 1.2s infinite', boxShadow: '0 0 8px rgba(244,63,94,0.5)' }} />
+                            <span style={{ fontSize: 9, fontWeight: 800, color: '#f43f5e', letterSpacing: '0.1em', fontFamily: "'JetBrains Mono',monospace" }}>LIVE</span>
+                        </div>
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(transparent, rgba(0,0,0,0.7))', display: 'flex', alignItems: 'flex-end', padding: '0 12px 8px', justifyContent: 'space-between' }}>
+                            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', fontFamily: "'JetBrains Mono',monospace" }}>AI PROCTORING ACTIVE</span>
+                        </div>
+                    </div>
+                </aside>
+
+                {/* ─── Right: Question Panel ─── */}
+                <section style={S.questionPanel}>
+                    {/* Question Card */}
+                    <div style={{ ...S.card, flex: 1, animation: 'enterUp 0.5s ease forwards' }}>
+                        <div style={{ marginBottom: 28 }}>
+                            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#475569', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 16, height: 1, background: '#475569' }} />
+                                QUESTION {question.question_index} OF {question.total_questions}
+                            </div>
+                            <h2 style={{ fontSize: 22, fontWeight: 700, lineHeight: 1.65, margin: 0, color: '#e8f0fe', fontFamily: "'Inter',sans-serif" }}>
+                                {question.question_text}
+                            </h2>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div style={{ marginBottom: 28 }}>
+                            <div style={{ height: 3, background: 'rgba(255,255,255,0.04)', borderRadius: 2, overflow: 'hidden' }}>
+                                <div style={{
+                                    height: '100%', borderRadius: 2,
+                                    width: `${(timeLeft / maxTime) * 100}%`,
+                                    background: status === 'reading' ? 'linear-gradient(90deg,#00e5ff,#0ea5e9)' : timeLeft <= 10 ? 'linear-gradient(90deg,#f43f5e,#e11d48)' : 'linear-gradient(90deg,#818cf8,#6366f1)',
+                                    transition: 'width 1s linear',
+                                    boxShadow: status === 'reading' ? '0 0 10px rgba(0,229,255,0.3)' : timeLeft <= 10 ? '0 0 10px rgba(244,63,94,0.3)' : '0 0 10px rgba(99,102,241,0.3)',
+                                }} />
+                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
+                            {status === 'answering' && (
+                                <button onClick={() => handleSubmit('MANUAL')} style={S.btnSubmit}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Submit Answer
+                                </button>
+                            )}
+                            {status === 'reading' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 24px', background: 'rgba(0,229,255,0.04)', border: '1px solid rgba(0,229,255,0.1)', borderRadius: 12 }}>
+                                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#00e5ff', animation: 'pulse 1.5s infinite' }} />
+                                    <span style={{ fontSize: 13, color: '#00e5ff', fontWeight: 600 }}>Recording begins in {timeLeft}s...</span>
+                                </div>
+                            )}
+                            {status === 'submitting' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 24px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 12 }}>
+                                    <div style={{ width: 18, height: 18, border: '2px solid rgba(245,158,11,0.2)', borderTopColor: '#f59e0b', borderRadius: '50%', animation: 'spin-slow 0.8s linear infinite' }} />
+                                    <span style={{ fontSize: 13, color: '#f59e0b', fontWeight: 600 }}>Analyzing response...</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* End Interview Button */}
+                        {!['loading', 'submitting', 'error', 'completed'].includes(status) && (
+                            <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.04)', display: 'flex', justifyContent: 'center' }}>
+                                <button onClick={() => setShowEndModal(true)} style={S.btnGhost}
+                                    onMouseOver={(e) => { e.currentTarget.style.color = '#f43f5e'; e.currentTarget.style.borderColor = 'rgba(244,63,94,0.25)'; e.currentTarget.style.background = 'rgba(244,63,94,0.04)'; }}
+                                    onMouseOut={(e) => { e.currentTarget.style.color = '#475569'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'transparent'; }}>
+                                    End Interview Early
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Transcript Card */}
+                    {transcript && (
+                        <div style={{ ...S.card, animation: 'enterUp 0.4s ease forwards', borderColor: 'rgba(0,229,255,0.12)' }}>
+                            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#00e5ff', letterSpacing: '0.12em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 16, height: 1, background: '#00e5ff' }} />
+                                LAST TRANSCRIBED RESPONSE
+                            </div>
+                            <p style={{ fontSize: 14, color: '#94a3b8', fontStyle: 'italic', lineHeight: 1.7, margin: 0 }}>"{transcript}"</p>
                         </div>
                     )}
-                </div>
+                </section>
+            </main>
 
-                {/* Optional early termination button */}
-                {!['loading', 'submitting', 'error', 'completed'].includes(status) && (
-                    <div style={{ marginTop: '20px', borderTop: '1px solid #edf2f7', paddingTop: '20px' }}>
-                        <button
-                            onClick={() => setShowEndModal(true)}
-                            style={{
-                                background: 'transparent',
-                                color: '#a0aec0',
-                                border: '1px solid #e2e8f0',
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                fontSize: '13px',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s'
-                            }}
-                            onMouseOver={(e) => { e.target.style.color = '#e53e3e'; e.target.style.borderColor = '#feb2b2'; }}
-                            onMouseOut={(e) => { e.target.style.color = '#a0aec0'; e.target.style.borderColor = '#e2e8f0'; }}
-                        >
-                            End Interview Early
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* Confirmation Modal */}
-            {showEndModal && (
+            {/* ─── Warning Toast ─── */}
+            {latestWarning && (
                 <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000,
-                    backdropFilter: 'blur(4px)'
+                    position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)',
+                    padding: '14px 28px', background: 'rgba(244,63,94,0.12)', border: '1px solid rgba(244,63,94,0.3)',
+                    color: '#fb7185', borderRadius: 14, fontSize: 13, fontWeight: 700,
+                    backdropFilter: 'blur(16px)', zIndex: 999, display: 'flex', alignItems: 'center', gap: 10,
+                    animation: 'shake 0.4s ease, enterUp 0.3s ease', boxShadow: '0 8px 32px rgba(244,63,94,0.15)',
                 }}>
-                    <div style={{
-                        background: 'white',
-                        padding: '30px',
-                        borderRadius: '16px',
-                        maxWidth: '400px',
-                        width: '90%',
-                        textAlign: 'center',
-                        boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)'
-                    }}>
-                        <div style={{ fontSize: '40px', marginBottom: '10px' }}>⚠️</div>
-                        <h3 style={{ margin: '0 0 10px 0', color: '#2d3748' }}>End Interview?</h3>
-                        <p style={{ color: '#718096', fontSize: '14px', marginBottom: '24px', lineHeight: '1.5' }}>
-                            Are you sure you want to end the interview now?
-                            <strong> Remaining questions will be skipped</strong> and your current progress will be submitted.
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f43f5e', animation: 'pulse 1s infinite' }} />
+                    {latestWarning}
+                </div>
+            )}
+
+            {/* ─── End Interview Modal ─── */}
+            {showEndModal && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(2,8,17,0.85)', backdropFilter: 'blur(16px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+                    <div style={{ background: 'rgba(10,22,40,0.97)', border: '1px solid rgba(255,255,255,0.08)', padding: 36, borderRadius: 24, maxWidth: 420, width: '90%', textAlign: 'center', boxShadow: '0 32px 80px rgba(0,0,0,0.6)', animation: 'enterScale 0.3s ease forwards' }}>
+                        <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, margin: '0 auto 20px' }}>⚠️</div>
+                        <h3 style={{ margin: '0 0 8px', color: '#e8f0fe', fontSize: 20, fontWeight: 800 }}>End Interview?</h3>
+                        <p style={{ color: '#64748b', fontSize: 14, marginBottom: 28, lineHeight: 1.6 }}>
+                            Remaining questions will be skipped and your current progress will be submitted.
                         </p>
-                        <div style={{ display: 'flex', gap: '12px' }}>
-                            <button
-                                onClick={() => setShowEndModal(false)}
-                                style={{
-                                    flex: 1,
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: '1px solid #e2e8f0',
-                                    background: 'white',
-                                    fontWeight: '600',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Keep Going
+                        <div style={{ display: 'flex', gap: 12 }}>
+                            <button onClick={() => setShowEndModal(false)} style={{ flex: 1, padding: '13px 0', borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: '#94a3b8', fontWeight: 700, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontSize: 14, transition: 'all 0.2s' }}>
+                                Continue
                             </button>
-                            <button
-                                onClick={handleEndInterview}
-                                style={{
-                                    flex: 1,
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: 'none',
-                                    background: '#e53e3e',
-                                    color: 'white',
-                                    fontWeight: '600',
-                                    cursor: 'pointer'
-                                }}
-                            >
+                            <button onClick={handleEndInterview} style={{ flex: 1, padding: '13px 0', borderRadius: 12, border: '1px solid rgba(225,29,72,0.3)', background: 'rgba(225,29,72,0.15)', color: '#fb7185', fontWeight: 700, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontSize: 14, transition: 'all 0.2s' }}>
                                 End & Submit
                             </button>
                         </div>
@@ -629,141 +744,93 @@ const InterviewSession = () => {
                 </div>
             )}
 
-            {/* Video Monitor */}
-            <div style={{ marginTop: '20px', borderRadius: '12px', overflow: 'hidden', background: '#000', height: '180px', width: '320px', margin: '20px auto', position: 'relative' }}>
-                <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <canvas ref={canvasRef} style={{ display: 'none' }} />
-                <div style={{ position: 'absolute', top: '10px', right: '10px', color: 'red', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <div style={{ width: '8px', height: '8px', background: 'red', borderRadius: '50%', animation: 'pulse 1s infinite' }} />
-                    LIVE MONITORING
-                </div>
-            </div>
-
-            {/* Misconduct Warnings */}
-            {latestWarning && (
-                <div style={{
-                    marginTop: '20px',
-                    padding: '12px',
-                    background: '#fff5f5',
-                    border: '1px solid #feb2b2',
-                    color: '#c53030',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    animation: 'shake 0.5s'
-                }}>
-                    ⚠️ {latestWarning}
-                </div>
-            )}
-
-            {/* Transcribed Answer Display */}
-            {transcript && (
-                <div style={{
-                    marginTop: '20px',
-                    width: '100%',
-                    maxWidth: '600px',
-                    padding: '20px',
-                    background: '#ebf8ff',
-                    border: '1px solid #bee3f8',
-                    borderRadius: '12px',
-                    color: '#2b6cb0',
-                    fontSize: '14px',
-                    animation: 'fadeIn 0.5s'
-                }}>
-                    <strong>Your Last Answer (Transcribed):</strong>
-                    <p style={{ margin: '10px 0 0 0', fontStyle: 'italic', lineHeight: '1.6' }}>
-                        "{transcript}"
-                    </p>
-                </div>
-            )}
-
-            {/* Hint / Instructions */}
-            <div style={{ marginTop: '30px', color: '#a0aec0', fontSize: '12px', textAlign: 'center' }}>
-                Please ensure you are in a quiet environment. Your video and audio are being recorded.
-            </div>
+            {/* ─── Bottom Status Bar ─── */}
+            <footer style={S.bottomBar}>
+                <span style={{ fontSize: 10, color: '#334155', fontFamily: "'JetBrains Mono',monospace" }}>SESSION {interviewId?.slice(0, 8)}</span>
+                <span style={{ fontSize: 10, color: '#334155' }}>•</span>
+                <span style={{ fontSize: 10, color: '#334155', fontFamily: "'JetBrains Mono',monospace" }}>AI PROCTORING ENABLED</span>
+                <span style={{ fontSize: 10, color: '#334155' }}>•</span>
+                <span style={{ fontSize: 10, color: '#334155', fontFamily: "'JetBrains Mono',monospace" }}>ENCRYPTED</span>
+            </footer>
 
             <style>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
+                @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+                @keyframes shake { 0%,100% { transform:translateX(-50%); } 25% { transform:translateX(calc(-50% - 4px)); } 75% { transform:translateX(calc(-50% + 4px)); } }
+                @keyframes timerPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.08); } }
+                @keyframes waveBar {
+                    0% { height: 4px; }
+                    100% { height: 18px; }
                 }
-                .spinner-small {
-                    width: 20px;
-                    height: 20px;
-                    border: 2px solid #e2e8f0;
-                    border-top-color: #3182ce;
-                    border-radius: 50%;
-                    animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                    to { transform: rotate(360deg); }
-                }
-                @keyframes pulse {
-                    0% { opacity: 1; }
-                    50% { opacity: 0.5; }
-                    100% { opacity: 1; }
-                }
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-5px); }
-                    75% { transform: translateX(5px); }
-                }
+                @keyframes enterUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+                @keyframes enterScale { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+                @keyframes spin-slow { to { transform:rotate(360deg); } }
             `}</style>
         </div>
     );
 };
 
-// Styles
-const containerStyle = {
-    minHeight: '100vh',
-    background: '#f7fafc',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
-    fontFamily: '"Inter", sans-serif'
-};
-
-const headerStyle = {
-    width: '100%',
-    maxWidth: '600px',
-    marginBottom: '30px'
-};
-
-const progressContainerStyle = {
-    height: '8px',
-    background: '#edf2f7',
-    borderRadius: '4px',
-    overflow: 'hidden'
-};
-
-const progressBarStyle = {
-    height: '100%',
-    transition: 'width 1s linear, background-color 0.3s'
-};
-
-const cardStyle = {
-    width: '100%',
-    maxWidth: '600px',
-    background: 'white',
-    padding: '40px',
-    borderRadius: '16px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-    textAlign: 'center'
-};
-
-const buttonStyle = {
-    padding: '12px 30px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: 'white',
-    background: '#4a5568',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    outline: 'none'
+/* ─── Style Constants ─── */
+const S = {
+    page: {
+        minHeight: '100vh', background: '#020811', fontFamily: "'Outfit',sans-serif", color: '#e8f0fe',
+        display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden',
+    },
+    ambientGrid: {
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+        backgroundImage: 'linear-gradient(rgba(0,229,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.02) 1px, transparent 1px)',
+        backgroundSize: '60px 60px',
+    },
+    blobCyan: {
+        position: 'fixed', width: 500, height: 500, borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
+        background: 'radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%)', filter: 'blur(80px)',
+    },
+    blobIndigo: {
+        position: 'fixed', width: 400, height: 400, borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
+        background: 'radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)', filter: 'blur(80px)',
+    },
+    topBar: {
+        padding: '12px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        background: 'rgba(2,8,17,0.9)', borderBottom: '1px solid rgba(255,255,255,0.04)',
+        position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(20px)',
+    },
+    main: {
+        flex: 1, display: 'grid', gridTemplateColumns: '300px 1fr', gap: 24, padding: '24px 28px',
+        position: 'relative', zIndex: 10, maxWidth: 1200, margin: '0 auto', width: '100%',
+    },
+    sidebar: {
+        display: 'flex', flexDirection: 'column', gap: 16,
+    },
+    questionPanel: {
+        display: 'flex', flexDirection: 'column', gap: 16,
+    },
+    card: {
+        background: 'rgba(10,22,40,0.85)', backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20,
+        padding: 28, boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+    },
+    btnPrimary: {
+        display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px',
+        background: 'linear-gradient(135deg, #00e5ff, #0ea5e9)', color: '#020811',
+        fontFamily: "'Outfit',sans-serif", fontWeight: 800, fontSize: 14, border: 'none',
+        borderRadius: 12, cursor: 'pointer', transition: 'all 0.3s',
+        boxShadow: '0 8px 24px rgba(0,229,255,0.25)',
+    },
+    btnSubmit: {
+        display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 32px',
+        background: 'linear-gradient(135deg, #10b981, #059669)', color: '#ffffff',
+        fontFamily: "'Outfit',sans-serif", fontWeight: 800, fontSize: 14, border: 'none',
+        borderRadius: 12, cursor: 'pointer', transition: 'all 0.3s',
+        boxShadow: '0 8px 24px rgba(16,185,129,0.3)',
+    },
+    btnGhost: {
+        background: 'transparent', color: '#475569', border: '1px solid rgba(255,255,255,0.06)',
+        padding: '9px 20px', borderRadius: 10, fontSize: 12, fontWeight: 600,
+        cursor: 'pointer', transition: 'all 0.2s', fontFamily: "'Outfit',sans-serif",
+    },
+    bottomBar: {
+        padding: '10px 28px', display: 'flex', justifyContent: 'center', gap: 12, alignItems: 'center',
+        borderTop: '1px solid rgba(255,255,255,0.03)', position: 'relative', zIndex: 10,
+    },
 };
 
 export default InterviewSession;

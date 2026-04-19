@@ -28,6 +28,9 @@ class DocumentService:
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext == ".pdf":
             raw_text = await ocr_engine.extract_from_pdf(file_path)
+        elif file_ext in [".txt", ".log", ".md"]:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                raw_text = f.read()
         else:
             # Assume image for now (png, jpg, etc.)
             raw_text = await ocr_engine.extract_text_from_image(file_path)

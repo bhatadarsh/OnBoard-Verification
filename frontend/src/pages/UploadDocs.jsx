@@ -1,91 +1,235 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import SearchInput from '../components/SearchInput';
-import SelectedBanner from '../components/SelectedBanner';
 
-const UploadDocs = () => {
-  const { candidates, selected, load, docFiles, setDocFiles, loading, uploadDocs } = useOutletContext();
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-  const docTypes = [
-    { key: 'resume', label: 'Resume', icon: '📄', accept: '.pdf,.docx,.txt', hint: 'PDF, DOCX, TXT' },
-    { key: 'hr_transcript', label: 'HR Interview File', icon: '🎤', accept: '.txt,.mp3,.wav,.m4a', hint: 'Audio or Transcript' },
-    { key: 'aadhar', label: 'Aadhar Card', icon: '🪪', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Image or PDF' },
-    { key: 'pan', label: 'PAN Card', icon: '💳', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Image or PDF' },
-    { key: 'marksheet_10th', label: '10th Marksheet', icon: '🎓', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'High School Result' },
-    { key: 'marksheet_12th', label: '12th Marksheet', icon: '🎓', accept: '.png,.jpg,.jpeg,.pdf,.txt', hint: 'Intermediate Result' },
-    { key: 'i9_form', label: 'I-9 Form', icon: '📝', accept: '.png,.jpg,.jpeg,.pdf', hint: 'Signed Onboarding Form' },
-  ];
+const DOC_TYPES = [
+  { key: 'resume',        label: 'Resume',            icon: '📄', accent: '#818cf8', accept: '.pdf,.docx,.txt',           hint: 'PDF / DOCX / TXT' },
+  { key: 'aadhar',        label: 'Aadhar Card',       icon: '🪪', accent: '#00e5ff', accept: '.png,.jpg,.jpeg,.pdf',       hint: 'Image or PDF' },
+  { key: 'pan',           label: 'PAN Card',          icon: '💳', accent: '#f59e0b', accept: '.png,.jpg,.jpeg,.pdf',       hint: 'Image or PDF' },
+  { key: 'marksheet_10th',label: '10th Marksheet',    icon: '🎓', accent: '#10b981', accept: '.png,.jpg,.jpeg,.pdf',       hint: 'High School Result' },
+  { key: 'marksheet_12th',label: '12th Marksheet',    icon: '🎓', accent: '#10b981', accept: '.png,.jpg,.jpeg,.pdf',       hint: 'Intermediate Result' },
+  { key: 'hr_transcript', label: 'HR Interview File', icon: '🎤', accent: '#8b5cf6', accept: '.txt,.mp3,.wav,.m4a',        hint: 'Audio or Transcript' },
+  { key: 'i9_form',       label: 'I-9 Form',          icon: '📝', accent: '#f43f5e', accept: '.png,.jpg,.jpeg,.pdf',       hint: 'Signed Onboarding Form' },
+];
+
+function DocCard({ doc, file, onSelect, onClear }) {
+  const inputRef = useRef();
+  const [drag, setDrag] = useState(false);
 
   return (
-    <div className="animate-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white tracking-wide">Document Uploads</h1>
-        <p className="text-slate-400 mt-1 text-sm">Attach proofs of identity and education for the applicant.</p>
-      </div>
-      
-      <SelectedBanner />
-
-      {!selected && (
-        <div className="bg-slate-900/60 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-slate-800 mb-6">
-          <div className="flex justify-between items-center mb-6">
-            <span className="font-semibold text-slate-300">Select a candidate to upload their files</span>
-            <SearchInput candidates={candidates} onSelect={(c) => load(c.id)} placeholder="Search candidate..." />
-          </div>
-          {candidates.length > 0 && (
-            <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-slate-800">
-              {candidates.slice(0, 10).map((c, idx) => (
-                <button key={c.id} onClick={() => load(c.id)} className="px-4 py-2 bg-slate-800 hover:bg-cyan-900/40 hover:text-cyan-300 hover:border-cyan-500/50 text-slate-300 rounded border border-slate-700 text-sm font-medium transition-colors animate-in fade-in cursor-pointer" style={{ animationDelay: `${idx * 50}ms` }}>
-                  {c.full_name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+    <div
+      style={{
+        background: file ? `${doc.accent}09` : 'rgba(10,22,40,0.8)',
+        border: `1px solid ${file ? doc.accent + '35' : 'rgba(255,255,255,0.06)'}`,
+        borderRadius: 16, padding: '20px', backdropFilter: 'blur(16px)',
+        transition: 'all 0.25s', position: 'relative',
+      }}
+      onMouseEnter={e => { if (!file) e.currentTarget.style.borderColor = `${doc.accent}25`; }}
+      onMouseLeave={e => { if (!file) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; }}
+    >
+      {file && (
+        <button
+          onClick={() => onClear(doc.key)}
+          style={{ position: 'absolute', top: 10, right: 10, width: 22, height: 22, borderRadius: '50%', background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', color: '#f43f5e', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 700 }}
+        >✕</button>
       )}
-
-      {selected && (
-        <div className="animate-in fade-in z-10 w-full">
-          <div className="bg-slate-900 border-l-4 border-cyan-500 text-cyan-100 p-4 rounded-r-lg text-sm mb-6 flex items-start shadow-inner">
-            <span className="text-cyan-400 mr-2 mt-0.5">🔒</span> 
-            <span>Privacy Secured. All uploaded documents are symmetrically encrypted locally before writing to disk.</span>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-            {docTypes.map(d => (
-              <div key={d.key} className="bg-slate-900/80 backdrop-blur-sm rounded-xl p-5 border border-slate-800 hover:border-cyan-500/50 transition-all group shadow-sm flex flex-col justify-between">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className={`text-2xl ${docFiles[d.key] ? 'text-cyan-400' : 'text-slate-500'}`}>{d.icon}</span>
-                  <div>
-                    <div className="font-semibold text-slate-200 text-sm">{d.label}</div>
-                    <div className="text-[10px] text-slate-500 uppercase tracking-wider">{d.hint}</div>
-                  </div>
-                </div>
-                
-                <input type="file" id={d.key} accept={d.accept} className="hidden" onChange={e => setDocFiles({ ...docFiles, [d.key]: e.target.files?.[0] })} />
-                <label 
-                  htmlFor={d.key} 
-                  className={`block p-3 border border-dashed rounded text-center cursor-pointer font-medium text-xs transition-all ${
-                    docFiles[d.key] ? 'border-cyan-500 bg-cyan-500/10 text-cyan-300' : 'border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800 text-slate-400'
-                  }`}
-                >
-                  {docFiles[d.key] ? <span className="flex items-center justify-center gap-2">✓ Attached: {docFiles[d.key].name.substring(0, 15)}...</span> : '+ Select File'}
-                </label>
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex gap-4">
-            <button onClick={uploadDocs} disabled={loading} className={`flex-1 py-3.5 rounded font-bold text-xs uppercase tracking-widest transition-all shadow-md flex justify-center items-center gap-2 border ${loading ? 'bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed' : 'bg-cyan-600/20 hover:bg-cyan-500/40 border-cyan-500/50 text-cyan-300 hover:text-white active:scale-[0.99] shadow-[0_0_15px_rgba(6,182,212,0.15)] cursor-pointer'}`}>
-              {loading ? 'Encrypting & Uploading...' : 'Secure Submit'}
-            </button>
-            <button onClick={() => setDocFiles({})} className="px-6 py-3.5 bg-transparent border border-slate-700 hover:border-slate-500 hover:bg-slate-800 text-slate-400 rounded font-bold text-xs uppercase tracking-widest transition-all focus:ring-1 focus:ring-slate-500 cursor-pointer">
-              Clear Cache
-            </button>
-          </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 11, background: file ? `${doc.accent}18` : 'rgba(255,255,255,0.04)', border: `1px solid ${file ? doc.accent + '30' : 'rgba(255,255,255,0.07)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
+          {doc.icon}
         </div>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#e8f0fe' }}>{doc.label}</div>
+          <div style={{ fontSize: 10, color: '#334155', fontFamily: "'JetBrains Mono',monospace" }}>{doc.hint}</div>
+        </div>
+      </div>
+
+      <input ref={inputRef} type="file" id={doc.key} accept={doc.accept} style={{ display: 'none' }}
+        onChange={e => { const f = e.target.files?.[0]; if (f) onSelect(doc.key, f); }} />
+
+      {file ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: `${doc.accent}10`, border: `1px solid ${doc.accent}25`, borderRadius: 8 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: doc.accent, boxShadow: `0 0 5px ${doc.accent}` }} />
+          <span style={{ fontSize: 11, fontWeight: 600, color: doc.accent, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{file.name}</span>
+          <span style={{ fontSize: 10, color: '#334155' }}>{(file.size / 1024).toFixed(0)}K</span>
+        </div>
+      ) : (
+        <label htmlFor={doc.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '9px', border: '1px dashed rgba(255,255,255,0.08)', borderRadius: 8, cursor: 'pointer', color: '#475569', fontSize: 12, fontWeight: 600, transition: 'all 0.2s' }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = `${doc.accent}40`; e.currentTarget.style.color = doc.accent; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#475569'; }}
+        >
+          <span style={{ fontSize: 14 }}>+</span> Select File
+        </label>
       )}
     </div>
   );
-};
+}
 
-export default UploadDocs;
+export default function UploadDocs() {
+  const { candidates, selected, load, docFiles, setDocFiles, loading, uploadDocs, extractLogs, setPreviewFile } = useOutletContext();
+  const [search, setSearch] = useState('');
+
+  const uploadedCount = Object.values(docFiles).filter(Boolean).length;
+  const isExtracting  = loading && extractLogs.length > 0;
+
+  const filtered = candidates.filter(c =>
+    !search || c.full_name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono',monospace", color: '#10b981', letterSpacing: '0.2em', marginBottom: 8 }}>// STEP 2 OF 3</div>
+        <h1 style={{ fontSize: 30, fontWeight: 900, color: '#ffffff', letterSpacing: '-1px', lineHeight: 1 }}>Upload Documents</h1>
+        <p style={{ color: '#475569', fontSize: 13, marginTop: 5 }}>Upload identity & education proofs. Extraction builds the Knowledge Base automatically.</p>
+      </div>
+
+      {/* Candidate Selector */}
+      {!selected ? (
+        <div style={{ background: 'rgba(10,22,40,0.8)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 18, padding: '28px', backdropFilter: 'blur(16px)', marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#94a3b8' }}>Select a candidate to upload documents</span>
+            <div style={{ position: 'relative' }}>
+              <svg style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#475569' }} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}
+                style={{ width: 200, padding: '8px 12px 8px 30px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 9, color: '#e8f0fe', fontSize: 12, fontFamily: "'Outfit',sans-serif", outline: 'none' }} />
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {filtered.slice(0, 12).map(c => (
+              <button key={c.id} onClick={() => load(c.id)}
+                style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 9, color: '#94a3b8', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,229,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(0,229,255,0.3)'; e.currentTarget.style.color = '#00e5ff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = '#94a3b8'; }}
+              >{c.full_name}</button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div>
+          {/* Selected Candidate Banner */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 13, marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, color: '#10b981' }}>
+                {selected.full_name?.[0]?.toUpperCase()}
+              </div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#e8f0fe' }}>{selected.full_name}</div>
+                <div style={{ fontSize: 10, color: '#10b981', fontFamily: "'JetBrains Mono',monospace" }}>SELECTED — {uploadedCount} file{uploadedCount !== 1 ? 's' : ''} queued</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
+              <span style={{ fontSize: 10, color: '#10b981', fontFamily: "'JetBrains Mono',monospace" }}>
+                {selected.has_knowledge_base ? 'KB INDEXED' : 'AWAITING EXTRACTION'}
+              </span>
+            </div>
+          </div>
+
+          {/* Encryption Note */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', borderRadius: 10, marginBottom: 22 }}>
+            <span style={{ fontSize: 14 }}>🔒</span>
+            <span style={{ fontSize: 11, color: '#94a3b8' }}>All files are <strong style={{ color: '#818cf8' }}>AES-256 encrypted</strong> locally before writing to disk. Zero plaintext persisted.</span>
+          </div>
+
+          {/* Previously Uploaded Documents */}
+          {selected.uploaded_documents?.length > 0 && (
+            <div style={{ background: 'rgba(10,22,40,0.8)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: '18px 20px', marginBottom: 22 }}>
+              <div style={{ fontSize: 10, fontFamily: "'JetBrains Mono',monospace", color: '#00e5ff', letterSpacing: '0.15em', marginBottom: 14 }}>
+                UPLOADED DOCUMENTS ({selected.uploaded_documents.length})
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {selected.uploaded_documents.map(docName => {
+                  const docInfo = DOC_TYPES.find(d => d.key === docName);
+                  const isTampered = selected.forensic_alerts?.some(a => a.toUpperCase().includes(docName.toUpperCase()));
+                  return (
+                    <button
+                      key={docName}
+                      onClick={() => setPreviewFile({ url: `${API_BASE}/api/v1/documents/${selected.id}/${docName}/redacted`, title: docInfo?.label || docName })}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px',
+                        background: isTampered ? 'rgba(244,63,94,0.08)' : 'rgba(255,255,255,0.03)',
+                        border: `1px solid ${isTampered ? 'rgba(244,63,94,0.25)' : 'rgba(255,255,255,0.08)'}`,
+                        borderRadius: 9, cursor: 'pointer', transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = (docInfo?.accent || '#00e5ff') + '50'; e.currentTarget.style.background = (docInfo?.accent || '#00e5ff') + '10'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = isTampered ? 'rgba(244,63,94,0.25)' : 'rgba(255,255,255,0.08)'; e.currentTarget.style.background = isTampered ? 'rgba(244,63,94,0.08)' : 'rgba(255,255,255,0.03)'; }}
+                    >
+                      <span style={{ fontSize: 14 }}>{docInfo?.icon || '📄'}</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: '#e8f0fe' }}>{docInfo?.label || docName}</span>
+                      {isTampered && <span style={{ fontSize: 9, padding: '2px 6px', background: 'rgba(244,63,94,0.15)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: 4, color: '#f43f5e', fontWeight: 700 }}>TAMPER</span>}
+                      <span style={{ fontSize: 10, color: '#475569' }}>👁</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {selected.forensic_alerts?.length > 0 && (
+                <div style={{ marginTop: 12 }}>
+                  {selected.forensic_alerts.map((alert, i) => (
+                    <div key={i} style={{ fontSize: 11, color: '#f43f5e', padding: '6px 10px', background: 'rgba(244,63,94,0.06)', borderRadius: 6, marginBottom: 4, fontFamily: "'JetBrains Mono',monospace" }}>
+                      ⚠ {alert}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Document Grid */}
+          <div className="enter-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 14, marginBottom: 24 }}>
+            {DOC_TYPES.map(doc => (
+              <DocCard
+                key={doc.key} doc={doc}
+                file={docFiles[doc.key] || null}
+                onSelect={(k, f) => setDocFiles(prev => ({ ...prev, [k]: f }))}
+                onClear={(k) => setDocFiles(prev => { const n = { ...prev }; delete n[k]; return n; })}
+              />
+            ))}
+          </div>
+
+          {/* Extraction Log (auto-triggered) */}
+          {extractLogs.length > 0 && (
+            <div style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(0,229,255,0.15)', borderRadius: 14, padding: '18px 20px', marginBottom: 20, fontFamily: "'JetBrains Mono',monospace" }}>
+              <div style={{ fontSize: 10, color: '#00e5ff', letterSpacing: '0.15em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e5ff', animation: 'pulse 1s infinite' }} />
+                EXTRACTION ENGINE — LIVE LOG
+              </div>
+              <div style={{ maxHeight: 180, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {extractLogs.map((log, i) => (
+                  <div key={i} style={{ fontSize: 11, color: i === extractLogs.length - 1 ? '#e8f0fe' : '#475569', lineHeight: 1.5 }}>{log}</div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button
+              onClick={uploadDocs}
+              disabled={loading || uploadedCount === 0}
+              style={{
+                flex: 1, padding: '15px', borderRadius: 13, border: 'none',
+                background: (loading || uploadedCount === 0) ? 'rgba(255,255,255,0.04)' : 'linear-gradient(135deg,#00e5ff,#0ea5e9)',
+                color: (loading || uploadedCount === 0) ? '#334155' : '#020811',
+                fontSize: 14, fontWeight: 800, cursor: (loading || uploadedCount === 0) ? 'not-allowed' : 'pointer',
+                boxShadow: (loading || uploadedCount === 0) ? 'none' : '0 12px 32px rgba(0,229,255,0.25)',
+                transition: 'all 0.3s', fontFamily: "'Outfit',sans-serif",
+              }}
+            >
+              {isExtracting ? '⚡ Building Knowledge Base...' : loading ? '🔒 Encrypting & Uploading...' : `Upload & Extract (${uploadedCount} file${uploadedCount !== 1 ? 's' : ''})`}
+            </button>
+            <button
+              onClick={() => setDocFiles({})}
+              style={{ padding: '15px 24px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 13, color: '#475569', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: "'Outfit',sans-serif", transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(244,63,94,0.3)'; e.currentTarget.style.color = '#f43f5e'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = '#475569'; }}
+            >Clear</button>
+          </div>
+        </div>
+      )}
+
+      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
+    </div>
+  );
+}

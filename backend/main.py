@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fastapi import FastAPI, HTTPException, status, Depends, File, UploadFile, Form, Query
+from fastapi import FastAPI, APIRouter, HTTPException, status, Depends, File, UploadFile, Form, Query
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -57,22 +57,11 @@ from interview_orchestration.nodes.evaluator import evaluate_interview
 from interview_orchestration.nodes.cheating_detector import analyze_single_frame
 from interview_orchestration.stt.factory import get_stt_engine
 
-app = FastAPI(title="Interview System API - Stage 5: Interview In-Progress")
+router = APIRouter(tags=["interview"])
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
-@app.middleware("http")
-async def log_request_size(request, call_next):
-    content_length = request.headers.get("Content-Length")
-    if content_length and int(content_length) > 1024 * 1024:
-        print(f"CRITICAL DEBUG: Large Request Detected! Path: {request.url.path}, Size: {content_length} bytes")
-    return await call_next(request)
+
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -151,7 +140,7 @@ def create_interview_session_for_candidate(candidate_id: int, resume_id: Optiona
     
     return session
 
-@app.get("/files/{container}/{blob_path:path}")
+@router.get("/files/{container}/{blob_path:path}")
 async def serve_local_file(
     container: str,
     blob_path: str,
@@ -168,14 +157,19 @@ async def serve_local_file(
 
     media_type, _ = mimetypes.guess_type(str(local_path))
     media_type = media_type or "application/octet-stream"
-    return FileResponse(str(local_path), media_type=media_type, filename=local_path.name)
+    disposition = "inline" if media_type == "application/pdf" else "attachment"
+    return FileResponse(
+        str(local_path),
+        media_type=media_type,
+        headers={"Content-Disposition": f'{disposition}; filename="{local_path.name}"'},
+    )
 
 
-@app.get("/")
+@router.get("/")
 async def root():
     return {"status": "ok", "stage": "2 - Persistence & Files"}
 
-@app.post("/auth/register", response_model=User, status_code=status.HTTP_201_CREATED)
+@router.post("/auth/register", response_model=User, status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserCreate):
     user_data.email = user_data.email.lower()
     if user_data.email in db.users:
@@ -191,7 +185,7 @@ async def register(user_data: UserCreate):
     db.save()
     return User(**{k: v for k, v in user.items() if k != "hashed_password"})
 
-@app.post("/auth/login", response_model=Token)
+@router.post("/auth/login", response_model=Token)
 async def login(credentials: UserLogin):
     email = credentials.email.lower()
     user = db.users.get(email)
@@ -205,18 +199,18 @@ async def login(credentials: UserLogin):
     access_token = create_access_token(data={"user_id": user["id"], "role": user["role"]}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.get("/auth/me", response_model=User)
+@router.get("/auth/me", response_model=User)
 async def get_me(current_user: TokenData = Depends(get_current_user)):
     for user in db.users.values():
         if user["id"] == current_user.user_id:
             return User(**{k: v for k, v in user.items() if k != "hashed_password"})
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-@app.get("/admin/dashboard")
+@router.get("/admin/dashboard")
 async def admin_dashboard(current_user: TokenData = Depends(require_admin)):
     return {"message": "Welcome to Admin Dashboard", "user_id": current_user.user_id}
 
-@app.get("/user/dashboard")
+@router.get("/user/dashboard")
 async def user_dashboard(current_user: TokenData = Depends(require_user)):
     return {"message": "Welcome to User Dashboard", "user_id": current_user.user_id}
 
@@ -225,7 +219,7 @@ async def user_dashboard(current_user: TokenData = Depends(require_user)):
 # Stage 2: JD and Resume Upload
 # ─────────────────────────────────────────────────────────────────────────────
 
-@app.post("/admin/jd/upload", response_model=JobDescription, status_code=status.HTTP_201_CREATED)
+@router.post("/admin/jd/upload", response_model=JobDescription, status_code=status.HTTP_201_CREATED)
 async def upload_jd(file: UploadFile = File(...), current_user: TokenData = Depends(require_admin)):
     """Admin uploads Job Description — saved to datasets/job_descriptions/."""
     if not file.filename.lower().endswith(('.pdf', '.docx')):
@@ -258,7 +252,7 @@ async def upload_jd(file: UploadFile = File(...), current_user: TokenData = Depe
     db.save()
     return jd
 
-@app.get("/admin/jd", response_model=List[JobDescription])
+@router.get("/admin/jd", response_model=List[JobDescription])
 async def get_all_jds(current_user: TokenData = Depends(require_admin)):
     jds = []
     for jd_data in db.jds.values():
@@ -273,7 +267,7 @@ async def get_all_jds(current_user: TokenData = Depends(require_admin)):
         jds.append(JobDescription(**jd_data))
     return jds
 
-@app.delete("/admin/job-descriptions/{job_id}")
+@router.delete("/admin/job-descriptions/{job_id}")
 async def delete_jd(job_id: str, current_user: TokenData = Depends(require_admin)):
     if job_id not in db.jds:
         raise HTTPException(status_code=404, detail="Job description not found")
@@ -285,7 +279,7 @@ async def delete_jd(job_id: str, current_user: TokenData = Depends(require_admin
     print(f"JD {job_id} soft-deleted by admin {current_user.user_id}")
     return {"status": "success", "message": f"Job description {job_id} has been deleted"}
 
-@app.get("/user/jd", response_model=Optional[JobDescription])
+@router.get("/user/jd", response_model=Optional[JobDescription])
 async def get_active_jd(current_user: TokenData = Depends(require_user)):
     for jd_data in db.jds.values():
         if jd_data.get("status") == "ACTIVE" and not jd_data.get("is_deleted", False):
@@ -298,7 +292,7 @@ async def get_active_jd(current_user: TokenData = Depends(require_user)):
             return JobDescription(**jd_data)
     return None
 
-@app.get("/user/jds", response_model=List[JobDescription])
+@router.get("/user/jds", response_model=List[JobDescription])
 async def get_all_active_jds(current_user: TokenData = Depends(require_user)):
     jds = []
     for jd_data in db.jds.values():
@@ -312,7 +306,7 @@ async def get_all_active_jds(current_user: TokenData = Depends(require_user)):
             jds.append(JobDescription(**jd_data))
     return jds
 
-@app.post("/user/resume/upload", response_model=Resume, status_code=status.HTTP_201_CREATED)
+@router.post("/user/resume/upload", response_model=Resume, status_code=status.HTTP_201_CREATED)
 async def upload_resume(
     file: UploadFile = File(...),
     job_id: Optional[str] = Form(None),
@@ -373,11 +367,11 @@ async def upload_resume(
     db.save()
     return resume
 
-@app.get("/admin/resumes", response_model=List[Resume])
+@router.get("/admin/resumes", response_model=List[Resume])
 async def list_resumes(current_user: TokenData = Depends(require_admin)):
     return [Resume(**r) for r in db.resumes]
 
-@app.get("/user/resume/status")
+@router.get("/user/resume/status")
 async def get_resume_status(current_user: TokenData = Depends(require_user)):
     for resume_data in db.resumes:
         if resume_data["candidate_id"] == current_user.user_id:
@@ -412,8 +406,9 @@ class CandidateResponse(BaseModel):
     cheating_severity: str = "LOW"
     interview_recommendation: str = "PENDING"
     admin_insights: Optional[Dict[str, str]] = None
+    normalized_resume: Optional[str] = None
 
-@app.get("/admin/candidates", response_model=List[CandidateResponse])
+@router.get("/admin/candidates", response_model=List[CandidateResponse])
 async def get_candidates(current_user: TokenData = Depends(require_admin)):
     db.load()
     candidates = []
@@ -497,7 +492,8 @@ async def get_candidates(current_user: TokenData = Depends(require_admin)):
             evaluation_results=interview.get("evaluation") if interview else None,
             total_interview_score=total_score, total_confidence_level=confidence,
             cheating_severity=severity, interview_recommendation=interview_rec,
-            admin_insights=intel.get("admin_insights")
+            admin_insights=intel.get("admin_insights"),
+            normalized_resume=intel.get("normalized_resume", None)
         )
         candidates.append(c)
     return candidates
@@ -551,7 +547,7 @@ async def admin_report_auth(token: Optional[str] = Query(None), credentials: Opt
         raise HTTPException(status_code=403, detail="Admin access required")
     return user
 
-@app.get("/admin/candidates/{candidate_id}/report", response_class=HTMLResponse)
+@router.get("/admin/candidates/{candidate_id}/report", response_class=HTMLResponse)
 async def generate_interview_report(candidate_id: int, current_user: TokenData = Depends(admin_report_auth)):
     resume = next((r for r in db.resumes if r["candidate_id"] == candidate_id), None)
     if not resume:
@@ -673,7 +669,7 @@ async def generate_interview_report(candidate_id: int, current_user: TokenData =
     </div></body></html>"""
     return html_content
 
-@app.post("/admin/candidates/{candidate_id}/shortlist")
+@router.post("/admin/candidates/{candidate_id}/shortlist")
 async def shortlist_candidate(candidate_id: int, request: ShortlistRequest, current_user: TokenData = Depends(require_admin)):
     resume = next((r for r in db.resumes if r["candidate_id"] == candidate_id), None)
     if not resume:
@@ -687,7 +683,7 @@ async def shortlist_candidate(candidate_id: int, request: ShortlistRequest, curr
     db.save()
     return {"status": "success", "new_status": request.decision}
 
-@app.delete("/admin/candidates/{candidate_id}")
+@router.delete("/admin/candidates/{candidate_id}")
 async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(require_admin)):
     resume_idx = next((i for i, r in enumerate(db.resumes) if r["candidate_id"] == candidate_id), None)
     if resume_idx is None:
@@ -709,16 +705,16 @@ async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(
 # Stage 4: Interview Session Initialization
 # ─────────────────────────────────────────────────────────────────────────────
 
-@app.post("/admin/interview/start/{candidate_id}", response_model=InterviewSession)
+@router.post("/admin/interview/start/{candidate_id}", response_model=InterviewSession)
 async def start_interview_admin(candidate_id: int, resume_id: Optional[str] = Query(None), current_user: TokenData = Depends(require_admin)):
     return create_interview_session_for_candidate(candidate_id, resume_id)
 
-@app.post("/user/interview/start", response_model=InterviewSession)
+@router.post("/user/interview/start", response_model=InterviewSession)
 async def start_interview_user(current_user: TokenData = Depends(require_user)):
     """Allow a shortlisted user to start their own interview."""
     return create_interview_session_for_candidate(current_user.user_id, None)
     
-@app.get("/user/interview/status", response_model=Optional[InterviewSession])
+@router.get("/user/interview/status", response_model=Optional[InterviewSession])
 async def get_interview_status(current_user: TokenData = Depends(require_user)):
     session_data = next((i for i in db.interviews if i["candidate_id"] == current_user.user_id), None)
     if session_data:
@@ -730,7 +726,7 @@ async def get_interview_status(current_user: TokenData = Depends(require_user)):
 # Stage 5: Interview In-Progress Flow
 # ─────────────────────────────────────────────────────────────────────────────
 
-@app.get("/interview/{interview_id}/question")
+@router.get("/interview/{interview_id}/question")
 async def get_current_question(interview_id: str, current_user: TokenData = Depends(require_user)):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
@@ -750,7 +746,7 @@ async def get_current_question(interview_id: str, current_user: TokenData = Depe
         "status": session_data["status"]
     }
 
-@app.post("/interview/{interview_id}/video-frame")
+@router.post("/interview/{interview_id}/video-frame")
 async def store_video_frame(interview_id: str, frame_data: dict, current_user: TokenData = Depends(require_user)):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
@@ -779,7 +775,7 @@ async def store_video_frame(interview_id: str, frame_data: dict, current_user: T
                 db.save()
     return {"status": "success"}
 
-@app.post("/interview/{interview_id}/event")
+@router.post("/interview/{interview_id}/event")
 async def log_interview_event(interview_id: str, event_data: dict, current_user: TokenData = Depends(require_user)):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
@@ -793,7 +789,7 @@ async def log_interview_event(interview_id: str, event_data: dict, current_user:
         return {"status": "success", "tab_change_count": session_data["tab_change_count"]}
     return {"status": "ignored"}
 
-@app.post("/interview/{interview_id}/answer")
+@router.post("/interview/{interview_id}/answer")
 async def submit_answer(
     interview_id: str,
     submission_type: str = Form(...),
@@ -972,7 +968,7 @@ async def submit_answer(
         if file_path and os.path.exists(file_path):
             os.remove(file_path)
 
-@app.post("/interview/{interview_id}/end")
+@router.post("/interview/{interview_id}/end")
 async def end_interview_early(interview_id: str, audio_file: UploadFile = File(None), current_user: TokenData = Depends(require_user)):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
@@ -1052,7 +1048,7 @@ async def end_interview_early(interview_id: str, audio_file: UploadFile = File(N
 # ─────────────────────────────────────────────────────────────────────────────
 # /blob/url compatibility shim  (returns local /files/… URL)
 # ─────────────────────────────────────────────────────────────────────────────
-@app.get("/blob/url")
+@router.get("/blob/url")
 async def get_blob_url(container: str, blob_path: str, current_user: TokenData = Depends(get_current_user)):
     """Compatibility shim — returns local file-serving URL instead of SAS URL."""
     local_path = storage.generate_sas_url(container, blob_path)   # returns /files/…

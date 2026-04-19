@@ -43,16 +43,22 @@ def _build_flat_kb(knowledge_base: Dict) -> Dict:
             if not value or not str(value).strip():
                 continue
             
+            # Normalize field key for consistent lookup
+            # Replace both spaces and slashes with underscores for consistency
+            field_norm = str(field).lower().strip().replace(' ', '_').replace('/', '_')
+            
             val_str = str(value).strip()
             entry = {"value": val_str, "source": source}
             
-            # Store with original key (first one wins for non-prefixed)
+            # Store with original and normalized key
+            if field_norm not in flat_kb:
+                flat_kb[field_norm] = entry
             if field not in flat_kb:
                 flat_kb[field] = entry
             
             # Store with source prefix for disambiguation
             if prefix:
-                prefixed = prefix + field
+                prefixed = prefix + field_norm
                 if prefixed not in flat_kb:
                     flat_kb[prefixed] = entry
                 
@@ -62,17 +68,30 @@ def _build_flat_kb(knowledge_base: Dict) -> Dict:
                 suffix = source.split('_')[-1]  # "10th" or "12th"
                 canonical_renames = {
                     'school_name': f'school_{suffix}',
+                    'school_college': f'school_{suffix}',
                     'institution': f'school_{suffix}',
                     'percentage': f'percentage_{suffix}',
                     'total_marks': f'percentage_{suffix}',
                     'marks': f'percentage_{suffix}',
                     'year_of_passing': f'year_{suffix}',
+                    'year': f'year_{suffix}',
                     'board': f'board_{suffix}',
                 }
-                if field in canonical_renames:
-                    canon_key = canonical_renames[field]
+                if field_norm in canonical_renames:
+                    canon_key = canonical_renames[field_norm]
                     if canon_key not in flat_kb:
                         flat_kb[canon_key] = entry
+            
+            # Map common LLM extraction field names to canonical names
+            extra_aliases = {
+                'college_university': 'graduation_college',
+                'school_college': 'school_name',
+                'total_experience': 'experience',
+            }
+            if field_norm in extra_aliases:
+                alias = extra_aliases[field_norm]
+                if alias not in flat_kb:
+                    flat_kb[alias] = entry
     
     return flat_kb
 
@@ -93,7 +112,13 @@ def _find_kb_value(field_key: str, flat_kb: Dict) -> Optional[Dict]:
         if alias in flat_kb:
             return flat_kb[alias]
     
-    # 3. NO fuzzy matching — return None if not found
+    # 3. Fuzzy fallback (only if not found in lookup)
+    field_norm = field_key.lower().replace('_', ' ')
+    for kb_key in flat_kb:
+        kb_norm = kb_key.lower().replace('_', ' ')
+        if field_norm in kb_norm or kb_norm in field_norm:
+            return flat_kb[kb_key]
+            
     return None
 
 

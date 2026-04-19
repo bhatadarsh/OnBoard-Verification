@@ -95,8 +95,15 @@ async def upload_onboarding_form(
                 existing.set_form(old_form)
                 candidates_created.append({"id": candidate_id, "name": name, "status": "updated"})
             else:
+                # Split name into first/last for the new unified model
+                parts = name.split(maxsplit=1)
+                first = parts[0] if parts else name
+                last = parts[1] if len(parts) > 1 else ""
+
                 candidate = Candidate(
                     id=candidate_id,
+                    first_name=first,
+                    last_name=last,
                     full_name=name,
                     email=form_data.get('email', ''),
                     phone=form_data.get('phone', '')
@@ -130,8 +137,15 @@ async def upload_onboarding_form(
                     existing.set_form(form_data)
                     candidates_created.append({"id": candidate_id, "name": name, "status": "updated"})
                 else:
+                    # Split name into first/last
+                    parts = name.split(maxsplit=1)
+                    first = parts[0] if parts else name
+                    last = parts[1] if len(parts) > 1 else ""
+
                     candidate = Candidate(
                         id=candidate_id,
+                        first_name=first,
+                        last_name=last,
                         full_name=name,
                         email=form_data.get('email', ''),
                         phone=form_data.get('phone', '')
@@ -246,7 +260,7 @@ async def extract_knowledge_base(
     candidate_id: str,
     db: Session = Depends(get_db)
 ):
-    """Extract knowledge base from uploaded documents using LangGraph with SSE Streaming."""
+    """Extract knowledge base using the Hetro Extraction Engine and bridge it to SQLite."""
     candidate = db.query(Candidate).filter(Candidate.id == candidate_id).first()
     if not candidate:
         raise HTTPException(status_code=404, detail="Candidate not found")
@@ -256,68 +270,119 @@ async def extract_knowledge_base(
         raise HTTPException(status_code=400, detail="No documents uploaded")
         
     async def event_generator():
-        yield "data: {\"type\": \"log\", \"message\": \"> Initializing extraction workflow...\"}\n\n"
-        
-        from app.langgraph.orchestration import extraction_graph
+        import tempfile
         import asyncio
-
-        yield "data: {\"type\": \"log\", \"message\": \"> Loading encrypted documents...\"}\n\n"
+        from cryptography.fernet import Fernet
+        from candidate.services.document_service import DocumentService
+        from candidate.db.database import SessionLocal as PgSessionLocal
+        
+        # Import Vector & NoSQL Storage
+        from embeddings.embedding_generator import generate_embeddings
+        from storage.chroma_handler import chroma_handler
+        from storage.mongo_handler import mongo_handler
+        
+        yield "data: {\"type\": \"log\", \"message\": \"> Initializing Hetro Extraction Engine...\"}\n\n"
         
         try:
-            input_state = {
-                "documents": docs,
-                "document_texts": {},
-                "knowledge_base": candidate.get_knowledge_base()
-            }
-
-            yield "data: {\"type\": \"log\", \"message\": \"> Connecting to LLM Models...\"}\n\n"
-
             knowledge_base = dict(candidate.get_knowledge_base())
+            pg_db = PgSessionLocal()
+            fernet = Fernet(config.FERNET_KEY.encode('utf-8'))
             
-            async for event in extraction_graph.astream_events(input_state, version="v1"):
-                kind = event["event"]
-                name = event.get("name", "")
+            yield "data: {\"type\": \"log\", \"message\": \"> Bridging SQLite and PostgreSQL Databases...\"}\n\n"
+            
+            for doc_name, path in docs.items():
+                if doc_name == "forensic_alerts" or not isinstance(path, str):
+                    continue
+                    
+                if not os.path.exists(path):
+                    continue
                 
-                if kind == "on_chat_model_stream":
-                    chunk = event["data"]["chunk"].content
-                    if chunk:
-                        clean_chunk = chunk.replace('\n', ' ').replace('"', "'")
-                        yield f"data: {{\"type\": \"stream\", \"message\": \"{clean_chunk}\"}}\n\n"
-                elif kind == "on_tool_start":
-                    yield f"data: {{\"type\": \"log\", \"message\": \"> Running tool: {name}\"}}\n\n"
-                elif kind == "on_chain_end":
-                    # Langgraph v1 top level completion contains the output state
-                    output_state = event["data"].get("output", {})
-                    if isinstance(output_state, dict):
-                        # Find knowledge base in root or nested (if wrapped by node name)
-                        if "knowledge_base" in output_state and output_state["knowledge_base"]:
-                            knowledge_base = output_state["knowledge_base"]
-                        else:
-                            for k, v in output_state.items():
-                                if isinstance(v, dict) and "knowledge_base" in v and v["knowledge_base"]:
-                                    knowledge_base = v["knowledge_base"]
-                else:
-                    if kind in ["on_chain_start", "on_chat_model_start"]:
-                        if name and 'graph' not in name.lower() and name != "LangGraph":
-                            yield f"data: {{\"type\": \"log\", \"message\": \"> Starting {name}...\"}}\n\n"
+                yield f"data: {{\"type\": \"log\", \"message\": \"> Decrypting {doc_name.upper()} into volatile memory...\"}}\n\n"
+                
+                # Decrypt the document
+                async with aiofiles.open(path, "rb") as f:
+                    encrypted_data = await f.read()
+                
+                decrypted_data = fernet.decrypt(encrypted_data)
+                
+                # Get the extension
+                ext = os.path.splitext(path)[1] or '.pdf'
+                
+                # Create a temporary file to feed to DocumentService
+                with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_file:
+                    temp_file.write(decrypted_data)
+                    temp_path = temp_file.name
+                
+                try:
+                    yield f"data: {{\"type\": \"stream\", \"message\": \"Extracting text and JSON structures from {doc_name.upper()} via Hetro Engine...\"}}\n\n"
+                    
+                    # Process the document with Hetro Engine
+                    extraction_result = await DocumentService.extract_and_store_document(
+                        db=pg_db,
+                        file_path=temp_path,
+                        candidate_id=candidate_id
+                    )
+                    
+                    print(f"DEBUG: Extraction Result for {doc_name}: {extraction_result.extracted_data}")
+                    
+                    # Append extracted data to the knowledge base dictionary
+                    knowledge_base[doc_name] = extraction_result.extracted_data
+                    yield f"data: {{\"type\": \"log\", \"message\": \"> Successfully parsed {doc_name.upper()} into Knowledge Base.\"}}\n\n"
+                    
+                    # Vectorize and Store
+                    raw_text = extraction_result.raw_text
+                    if raw_text and len(raw_text.strip()) > 50:
+                        yield f"data: {{\"type\": \"log\", \"message\": \"> Vectorizing {doc_name.upper()} text...\"}}\n\n"
+                        try:
+                            # 1. Generate Embeddings & Store in ChromaDB
+                            embed_id = f"{candidate_id}_{doc_name}"
+                            embeddings = generate_embeddings([raw_text])
+                            if embeddings and len(embeddings) > 0 and len(embeddings[0]) > 0:
+                                chroma_handler.store_embeddings(
+                                    ids=[embed_id],
+                                    embeddings=embeddings,
+                                    documents=[raw_text],
+                                    metadatas=[{"candidate_id": candidate_id, "doc_type": doc_name}]
+                                )
+                            
+                            # 2. Store Raw Data in MongoDB
+                            mongo_handler.store_document_metadata({
+                                "candidate_id": candidate_id,
+                                "doc_type": doc_name,
+                                "raw_text": raw_text,
+                                "parsed_json": extraction_result.extracted_data
+                            })
+                            yield f"data: {{\"type\": \"log\", \"message\": \"> Vector generated and indexed in ChromaDB & MongoDB.\"}}\n\n"
+                        except Exception as storage_err:
+                            yield f"data: {{\"type\": \"log\", \"message\": \"> ⚠ Vector storage warning for {doc_name.upper()}: {str(storage_err)}\"}}\n\n"
+                
+                except Exception as ex:
+                    yield f"data: {{\"type\": \"log\", \"message\": \"> ⚠ Error extracting {doc_name.upper()}: {str(ex)}\"}}\n\n"
+                finally:
+                    # Clean up the temporary file immediately
+                    if os.path.exists(temp_path):
+                        os.remove(temp_path)
+            
+            pg_db.close()
             
             yield "data: {\"type\": \"log\", \"message\": \"> Finalizing parsed data schemas...\"}\n\n"
             
-            # Save the extracted data robustly using a fresh session to avoid generator detachment scope bugs
+            # Save the newly constructed knowledge base back to SQLite Candidate
             from app.core.database import SessionLocal
-            db_session = SessionLocal()
+            sqlite_db = SessionLocal()
             try:
-                fresh_cand = db_session.query(Candidate).filter(Candidate.id == candidate_id).first()
+                fresh_cand = sqlite_db.query(Candidate).filter(Candidate.id == candidate_id).first()
                 if fresh_cand:
                     fresh_cand.set_knowledge_base(knowledge_base)
-                    db_session.commit()
+                    sqlite_db.commit()
+                    yield "data: {\"type\": \"log\", \"message\": \"> Knowledge Base successfully committed to OnboardGuard Database.\"}\n\n"
             except Exception as dbe:
                 yield f"data: {{\"type\": \"log\", \"message\": \"> DB Error: {str(dbe)}\"}}\n\n"
             finally:
-                db_session.close()
+                sqlite_db.close()
             
             sources = list(knowledge_base.keys())
-            yield "data: {\"type\": \"log\", \"message\": \"> Extraction successful.\"}\n\n"
+            yield "data: {\"type\": \"log\", \"message\": \"> Extraction Engine Shutdown. Complete.\"}\n\n"
             
             final_resp = {
                 "type": "result",
@@ -327,7 +392,7 @@ async def extract_knowledge_base(
             yield f"data: {json.dumps(final_resp)}\n\n"
             
         except Exception as e:
-            yield f"data: {{\"type\": \"log\", \"message\": \"> Error: {str(e)}\"}}\n\n"
+            yield f"data: {{\"type\": \"log\", \"message\": \"> Critical Error: {str(e)}\"}}\n\n"
             yield "data: {\"type\": \"error\", \"message\": \"Extraction failed\"}\n\n"
     
     return StreamingResponse(event_generator(), media_type="text/event-stream")
@@ -558,7 +623,7 @@ async def get_candidate(candidate_id: str, db: Session = Depends(get_db)):
         **candidate.to_dict(),
         "knowledge_base": candidate.get_knowledge_base(),
         "form_data": candidate.get_form(),
-        "validation_result": candidate.get_validation() if candidate.is_validated else None
+        "validation_result": candidate.get_validation() if getattr(candidate, 'is_validated', False) else None
     }
 
 

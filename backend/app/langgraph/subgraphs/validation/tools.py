@@ -202,25 +202,28 @@ KB_FIELD_LOOKUP = {
     'current_address':    ['current_address', 'current_location', 'present_address',
                            'confirmed_current_location'],
     'graduation_degree':  ['graduation_degree', 'degree', 'highest_qualification',
-                           'qualification', 'course_name'],
+                           'qualification', 'course_name', 'degree_name', 'ug_degree'],
     'graduation_college': ['graduation_college', 'college', 'university',
-                           'institute', 'institution', 'college_name'],
-    'graduation_year':    ['graduation_year', 'year_of_passing', 'passing_year'],
-    'school_10th':        ['10th_school', 'school_10th'],
-    'percentage_10th':    ['10th_percentage', 'percentage_10th', 'total_marks'],
-    'year_10th':          ['10th_year', 'year_10th', 'year_of_passing'],
-    'school_12th':        ['12th_school', 'school_12th'],
-    'percentage_12th':    ['12th_percentage', 'percentage_12th'],
-    'year_12th':          ['12th_year', 'year_12th', 'year_of_passing'],
-    'skills':             ['skills', 'technical_skills', 'key_skills'],
-    'current_company':    ['current_company', 'company', 'employer', 'organization'],
-    'current_role':       ['current_role', 'role', 'designation', 'position'],
-    'current_ctc':        ['current_ctc', 'ctc', 'salary', 'last_drawn_ctc'],
+                           'institute', 'institution', 'college_name', 'university_name',
+                           'college_university'],
+    'graduation_year':    ['graduation_year', 'year_of_passing', 'passing_year', 'grad_year'],
+    'school_10th':        ['10th_school', 'school_10th', 'ssc_school', 'matriculation_school',
+                           '10th_school_college'],
+    'percentage_10th':    ['10th_percentage', 'percentage_10th', 'total_marks', 'ssc_percentage'],
+    'year_10th':          ['10th_year', 'year_10th', 'year_of_passing', 'ssc_year'],
+    'school_12th':        ['12th_school', 'school_12th', 'hsc_school', 'intermediate_school',
+                           '12th_school_college'],
+    'percentage_12th':    ['12th_percentage', 'percentage_12th', 'hsc_percentage'],
+    'year_12th':          ['12th_year', 'year_12th', 'year_of_passing', 'hsc_year'],
+    'skills':             ['skills', 'technical_skills', 'key_skills', 'skills_technologies'],
+    'current_company':    ['current_company', 'company', 'employer', 'organization', 'company_name'],
+    'current_role':       ['current_role', 'role', 'designation', 'position', 'job_title'],
+    'current_ctc':        ['current_ctc', 'ctc', 'salary', 'last_drawn_ctc', 'annual_ctc'],
     'expected_ctc':       ['expected_ctc', 'expected_salary'],
     'notice_period':      ['notice_period', 'notice', 'notice_days'],
-    'experience':         ['experience', 'total_experience', 'work_experience'],
-    'aadhar_number':      ['aadhar_number', 'aadhaar_number'],
-    'pan_number':         ['pan_number', 'pan', 'pan_no'],
+    'experience':         ['experience', 'total_experience', 'work_experience', 'experience_years'],
+    'aadhar_number':      ['aadhar_number', 'aadhaar_number', 'aadhar', 'aadhaar'],
+    'pan_number':         ['pan_number', 'pan', 'pan_no', 'pan_card'],
     'bank_account_number':['bank_account_number', 'account_number', 'account_no'],
     'ifsc_code':          ['ifsc_code', 'ifsc'],
     'bank_name':          ['bank_name', 'bank'],
@@ -420,6 +423,27 @@ def values_match(form_value: str, doc_value: str, field_type: str = "text") -> T
 
     fv = str(form_value).strip()
     dv = str(doc_value).strip()
+    
+    # Pre-process doc_value if it's a JSON string (common for structured extraction like experience)
+    if (dv.startswith('[') and dv.endswith(']')) or (dv.startswith('{') and dv.endswith('}')):
+        try:
+            import json
+            parsed = json.loads(dv.replace("'", '"')) # Simple fix for single-quoted JSON from Python repr
+            if isinstance(parsed, list) and len(parsed) > 0:
+                # If it's a list, look for a "value" or "total" field, or just take the first item
+                first = parsed[0]
+                if isinstance(first, dict):
+                    # Try to find common value keys
+                    for k in ['total_experience', 'experience', 'value', 'text', 'degree', 'year']:
+                        if k in first: dv = str(first[k]); break
+                    else: dv = str(first)
+                else: dv = str(first)
+            elif isinstance(parsed, dict):
+                for k in ['total_experience', 'experience', 'value', 'text', 'degree', 'year']:
+                    if k in parsed: dv = str(parsed[k]); break
+        except:
+            pass
+
     fv_norm = normalize_text(fv)
     dv_norm = normalize_text(dv)
 
@@ -495,9 +519,18 @@ def values_match(form_value: str, doc_value: str, field_type: str = "text") -> T
     if any(x in field_type.lower() for x in ['ctc', 'salary', 'percentage', 'marks', 'score', 'experience', 'year', 'exp']):
          fv_num = re.sub(r'[^\d.]', '', fv)
          dv_num = re.sub(r'[^\d.]', '', dv)
+         
+         # Special case: Year of passing/graduation must be EXACT
+         is_year = any(y in field_type.lower() for y in ['year_of_passing', 'passing_year', 'graduation_year', 'year_10th', 'year_12th'])
+         
          if fv_num and dv_num:
              try:
                  f, d = float(fv_num), float(dv_num)
+                 
+                 if is_year:
+                     if abs(f - d) < 1.0: return True, "Years match"
+                     else: return False, f"Year mismatch: '{int(f)}' ≠ '{int(d)}'"
+
                  # Handle scaling (Lakhs vs absolute)
                  if f < 100 and d > 10000: f *= 100000
                  if d < 100 and f > 10000: d *= 100000

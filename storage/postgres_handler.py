@@ -37,8 +37,13 @@ class PostgresHandler:
     @property
     def engine(self):
         if self._engine is None:
-            self._engine = create_engine(settings.postgres_uri, echo=False)
-            log.info(f"Connected to PostgreSQL: {settings.postgres_uri.split('@')[-1]}")
+            import os
+            db_url = os.getenv("DATABASE_URL") or settings.postgres_uri
+            if not db_url or "postgresql" not in db_url:
+                db_url = "sqlite:///./onboardguard.db"
+            
+            self._engine = create_engine(db_url, echo=False)
+            log.info(f"Connected to database: {db_url.split('/')[-1]}")
         return self._engine
 
     def create_table(self, schema: Dict[str, Any]) -> bool:
