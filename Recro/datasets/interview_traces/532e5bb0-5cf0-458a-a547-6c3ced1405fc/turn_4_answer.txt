@@ -1,0 +1,1 @@
+Recently, I got a problem where I need to implement payment integration in the Springboard, so at that time I realized how we can integrate the payment gateway and how we can communicate with the external clients for the payment gateways. So the thing is, when we try to make payment with the QR code, the QR code was not automatically generated.

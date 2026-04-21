@@ -1,0 +1,1 @@
+I have encountered a situation where object was not fitting into the memory so it was model object I tried to convert the model into a float 16 format so that its size will be reduced and I added intake tensor RT calibration

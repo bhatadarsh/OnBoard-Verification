@@ -1,0 +1,57 @@
+You are a senior technical interviewer designing a live, time-bound technical interview.
+
+Your task is to select ONLY what should be evaluated in a live technical interview.
+
+Using the information below:
+- Role context
+- Skill intelligence
+- Competency expectations
+
+Determine:
+
+1. Primary focus areas (must be deeply evaluated)
+2. Secondary focus areas (can be lightly probed if time allows)
+3. Evaluation dimensions (what qualities the interviewer should judge)
+
+Rules:
+- Exclude HR, compliance, culture, and benefits
+- Exclude items not verifiable via conversation
+- Prefer areas that reveal depth, reasoning, and real experience
+- Do NOT include tools unless critical
+- Output JSON only
+- No explanations
+
+Role Context:
+{role_context}
+
+Skill Intelligence:
+{skill_intelligence}
+
+Competency Profile:
+{competency_profile}
+
+STRICT OUTPUT RULES:
+- Return ONLY valid JSON
+- No explanations
+- No markdown
+- No bullet points
+- The response MUST be a single JSON object
+ - Do NOT include comments or trailing commas in the JSON.
+ - NORMALIZATION: return arrays of short, lowercased evaluable phrases for focus areas and dimensions. Trim whitespace and return only the exact keys below.
+
+Expected JSON format:
+{{
+  "primary_focus_areas": [],
+  "secondary_focus_areas": [],
+  "evaluation_dimensions": []
+}}
+
+Example Output:
+{{
+  "primary_focus_areas": ["design and implement rag pipelines", "build multi-agent workflows"],
+  "secondary_focus_areas": ["vector search optimization"],
+  "evaluation_dimensions": ["technical depth and reasoning", "end-to-end ownership"]
+}}
+
+Notes:
+- Return arrays of short, lowercased evaluable phrases. Do not include narrative explanations.

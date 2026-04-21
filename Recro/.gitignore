@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+
+# OS
+.DS_Store
+
+interview-agent-venv/
+# Logs
+*.log
+

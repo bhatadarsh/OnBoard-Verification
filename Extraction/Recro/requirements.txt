@@ -1,0 +1,32 @@
+# Data Extraction Pipeline Dependencies
+
+# Core
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# Document Processing
+pymupdf>=1.24.0           # PDF text, image, chart extraction (fitz)
+camelot-py[cv]>=0.11.0    # PDF table detection
+python-docx>=1.1.0        # DOCX parsing
+pandas>=2.0.0             # Tabular data manipulation
+openpyxl>=3.1.0           # XLSX support
+
+# LLM & Embeddings
+google-genai>=1.0.0       # Gemini API (validation, image summary)
+openai>=1.0.0             # Text embeddings (optional, if provider=openai)
+transformers>=4.40.0      # HuggingFace model loading
+torch>=2.0.0              # PyTorch backend for HuggingFace
+
+# Vector Database
+chromadb>=0.4.0           # Vector storage & retrieval
+
+# Relational Database
+sqlalchemy>=2.0.0         # ORM
+psycopg2-binary>=2.9.0   # PostgreSQL driver
+
+# NoSQL Database
+pymongo>=4.6.0            # MongoDB driver
+
+# Utilities
+rich>=13.0.0              # Pretty logging & progress bars
