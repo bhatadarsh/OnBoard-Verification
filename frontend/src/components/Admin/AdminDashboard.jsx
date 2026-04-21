@@ -9,7 +9,7 @@ import './AdminDashboard.css';
 import OnboardDashboard from '../OnboardGuard/OnboardDashboard';
 import OnboardUpload from '../OnboardGuard/OnboardUpload';
 import OnboardValidate from '../OnboardGuard/OnboardValidate';
-
+import { jobs as mockJobs } from '../../data/jobs';
 
 
 const STATUS_COLOR = {
@@ -52,32 +52,12 @@ export default function AdminDashboard({ admin, onLogout }) {
   const fetchInitialData = async () => {
     setLoading(true);
     try {
-      const [jobsRes, statsRes] = await Promise.all([
-        fetch(`${RECRO_API}/api/job/`),
-        fetch(`${RECRO_API}/api/admin/stats`)
-      ]);
-      if (jobsRes.ok) {
-        const rawJobs = await jobsRes.json();
-        console.log("rawJobs", rawJobs)
-        const mappedJobs = rawJobs.map(j => ({
-          ...j,
-          type: j.employment_type,
-          mode: j.work_mode,
-          experience: j.experience_range,
-          tags: j.required_skills,
-          summary: j.content_raw,
-          desiredExperience: j.desired_experience,
-          primarySkills: j.primary_skills,
-          secondarySkills: j.secondary_skills,
-          posted: new Date(j.created_at).toLocaleDateString()
-        }));
-        setJobs(mappedJobs);
-      }
-      if (statsRes.ok) {
-        const s = await statsRes.json();
-        console.log("----", s.stats)
-        setStats(s.stats);
-      }
+      setJobs(mockJobs);
+      setStats({
+        total_candidates: mockJobs.reduce((acc, job) => acc + (job.applicant_count || 0), 0),
+        active_jobs: mockJobs.length,
+        total_applications: mockJobs.reduce((acc, job) => acc + (job.applicant_count || 0), 0)
+      });
     } catch (err) {
       console.error('Admin fetch error:', err);
     } finally {

@@ -8,7 +8,45 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                         AI HirePro Enterprise                            │
+│                         AI HirePro Enterprise             
+￼
+ merged-features*
+ 0 
+ 0
+Antigravity - Settings
+Ignore
+LF
+UTF-8
+Spaces: 4
+Ln 22, Col 10
+ yatinjadhav (1 month ago)
+Productionizing HirePro Architecture and UI
+how do we know the hetrogenous is really working alongside onboard guide?
+and can you tell me here..
+what is api..api endpoint route which we have used here...
+undo
+￼
+Thought for 1s
+chevron_right
+
+
+You can verify that the heterogeneous storage is working by checking both the System Logs and the Health Endpoints I've built into the project.
+
+1. How to know it's "really working"?
+There are three ways to confirm this right now:
+
+The Logs (Real-time): When you run an extraction, watch your terminal. You will see these specific lines:
+Stored 1 embeddings in ChromaDB → Confirms the Vector Layer is active.
+Stored document metadata: [ID] → Confirms MongoDB has saved the data.
+The Health Check: You can visit this URL in your browser while the app is running:
+http://localhost:8000/api/v1/health/db
+It will return a JSON showing the status of your connections to SQLite, MongoDB, and ChromaDB.
+The Filesystem: Look in your project folder for a directory named chroma_db/. If that folder exists and contains files, it means ChromaDB is successfully persisting your data.
+2. The Core API Endpoints
+Here are the primary routes (defined in backend/app/api/routes/validation.py) that bridge OnboardGuard and the Heterogeneous Engine:
+
+Action	Endpoint (Route)	What it does
+Upload Form	POST /api/v1/onboarding/up               │
 │                                                                          │
 │   ┌──────────────────────────┐   ┌───────────────────────────────────┐   │
 │   │     Interview Agent       │   │          OnboardGuard             │   │
@@ -81,11 +119,11 @@
 - **Pydub + FFmpeg** — audio conversion (WebM → WAV → Whisper)
 
 ### Frontend
-- **React 18** + **React Router v7**
+- **React 18** (State-based routing without React Router)
 - **Vite** — dev server and production bundler
 - **Tailwind CSS v4** — utility-first styling
-- **Custom design system** — dark theme, Outfit + Inter + JetBrains Mono fonts, CSS variables, stagger animations
-- **Premium interview UI** — split-panel layout, circular SVG timer, question board, audio waveform, phase badges
+- **Custom design system** — Sigmoid Careers unified portal, dark theme, Outfit + Inter fonts
+- **Unified Portals** — fully integrated Candidate & Admin dashboards (Job Postings, Applications, Interview Sessions, Verification Dashboards)
 
 ### Storage
 - **ChromaDB** — local PersistentClient, cosine similarity HNSW

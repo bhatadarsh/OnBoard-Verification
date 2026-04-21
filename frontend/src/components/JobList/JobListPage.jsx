@@ -4,7 +4,7 @@ import JobDetail from './JobDetail';
 import './JobListPage.css';
 import { RECRO_API } from '../../config/api';
 import sigmoidLogo from '../../assets/sigmoid_logo.jpeg';
-
+import { jobs as mockJobs } from '../../data/jobs';
 export default function JobListPage({ onApply, onAdminSwitch, user, onDashboard }) {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
@@ -13,37 +13,13 @@ export default function JobListPage({ onApply, onAdminSwitch, user, onDashboard 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${RECRO_API}/api/job/`);
-        if (res.ok) {
-          const data = await res.json();
-          // Map backend fields to frontend UI expectations
-          const mappedJobs = data.map(j => ({
-            ...j,
-            type: j.employment_type || 'Full-time',
-            mode: j.work_mode || 'Hybrid',
-            experience: j.experience_range || `${j.min_experience}-${j.max_experience} years`,
-            tags: j.required_skills ? j.required_skills.split(',').map(s => s.trim()) : [],
-            subtitle: j.subtitle || j.company || 'Sigmoid',
-            summary: j.content_raw || '',
-            desiredExperience: j.desired_experience || [],
-            responsibilities: j.responsibilities || [],
-            primarySkills: j.primary_skills || [],
-            secondarySkills: j.secondary_skills || [],
-            posted: new Date(j.created_at).toLocaleDateString()
-          }));
-          setJobs(mappedJobs);
-          if (mappedJobs.length > 0) setSelectedJob(mappedJobs[0]);
-        }
-      } catch (err) {
-        console.error('Failed to fetch jobs:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchJobs();
+    setLoading(true);
+    // Simulate API delay for smooth UI transition
+    setTimeout(() => {
+      setJobs(mockJobs);
+      if (mockJobs.length > 0) setSelectedJob(mockJobs[0]);
+      setLoading(false);
+    }, 500);
   }, []);
 
   const departments = ['All', ...new Set(jobs.map(j => j.department))];
