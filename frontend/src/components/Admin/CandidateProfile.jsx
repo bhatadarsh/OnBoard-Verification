@@ -219,7 +219,7 @@ function IntegrityReport({ profile, onBack }) {
 
         <div className="cp-metrics-row">
           {[
-            { label: 'INTEGRITY',     value: riskLevel,            color: { LOW: '#16a34a', MEDIUM: '#d97706', HIGH: '#dc2626' }[riskLevel] },
+            { label: 'PROCTOR RISK',  value: riskLevel,            color: { LOW: '#16a34a', MEDIUM: '#d97706', HIGH: '#dc2626' }[riskLevel] },
             { label: 'CHEAT SCORE',   value: `${cheatScore.toFixed(1)}/20`, color: cheatScore >= 10 ? '#dc2626' : cheatScore >= 3 ? '#d97706' : '#16a34a' },
             { label: 'TAB SHIFTS',    value: tabCount > 0 ? String(tabCount) : '0', color: tabCount > 2 ? '#dc2626' : '#0f172a' },
             { label: 'BRIEF MATCH',   value: profile.briefMatch,   color: '#0f172a' },
@@ -252,25 +252,32 @@ function IntegrityReport({ profile, onBack }) {
             {/* Specific logged events (from tab switches, real-time flags with timestamps) */}
             {hasSpecificEvents && (
               <div style={{ marginBottom: 10 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: '#64748b', letterSpacing: 1, marginBottom: 6 }}>LOGGED EVENTS</div>
-                {integrityFlags.map((flag, i) => (
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#64748b', letterSpacing: 1, marginBottom: 6 }}>LOGGED EVENTS (Top 10)</div>
+                {integrityFlags.slice(0, 10).map((flag, i) => {
+                  const formatTime = (t) => {
+                    if (!t) return '';
+                    if (typeof t === 'string' && t.includes(':')) return t;
+                    return new Date(t < 10000000000 ? t * 1000 : t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                  };
+                  return (
                   <div key={i} style={{
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     padding: '7px 12px', marginBottom: 4, borderRadius: 6,
                     background: '#fef2f2', border: '1px solid #fca5a5'
                   }}>
                     <div>
-                      <span style={{ fontSize: 11, color: '#64748b', marginRight: 8 }}>{flag.time}</span>
+                      <span style={{ fontSize: 11, color: '#64748b', marginRight: 8 }}>{formatTime(flag.time)}</span>
                       <span style={{ fontSize: 12, fontWeight: 600, color: '#991b1b' }}>{(flag.events || []).join(' · ')}</span>
                     </div>
                     {flag.score != null && <span style={{ fontSize: 11, color: '#b91c1c', fontWeight: 700, background: '#fee2e2', padding: '1px 7px', borderRadius: 4 }}>+{flag.score} pts</span>}
                   </div>
-                ))}
+                )})}
+                {integrityFlags.length > 10 && <div style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 4 }}>... and {integrityFlags.length - 10} more events</div>}
               </div>
             )}
 
-            {/* Camera AI analysis — when no specific events but score > 0 */}
-            {!hasSpecificEvents && cheatScore > 0 && (
+            {/* Camera AI analysis */}
+            {cheatScore > 0 && (
               <div>
                 <div style={{ fontSize: 10, fontWeight: 700, color: '#64748b', letterSpacing: 1, marginBottom: 8 }}>
                   AI CAMERA ANALYSIS — Score: {cheatScore.toFixed(1)}/20
@@ -474,11 +481,11 @@ export default function CandidateProfile({ applicant, jobTitle, onClose, onStatu
   const ivEval      = ivResult?.evaluation || {};
   const cheatScore  = ivResult?.cheating_score ?? null;
   const integrityVal = cheatScore === null ? 'N/A'
-    : cheatScore < 0.3 ? 'LOW' : cheatScore < 0.7 ? 'MEDIUM' : 'HIGH';
+    : cheatScore < 0.3 ? 'HIGH' : cheatScore < 0.7 ? 'MEDIUM' : 'LOW';
   const tabShiftsVal = ivResult ? String(ivResult.tab_change_count ?? 0) : 'N/A';
   const overallScore = ivResult?.overall_score ?? ivEval?.overall_score ?? null;
   const interviewRecVal = ivResult
-    ? (overallScore !== null ? (overallScore >= 6 ? '✅ YES' : '❌ NO') : 'PENDING')
+    ? (ivResult.status === 'COMPLETED_EARLY' ? '❌ TERMINATED EARLY' : overallScore !== null ? (overallScore >= 6 ? '✅ YES' : '❌ NO') : 'PENDING')
     : (applicant.status === 'Offered' ? '✅ YES' : applicant.status === 'Rejected' ? '❌ NO' : 'PENDING');
 
   const profile = {
@@ -663,7 +670,7 @@ export default function CandidateProfile({ applicant, jobTitle, onClose, onStatu
         {/* Metrics */}
         <div className="cp-metrics-row">
           {[
-            { label: 'INTEGRITY',     value: profile.integrity,    color: { LOW: '#16a34a', MEDIUM: '#d97706', HIGH: '#dc2626' }[profile.integrity] },
+            { label: 'INTEGRITY',     value: profile.integrity,    color: { HIGH: '#16a34a', MEDIUM: '#d97706', LOW: '#dc2626' }[profile.integrity] },
             { label: 'TAB SHIFTS',    value: profile.tabShifts,    color: '#0f172a' },
             { label: 'RESUME MATCH',  value: profile.briefMatch,   color: '#0f172a' },
             { label: 'RESUME REC',    value: profile.resumeRec,    color: profile.resumeRec === 'YES' ? '#16a34a' : '#dc2626', icon: profile.resumeRec === 'YES' ? '✅' : '❌' },

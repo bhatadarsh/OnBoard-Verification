@@ -126,15 +126,10 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
       <div style={{ marginTop: '30px' }}>
         <InterviewSession
           interviewId={activeInterviewId}
-          onEnd={async () => {
+          onEnd={() => {
           setActiveInterviewId(null);
-          // Refresh applications so the status updates to 'Interviewed'
-          const token = user?.access_token;
-          const headers = token ? { Authorization: `Bearer ${token}` } : {};
-          try {
-            const r = await fetch(`${RECRO_API}/api/candidate/applications`, { headers });
-            if (r.ok) { const d = await r.json(); setApplications(d.applications || []); }
-          } catch (_) {}
+          // Force a full refresh to guarantee all SQLite updates (status, interview cards) are pulled cleanly
+          window.location.reload();
         }}
         />
       </div>
@@ -276,7 +271,18 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
             {/* ── Interview Card ── */}
             <div className={`cd-card ${interview ? 'cd-interview-active' : ''}`}>
               <div className="cd-card-title">🎙️ Interview Details</div>
-              {interview ? (
+              {applications.some(app => ['rejected'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_'))) ? (
+                <div className="cd-no-interview">
+                  <span style={{ fontSize: 40, display: 'block', marginBottom: 12 }}>🔒</span>
+                  <p>Interview process closed.</p>
+                </div>
+              ) : applications.some(app => ['interviewed', 'offered'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_'))) ? (
+                <div className="cd-no-interview">
+                  <span style={{ fontSize: 40, display: 'block', marginBottom: 12 }}>✅</span>
+                  <p>Interview Completed.</p>
+                  <p style={{ fontSize: 12, color: '#94a3b8' }}>Your responses have been recorded and are under review.</p>
+                </div>
+              ) : interview ? (
                 <div className="cd-interview-content">
                   <div className="cd-interview-status-badge">Interview Confirmed</div>
 
@@ -354,7 +360,9 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
                 <div className="cd-info-row">
                   <span className="cd-info-label">Interview</span>
                   <span className="cd-info-value">
-                    {applications.some(app => ['interviewed', 'offered'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_')))
+                    {applications.some(app => ['rejected'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_')))
+                      ? '❌ Rejected'
+                      : applications.some(app => ['interviewed', 'offered'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_')))
                       ? '🎊 Completed'
                       : applications.some(app => ['interview_scheduled'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_'))) || interview
                       ? '✅ Scheduled'
