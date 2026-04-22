@@ -1,10 +1,12 @@
 import os
+import uuid
 import hashlib
 import shutil
 from datetime import datetime
 from typing import Optional, List
 import json
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 import aiofiles
 from app.db.database import get_db
@@ -16,6 +18,7 @@ from candidate.services.candidate_registration import CandidateService
 from candidate.pydantic.candidate_registration import LoginRequest
 from candidate.pydantic.candidate_registration import ApplyForJobSchema
 from candidate.models.candidate_account import CandidateAccount
+from candidate.models.applications import Application
 from candidate.jwt.jwt_validation import get_current_candidate
 
 # New imports for KYC and Audio
@@ -220,33 +223,32 @@ def login_candidate(payload: LoginRequest, db: Session = Depends(get_db)):
 async def apply_jd(
     jd_id: str,
     payload: str                       = Form(...),
-    resume: UploadFile                 = File(...),
-    certificates: List[UploadFile]     = File(...),
+    resume: Optional[UploadFile]       = File(None),
+    certificates: Optional[List[UploadFile]] = File(None),
     current_candidate: CandidateAccount = Depends(get_current_candidate),
     db: Session                        = Depends(get_db),
 ):
     payload_dict = json.loads(payload)
     candidate_id = current_candidate.id
  
-    
-    resume_path = await save_user_file(
-        candidate_id   = candidate_id,
-        file           = resume,
-        category       = "resume",
-        clear_existing = True,     # deletes previous resume.pdf before saving
-    )
-    payload_dict["resume_path"] = resume_path
+    if resume:
+        resume_path = await save_user_file(
+            candidate_id   = candidate_id,
+            file           = resume,
+            category       = "resume",
+            clear_existing = True,     # deletes previous resume.pdf before saving
+        )
+        payload_dict["resume_path"] = resume_path
  
-    # ── 2. Delete old certificate files then save new ones ────────────────────
-    # clear_existing=True on the first file wipes the certificates folder
-    # so old files like python_cert.pdf are removed before new files are saved
-    cert_paths = await save_category_files(
-        candidate_id = candidate_id,
-        files        = certificates,
-        category     = "certificates",
-        # clear_existing handled internally — True for first file, False for rest
-    )
-    payload_dict["certificate_paths"] = cert_paths
+    if certificates:
+        cert_paths = await save_category_files(
+            candidate_id = candidate_id,
+            files        = certificates,
+            category     = "certificates",
+        )
+        payload_dict["certificate_paths"] = cert_paths
+    else:
+        payload_dict["certificate_paths"] = []
  
     # ── 3. Validate payload and call service ──────────────────────────────────
     validated_payload = ApplyForJobSchema(**payload_dict)
@@ -262,6 +264,175 @@ async def apply_jd(
         "changes_detected": response["changes_detected"],
     }
 
+@router.get("/applications")
+def list_candidate_applications(
+    current_candidate: CandidateAccount = Depends(get_current_candidate),
+    db: Session = Depends(get_db),
+):
+    """Return all job applications submitted by the logged-in candidate."""
+    apps = (
+        db.query(Application)
+        .filter(Application.candidate_id == current_candidate.id)
+        .order_by(Application.created_at.desc())
+        .all()
+    )
+    result = []
+    for a in apps:
+        jd = a.job_description
+        # Read ai_interview_id from stored ai_intelligence blob
+        try:
+            ai = json.loads(a.ai_intelligence) if a.ai_intelligence else {}
+        except Exception:
+            ai = {}
+        sched = ai.get("interview_schedule", {})
+        result.append({
+            "application_id":  a.id,
+            "job_id":          a.job_id,
+            "job_title":       jd.title if jd else "Unknown Role",
+            "department":      jd.department if jd else "",
+            "status":          a.status,
+            "pre_score":       a.pre_score,
+            "created_at":      a.created_at.isoformat() if a.created_at else None,
+            # The UUID that InterviewSession.jsx uses to call /interview/{id}/...
+            "ai_interview_id": sched.get("ai_interview_id"),
+            "scheduled_at":    sched.get("scheduled_at"),
+            "interview_link":  sched.get("interview_link"),
+            "notes":           sched.get("notes"),
+        })
+    return {"applications": result}
+
+
+# ── Separate router for /api/interview/* (correct path without /api/candidate prefix)
+interview_router = APIRouter(prefix="/api/interview", tags=["interview-candidate"])
+
+@interview_router.get("/candidate/{candidate_id}")
+def get_candidate_interview(
+    candidate_id: str,
+    db: Session = Depends(get_db),
+):
+    """Return scheduled interview details for a candidate if any exists."""
+    # Check all applications for this candidate and look for interview_scheduled status
+    apps = db.query(Application).filter(Application.candidate_id == candidate_id).all()
+    for a in apps:
+        if a.status and "interview" in a.status.lower():
+            # Pull schedule info stored in ai_intelligence
+            try:
+                ai = json.loads(a.ai_intelligence) if a.ai_intelligence else {}
+            except Exception:
+                ai = {}
+            sched = ai.get("interview_schedule", {})
+            return {
+                "interview": {
+                    "job_id":         a.job_id,
+                    "status":         a.status,
+                    "scheduled_at":   sched.get("scheduled_at"),
+                    "interview_link": sched.get("interview_link"),
+                    "notes":          sched.get("notes"),
+                }
+            }
+    return {"interview": None}
+
+
+class ScheduleInterviewRequest(BaseModel):
+    candidate_id:    str
+    job_id:          Optional[str] = None
+    scheduled_at:    Optional[str] = None
+    interview_link:  Optional[str] = None
+    notes:           Optional[str] = None
+    ai_interview_id: Optional[str] = None  # LangGraph session ID if already created
+
+
+@interview_router.post("/schedule")
+def schedule_interview(
+    payload: ScheduleInterviewRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Schedule an AI interview for a candidate.
+    Generates a unique ai_interview_id, updates application status
+    to 'Interview Scheduled', and stores all metadata in ai_intelligence.
+    """
+    # Find the application — prefer the specific job_id if given
+    query = db.query(Application).filter(Application.candidate_id == payload.candidate_id)
+    if payload.job_id:
+        query = query.filter(Application.job_id == payload.job_id)
+    app = query.order_by(Application.created_at.desc()).first()
+
+    if not app:
+        raise HTTPException(status_code=404, detail="No application found for this candidate.")
+
+    # Merge schedule details into ai_intelligence blob
+    try:
+        ai = json.loads(app.ai_intelligence) if app.ai_intelligence else {}
+    except Exception:
+        ai = {}
+
+    # Generate or reuse ai_interview_id — this is what the InterviewSession uses
+    # Priority: (1) passed from frontend (LangGraph session ID), (2) stored, (3) new UUID
+    ai_interview_id = (
+        payload.ai_interview_id
+        or ai.get("interview_schedule", {}).get("ai_interview_id")
+        or str(uuid.uuid4())
+    )
+
+    ai["interview_schedule"] = {
+        "ai_interview_id": ai_interview_id,
+        "scheduled_at":    payload.scheduled_at,
+        "interview_link":  payload.interview_link,
+        "notes":           payload.notes,
+    }
+
+    app.ai_intelligence = json.dumps(ai)
+    app.status = "Interview Scheduled"
+    db.commit()
+    db.refresh(app)
+
+    # ── Send email notification (non-blocking background thread) ─────────────
+    try:
+        import threading
+        from candidate.utils.email_service import send_interview_scheduled_email
+
+        candidate = db.query(CandidateAccount).filter(
+            CandidateAccount.id == app.candidate_id
+        ).first()
+        jd = app.job_description  # SQLAlchemy relationship
+
+        if candidate and candidate.email:
+            candidate_name = (
+                f"{candidate.first_name or ''} {candidate.last_name or ''}".strip()
+                or candidate.email
+            )
+            job_title = jd.title if jd else "the role you applied for"
+
+            threading.Thread(
+                target=send_interview_scheduled_email,
+                kwargs={
+                    "candidate_email": candidate.email,
+                    "candidate_name":  candidate_name,
+                    "job_title":       job_title,
+                    "scheduled_at":    payload.scheduled_at,
+                    "interview_link":  payload.interview_link,
+                    "notes":           payload.notes,
+                },
+                daemon=True,
+            ).start()
+    except Exception as email_err:
+        import logging
+        logging.getLogger(__name__).warning(
+            f"[schedule] Email notification skipped: {email_err}"
+        )
+
+    return {
+        "success":          True,
+        "application_id":   app.id,
+        "candidate_id":     app.candidate_id,
+        "job_id":           app.job_id,
+        "status":           app.status,
+        "ai_interview_id":  ai_interview_id,
+        "scheduled_at":     payload.scheduled_at,
+        "interview_link":   payload.interview_link,
+        "notes":            payload.notes,
+    }
 
 
 @router.get("/application/{jd_id}")

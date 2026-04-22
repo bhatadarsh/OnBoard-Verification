@@ -1,0 +1,1 @@
+Yeah, so there was this day when I deployed a Kubernetes server in the AWS architecture. And then the thing was, it was not going to that site, right? So the thing was, in the SD part, that is the security group, I hadn't mentioned the port which the application should go in. So that's why it was not, so I was not able to enter that site.

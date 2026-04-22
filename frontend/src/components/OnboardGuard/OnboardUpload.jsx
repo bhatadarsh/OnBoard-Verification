@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import OBCandidateSearch from './OBCandidateSearch';
 import { ONBOARD_API } from '../../config/api';
 import './OnboardGuard.css';
 
@@ -13,11 +12,13 @@ const DOC_TYPES = [
   { key: 'marksheet_10th', label: '10th Marksheet',      icon: '🎓' },
   { key: 'marksheet_12th', label: '12th Marksheet',      icon: '🏫' },
   { key: 'resume',        label: 'Resume / CV',          icon: '📄' },
+  { key: 'i9_form',       label: 'I-9 Form',             icon: '📝' },
 ];
 
 const OnboardUpload = () => {
   const [candidates, setCandidates]     = useState([]);
   const [selected, setSelected]         = useState(null);
+  const [searchQuery, setSearchQuery]   = useState('');
   const [files, setFiles]               = useState({});
   const [uploading, setUploading]       = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
@@ -75,19 +76,48 @@ const OnboardUpload = () => {
         <p>Attach verification documents for candidates. Files are encrypted before storage.</p>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 1000 }}>
-        <OBCandidateSearch
-          candidates={candidates}
-          onSelect={c => { setSelected(c); setUploadResult(null); setFiles({}); setError(null); }}
-          selectedId={selected?.id}
-          placeholder="Search candidate by name or email..."
-        />
+      <div style={{ position: 'relative', zIndex: 1000, marginBottom: '20px' }}>
+        <div className="ob-search-box">
+          <span style={{ fontSize: '18px' }}>🔍</span>
+          <input 
+            type="text" 
+            className="ob-search-input" 
+            placeholder="Search candidate by name or email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       {!selected ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8', background: 'white', borderRadius: '16px', border: '1.5px dashed #e2e8f0', marginTop: '20px' }}>
-          <span style={{ fontSize: '48px', display: 'block', marginBottom: '16px' }}>👤</span>
-          <p>Select a candidate to begin document upload.</p>
+        <div style={{ marginTop: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+            {candidates
+              .filter(c => c.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || c.email?.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map(c => (
+                <div 
+                  key={c.id} 
+                  className="ob-upload-card" 
+                  style={{ alignItems: 'flex-start', padding: '16px', textAlign: 'left', cursor: 'pointer', border: '1.5px solid #e2e8f0' }}
+                  onClick={() => { setSelected(c); setUploadResult(null); setFiles({}); setError(null); }}
+                >
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div className="admin-avatar" style={{ background: '#3b82f6', width: '36px', height: '36px', fontSize: '16px' }}>
+                      {(c.full_name || c.first_name || '?')[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b' }}>{c.full_name}</div>
+                      <div style={{ fontSize: '12px', color: '#64748b' }}>{c.email}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+          {candidates.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8', background: 'white', borderRadius: '16px', border: '1.5px dashed #e2e8f0' }}>
+              <p>No candidates available. Import a CSV first.</p>
+            </div>
+          )}
         </div>
       ) : (
         <div style={{ marginTop: '20px' }} className="animate-in fade-in">

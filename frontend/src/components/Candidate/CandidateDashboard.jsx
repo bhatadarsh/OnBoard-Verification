@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { RECRO_API } from '../../config/api';
+import { RECRO_API, ONBOARD_API } from '../../config/api';
 import './CandidateDashboard.css';
 import InterviewSession from './InterviewSession';
 
@@ -27,24 +27,43 @@ function getStepIndex(status) {
 }
 
 export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
-  const [interview, setInterview]   = useState(null);
+  const [interview, setInterview]     = useState(null);
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading]       = useState(true);
+  const [loading, setLoading]         = useState(true);
   const [activeInterviewId, setActiveInterviewId] = useState(null);
-
-  if (activeInterviewId) {
-      return (
-          <div style={{ marginTop: '30px' }}>
-              <InterviewSession 
-                interviewId={activeInterviewId} 
-                onEnd={() => setActiveInterviewId(null)} 
-              />
-          </div>
-      );
-  }
+  const [interviewLoading, setInterviewLoading]   = useState(false);
+  const [interviewError, setInterviewError]       = useState(null);
+  const [onboardStatus, setOnboardStatus]         = useState(null);
 
   const candidateId = user?.candidate_id;
 
+  // Create (or resume) a LangGraph session then open the interview UI
+  const startInterview = async (app) => {
+    setInterviewError(null);
+    setInterviewLoading(true);
+    try {
+      // Always create a fresh session — this runs initialize_interview + stage4_graph
+      const res = await fetch(`${RECRO_API}/admin/interview/start/${candidateId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `Session creation failed (${res.status})`);
+      }
+      const data = await res.json();
+      const interviewId = data.interview_id;
+      if (!interviewId) throw new Error('No interview_id returned from server');
+      setActiveInterviewId(interviewId);
+    } catch (err) {
+      console.error('[startInterview]', err);
+      setInterviewError(err.message);
+    } finally {
+      setInterviewLoading(false);
+    }
+  };
+
+  // ── All hooks must be called before any return ──────────────────────────────
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -67,15 +86,28 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
         }
 
         // Silent patch for older sessions missing the email in local storage
-        if (!user.email) {
+        let currentEmail = user.email;
+        if (!currentEmail) {
           const resProf = await fetch(`${RECRO_API}/api/candidate/profile`, { headers });
           if (resProf.ok) {
             const pData = await resProf.json();
             if (pData?.candidate_data?.email) {
-              user.email = pData.candidate_data.email;
-              localStorage.setItem('candidate_email', pData.candidate_data.email);
+              currentEmail = pData.candidate_data.email;
+              user.email = currentEmail;
+              localStorage.setItem('candidate_email', currentEmail);
             }
           }
+        }
+
+        // Fetch live OnboardGuard document status via the bridge
+        if (currentEmail) {
+          try {
+            const resOnb = await fetch(`${ONBOARD_API}/api/v1/candidate/by-email/${encodeURIComponent(currentEmail)}`);
+            if (resOnb.ok) {
+              const onbData = await resOnb.json();
+              setOnboardStatus(onbData);
+            }
+          } catch(e) {}
         }
       } catch (e) {
         console.warn('Could not fetch data:', e);
@@ -87,6 +119,27 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
     if (candidateId) fetchData();
     else setLoading(false);
   }, [candidateId, user]);
+
+  // ── Now safe to do early returns after all hooks are declared ────────────────
+  if (activeInterviewId) {
+    return (
+      <div style={{ marginTop: '30px' }}>
+        <InterviewSession
+          interviewId={activeInterviewId}
+          onEnd={async () => {
+          setActiveInterviewId(null);
+          // Refresh applications so the status updates to 'Interviewed'
+          const token = user?.access_token;
+          const headers = token ? { Authorization: `Bearer ${token}` } : {};
+          try {
+            const r = await fetch(`${RECRO_API}/api/candidate/applications`, { headers });
+            if (r.ok) { const d = await r.json(); setApplications(d.applications || []); }
+          } catch (_) {}
+        }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="cd-root">
@@ -135,7 +188,9 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
               ) : (
                 applications.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map((app, idx) => {
                   const isRejected  = (app.status || '').toLowerCase() === 'rejected';
-                  const appStatus = interview && interview.job_id === app.job_id ? 'interview_scheduled' : app.status;
+                  // Always use the real status from SQLite — normalise to lowercase_underscore
+                  // so it matches STATUS_STEPS keys
+                  const appStatus   = (app.status || 'applied').toLowerCase().replace(/\s+/g, '_');
                   const currentStep = getStepIndex(appStatus);
 
                   return (
@@ -164,20 +219,46 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
                         })}
                       </div>
                       
-                      {appStatus === 'interview_scheduled' && app.ai_interview_id && (
+                      {['interview_scheduled'].includes(appStatus) && (
                         <div style={{ marginTop: '24px', textAlign: 'center' }}>
-                            <button
-                                onClick={() => setActiveInterviewId(app.ai_interview_id)}
-                                style={{
-                                    padding: '12px 24px', background: '#3b82f6', color: 'white',
-                                    border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600'
-                                }}
-                            >
-                                🎤 Start AI Video Interview
-                            </button>
-                            <p style={{ fontSize: '12px', color: '#64748b', marginTop: '8px' }}>
-                                Requires web-camera and microphone permissions.
+                          {interviewError && (
+                            <p style={{ color: '#ef4444', fontSize: '13px', marginBottom: '10px' }}>
+                              ⚠️ {interviewError}
                             </p>
+                          )}
+                          <button
+                            onClick={() => startInterview(app)}
+                            disabled={interviewLoading}
+                            style={{
+                              padding: '12px 24px',
+                              background: interviewLoading ? '#93c5fd' : '#3b82f6',
+                              color: 'white', border: 'none', borderRadius: '8px',
+                              cursor: interviewLoading ? 'not-allowed' : 'pointer',
+                              fontWeight: '600', minWidth: '220px'
+                            }}
+                          >
+                            {interviewLoading ? '⏳ Starting Interview...' : '🎤 Start AI Video Interview'}
+                          </button>
+                          <p style={{ fontSize: '12px', color: '#64748b', marginTop: '8px' }}>
+                            Requires webcam and microphone permissions.
+                          </p>
+                        </div>
+                      )}
+
+                      {appStatus === 'interviewed' && (
+                        <div style={{
+                          marginTop: '20px', padding: '16px 20px',
+                          background: 'linear-gradient(135deg,#f0fdf4,#dcfce7)',
+                          border: '1px solid #86efac', borderRadius: '10px',
+                          textAlign: 'center'
+                        }}>
+                          <div style={{ fontSize: '28px', marginBottom: '6px' }}>🎊</div>
+                          <p style={{ margin: 0, fontWeight: '700', color: '#166534', fontSize: '15px' }}>
+                            Interview Completed
+                          </p>
+                          <p style={{ margin: '4px 0 0', color: '#15803d', fontSize: '13px' }}>
+                            Your responses have been recorded. We'll be in touch soon!
+                          </p>
                         </div>
                       )}
 
@@ -272,7 +353,13 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
                 </div>
                 <div className="cd-info-row">
                   <span className="cd-info-label">Interview</span>
-                  <span className="cd-info-value">{interview ? '✅ Scheduled' : '⏳ Pending'}</span>
+                  <span className="cd-info-value">
+                    {applications.some(app => ['interviewed', 'offered'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_')))
+                      ? '🎊 Completed'
+                      : applications.some(app => ['interview_scheduled'].includes((app.status || '').toLowerCase().replace(/\s+/g, '_'))) || interview
+                      ? '✅ Scheduled'
+                      : '⏳ Pending'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -282,20 +369,33 @@ export default function CandidateDashboard({ user, onLogout, onGoToCareers }) {
               <div className="cd-card-title">📄 Document Checklist</div>
               <div className="cd-doc-list">
                 {[
-                  { label: 'Resume / CV',    icon: '📄' },
-                  { label: 'Aadhar Card',    icon: '🪪' },
-                  { label: 'PAN Card',       icon: '💳' },
-                  { label: '10th Marksheet', icon: '🎓' },
-                  { label: '12th Marksheet', icon: '🏫' },
-                ].map((doc, i) => (
-                  <div key={i} className="cd-doc-row">
-                    <span>{doc.icon} {doc.label}</span>
-                    <span className="cd-doc-hint">Upload via HR portal</span>
-                  </div>
-                ))}
+                  { key: 'resume',         label: 'Resume / CV',    icon: '📄' },
+                  { key: 'aadhar',         label: 'Aadhar Card',    icon: '🪪' },
+                  { key: 'pan',            label: 'PAN Card',       icon: '💳' },
+                  { key: 'marksheet_10th', label: '10th Marksheet', icon: '🎓' },
+                  { key: 'marksheet_12th', label: '12th Marksheet', icon: '🏫' },
+                  { key: 'i9_form',        label: 'I-9 Form',       icon: '📝' },
+                ].map((doc, i) => {
+                  const isUploaded = onboardStatus?.uploaded_documents?.includes(doc.key);
+                  const isVerified = onboardStatus?.validation_status === 'validated'; // Simplification for demo
+                  return (
+                    <div key={i} className="cd-doc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ opacity: isUploaded ? 1 : 0.6 }}>{doc.icon} {doc.label}</span>
+                      <span className="cd-doc-hint" style={{
+                        color: isUploaded ? '#10b981' : '#94a3b8',
+                        fontWeight: isUploaded ? 600 : 400,
+                        background: isUploaded ? '#ecfdf5' : 'transparent',
+                        padding: isUploaded ? '2px 8px' : 0,
+                        borderRadius: '4px'
+                      }}>
+                        {isUploaded ? (isVerified ? '✅ Verified' : '⏳ Uploaded') : 'Upload via HR portal'}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
               <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 12 }}>
-                Documents are uploaded by HR during onboarding. Contact HR if you need to submit any.
+                Documents are securely uploaded by HR during onboarding. Contact HR if you need to submit any.
               </p>
             </div>
 

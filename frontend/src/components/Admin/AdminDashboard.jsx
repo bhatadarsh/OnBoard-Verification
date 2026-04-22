@@ -9,15 +9,22 @@ import './AdminDashboard.css';
 import OnboardDashboard from '../OnboardGuard/OnboardDashboard';
 import OnboardUpload from '../OnboardGuard/OnboardUpload';
 import OnboardValidate from '../OnboardGuard/OnboardValidate';
-import { jobs as mockJobs } from '../../data/jobs';
 
 
 const STATUS_COLOR = {
-  'applied': { bg: '#eff6ff', color: '#1d4ed8' },
-  'shortlisted': { bg: '#f0fdf4', color: '#15803d' },
+  // lowercase keys (legacy)
+  'applied':             { bg: '#eff6ff', color: '#1d4ed8' },
+  'shortlisted':         { bg: '#f0fdf4', color: '#15803d' },
   'interview_scheduled': { bg: '#fefce8', color: '#a16207' },
-  'rejected': { bg: '#fef2f2', color: '#dc2626' },
-  'onboarded': { bg: '#f5f3ff', color: '#7c3aed' },
+  'rejected':            { bg: '#fef2f2', color: '#dc2626' },
+  'onboarded':           { bg: '#f5f3ff', color: '#7c3aed' },
+  // title-cased keys (from SQLite)
+  'Applied':             { bg: '#eff6ff', color: '#1d4ed8' },
+  'Shortlisted':         { bg: '#f0fdf4', color: '#15803d' },
+  'Interview Scheduled': { bg: '#fefce8', color: '#a16207' },
+  'Interviewed':         { bg: '#f0fdfa', color: '#0f766e' },
+  'Rejected':            { bg: '#fef2f2', color: '#dc2626' },
+  'Offered':             { bg: '#f5f3ff', color: '#7c3aed' },
 };
 
 const MENU = [
@@ -52,12 +59,32 @@ export default function AdminDashboard({ admin, onLogout }) {
   const fetchInitialData = async () => {
     setLoading(true);
     try {
-      setJobs(mockJobs);
-      setStats({
-        total_candidates: mockJobs.reduce((acc, job) => acc + (job.applicant_count || 0), 0),
-        active_jobs: mockJobs.length,
-        total_applications: mockJobs.reduce((acc, job) => acc + (job.applicant_count || 0), 0)
-      });
+      const [jobsRes, statsRes] = await Promise.all([
+        fetch(`${RECRO_API}/api/job/`),
+        fetch(`${RECRO_API}/api/admin/stats`)
+      ]);
+      if (jobsRes.ok) {
+        const rawJobs = await jobsRes.json();
+        console.log("rawJobs", rawJobs)
+        const mappedJobs = rawJobs.map(j => ({
+          ...j,
+          type: j.employment_type,
+          mode: j.work_mode,
+          experience: j.experience_range,
+          tags: j.required_skills,
+          summary: j.content_raw,
+          desiredExperience: j.desired_experience,
+          primarySkills: j.primary_skills,
+          secondarySkills: j.secondary_skills,
+          posted: new Date(j.created_at).toLocaleDateString()
+        }));
+        setJobs(mappedJobs);
+      }
+      if (statsRes.ok) {
+        const s = await statsRes.json();
+        console.log("----", s.stats)
+        setStats(s.stats);
+      }
     } catch (err) {
       console.error('Admin fetch error:', err);
     } finally {
@@ -137,16 +164,14 @@ export default function AdminDashboard({ admin, onLogout }) {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Delete this job?')) {
-      try {
-        const res = await fetch(`${RECRO_API}/api/job/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-          showToast('Job deleted.');
-          fetchInitialData();
-        }
-      } catch (err) {
-        showToast('Delete failed', 'error');
+    try {
+      const res = await fetch(`${RECRO_API}/api/job/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        showToast('Job deleted.');
+        fetchInitialData();
       }
+    } catch (err) {
+      showToast('Delete failed', 'error');
     }
   };
 
@@ -537,6 +562,36 @@ export default function AdminDashboard({ admin, onLogout }) {
                             <td className="table-muted">{applicant.candidate.experience}</td>
                             <td className="table-muted">{applicant.applied_on}</td>
                             <td>
+                              {(() => {
+                                // Score priority: interview > AI assessment > pre-screen
+                                const ivScore  = applicant.ai_intelligence?.interview_result?.overall_score ?? null;
+                                const aiScore  = applicant.ai_intelligence?.final_score ?? null;
+                                const hasIv    = ivScore != null;
+                                const hasAi    = !hasIv && aiScore != null;
+                                const score    = hasIv ? ivScore : hasAi ? aiScore : applicant.pre_score;
+                                const tier     = hasIv
+                                  ? (ivScore >= 7 ? 'shortlist' : ivScore >= 5 ? 'review' : 'reject')
+                                  : hasAi
+                                  ? (aiScore >= 7 ? 'shortlist' : aiScore >= 5 ? 'review' : 'reject')
+                                  : applicant.score_tier;
+                                const label    = hasIv ? 'Interview' : hasAi ? 'AI Match' : 'Pre-screen';
+                                if (score < 0 && !hasIv) return <span style={{ color: '#94a3b8', fontSize: 12 }}>—</span>;
+                                return (
+                                  <div>
+                                    <span style={{
+                                      padding: '3px 10px', borderRadius: 999, fontSize: 11, fontWeight: 700,
+                                      background: tier === 'shortlist' ? '#f0fdf4' : tier === 'review' ? '#fffbeb' : '#fef2f2',
+                                      color:      tier === 'shortlist' ? '#15803d' : tier === 'review' ? '#92400e' : '#b91c1c',
+                                    }}>
+                                      {tier === 'shortlist' ? '🟢' : tier === 'review' ? '🟡' : '🔴'}
+                                      {' '}{Number(score).toFixed(1)}/10
+                                    </span>
+                                    <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2, textAlign: 'center' }}>{label}</div>
+                                  </div>
+                                );
+                              })()}
+                            </td>
+                            <td>
                               <span
                                 className="status-pill"
                                 style={{
@@ -556,13 +611,15 @@ export default function AdminDashboard({ admin, onLogout }) {
                                 >
                                   View Profile
                                 </button>
-                                <button
-                                  className="tbl-btn del"
-                                  id={`reject-${applicant.id}`}
-                                  onClick={() => handleStatusChange(applicant.id, 'rejected')}
-                                >
-                                  Reject
-                                </button>
+                                {!['Offered', 'Rejected', 'offered', 'rejected'].includes(applicant.status) && (
+                                  <button
+                                    className="tbl-btn del"
+                                    id={`reject-${applicant.id}`}
+                                    onClick={() => handleStatusChange(applicant.id, 'Rejected')}
+                                  >
+                                    Reject
+                                  </button>
+                                )}
                               </div>
                             </td>
                           </tr>

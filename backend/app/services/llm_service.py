@@ -217,7 +217,7 @@ class LLMService:
         return await self._call_llm(prompt, f"PAN Card:\n{text}")
 
     async def extract_from_i9(self, text: str) -> Dict[str, str]:
-        prompt = """Extract verification details from this I-9 form text. The text will contain OCR data AND a signature verification result block. Output MUST be a valid JSON object. Extract keys: "signature_detected", "signature_details". Use the "[SIGNATURE VERIFICATION RESULT]" block to populate these fields. If no signature block is found, write "No" for signature_detected."""
+        prompt = """Extract verification details from this I-9 form text. The text will contain OCR data AND a signature verification result block. Output MUST be a valid JSON object. Extract keys: "full_name", "signature_detected", "signature_details". Use the "[SIGNATURE VERIFICATION RESULT]" block to populate signature fields. For full_name, look for the employee's name printed or handwritten on the form. If no signature block is found, write "No" for signature_detected."""
         return await self._call_llm(prompt, f"I-9 Form:\n{text}")
 
 # Singleton

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from sqlalchemy import (
     Column, String, Integer, Float, Boolean,
-    Text, Date, DateTime, ForeignKey, UniqueConstraint
+    Text, Date, DateTime, ForeignKey, UniqueConstraint, JSON
 )
 from sqlalchemy.orm import relationship, declarative_base
 
@@ -19,9 +19,19 @@ class JobDescription(Base):
     location         = Column(String)                     
     department       = Column(String)                     
     employment_type  = Column(String)                     
+    work_mode        = Column(String)                     
     min_experience   = Column(Integer)                    
     max_experience   = Column(Integer)                    
+    experience_range = Column(String)                     
     required_skills  = Column(Text)                       
+
+    # New fields for structured JD content
+    subtitle           = Column(String)
+    responsibilities   = Column(JSON)   # Store as a list of strings
+    desired_experience = Column(JSON)   # Store as a list of strings
+    primary_skills     = Column(JSON)   # Store as a list of strings
+    secondary_skills   = Column(JSON)   # Store as a list of strings
+
     status           = Column(String, default="open")     
     posted_by        = Column(String)                     
 
@@ -45,9 +55,16 @@ class JobDescription(Base):
             "location": self.location,
             "department": self.department,
             "employment_type": self.employment_type,
+            "work_mode": self.work_mode,
             "min_experience": self.min_experience,
             "max_experience": self.max_experience,
+            "experience_range": self.experience_range,
             "required_skills": self.required_skills,
+            "subtitle": self.subtitle,
+            "responsibilities": self.responsibilities,
+            "desired_experience": self.desired_experience,
+            "primary_skills": self.primary_skills,
+            "secondary_skills": self.secondary_skills,
             "status": self.status,
             "posted_by": self.posted_by,
             "content_raw": self.content_raw,

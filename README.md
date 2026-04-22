@@ -127,8 +127,9 @@ Upload Form	POST /api/v1/onboarding/up               │
 
 ### Storage
 - **ChromaDB** — local PersistentClient, cosine similarity HNSW
-- **MongoDB** — pymongo, localhost:27017
-- **SQLite** — OnboardGuard operational DB
+- **MongoDB** — pymongo, localhost:27017 (for raw extraction data)
+- **SQLite** — OnboardGuard core operational DB (`onboardguard.db`)
+- **PostgreSQL** — Central data extraction and candidate account registry (`postgresql://postgres:postgres@localhost:5432/data_extraction`)
 - **Local filesystem** — AES-256 encrypted document storage
 
 ---

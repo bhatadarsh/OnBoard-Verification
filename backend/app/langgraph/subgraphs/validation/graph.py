@@ -229,6 +229,34 @@ async def validation_node(state: GraphState) -> Dict[str, Any]:
                 "source": "N/A"
             })
     
+    # --- Explicitly Add I-9 Signature Validation ---
+    # The signature is not in the CSV form, so we must add it manually to the validation report.
+    if "i9_form" in knowledge_base:
+        i9_data = knowledge_base["i9_form"]
+        sig_detected = str(i9_data.get("signature_detected", "No")).strip()
+        sig_details = str(i9_data.get("signature_details", "")).strip()
+        
+        sig_field_key = "i9_signature"
+        if sig_field_key in manual_overrides:
+            override = manual_overrides[sig_field_key]
+            validations.append(override)
+            if override["status"] == "CORRECT": correct_count += 1
+            elif override["status"] == "INCORRECT": incorrect_count += 1
+            else: ambiguous_count += 1
+        else:
+            status = "CORRECT" if "yes" in sig_detected.lower() else "INCORRECT"
+            if status == "CORRECT": correct_count += 1
+            else: incorrect_count += 1
+                
+            validations.append({
+                "field": sig_field_key,
+                "status": status,
+                "form_value": "Yes (Required)",
+                "doc_value": sig_detected,
+                "reason": sig_details or ("Signature verified on I-9" if status == "CORRECT" else "Missing signature on I-9 form"),
+                "source": "i9_form"
+            })
+    
     total = correct_count + incorrect_count + ambiguous_count
     score = round((correct_count / total * 100), 1) if total else 0
     

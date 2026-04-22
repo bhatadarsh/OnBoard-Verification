@@ -22,8 +22,11 @@ except ImportError as e:
 # Determine database URL
 db_url = os.getenv("DATABASE_URL") or settings.postgres_uri
 if not db_url or "postgresql" not in db_url:
-    # Fallback to local SQLite for OnboardGuard
-    db_url = "sqlite:///./onboardguard.db"
+    # Fallback to local SQLite — use absolute path so CWD never matters
+    _here = os.path.dirname(os.path.abspath(__file__))          # app/db/
+    _root = os.path.dirname(os.path.dirname(_here))              # project root
+    _db   = os.path.join(_root, "backend", "onboardguard.db")
+    db_url = f"sqlite:///{_db}"
     connect_args = {"check_same_thread": False}
 else:
     connect_args = {}

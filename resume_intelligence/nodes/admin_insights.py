@@ -1,11 +1,23 @@
 """
 Node 7 — generate_admin_insights
-Produces two recruiter-readable paragraphs via LLM.
+Produces two recruiter-readable bullet-point arrays via LLM.
 """
 import json
 from langchain.prompts import PromptTemplate
 from utils.llm import get_llm, load_prompt
 from utils.json_parser import extract_json
+
+
+def _to_bullets(value) -> list:
+    """Normalize LLM output to a list of bullet strings."""
+    if isinstance(value, list):
+        return [str(v).strip() for v in value if str(v).strip()]
+    if isinstance(value, str) and value.strip():
+        # Old format: split paragraph into sentences as bullets
+        import re
+        sentences = re.split(r'(?<=[.!?])\s+', value.strip())
+        return [s.strip() for s in sentences if s.strip()]
+    return []
 
 
 def generate_admin_insights(state: dict) -> dict:
@@ -40,7 +52,13 @@ def generate_admin_insights(state: dict) -> dict:
     )
 
     insights = extract_json(response.content)
-    insights.setdefault("matched_skills_summary", "")
-    insights.setdefault("candidate_strengths", "")
+
+    # Normalize to bullet arrays regardless of LLM format
+    insights["matched_skills_summary"] = _to_bullets(
+        insights.get("matched_skills_summary", [])
+    )
+    insights["candidate_strengths"] = _to_bullets(
+        insights.get("candidate_strengths", [])
+    )
 
     return {**state, "admin_insights": insights}

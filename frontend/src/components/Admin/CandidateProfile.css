@@ -180,11 +180,21 @@
   color: #15803d;
   margin-bottom: 10px;
 }
-.cp-insight-card p {
+.cp-insight-card p, .cp-insight-card ul {
   font-size: 12.5px;
   color: #374151;
   margin: 0;
   line-height: 1.65;
+}
+.cp-insight-card ul {
+  padding-left: 18px;
+  list-style-type: disc;
+}
+.cp-insight-card li {
+  margin-bottom: 6px;
+}
+.cp-insight-card li:last-child {
+  margin-bottom: 0;
 }
 
 /* ── Interview Sent Banner ── */

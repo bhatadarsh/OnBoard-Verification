@@ -3,6 +3,7 @@ import './OnboardGuard.css';
 
 const OBCandidateSearch = ({ candidates, onSelect, selectedId, placeholder = "Search candidates..." }) => {
   const [query, setQuery] = React.useState('');
+  const [isFocused, setIsFocused] = React.useState(false);
 
   const filtered = candidates.filter(c => 
     c.full_name?.toLowerCase().includes(query.toLowerCase()) || 
@@ -10,16 +11,18 @@ const OBCandidateSearch = ({ candidates, onSelect, selectedId, placeholder = "Se
   );
 
   return (
-    <div className="ob-search-box">
+    <div className="ob-search-box" style={{ position: 'relative' }}>
       <span style={{ fontSize: '18px' }}>🔍</span>
       <input 
         type="text" 
         className="ob-search-input" 
         placeholder={placeholder}
         value={query}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setTimeout(() => setIsFocused(false), 200)}
         onChange={(e) => setQuery(e.target.value)}
       />
-      {query && (
+      {(query || isFocused) && (
         <div className="ob-search-results" style={{
           position: 'absolute',
           top: '100%',

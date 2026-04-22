@@ -252,6 +252,28 @@ async def upload_documents(
         "tamper_warning": candidate.tamper_warning if hasattr(candidate, 'tamper_warning') else False
     }
 
+@router.delete("/documents/{candidate_id}")
+async def reset_documents(candidate_id: str, db: Session = Depends(get_db)):
+    """Reset all uploaded documents, knowledge base, and validation data for a candidate."""
+    candidate = db.query(Candidate).filter(Candidate.id == candidate_id).first()
+    if not candidate:
+        raise HTTPException(status_code=404, detail="Candidate not found.")
+    
+    candidate_dir = os.path.join(UPLOAD_DIR, candidate_id)
+    if os.path.exists(candidate_dir):
+        import shutil
+        shutil.rmtree(candidate_dir)
+        
+    candidate.set_documents({})
+    candidate.set_knowledge_base({})
+    candidate.set_validation({})
+    candidate.validation_score = None
+    candidate.is_validated = False
+    
+    db.commit()
+    
+    return {"status": "success", "message": "Candidate documents and validation data reset."}
+
 
 # ============ EXTRACTION (via LangGraph) ============
 
@@ -618,6 +640,20 @@ async def get_candidate(candidate_id: str, db: Session = Depends(get_db)):
     candidate = db.query(Candidate).filter(Candidate.id == candidate_id).first()
     if not candidate:
         raise HTTPException(status_code=404, detail="Candidate not found")
+    
+    return {
+        **candidate.to_dict(),
+        "knowledge_base": candidate.get_knowledge_base(),
+        "form_data": candidate.get_form(),
+        "validation_result": candidate.get_validation() if getattr(candidate, 'is_validated', False) else None
+    }
+
+@router.get("/candidate/by-email/{email}")
+async def get_candidate_by_email(email: str, db: Session = Depends(get_db)):
+    """Get candidate details by email (bridge for ATS portal)."""
+    candidate = db.query(Candidate).filter(Candidate.email == email).first()
+    if not candidate:
+        raise HTTPException(status_code=404, detail="Candidate not found in OnboardGuard")
     
     return {
         **candidate.to_dict(),

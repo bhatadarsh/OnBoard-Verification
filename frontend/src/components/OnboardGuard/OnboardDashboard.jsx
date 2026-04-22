@@ -12,20 +12,50 @@ const OnboardDashboard = () => {
   const [error, setError]           = useState(null);
 
   useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        const res = await fetch(`${ONBOARD_API}/api/v1/candidates`);
-        if (!res.ok) throw new Error(`Status ${res.status}`);
-        const data = await res.json();
-        setCandidates(data.candidates || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCandidates();
   }, []);
+
+  const fetchCandidates = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${ONBOARD_API}/api/v1/candidates`);
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const data = await res.json();
+      setCandidates(data.candidates || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImportCsv = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('form_file', file);
+      
+      const res = await fetch(`${ONBOARD_API}/api/v1/onboarding/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Upload failed');
+      }
+      
+      await fetchCandidates();
+    } catch (err) {
+      alert('Error uploading CSV: ' + err.message);
+      setLoading(false);
+    } finally {
+      e.target.value = null;
+    }
+  };
 
   // Compute real stats
   const total         = candidates.length;
@@ -67,7 +97,7 @@ const OnboardDashboard = () => {
         <div className="view-title"><h1>Onboarding Overview</h1></div>
         <div style={{ padding: '24px', background: '#fef2f2', borderRadius: 12, border: '1px solid #fecaca', color: '#dc2626' }}>
           ⚠️ Could not reach OnBoard backend: {error}
-          <br /><small>Make sure the OnBoard-Verification server is running on port 8002.</small>
+          <br /><small>Make sure the backend server is running on port 8000.</small>
         </div>
       </div>
     );
@@ -75,9 +105,17 @@ const OnboardDashboard = () => {
 
   return (
     <div className="onboard-container">
-      <div className="view-title">
-        <h1>Onboarding Overview</h1>
-        <p>Real-time verification status from OnboardGuard.</p>
+      <div className="view-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1>Onboarding Overview</h1>
+          <p>Real-time verification status from OnboardGuard.</p>
+        </div>
+        <div>
+          <input type="file" id="csv-upload" accept=".csv,.xlsx" style={{ display: 'none' }} onChange={handleImportCsv} />
+          <button className="tbl-btn" style={{ background: '#4f46e5', color: 'white', border: 'none', padding: '8px 16px', fontWeight: 600 }} onClick={() => document.getElementById('csv-upload').click()}>
+            + Import Candidates (CSV)
+          </button>
+        </div>
       </div>
 
       {/* Stat cards */}

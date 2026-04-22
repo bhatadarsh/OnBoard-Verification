@@ -71,7 +71,7 @@ router = APIRouter(tags=["interview"])
 
 # Add this helper function near the top (after imports)
 def create_interview_session_for_candidate(candidate_id: int, resume_id: Optional[str] = None) -> InterviewSession:
-    """Shared logic to create an interview session for a candidate."""
+    """Shared logic to create an interview session for a candidate (legacy JSON store)."""
     db.load()
     
     # Find resume
@@ -139,6 +139,131 @@ def create_interview_session_for_candidate(candidate_id: int, resume_id: Optiona
     db.save()
     
     return session
+
+
+def create_interview_session_from_sqlite(candidate_id: str) -> InterviewSession:
+    """
+    Create a LangGraph interview session for a candidate from the NEW SQLite system.
+    Reads Application + JobDescription from SQLite instead of the old JSON db.
+    Falls back to generating generic focus areas if no JD intelligence exists.
+    """
+    from app.db.database import SessionLocal
+    from candidate.models.applications import Application
+    from job_description.models.job_description import JobDescription as JDModel
+    import json as _json
+
+    sql_session = SessionLocal()
+    try:
+        # Find the most recent application for this candidate
+        app = (
+            sql_session.query(Application)
+            .filter(Application.candidate_id == candidate_id)
+            .order_by(Application.created_at.desc())
+            .first()
+        )
+        if not app:
+            raise HTTPException(status_code=404, detail=f"No application found for candidate {candidate_id}")
+
+        jd = sql_session.query(JDModel).filter(JDModel.id == app.job_id).first()
+
+        # Build focus areas in the exact format expected by initialize_interview
+        # Each entry: { order, topic, priority, depth_score, confidence, evidence, interview_goal }
+        raw_skills = []
+        if jd:
+            required = [s.strip() for s in (jd.required_skills or "").split(",") if s.strip()]
+            ps = jd.primary_skills or []
+            try:
+                ps = _json.loads(ps) if isinstance(ps, str) else ps
+            except Exception:
+                ps = []
+            raw_skills = (required + [str(s) for s in ps])[:6]  # cap at 6
+
+        if not raw_skills:
+            raw_skills = ["Python", "Problem Solving", "System Design"]
+
+        focus_areas = [
+            {
+                "order":          idx + 1,
+                "topic":          skill,
+                "priority":       "Primary" if idx < 3 else "Secondary",
+                "depth_score":    "High" if idx < 2 else "Medium",
+                "confidence":     "High",
+                "evidence":       [],
+                "interview_goal": (
+                    "Assess system design, decision-making, and tradeoff reasoning"
+                    if idx < 2
+                    else "Assess implementation understanding and practical experience"
+                ),
+            }
+            for idx, skill in enumerate(raw_skills)
+        ]
+
+        # Initialize LangGraph interview
+        try:
+            from interview_orchestration.nodes.initialize_interview import initialize_interview
+            s4_state = initialize_interview({"candidate_id": candidate_id, "final_focus_areas": focus_areas})
+            s4_res = stage4_graph.invoke(s4_state)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Interview initiation failed: {str(e)}")
+
+        interview_id = str(uuid.uuid4())
+        session_dict = {
+            "interview_id":          interview_id,
+            "candidate_id":          candidate_id,   # keep as string
+            "current_question":      s4_res.get("current_question"),
+            "status":                "IN_PROGRESS" if s4_res.get("current_question") else "NOT_STARTED",
+            "created_at":            datetime.now().isoformat(),
+            "focus_areas":           focus_areas,
+            "current_topic":         s4_res.get("current_topic"),
+            "current_topic_index":   s4_res.get("current_topic_index", 0),
+            "current_followup_count": s4_res.get("current_followup_count", 0),
+            "interview_trace":       [],
+            "cheating_score":        0.0,
+            "cheating_events":       [],
+            "tab_change_count":      0,
+            "interview_unlocked":    True,
+        }
+
+        # Store in persistent JSON db — but NEVER overwrite a completed session
+        db.load()
+        existing = next((i for i in db.interviews if i.get("candidate_id") == candidate_id), None)
+        if existing and existing.get("status") in ("COMPLETED", "COMPLETED_EARLY"):
+            print(f"[interview] ⚠️ Not overwriting COMPLETED session {existing['interview_id']} for {candidate_id}")
+            return existing  # Return the completed session as-is
+        db.interviews = [i for i in db.interviews if i.get("candidate_id") != candidate_id]
+        db.interviews.append(session_dict)
+        db.save()
+
+        # ── Write the real interview_id back to SQLite ai_intelligence ────────
+        # This keeps both stores in sync so the dashboard can show the right state
+        import sqlite3 as _sqlite3, json as _json2
+        try:
+            _conn = _sqlite3.connect(_SQLITE_DB_PATH)
+            _cur  = _conn.cursor()
+            _cur.execute(
+                "SELECT id, ai_intelligence FROM applications WHERE candidate_id = ? ORDER BY created_at DESC LIMIT 1",
+                (str(candidate_id),)
+            )
+            _row = _cur.fetchone()
+            if _row:
+                _ai = _json2.loads(_row[1]) if _row[1] else {}
+                _sched = _ai.get("interview_schedule", {})
+                _sched["ai_interview_id"] = interview_id
+                _ai["interview_schedule"] = _sched
+                _cur.execute(
+                    "UPDATE applications SET ai_intelligence = ? WHERE id = ?",
+                    (_json2.dumps(_ai), _row[0])
+                )
+                _conn.commit()
+                print(f"[interview] Synced interview_id {interview_id} -> SQLite for {candidate_id}")
+            _conn.close()
+        except Exception as _sync_err:
+            print(f"[interview] SQLite sync warning: {_sync_err}")
+
+        return session_dict  # return dict so FastAPI can serialize
+    finally:
+        sql_session.close()
+
 
 @router.get("/files/{container}/{blob_path:path}")
 async def serve_local_file(
@@ -251,6 +376,35 @@ async def upload_jd(file: UploadFile = File(...), current_user: TokenData = Depe
     db.jds[job_id] = jd.dict()
     db.save()
     return jd
+
+from pydantic import BaseModel
+class JDSyncPayload(BaseModel):
+    job_id: str
+    jd_name: str
+    raw_text: str
+
+@router.post("/admin/jd/sync", response_model=JobDescription, status_code=status.HTTP_201_CREATED)
+async def sync_jd(payload: JDSyncPayload):
+    """Sync JD text to run intelligence graph without file upload."""
+    
+    intelligence = {}
+    try:
+        print(f"Running JD Intelligence for {payload.job_id}...")
+        res = jd_graph.invoke({"raw_jd": payload.raw_text})
+        intelligence = res
+    except Exception as e:
+        print(f"JD Graph Error: {e}")
+
+    jd_name = intelligence.get("role_context", {}).get("primary_role") or payload.jd_name
+
+    jd = JobDescription(
+        job_id=payload.job_id, jd_name=jd_name, jd_blob_path="synced_from_db",
+        status="ACTIVE", uploaded_at=datetime.now(), intelligence=intelligence
+    )
+    db.jds[payload.job_id] = jd.dict()
+    db.save()
+    return jd
+
 
 @router.get("/admin/jd", response_model=List[JobDescription])
 async def get_all_jds(current_user: TokenData = Depends(require_admin)):
@@ -705,9 +859,11 @@ async def delete_candidate(candidate_id: int, current_user: TokenData = Depends(
 # Stage 4: Interview Session Initialization
 # ─────────────────────────────────────────────────────────────────────────────
 
-@router.post("/admin/interview/start/{candidate_id}", response_model=InterviewSession)
-async def start_interview_admin(candidate_id: int, resume_id: Optional[str] = Query(None), current_user: TokenData = Depends(require_admin)):
-    return create_interview_session_for_candidate(candidate_id, resume_id)
+@router.post("/admin/interview/start/{candidate_id}")
+async def start_interview_admin(candidate_id: str, resume_id: Optional[str] = Query(None)):
+    """Create a LangGraph interview session for a candidate (new SQLite system)."""
+    return create_interview_session_from_sqlite(candidate_id)
+
 
 @router.post("/user/interview/start", response_model=InterviewSession)
 async def start_interview_user(current_user: TokenData = Depends(require_user)):
@@ -726,13 +882,108 @@ async def get_interview_status(current_user: TokenData = Depends(require_user)):
 # Stage 5: Interview In-Progress Flow
 # ─────────────────────────────────────────────────────────────────────────────
 
+_SQLITE_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "onboardguard.db")
+
+def _mark_application_interviewed(candidate_id: str) -> None:
+    """
+    1. Set Application.status = 'Interviewed' in SQLite.
+    2. Write the full interview result into ai_intelligence so the admin report can display it.
+    """
+    import sqlite3 as _sq, json as _j
+
+    # Find the completed session in the JSON store
+    session = next(
+        (iv for iv in db.interviews if str(iv.get("candidate_id")) == str(candidate_id)),
+        None
+    )
+
+    try:
+        conn = _sq.connect(_SQLITE_DB_PATH)
+        cur  = conn.cursor()
+
+        # 1. Update status
+        cur.execute(
+            """UPDATE applications SET status = 'Interviewed'
+               WHERE candidate_id = ?
+                 AND status NOT IN ('Interviewed', 'Offered', 'Rejected')""",
+            (str(candidate_id),)
+        )
+        print(f"[interview] ✅ status -> Interviewed for {candidate_id} ({cur.rowcount} rows)")
+
+        # 2. Merge full interview result into ai_intelligence
+        if session:
+            cur.execute(
+                "SELECT id, ai_intelligence FROM applications WHERE candidate_id=? ORDER BY created_at DESC LIMIT 1",
+                (str(candidate_id),)
+            )
+            row = cur.fetchone()
+            if row:
+                ai = _j.loads(row[1]) if row[1] else {}
+
+                # Build turn_breakdown from interview_trace
+                trace = session.get("interview_trace", [])
+                per_ans = session.get("evaluation", {}).get("per_answer_results", []) if session.get("evaluation") else []
+                turn_breakdown = [
+                    {
+                        "turn":               i + 1,
+                        "topic":              t.get("topic", "General"),
+                        "question":           t.get("question", ""),
+                        "answer":             t.get("answer_text", ""),
+                        "question_type":      t.get("question_type", "initial"),
+                        "score":              per_ans[i].get("score")              if i < len(per_ans) else None,
+                        "max":                10,
+                        "strengths":          per_ans[i].get("strengths", [])     if i < len(per_ans) else [],
+                        "weaknesses":         per_ans[i].get("weaknesses", [])    if i < len(per_ans) else [],
+                        "expected_vs_actual": per_ans[i].get("expected_vs_actual", {}) if i < len(per_ans) else {},
+                    }
+                    for i, t in enumerate(trace)
+                ]
+
+                # Build integrity_flags from cheating_events
+                cheating_events = session.get("cheating_events", [])
+                integrity_flags = []
+                for ev in cheating_events:
+                    integrity_flags.append({
+                        "time":   ev.get("timestamp", ""),
+                        "events": [ev.get("event_type", "UNKNOWN")],
+                    })
+
+                evaluation = session.get("evaluation") or {}
+                overall_score = evaluation.get("overall_score", None)
+
+                ai["interview_schedule"] = ai.get("interview_schedule", {})
+                ai["interview_schedule"]["ai_interview_id"] = session.get("interview_id")
+
+                ai["interview_result"] = {
+                    "interview_id":     session.get("interview_id"),
+                    "status":           session.get("status"),
+                    "completed_at":     session.get("ended_at") or session.get("created_at"),
+                    "total_turns":      len(trace),
+                    "cheating_score":   session.get("cheating_score", 0.0),
+                    "tab_change_count": session.get("tab_change_count", 0),
+                    "overall_score":    overall_score,
+                    "turn_breakdown":   turn_breakdown,
+                    "integrity_flags":  integrity_flags,
+                    "evaluation":       evaluation,
+                }
+
+                cur.execute(
+                    "UPDATE applications SET ai_intelligence=? WHERE id=?",
+                    (_j.dumps(ai), row[0])
+                )
+                print(f"[interview] ✅ interview_result saved to ai_intelligence ({len(turn_breakdown)} turns)")
+
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[interview] ❌ SQLite update failed: {e}")
+
+
 @router.get("/interview/{interview_id}/question")
-async def get_current_question(interview_id: str, current_user: TokenData = Depends(require_user)):
+async def get_current_question(interview_id: str):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
         raise HTTPException(status_code=404, detail="Interview session not found")
-    if session_data["candidate_id"] != current_user.user_id:
-        raise HTTPException(status_code=403, detail="Not authorized for this interview")
     if session_data["status"] in ["COMPLETED", "COMPLETED_EARLY"]:
         return {"status": session_data["status"], "question_text": "Interview already completed."}
     total_expected = len(session_data.get("focus_areas", [])) * 3
@@ -747,7 +998,7 @@ async def get_current_question(interview_id: str, current_user: TokenData = Depe
     }
 
 @router.post("/interview/{interview_id}/video-frame")
-async def store_video_frame(interview_id: str, frame_data: dict, current_user: TokenData = Depends(require_user)):
+async def store_video_frame(interview_id: str, frame_data: dict):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
         return {"status": "error", "message": "Session not found"}
@@ -776,7 +1027,7 @@ async def store_video_frame(interview_id: str, frame_data: dict, current_user: T
     return {"status": "success"}
 
 @router.post("/interview/{interview_id}/event")
-async def log_interview_event(interview_id: str, event_data: dict, current_user: TokenData = Depends(require_user)):
+async def log_interview_event(interview_id: str, event_data: dict):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
         raise HTTPException(status_code=404, detail="Session not found")
@@ -794,13 +1045,10 @@ async def submit_answer(
     interview_id: str,
     submission_type: str = Form(...),
     audio_file: UploadFile = File(None),
-    current_user: TokenData = Depends(require_user)
 ):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
         raise HTTPException(status_code=404, detail="Interview session not found")
-    if session_data["candidate_id"] != current_user.user_id:
-        raise HTTPException(status_code=403, detail="Not authorized for this interview")
     if session_data["status"] in ["COMPLETED", "COMPLETED_EARLY"]:
         return {"status": session_data["status"], "next_question": None}
 
@@ -909,6 +1157,7 @@ async def submit_answer(
 
         if new_state.get("interview_status") == "COMPLETED" or not session_data["current_question"]:
             session_data["status"] = "COMPLETED"
+            _mark_application_interviewed(session_data["candidate_id"])
         else:
             session_data["status"] = "IN_PROGRESS"
             session_data["last_question_served_at"] = datetime.now().timestamp()
@@ -969,12 +1218,10 @@ async def submit_answer(
             os.remove(file_path)
 
 @router.post("/interview/{interview_id}/end")
-async def end_interview_early(interview_id: str, audio_file: UploadFile = File(None), current_user: TokenData = Depends(require_user)):
+async def end_interview_early(interview_id: str, audio_file: UploadFile = File(None)):
     session_data = next((i for i in db.interviews if i["interview_id"] == interview_id), None)
     if not session_data:
         raise HTTPException(status_code=404, detail="Interview session not found")
-    if session_data["candidate_id"] != current_user.user_id:
-        raise HTTPException(status_code=403, detail="Not authorized")
     if session_data["status"] in ["COMPLETED", "COMPLETED_EARLY"]:
         return {"status": session_data["status"]}
 
@@ -1016,6 +1263,7 @@ async def end_interview_early(interview_id: str, audio_file: UploadFile = File(N
         session_data.setdefault("interview_trace", []).append(turn)
 
     session_data["status"] = "COMPLETED_EARLY"
+    _mark_application_interviewed(session_data["candidate_id"])
     session_data["ended_at"] = datetime.now().isoformat()
     session_data["termination_metadata"] = {"ended_by": "CANDIDATE", "end_reason": "MANUAL_SUBMISSION", "questions_at_termination": len(session_data["interview_trace"])}
 

@@ -1,0 +1,1 @@
+To ensure that the dog watch alerts performed with the exact failure point, I relieved heavily on the robust tagging and grouping strategy when confirming the monitors and the alert message payload. And then, for the triggers myself, I focused on leading indicators, error rates, latency, and so on. And this is how I started to use those triggers.

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import OBCandidateSearch from './OBCandidateSearch';
 import { ONBOARD_API } from '../../config/api';
 import './OnboardGuard.css';
 
@@ -21,6 +20,7 @@ const STATUS_STYLE = {
 const OnboardValidate = () => {
   const [candidates, setCandidates]     = useState([]);
   const [selected, setSelected]         = useState(null);
+  const [searchQuery, setSearchQuery]   = useState('');
 
   // Extraction state
   const [extracting, setExtracting]     = useState(false);
@@ -134,6 +134,25 @@ const OnboardValidate = () => {
     }
   };
 
+  // ── Step 3: Reset Data ──────────────────────────────────────────────────────
+  const handleReset = async () => {
+    if (!selected) return;
+    if (!window.confirm("Are you sure you want to completely wipe all uploaded documents and validation data for this candidate?")) return;
+    
+    try {
+      const res = await fetch(`${ONBOARD_API}/api/v1/documents/${selected.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to reset candidate data');
+      
+      // Reset UI state
+      setExtractDone(false);
+      setValidation(null);
+      setExtractLogs([]);
+      alert("Candidate data successfully wiped. You can now upload new documents.");
+    } catch (err) {
+      alert("Error resetting data: " + err.message);
+    }
+  };
+
   // ── Resolve ambiguous field ─────────────────────────────────────────────────
   const handleResolve = async (field, resolution) => {
     if (!selected) return;
@@ -166,19 +185,48 @@ const OnboardValidate = () => {
       </div>
 
       {/* Candidate selector */}
-      <div style={{ position: 'relative', zIndex: 1000 }}>
-        <OBCandidateSearch
-          candidates={candidates}
-          onSelect={resetCandidate}
-          selectedId={selected?.id}
-          placeholder="Select candidate to run validation..."
-        />
+      <div style={{ position: 'relative', zIndex: 1000, marginBottom: '20px' }}>
+        <div className="ob-search-box">
+          <span style={{ fontSize: '18px' }}>🔍</span>
+          <input 
+            type="text" 
+            className="ob-search-input" 
+            placeholder="Select candidate to run validation..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       {!selected && (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8', background: 'white', borderRadius: '16px', border: '1.5px dashed #e2e8f0', marginTop: '20px' }}>
-          <span style={{ fontSize: '48px', display: 'block', marginBottom: '16px' }}>✔️</span>
-          <p>Select a candidate to generate their verification report.</p>
+        <div style={{ marginTop: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+            {candidates
+              .filter(c => c.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || c.email?.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map(c => (
+                <div 
+                  key={c.id} 
+                  className="ob-upload-card" 
+                  style={{ alignItems: 'flex-start', padding: '16px', textAlign: 'left', cursor: 'pointer', border: '1.5px solid #e2e8f0' }}
+                  onClick={() => resetCandidate(c)}
+                >
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div className="admin-avatar" style={{ background: '#3b82f6', width: '36px', height: '36px', fontSize: '16px' }}>
+                      {(c.full_name || c.first_name || '?')[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b' }}>{c.full_name}</div>
+                      <div style={{ fontSize: '12px', color: '#64748b' }}>{c.email}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+          {candidates.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8', background: 'white', borderRadius: '16px', border: '1.5px dashed #e2e8f0' }}>
+              <p>No candidates available. Import a CSV first.</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -205,6 +253,14 @@ const OnboardValidate = () => {
                 {validating ? '🔍 Validating...' : '🔍 Run Validation'}
               </button>
             )}
+
+            <button
+              className="topbar-btn"
+              style={{ background: '#ef4444', marginLeft: 'auto' }}
+              onClick={handleReset}
+            >
+              🗑️ Clear Candidate Data
+            </button>
           </div>
 
           {/* SSE Extraction log */}
@@ -258,7 +314,7 @@ const OnboardValidate = () => {
                   <button
                     className="tbl-btn"
                     style={{ fontSize: '11px', fontWeight: 700, padding: '6px 14px' }}
-                    onClick={() => alert('Export feature: Copy to clipboard or print page')}
+                    onClick={() => { window.print(); }}
                   >
                     📥 Export Report
                   </button>

@@ -438,11 +438,15 @@ const InterviewSession = ({ interviewId, onEnd }) => {
 
     if (status === 'completed') {
         return (
-            <div style={containerStyle}>
-                <div style={cardStyle}>
-                    <h1 style={{ color: '#2f855a' }}>Interview Completed! 🎊</h1>
-                    <p>Thank you for your time. Your responses have been recorded for review.</p>
-                    <button onClick={() => { if (onEnd) onEnd(); }} style={buttonStyle}>
+            <div className="interview-container-pro">
+                <div className="pro-card text-center" style={{ padding: '60px', maxWidth: '500px', margin: 'auto', textAlign: 'center' }}>
+                    <div style={{ fontSize: '48px', color: '#10b981', marginBottom: '20px' }}>✓</div>
+                    <h1 style={{ color: '#1e293b', fontSize: '28px', marginBottom: '15px', fontWeight: 600 }}>Interview Completed</h1>
+                    <p style={{ color: '#64748b', fontSize: '16px', marginBottom: '30px', lineHeight: '1.6' }}>
+                        Your interview has been successfully submitted.<br />
+                        Our team will evaluate your responses and contact you shortly.
+                    </p>
+                    <button onClick={() => { if (onEnd) onEnd(); }} className="btn-primary-pro">
                         Return to Dashboard
                     </button>
                 </div>
@@ -452,12 +456,13 @@ const InterviewSession = ({ interviewId, onEnd }) => {
 
     if (status === 'error') {
         return (
-            <div style={containerStyle}>
-                <div style={cardStyle}>
-                    <h2 style={{ color: '#c53030' }}>Oops! Something went wrong</h2>
-                    <p>{error}</p>
-                    <button onClick={() => window.location.reload()} style={buttonStyle}>
-                        Retry
+            <div className="interview-container-pro">
+                <div className="pro-card text-center" style={{ padding: '60px', maxWidth: '500px', margin: 'auto', textAlign: 'center' }}>
+                    <div style={{ fontSize: '48px', color: '#ef4444', marginBottom: '20px' }}>⚠️</div>
+                    <h2 style={{ color: '#1e293b', marginBottom: '15px', fontWeight: 600 }}>Connection Error</h2>
+                    <p style={{ color: '#64748b', marginBottom: '30px' }}>{error}</p>
+                    <button onClick={() => window.location.reload()} className="btn-primary-pro" style={{ background: '#ef4444' }}>
+                        Retry Connection
                     </button>
                 </div>
             </div>
@@ -465,7 +470,30 @@ const InterviewSession = ({ interviewId, onEnd }) => {
     }
 
     if (!question || status === 'loading') {
-        return <div style={containerStyle}><div className="loader">Loading your interview...</div></div>;
+        return (
+            <div className="interview-container-pro">
+                <div style={{ textAlign: 'center', margin: 'auto' }}>
+                    <div className="spinner-pro"></div>
+                    <div style={{ marginTop: '20px', color: '#64748b', fontSize: '15px', fontWeight: 500 }}>
+                        Loading Interview Module...
+                    </div>
+                </div>
+                <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                .interview-container-pro {
+                    min-height: 100vh; background: #f8fafc;
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    padding: 40px; font-family: 'Inter', sans-serif; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                    overflow-y: auto; z-index: 9999;
+                }
+                .spinner-pro {
+                    width: 48px; height: 48px; border: 3px solid #e2e8f0; border-top-color: #3b82f6;
+                    border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;
+                }
+                @keyframes spin { to { transform: rotate(360deg); } }
+                `}</style>
+            </div>
+        );
     }
 
     const progress = status === 'reading'
@@ -473,293 +501,195 @@ const InterviewSession = ({ interviewId, onEnd }) => {
         : (timeLeft / ANSWER_TIME) * 100;
 
     return (
-        <div style={containerStyle}>
-            {/* Header with progress */}
-            <div style={headerStyle}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <span style={{ fontWeight: 'bold', color: '#4a5568' }}>
-                        {question.question_index}
-                    </span>
-                    <span style={{
-                        color: status === 'reading' ? '#3182ce' : '#e53e3e',
-                        fontWeight: 'bold'
-                    }}>
-                        {status === 'reading' ? '📖 Reading Phase' : '🎤 Answering Phase'}
-                    </span>
-                </div>
-                <div style={progressContainerStyle}>
-                    <div style={{
-                        ...progressBarStyle,
-                        width: `${progress}%`,
-                        backgroundColor: status === 'reading' ? '#3182ce' : '#e53e3e'
-                    }} />
-                </div>
-                <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '24px', fontWeight: 'bold' }}>
-                    {timeLeft}s
-                </div>
-            </div>
+        <div className="interview-container-pro">
+            <div className="pro-layout-grid">
+                
+                {/* Left Column: Camera */}
+                <div className="pro-left-col">
+                    <div className="pro-video-wrapper">
+                        <video ref={videoRef} autoPlay playsInline muted className="pro-video" />
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
+                        <div className="pro-rec-indicator">
+                            <span className="pro-rec-dot" /> REC
+                        </div>
+                        <div className="pro-timer-overlay">
+                            00:{timeLeft.toString().padStart(2, '0')}
+                        </div>
+                    </div>
 
-            {/* Question Card */}
-            <div style={{ ...cardStyle, animation: 'fadeIn 0.5s' }}>
-                <p style={{
-                    fontSize: '14px',
-                    color: '#718096',
-                    textTransform: 'uppercase',
-                    letterSpacing: '1px',
-                    marginBottom: '10px'
-                }}>
-                    Technical Interview
-                </p>
-                <h2 style={{ fontSize: '22px', lineHeight: '1.5', margin: '0 0 30px 0', color: '#2d3748' }}>
-                    {question.question_text}
-                </h2>
-
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-                    {status === 'answering' && (
-                        <button
-                            onClick={() => handleSubmit('MANUAL')}
-                            style={{ ...buttonStyle, background: '#38a169' }}>
-                            Finish & Submit
-                        </button>
-                    )}
-                    {status === 'reading' && (
-                        <p style={{ color: '#718096', fontStyle: 'italic' }}>
-                            You will be able to answer in a few seconds...
-                        </p>
-                    )}
-                    {status === 'submitting' && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <div className="spinner-small"></div>
-                            <span>Processing your request...</span>
+                    {/* Warnings below video */}
+                    {latestWarning && (
+                        <div className="pro-warning-banner">
+                            ⚠️ {latestWarning}
                         </div>
                     )}
                 </div>
 
-                {/* Optional early termination button */}
-                {!['loading', 'submitting', 'error', 'completed'].includes(status) && (
-                    <div style={{ marginTop: '20px', borderTop: '1px solid #edf2f7', paddingTop: '20px' }}>
-                        <button
-                            onClick={() => setShowEndModal(true)}
-                            style={{
-                                background: 'transparent',
-                                color: '#a0aec0',
-                                border: '1px solid #e2e8f0',
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                fontSize: '13px',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s'
-                            }}
-                            onMouseOver={(e) => { e.target.style.color = '#e53e3e'; e.target.style.borderColor = '#feb2b2'; }}
-                            onMouseOut={(e) => { e.target.style.color = '#a0aec0'; e.target.style.borderColor = '#e2e8f0'; }}
-                        >
-                            End Interview Early
-                        </button>
+                {/* Right Column: Question & Controls */}
+                <div className="pro-right-col">
+                    <div className="pro-card" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <div className="pro-q-header">
+                            <span className="pro-q-badge">Question {question.question_index} of {question.total_questions || '?'}</span>
+                            <span className={`pro-status-tag ${status === 'reading' ? 'tag-reading' : 'tag-answering'}`}>
+                                {status === 'reading' ? 'Reading Phase' : 'Recording Answer'}
+                            </span>
+                        </div>
+
+                        <div className="pro-progress-bar">
+                            <div className="pro-progress-fill" style={{
+                                width: `${progress}%`,
+                                backgroundColor: status === 'reading' ? '#3b82f6' : '#ef4444'
+                            }} />
+                        </div>
+
+                        <h2 className="pro-question-text">
+                            {question.question_text}
+                        </h2>
+
+                        <div className="pro-actions-area">
+                            {status === 'answering' && (
+                                <button onClick={() => handleSubmit('MANUAL')} className="btn-primary-pro">
+                                    Submit Answer
+                                </button>
+                            )}
+                            {status === 'reading' && (
+                                <p className="pro-hint-text">
+                                    Recording starts in {timeLeft} seconds...
+                                </p>
+                            )}
+                            {status === 'submitting' && (
+                                <div className="pro-submitting">
+                                    <div className="spinner-pro-small"></div>
+                                    <span>Saving Response...</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                )}
+
+                    {/* Bottom part: Transcript */}
+                    {transcript && (
+                        <div className="pro-card" style={{ marginTop: '20px', padding: '20px' }}>
+                            <div className="pro-transcript-title">Previous Answer Transcript:</div>
+                            <p className="pro-transcript-text">"{transcript}"</p>
+                        </div>
+                    )}
+                </div>
+
             </div>
 
-            {/* Confirmation Modal */}
+            {/* End Interview / Abort */}
+            {!['loading', 'submitting', 'error', 'completed'].includes(status) && (
+                <div className="pro-footer">
+                    <button onClick={() => setShowEndModal(true)} className="btn-outline-pro">
+                        End Interview
+                    </button>
+                </div>
+            )}
+
             {showEndModal && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000,
-                    backdropFilter: 'blur(4px)'
-                }}>
-                    <div style={{
-                        background: 'white',
-                        padding: '30px',
-                        borderRadius: '16px',
-                        maxWidth: '400px',
-                        width: '90%',
-                        textAlign: 'center',
-                        boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)'
-                    }}>
-                        <div style={{ fontSize: '40px', marginBottom: '10px' }}>⚠️</div>
-                        <h3 style={{ margin: '0 0 10px 0', color: '#2d3748' }}>End Interview?</h3>
-                        <p style={{ color: '#718096', fontSize: '14px', marginBottom: '24px', lineHeight: '1.5' }}>
-                            Are you sure you want to end the interview now?
+                <div className="pro-modal-overlay">
+                    <div className="pro-modal-box">
+                        <h3 className="pro-modal-title">End Interview?</h3>
+                        <p className="pro-modal-desc">
+                            Are you sure you want to end the interview early? 
                             <strong> Remaining questions will be skipped</strong> and your current progress will be submitted.
                         </p>
-                        <div style={{ display: 'flex', gap: '12px' }}>
-                            <button
-                                onClick={() => setShowEndModal(false)}
-                                style={{
-                                    flex: 1,
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: '1px solid #e2e8f0',
-                                    background: 'white',
-                                    fontWeight: '600',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Keep Going
+                        <div className="pro-modal-actions">
+                            <button onClick={() => setShowEndModal(false)} className="btn-outline-pro" style={{ flex: 1 }}>
+                                Cancel
                             </button>
-                            <button
-                                onClick={handleEndInterview}
-                                style={{
-                                    flex: 1,
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: 'none',
-                                    background: '#e53e3e',
-                                    color: 'white',
-                                    fontWeight: '600',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                End & Submit
+                            <button onClick={handleEndInterview} className="btn-primary-pro" style={{ flex: 1, background: '#ef4444', borderColor: '#ef4444' }}>
+                                Confirm End
                             </button>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Video Monitor */}
-            <div style={{ marginTop: '20px', borderRadius: '12px', overflow: 'hidden', background: '#000', height: '180px', width: '320px', margin: '20px auto', position: 'relative' }}>
-                <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <canvas ref={canvasRef} style={{ display: 'none' }} />
-                <div style={{ position: 'absolute', top: '10px', right: '10px', color: 'red', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <div style={{ width: '8px', height: '8px', background: 'red', borderRadius: '50%', animation: 'pulse 1s infinite' }} />
-                    LIVE MONITORING
-                </div>
-            </div>
-
-            {/* Misconduct Warnings */}
-            {latestWarning && (
-                <div style={{
-                    marginTop: '20px',
-                    padding: '12px',
-                    background: '#fff5f5',
-                    border: '1px solid #feb2b2',
-                    color: '#c53030',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    animation: 'shake 0.5s'
-                }}>
-                    ⚠️ {latestWarning}
-                </div>
-            )}
-
-            {/* Transcribed Answer Display */}
-            {transcript && (
-                <div style={{
-                    marginTop: '20px',
-                    width: '100%',
-                    maxWidth: '600px',
-                    padding: '20px',
-                    background: '#ebf8ff',
-                    border: '1px solid #bee3f8',
-                    borderRadius: '12px',
-                    color: '#2b6cb0',
-                    fontSize: '14px',
-                    animation: 'fadeIn 0.5s'
-                }}>
-                    <strong>Your Last Answer (Transcribed):</strong>
-                    <p style={{ margin: '10px 0 0 0', fontStyle: 'italic', lineHeight: '1.6' }}>
-                        "{transcript}"
-                    </p>
-                </div>
-            )}
-
-            {/* Hint / Instructions */}
-            <div style={{ marginTop: '30px', color: '#a0aec0', fontSize: '12px', textAlign: 'center' }}>
-                Please ensure you are in a quiet environment. Your video and audio are being recorded.
-            </div>
-
             <style>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                
+                .interview-container-pro {
+                    min-height: 100vh; background: #f8fafc; color: #334155;
+                    font-family: 'Inter', sans-serif; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                    overflow-y: auto; z-index: 9999; display: flex; flex-direction: column; padding: 40px;
                 }
-                .spinner-small {
-                    width: 20px;
-                    height: 20px;
-                    border: 2px solid #e2e8f0;
-                    border-top-color: #3182ce;
-                    border-radius: 50%;
-                    animation: spin 1s linear infinite;
+                .pro-layout-grid {
+                    display: grid; grid-template-columns: 450px 1fr; gap: 30px; max-width: 1200px; width: 100%; margin: 0 auto; flex: 1;
                 }
-                @keyframes spin {
-                    to { transform: rotate(360deg); }
+                .pro-left-col { display: flex; flex-direction: column; gap: 20px; }
+                .pro-right-col { display: flex; flex-direction: column; }
+                
+                .pro-card {
+                    background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 30px;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
                 }
-                @keyframes pulse {
-                    0% { opacity: 1; }
-                    50% { opacity: 0.5; }
-                    100% { opacity: 1; }
+                
+                .pro-video-wrapper {
+                    position: relative; width: 100%; aspect-ratio: 4/3; background: #0f172a; border-radius: 12px; overflow: hidden;
+                    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border: 4px solid white;
                 }
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-5px); }
-                    75% { transform: translateX(5px); }
+                .pro-video { width: 100%; height: 100%; object-fit: cover; }
+                
+                .pro-rec-indicator {
+                    position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.6); color: white;
+                    padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(4px);
                 }
+                .pro-rec-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; animation: pulse 1.5s infinite; }
+                
+                .pro-timer-overlay {
+                    position: absolute; bottom: 16px; left: 16px; background: rgba(0,0,0,0.6); color: white;
+                    padding: 6px 12px; border-radius: 6px; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; backdrop-filter: blur(4px);
+                }
+                
+                .pro-q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+                .pro-q-badge { background: #f1f5f9; color: #475569; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+                
+                .pro-status-tag { padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+                .tag-reading { background: #eff6ff; color: #2563eb; }
+                .tag-answering { background: #fef2f2; color: #dc2626; animation: subtlePulse 2s infinite; }
+                
+                .pro-progress-bar { height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; margin-bottom: 30px; }
+                .pro-progress-fill { height: 100%; transition: width 1s linear; }
+                
+                .pro-question-text { font-size: 24px; font-weight: 600; color: #0f172a; line-height: 1.5; margin: 0 0 40px 0; }
+                
+                .pro-actions-area { margin-top: auto; display: flex; justify-content: center; min-height: 50px; align-items: center; }
+                .btn-primary-pro {
+                    background: #2563eb; color: white; border: none; padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600;
+                    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); font-family: 'Inter', sans-serif;
+                }
+                .btn-primary-pro:hover { background: #1d4ed8; transform: translateY(-1px); }
+                
+                .pro-hint-text { color: #64748b; font-size: 15px; font-weight: 500; }
+                
+                .pro-submitting { display: flex; align-items: center; gap: 12px; color: #2563eb; font-weight: 500; }
+                .spinner-pro-small { width: 20px; height: 20px; border: 2px solid #bfdbfe; border-top-color: #2563eb; border-radius: 50%; animation: spin 1s linear infinite; }
+                
+                .pro-transcript-title { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+                .pro-transcript-text { font-size: 14px; color: #334155; line-height: 1.6; font-style: italic; margin: 0; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid #cbd5e1; }
+                
+                .pro-footer { max-width: 1200px; width: 100%; margin: 30px auto 0; text-align: right; }
+                .btn-outline-pro {
+                    background: white; color: #64748b; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 500;
+                    cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
+                }
+                .btn-outline-pro:hover { border-color: #94a3b8; color: #334155; background: #f8fafc; }
+                
+                .pro-warning-banner { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; }
+                
+                .pro-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; backdrop-filter: blur(4px); }
+                .pro-modal-box { background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+                .pro-modal-title { margin: 0 0 10px 0; font-size: 20px; color: #0f172a; font-weight: 600; }
+                .pro-modal-desc { margin: 0 0 24px 0; color: #64748b; font-size: 14px; line-height: 1.6; }
+                .pro-modal-actions { display: flex; gap: 12px; }
+                
+                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+                @keyframes subtlePulse { 0% { background: #fef2f2; } 50% { background: #fee2e2; } 100% { background: #fef2f2; } }
+                @keyframes spin { to { transform: rotate(360deg); } }
             `}</style>
         </div>
     );
-};
-
-// Styles
-const containerStyle = {
-    minHeight: '100vh',
-    background: '#f7fafc',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
-    fontFamily: '"Inter", sans-serif'
-};
-
-const headerStyle = {
-    width: '100%',
-    maxWidth: '600px',
-    marginBottom: '30px'
-};
-
-const progressContainerStyle = {
-    height: '8px',
-    background: '#edf2f7',
-    borderRadius: '4px',
-    overflow: 'hidden'
-};
-
-const progressBarStyle = {
-    height: '100%',
-    transition: 'width 1s linear, background-color 0.3s'
-};
-
-const cardStyle = {
-    width: '100%',
-    maxWidth: '600px',
-    background: 'white',
-    padding: '40px',
-    borderRadius: '16px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-    textAlign: 'center'
-};
-
-const buttonStyle = {
-    padding: '12px 30px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: 'white',
-    background: '#4a5568',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    outline: 'none'
 };
 
 export default InterviewSession;

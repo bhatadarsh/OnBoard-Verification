@@ -46,7 +46,7 @@ export default function AuthModal({ onClose, onSuccess }) {
         setErrors({ general: data.message || 'Login failed' });
       }
     } catch (err) {
-      setErrors({ general: 'Network error. Is the backend running on port 8001?' });
+      setErrors({ general: 'Network error. Is the backend running on port 8000?' });
     } finally {
       setLoading(false);
     }

@@ -20,7 +20,9 @@ from fastapi.responses import HTMLResponse, FileResponse
 from app.api.routes import validation, auth
 
 # Import unified routers
-from candidate.api.candidate_routes import router as candidate_router
+from candidate.api.candidate_routes import router as candidate_router, interview_router
+from candidate.api.admin_routes import router as admin_router
+from job_description.jd_routes.api import router as job_router
 from backend.main import router as whisper_router
 
 app = FastAPI(
@@ -44,7 +46,10 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
 
 # Integrated Routes
 app.include_router(whisper_router, tags=["interview"])
-app.include_router(candidate_router, prefix="/api/v1/extract", tags=["extraction"])
+app.include_router(candidate_router)
+app.include_router(interview_router)
+app.include_router(admin_router)
+app.include_router(job_router)
 
 
 @app.get("/api/health")
@@ -75,6 +80,11 @@ def db_health_check():
         status["mongodb"] = "offline"
     return status
 
+
+# Serve static uploads
+UPLOAD_DIR = "uploads"
+if os.path.exists(UPLOAD_DIR):
+    app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Serve React Frontend
 FRONTEND_DIR = "../frontend/dist"
